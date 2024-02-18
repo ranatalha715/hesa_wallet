@@ -1,0 +1,482 @@
+import 'dart:async';
+import 'dart:ui';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:deep_linking/deep_linking.dart';
+import 'package:device_preview/device_preview.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hesa_wallet/providers/token_provider.dart';
+import 'package:hesa_wallet/screens/unlock/set_pin_screen.dart';
+import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
+import 'package:hesa_wallet/widgets/dialog_button.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:url_launcher/url_launcher.dart';
+// import 'package:deepinking_module/deep_linking.dart';
+import 'package:uni_links/uni_links.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:hesa_wallet/constants/app_deep_linking.dart';
+import 'package:hesa_wallet/constants/colors.dart';
+import 'package:easy_localization/easy_localization.dart' as localized;
+import 'package:hesa_wallet/providers/assets_provider.dart';
+import 'package:hesa_wallet/providers/auth_provider.dart';
+import 'package:hesa_wallet/providers/bank_provider.dart';
+import 'package:hesa_wallet/providers/card_provider.dart';
+import 'package:hesa_wallet/providers/nfts_provider.dart';
+import 'package:hesa_wallet/providers/theme_provider.dart';
+import 'package:hesa_wallet/providers/transaction_provider.dart';
+import 'package:hesa_wallet/providers/user_provider.dart';
+import 'package:hesa_wallet/screens/account_recovery/reset_email.dart';
+import 'package:hesa_wallet/screens/account_recovery/reset_password.dart';
+import 'package:hesa_wallet/screens/connection_requests_pages/connect_dapp.dart';
+import 'package:hesa_wallet/screens/delete_account_confirmation/delete_account_disclaimer.dart';
+import 'package:hesa_wallet/screens/finger_print.dart';
+import 'package:hesa_wallet/screens/onboarding_notifications/onboarding_add_email.dart';
+import 'package:hesa_wallet/screens/settings/account_information.dart';
+import 'package:hesa_wallet/screens/settings/change_password.dart';
+import 'package:hesa_wallet/screens/settings/faq_&_support.dart';
+import 'package:hesa_wallet/screens/settings/language.dart';
+import 'package:hesa_wallet/screens/settings/security_and_privacy.dart';
+import 'package:hesa_wallet/screens/settings/settings.dart';
+import 'package:hesa_wallet/screens/signup_signin/signin_with_email.dart';
+import 'package:hesa_wallet/screens/signup_signin/signin_with_mobile.dart';
+import 'package:hesa_wallet/screens/signup_signin/signup_with_email.dart';
+import 'package:hesa_wallet/screens/signup_signin/signup_with_mobile.dart';
+import 'package:hesa_wallet/screens/signup_signin/terms_conditions.dart';
+import 'package:hesa_wallet/screens/signup_signin/wallet.dart';
+import 'package:hesa_wallet/screens/signup_signin/welcome_screen.dart';
+import 'package:hesa_wallet/screens/testscroll.dart';
+import 'package:hesa_wallet/screens/user_profile_pages/nfts_collection_details.dart';
+import 'package:hesa_wallet/screens/user_profile_pages/transaction_summary.dart';
+import 'package:hesa_wallet/screens/user_profile_pages/wallet_activity.dart';
+import 'package:hesa_wallet/screens/user_profile_pages/connected_sites.dart';
+import 'package:hesa_wallet/screens/user_profile_pages/wallet_tokens_nfts.dart';
+import 'package:hesa_wallet/screens/user_transaction_summaries_with_payment/transaction_req_acceptreject.dart';
+import 'package:hesa_wallet/screens/user_transaction_summaries_with_payment/transaction_request.dart';
+import 'package:hesa_wallet/screens/userpayment_and_bankingpages/wallet_add_bank.dart';
+import 'package:hesa_wallet/screens/userpayment_and_bankingpages/wallet_add_card.dart';
+import 'package:hesa_wallet/screens/userpayment_and_bankingpages/wallet_banking_and_payment_empty.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await localized.EasyLocalization.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  // HyperPay.init("", "");
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp, // Disable landscape mode
+    DeviceOrientation.portraitDown, // Disable landscape mode
+  ]).then((_) {
+    runApp(
+        MultiProvider(
+            providers: [
+              ChangeNotifierProvider(
+                create: (_) => ThemeProvider(),
+              ),
+              ChangeNotifierProvider(
+                create: (_) => AuthProvider(),
+              ),
+              ChangeNotifierProvider(
+                create: (_) => UserProvider(),
+              ),
+              ChangeNotifierProvider(
+                create: (_) => TransactionProvider(),
+              ),
+              ChangeNotifierProvider(
+                create: (_) => AssetsProvider(),
+              ),
+              ChangeNotifierProvider(
+                create: (_) => BankProvider(),
+              ),
+              ChangeNotifierProvider(
+                create: (_) => NftsProvider(),
+              ),
+              ChangeNotifierProvider(
+                create: (_) => CardProvider(),
+              ),
+              ChangeNotifierProvider(
+                create: (_) => TokenProvider(),
+              )
+            ],
+        // DevicePreview(
+        // enabled: !kReleaseMode,
+        // builder: (context) =>
+       child: localized.EasyLocalization(
+            supportedLocales: const [Locale('en', 'US'), Locale('ar', 'AE')],
+            path: 'assets/translations',
+            // path to your language files
+            fallbackLocale: Locale('en', 'US'),
+            saveLocale: true,
+            child: MyApp()))
+        // )
+        );
+    // Register the MethodChannel with the same unique name as in the NFT app
+    const channel = MethodChannel('com.example.hesa_wallet');
+  });
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  final PageController _pageController = PageController(initialPage: 0);
+  var accessToken = '';
+
+  late FToast fToast;
+  bool isOverlayVisible = false;
+  bool isWifiOn = true;
+  bool fromNeoApp=false;
+
+
+  // late OverlayEntry overlayEntry = OverlayEntry(builder: (context) => Container());
+  Future<void> checkWifiStatus() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    setState(() {
+      isWifiOn = (connectivityResult == ConnectivityResult.wifi);
+      isWifiOn = connectivityResult == ConnectivityResult.none ? false:true;
+     });
+
+    // if (!isWifiOn) {
+    //   noInternetDialog(context);
+    // }
+  }
+
+  @override
+  void initState() {
+    // AppDeepLinking().openNftApp(null);
+    // _launchUrl();
+    super.initState();
+    // DeepLinking().getDeepLinkStream.listen((event) {
+    //   print(event.toString());
+    // });
+    AppDeepLinking().initDeeplink();
+    fToast = FToast();
+    fToast.init(context);
+    getAccessToken();//31 jan
+    // checkAndDeleteExpiredToken();
+    WidgetsBinding.instance.addObserver(this);
+
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      checkWifiStatus();
+
+    }); // 31 jan
+    initUniLinks();
+    print('recieved data' + _receivedData);
+    Timer.periodic(Duration(seconds: 3), (timer) {
+      getAccessToken();
+    });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+  String _receivedData = 'No UniLink data received';
+  Future<void> initUniLinks() async {
+    // Initialize UniLinks
+    // await initPlatformState();
+    // Listen for incoming links
+    // AppDeepLinking().initDeeplink(); muzamil recommended
+    getLinksStream().listen((String? link) {
+      if (link != null) {
+        setState(() {
+          _receivedData = link;
+        });
+
+        Uri uri = Uri.parse(link);
+        String? operation = uri.queryParameters['operation'];
+        print('operation ' + operation.toString());
+        if (operation != null && operation == 'connectWallet') {
+          // Navigate to page for MintNFT
+          setState(() {
+            fromNeoApp=true; //faltu
+            Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet=true;
+            print(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet);
+          });
+        }
+
+      }
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      // App goes into the background
+      setState(() {
+        isOverlayVisible = true;
+      });
+      // _showLockScreen();
+    } else if (state == AppLifecycleState.resumed) {
+      // App comes back to the foreground
+      setState(() {
+        isOverlayVisible = true;
+      });
+      // _hideLockScreen();
+    }
+  }
+
+  getAccessToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    accessToken = prefs.getString('accessToken')!;
+    if (isTokenExpired(accessToken)) {
+      // print('Token is expired. calling after 3 seconds');
+      prefs.remove('accessToken');
+      setState(() {
+        accessToken='';
+      });
+      _showToast('Session Expired!');
+    } else {
+    }
+  }
+
+  String fcmToken = 'Waiting for FCM token...';
+
+  generateFcmToken() async {
+    await Firebase.initializeApp();
+    await FirebaseMessaging.instance.getToken().then((newToken) {
+      print("fcm===" + newToken!);
+      setState(() {
+        fcmToken = newToken;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // checkWifiStatus();
+    // generateFcmToken();
+    return Sizer(builder: (context, orientation, deviceType) {
+      return
+        Consumer<ThemeProvider>(
+            builder: (context, ThemeProvider themeProvider, _) {
+             return MaterialApp(
+            locale: context.locale,
+            supportedLocales: context.supportedLocales,
+            localizationsDelegates: context.localizationDelegates,
+            theme: themeProvider.isDark
+                ? ThemeData(
+                    brightness: Brightness.dark,
+                    fontFamily: 'Inter',
+                    hintColor: AppColors.backgroundColor,
+                  )
+                : ThemeData(
+                    brightness: Brightness.light,
+                    fontFamily: 'Inter',
+                    hintColor: AppColors.backgroundColor,
+                  ),
+            debugShowCheckedModeBanner: false,
+            home:
+            // Provider.of<TokenProvider>(
+            //   context,
+            // ).isTokenEmpty
+                 accessToken == ""
+                    ? Stack(
+                      children: [
+                        Wallet(),
+                        if(!isWifiOn)
+                          LoaderBluredScreen(
+                            isWifiOn: false,
+                          )
+                      ],
+                    )
+                    :
+                //fromNeoApp will be used later
+                Stack(
+                        children: [
+
+                          WalletTokensNfts(),
+                         // TransactionRequestAcceptReject(),
+                          // ConnectDapp(),
+                          // if(isOverlayVisible)
+                          //   WelcomeScreen(
+                          //       handler:()=> setState((){
+                          //         isOverlayVisible=false;
+                          //       }),
+                          //   ),
+                          if(!isWifiOn)
+
+                            LoaderBluredScreen(
+                              isWifiOn: false,
+                            )
+
+                        ],
+                      ),
+            routes: {
+              SignUpWithEmail.routeName: (context) => const SignUpWithEmail(),
+              SigninWithEmail.routeName: (context) => const SigninWithEmail(),
+              WalletTokensNfts.routeName: (context) => const WalletTokensNfts(),
+              TransactionRequestAcceptReject.routeName: (context) => const TransactionRequestAcceptReject(),
+              TransactionRequest.routeName: (context) =>
+                  const TransactionRequest(),
+              TermsAndConditions.routeName: (context) =>
+                  const TermsAndConditions(),
+              NftsCollectionDetails.routeName: (context) =>
+                  const NftsCollectionDetails(),
+            },
+          );
+        });
+
+    });
+  }
+
+  _showToast(String message, {int duration = 2000}) {
+    Widget toast = Container(
+      height: 60,
+      // width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12.0),
+        color: AppColors.textColorWhite.withOpacity(0.5),
+      ),
+      child: Row(
+        // mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Flexible(
+            child: Container(
+              color: Colors.transparent,
+              child: Text(
+                message,
+                maxLines: 2,
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
+                // .toUpperCase(),
+                style: TextStyle(
+                        color: AppColors.backgroundColor,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.bold)
+                    .apply(fontWeightDelta: -2),
+              ),
+            ),
+          ),
+          // Spacer(),
+        ],
+      ),
+    );
+
+    // Custom Toast Position
+    fToast.showToast(
+        child: toast,
+        toastDuration: Duration(milliseconds: duration),
+        positionedToastBuilder: (context, child) {
+          return Positioned(
+            child: Center(child: child),
+            top: 43.0,
+            left: 20,
+            right: 20,
+          );
+        });
+  }
+
+  void noInternetDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final screenWidth = MediaQuery.of(context).size.width;
+        final dialogWidth = screenWidth * 0.85;
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          backgroundColor: Colors.transparent,
+          child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+              child: Container(
+                height: 35.h,
+                width: dialogWidth,
+                decoration: BoxDecoration(
+                  color: AppColors.showDialogClr,
+                  // border: Border.all(
+                  //     width: 0.1.h,
+                  //     color: AppColors.textColorGrey),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.sp),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 4.h,
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Image.asset(
+                          "assets/images/no_internethesa.png",
+                          height: 7.h,
+                          color: AppColors.textColorWhite,
+                          // width: 104,
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'No internet access'.tr(),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 17.5.sp,
+                              color: AppColors.textColorWhite),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 1.h,
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Lorem ipsum dolor sit amet, consec adipiscing elit ultrices arcu.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: AppColors.textColorGreyShade2
+                                  .withOpacity(0.4),
+                              fontSize: 10.5.sp,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                      Spacer(),
+                      DialogButton(
+                          title: 'Reconnect'.tr(),
+                          handler: () {},
+                          // isLoading: isLoading,
+                          // isGradient: true,
+                          color: AppColors.textColorWhite),
+                      Spacer(),
+                    ],
+                  ),
+                ),
+              )),
+        );
+      },
+    );
+  }
+}
+
+bool isTokenExpired(String token) {
+  Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+  int? exp = decodedToken['exp'];
+
+  if (exp != null) {
+    DateTime expirationDate = DateTime.fromMillisecondsSinceEpoch(exp * 1000);
+    return expirationDate.isBefore(DateTime.now());
+  }
+
+  return true; // If no expiry information is found, consider it expired
+}
+
+

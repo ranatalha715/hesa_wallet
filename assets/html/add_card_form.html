@@ -1,0 +1,128 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Hyper Pay</title>-->
+<!--</head>-->
+
+<!--<body>-->
+<!--<script>-->
+<!--    // Function to handle form submission-->
+<!--    function onSubmitForm() {-->
+<!--        // Handle any additional logic or validation here-->
+
+<!--        // Communicate with Flutter app and trigger navigation-->
+<!--        Flutter.postMessage('success');-->
+
+<!--        // Return false to prevent the form from submitting to the original action-->
+<!--        return false;-->
+<!--    }-->
+<!--</script>-->
+<!--<form action="http://134.209.249.241:3001/card-message" class="paymentWidgets" data-brands="VISA MASTER AMEX" onsubmit="return onSubmitForm()"></form>-->
+
+<!--&lt;!&ndash;<form action="https://www.facebook.com/" class="paymentWidgets" data-brands="VISA MASTER AMEX" onsubmit="return onSubmitForm()"></form>&ndash;&gt;-->
+<!--<script>-->
+<!--        var wpwlOptions = {-->
+<!--            paymentTarget: "_top",-->
+<!--        }-->
+<!--    </script>-->
+<!--<script>-->
+<!--        var wpwlOptions = {-->
+<!--            paymentTarget: "_top",-->
+<!--        }-->
+
+<!--        // Function to update the checkout ID-->
+<!--        function updateCheckoutId(newCheckoutId) {-->
+<!--            var paymentWidget = document.querySelector('.paymentWidgets');-->
+<!--            paymentWidget.setAttribute('data-checkout-id', newCheckoutId);-->
+<!--            var scriptTag = document.querySelector('script[src^="https://test.oppwa.com/v1/paymentWidgets.js"]');-->
+<!--            scriptTag.src = scriptTag.src.replace(/checkoutId=[^&]*/, 'checkoutId=' + newCheckoutId);-->
+<!--        }-->
+
+
+<!--    </script>-->
+<!--&lt;!&ndash; Update your onSubmitForm function &ndash;&gt;-->
+
+<!--&lt;!&ndash; Update your onSubmitForm function &ndash;&gt;-->
+
+
+
+
+<!--<script src="https://test.oppwa.com/v1/paymentWidgets.js?checkoutId=55CCB91132C12F2C6BF6D75E28026CD1.uat01-vm-tx01/registration"></script>-->
+
+
+
+<!--</body>-->
+
+<!--</html>-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyper Pay</title>
+
+    <!-- Add the following style tag to set the background color -->
+    <style>
+        body {
+            background-color: #262626; /* Set your desired background color here */
+        }
+        .paymentWidgets {
+            box-shadow: none; /* Remove box-shadow from the form */
+        }
+    </style>
+</head>
+
+<body>
+<script>
+        // Function to handle form submission
+        function onSubmitForm() {
+            // Handle any additional logic or validation here
+
+            // Communicate with Flutter app and trigger navigation
+            Flutter.postMessage('success');
+
+            // Return false to prevent the form from submitting to the original action
+            return false;
+        }
+    </script>
+
+<!-- Rest of your HTML content -->
+
+<form action="http://134.209.249.241:3001/card-message" class="paymentWidgets" data-brands="VISA MASTER AMEX" onsubmit="return onSubmitForm()"></form>
+
+<!--<form action="https://www.facebook.com/" class="paymentWidgets" data-brands="VISA MASTER AMEX" onsubmit="return onSubmitForm()"></form>-->
+
+<script>
+        var wpwlOptions = {
+            paymentTarget: "_top",
+        }
+    </script>
+
+<script>
+        var wpwlOptions = {
+            paymentTarget: "_top",
+        }
+
+        // Function to update the checkout ID
+        function updateCheckoutId(newCheckoutId) {
+            var paymentWidget = document.querySelector('.paymentWidgets');
+            paymentWidget.setAttribute('data-checkout-id', newCheckoutId);
+            var scriptTag = document.querySelector('script[src^="https://test.oppwa.com/v1/paymentWidgets.js"]');
+            scriptTag.src = scriptTag.src.replace(/checkoutId=[^&]*/, 'checkoutId=' + newCheckoutId);
+        }
+    </script>
+
+<!-- Update your onSubmitForm function -->
+
+<!-- Update your onSubmitForm function -->
+
+<script src="https://test.oppwa.com/v1/paymentWidgets.js?checkoutId=55CCB91132C12F2C6BF6D75E28026CD1.uat01-vm-tx01/registration"></script>
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "248016490932",
+    "project_id": "hesa-app-8e3ad",
+    "storage_bucket": "hesa-app-8e3ad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:248016490932:android:c32be72394c8a9365d62e1",
+        "android_client_info": {
+          "package_name": "com.example.hesa_wallet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjBrFIVFIVFuWnZCctuOcB_TDA5-iEVNw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

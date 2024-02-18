@@ -1,0 +1,642 @@
+import 'dart:ui';
+
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:hesa_wallet/constants/colors.dart';
+import 'package:hesa_wallet/constants/footer_text.dart';
+import 'package:hesa_wallet/screens/connection_requests_pages/connect_dapp.dart';
+import 'package:hesa_wallet/screens/settings/faq_&_support.dart';
+import 'package:hesa_wallet/screens/settings/settings.dart';
+import 'package:hesa_wallet/screens/signup_signin/signin_with_mobile.dart';
+import 'package:hesa_wallet/screens/user_profile_pages/connected_sites.dart';
+import 'package:hesa_wallet/screens/userpayment_and_bankingpages/wallet_banking_and_payment_empty.dart';
+import 'package:hesa_wallet/widgets/dialog_button.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sizer/sizer.dart';
+
+import '../constants/configs.dart';
+import '../providers/auth_provider.dart';
+import '../providers/theme_provider.dart';
+import '../providers/user_provider.dart';
+import '../screens/signup_signin/wallet.dart';
+import '../screens/user_profile_pages/wallet_activity.dart';
+import 'button.dart';
+
+class AppDrawer extends StatefulWidget {
+  const AppDrawer({Key? key}) : super(key: key);
+
+  @override
+  State<AppDrawer> createState() => _AppDrawerState();
+}
+
+class _AppDrawerState extends State<AppDrawer> {
+  var selectedIndex = -1;
+  var isLoading = false;
+  var wstoken = '';
+
+  getWsToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    wstoken = prefs.getString('wsToken')!;
+  }
+
+  deleteToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('wsToken');
+  }
+
+  String replaceMiddleWithDots(String input) {
+    if (input.length <= 30) {
+      // If the input string is 30 characters or less, return it as is.
+      return input;
+    }
+
+    final int middleIndex = input.length ~/ 2; // Find the middle index
+    final int startIndex = middleIndex - 16; // Calculate the start index
+    final int endIndex = middleIndex + 16; // Calculate the end index
+
+    // Split the input string into three parts and join them with '...'
+    final String result =
+        input.substring(0, startIndex) + '...' + input.substring(endIndex);
+
+    return result;
+  }
+
+  init() async {
+    await getWsToken();
+    await Provider.of<UserProvider>(context, listen: false)
+        .getUserDetails(token: wstoken, context: context);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    init();
+    // getWsToken();
+    super.initState();
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor:
+          AppColors.profileHeaderDark, // Change to your desired color
+    ));
+  }
+
+  @override
+  void dispose() {
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //   statusBarColor: AppColors.profileHeaderDark, // Reset to default color
+    // ));
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Locale currentLocale = context.locale;
+    bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
+
+    return Consumer<UserProvider>(builder: (context, user, child) {
+      return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+          child: Drawer(
+            width: 90.w,
+            child: Container(
+              color: themeNotifier.isDark
+                  ? AppColors.backgroundColor
+                  : AppColors.textColorWhite,
+              child: Column(
+                children: [
+                  Container(
+                    height: 40.h,
+                    // color: Colors.blue,
+                    // color: themeNotifier.isDark
+                    //     ? AppColors.backgroundColor
+                    //     : AppColors.textColorWhite,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.sp),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          // SizedBox(
+                          //   height: 8.h,
+                          // ),
+                          Container(
+                            child: Image.asset(
+                              "assets/images/hesalogo_text.png",
+                              height: 21.h,
+                              width: 22.h,
+                            ),
+                          ),
+                          Expanded(
+                              child: Container(
+                            width: double.infinity,
+                            // color: Colors.red,
+                          )),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.textColorGrey,
+                              // gradient: LinearGradient(
+                              //   colors: [Color(0xff92B928), Color(0xffC9C317)],
+                              //   begin: Alignment.topLeft,
+                              //   end: Alignment.bottomRight,
+                              // ),
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(1.sp),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: AppColors.backgroundColor,
+                                    borderRadius: BorderRadius.circular(100)),
+                                child: Padding(
+                                  padding: EdgeInsets.all(1.sp),
+                                  child: Image.asset(
+                                    "assets/images/profile.png",
+                                    height: 61.sp,
+                                    width: 61.sp,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 1.5.h,
+                          ),
+                          Text(
+                            user.userName != null
+                                ? user.userName! + ".mjra"
+                                : 'username.mjra'.tr(),
+                            // 'username.mjra'.tr(),
+                            style: TextStyle(
+                                fontSize: 11.7.sp,
+                                fontFamily: 'Blogger Sans',
+                                fontWeight: FontWeight.w700,
+                                color: themeNotifier.isDark
+                                    ? AppColors.textColorWhite
+                                    : AppColors.tabColorlightMode
+                                // AppColors.textColorBlack
+                                ),
+                          ),
+                          SizedBox(
+                            height: 0.5.h,
+                          ),
+                          GestureDetector(
+                            onTap: () => _copyToClipboard(user.walletAddress!),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  user.walletAddress != null
+                                      ? replaceMiddleWithDots(
+                                          user.walletAddress!)
+                                      : "...",
+                                  style: TextStyle(
+                                      fontSize: 9.5.sp,
+                                      fontFamily: 'Blogger Sans',
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.textColorGrey),
+                                ),
+                                SizedBox(
+                                  width: 3.sp,
+                                ),
+                                Icon(
+                                  Icons.content_copy,
+                                  size: 10.sp,
+                                  color: AppColors.textColorGrey,
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 3.h,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 51.h,
+                    color: themeNotifier.isDark
+                        ? AppColors.drawerOptBackgroundClr
+                        : AppColors.drawerDividerlightColor.withOpacity(0.35),
+
+                    // color: Colors.transparent,
+
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          // SizedBox(height: 0.2.h,),
+                          drawerWidget(
+                            title: 'Payments & Banking'.tr(),
+                            imagePath: "assets/images/draweroption1.png",
+                            imageHeight: 3.2.h,
+                            imageWidth: 2.8.h,
+                            isDark: themeNotifier.isDark ? true : false,
+                            index: 0,
+                            handler: () {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        WalletBankingAndPaymentEmpty()),
+                              );
+                            },
+                          ),
+                          drawerWidget(
+                              title: 'Activity'.tr(),
+                              imagePath: "assets/images/draweroption2.png",
+                              imageHeight: 2.4.h,
+                              imageWidth: 2.4.h,
+                              isDark: themeNotifier.isDark ? true : false,
+                              index: 1,
+                              handler: () {
+                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => WalletActivity()),
+                                );
+                              }),
+                          drawerWidget(
+                              title: 'Connected Sites'.tr(),
+                              imagePath: "assets/images/draweroption3.png",
+                              imageHeight: 2.8.h,
+                              imageWidth: 2.8.h,
+                              isDark: themeNotifier.isDark ? true : false,
+                              index: 2,
+                              handler: () {
+                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ConnectedSites()),
+                                );
+                              }),
+                          Stack(children: [
+                            drawerWidget(
+                                title: 'Settings'.tr(),
+                                imagePath: "assets/images/draweroption4.png",
+                                imageHeight: 2.8.h,
+                                imageWidth: 2.8.h,
+                                isDark: themeNotifier.isDark ? true : false,
+                                index: 3,
+                                handler: () {
+                                  Navigator.pop(context);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Settings()),
+                                  );
+                                }),
+                            Positioned(
+                              right: isEnglish ? 20 : null,
+                              left: isEnglish ? null : 20,
+                              top: 0,
+                              bottom: 0,
+                              child: Container(
+                                // color: Colors.yellow,
+                                child: Center(
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        "assets/images/warning.png",
+                                        color: AppColors.errorColor,
+                                        height: 2.2.h,
+                                        width: 2.2.h,
+                                      ),
+                                      SizedBox(
+                                        width: 2.w,
+                                      ),
+                                      Text(
+                                        'Unprotected'.tr(),
+                                        style: TextStyle(
+                                            color: selectedIndex == 3
+                                                ? AppColors.errorColor
+                                                : !themeNotifier.isDark
+                                                    ? AppColors
+                                                        .tabColorlightMode
+                                                    : AppColors
+                                                        .textColorGreyShade2,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 9.3.sp,
+                                            fontFamily: 'Inter'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )
+                          ]),
+                          drawerWidget(
+                              title: 'FAQ & Support'.tr(),
+                              imagePath: "assets/images/draweroption5.png",
+                              imageHeight: 2.8.h,
+                              imageWidth: 2.8.h,
+                              isDark: themeNotifier.isDark ? true : false,
+                              index: 4,
+                              handler: () {
+                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => FAQAndSupport()),
+                                );
+                              }),
+                          drawerWidget(
+                            title: 'About HesaWallet'.tr(),
+                            imagePath: "assets/images/draweroption6.png",
+                            imageHeight: 2.9.h,
+                            imageWidth: 2.9.h,
+                            isDark: themeNotifier.isDark ? true : false,
+                            index: 5,
+                            handler: () => Navigator.pop(context),
+                          ),
+                          drawerWidget(
+                            title: 'Logout'.tr(),
+                            imagePath: "assets/images/draweroption7.png",
+                            imageHeight: 2.9.h,
+                            imageWidth: 2.9.h,
+                            isDark: themeNotifier.isDark ? true : false,
+                            index: 6,
+                            isLast: true,
+                            handler: () {
+                              Navigator.pop(context);
+                              logOutFunction(themeNotifier.isDark);
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                      child: Container(
+                    // margin: EdgeInsets.only(top: 1.sp),
+                    width: double.infinity,
+                    // color: Colors.teal,
+                    color: AppColors.drawerOptBackgroundClr,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: SizedBox(),
+                        ),
+                        Text(
+                          'Version 1.0.0'.tr(),
+                          style: TextStyle(
+                              color: AppColors.textColorGrey,
+                              fontSize: 8.7.sp,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        // FooterText(
+                        //   textcolor: themeNotifier.isDark
+                        //       ? AppColors.textColorGrey
+                        //       : AppColors.tabColorlightMode,
+                        // ),
+                        SizedBox(
+                          height: 3.h,
+                        )
+                      ],
+                    ),
+                  ))
+                ],
+              ),
+            ),
+          ),
+        );
+      });
+    });
+  }
+
+  Widget drawerWidget({
+    required String title,
+    required String imagePath,
+    required double imageHeight,
+    required double imageWidth,
+    required int index,
+    required Function handler,
+    bool isDark = true,
+    bool isLast = false,
+  }) {
+   return GestureDetector(
+              onTap: () {
+                setState(() {
+                  selectedIndex = index;
+                });
+                print(index);
+                print(selectedIndex);
+
+                Future.delayed(Duration(milliseconds: 250), () {
+                  handler();
+                });
+              },
+
+              child: Container(
+                // margin: EdgeInsets.only(
+                //     top: isDark ? 1.sp : 0.5.sp, bottom: isLast ? 0 : 0),
+                height: 7.5.h,
+                decoration:
+                    BoxDecoration(color: AppColors.drawerOptBackgroundClr
+                        // gradient: LinearGradient(
+                        //   colors: [
+                        //     index == selectedIndex
+                        //         ? Color(0xff92B928)
+                        //         : isDark
+                        //             ? AppColors.drawerOptBackgroundClr
+                        //             : AppColors.textColorWhite,
+                        //     index == selectedIndex
+                        //         ? Color(0xffC9C317)
+                        //         : isDark
+                        //             ? AppColors.drawerOptBackgroundClr
+                        //             : AppColors.textColorWhite
+                        //   ],
+                        //   begin: Alignment.topLeft,
+                        //   end: Alignment.bottomRight,
+                        // ),
+                        ),
+                // color: index == selectedIndex ? Colors.yellow:AppColors.textColorWhite.withOpacity(0.05),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.sp),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        color: Colors.transparent,
+                        height: 3.h,
+                        width: 3.h,
+                        child: Image.asset(
+                          imagePath,
+                          color: index == selectedIndex
+                              ? AppColors.hexaGreen
+                              : isDark
+                                  ? AppColors.textColorWhite
+                                  : AppColors.tabColorlightMode,
+                          // AppColors.textColorBlack,
+                          fit: BoxFit.cover,
+                          // height: imageHeight,
+                          // width: imageWidth,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 5.w,
+                      ),
+                      Text(
+                        title,
+                        style: TextStyle(
+                            color: index == selectedIndex
+                                ? AppColors.hexaGreen
+                                : isDark
+                                    ? AppColors.textColorWhite
+                                    : AppColors.tabColorlightMode,
+                            // AppColors.textColorBlack,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 11.7.sp,
+                            fontFamily: 'Inter'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+  }
+
+  logOutFunction(bool isDark) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final screenWidth = MediaQuery.of(context).size.width;
+        final dialogWidth = screenWidth * 0.85;
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            backgroundColor: Colors.transparent,
+            child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+                child: Container(
+                  height: 33.h,
+                  width: dialogWidth,
+                  decoration: BoxDecoration(
+                    // border: Border.all(
+                    //     width: 0.1.h, color: AppColors.textColorGrey),
+                    color: isDark
+                        ? AppColors.showDialogClr
+                        : AppColors.textColorWhite,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 4.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.sp),
+                        child: Text(
+                          'Are you sure, do you want to logout?'.tr(),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15.sp,
+                              color: isDark
+                                  ? AppColors.textColorWhite
+                                  : AppColors.textColorBlack),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 2.h,
+                      ),
+                      Expanded(child: SizedBox()),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 22),
+                        child: DialogButton(
+                          title: 'Confirm'.tr(),
+                          handler: () async {
+                            // if (isLoading) return;
+
+                            try {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              final result = await Provider.of<AuthProvider>(
+                                      context,
+                                      listen: false)
+                                  .logoutUser(token: wstoken, context: context);
+
+                              setState(() {
+                                isLoading = false;
+                              });
+                              if (result == AuthResult.success) {
+                                deleteToken();
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Wallet(),
+                                  ),
+                                  (route) =>
+                                      false, // This predicate ensures that all previous routes are removed.
+                                );
+                              }
+                            } catch (error) {
+                              print("Error: $error");
+                              // _showToast('An error occurred'); // Show an error message
+                            } finally {
+                              setState(() {
+                                isLoading = false;
+                              });
+                            }
+                          },
+                          isLoading: isLoading,
+                          // isGradient: true,
+                          // color: AppColors.errorColor,
+                          color: AppColors.appSecondButton.withOpacity(0.10),
+                          textColor: AppColors.errorColor,
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 22),
+                        child: AppButton(
+                            title: 'Cancel'.tr(),
+                            handler: () {
+                              Navigator.pop(context);
+                            },
+                            isGradient: false,
+                            textColor: isDark
+                                ? AppColors.textColorWhite
+                                : AppColors.textColorBlack.withOpacity(0.8),
+                            color: AppColors.appSecondButton.withOpacity(0.10)),
+                      ),
+                      Expanded(child: SizedBox()),
+                    ],
+                  ),
+                )),
+          );
+        });
+      },
+    );
+  }
+
+  void _copyToClipboard(String text) {
+    Clipboard.setData(
+        ClipboardData(text: text)); // Copies the provided text to clipboard
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: AppColors.profileHeaderDark,
+        content: Text(
+          'Wallet Address Copied',
+          style: TextStyle(
+              color: AppColors.textColorWhite, fontWeight: FontWeight.w400),
+        ),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+}
