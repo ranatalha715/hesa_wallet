@@ -567,6 +567,9 @@ class _ChangePasswordState extends State<ChangePassword> {
                                               .text.isNotEmpty) {
                                         setState(() {
                                           _isLoading = true;
+                                          if (_isLoading) {
+                                            FocusManager.instance.primaryFocus?.unfocus();
+                                          }
                                         });
                                         // await Future.delayed(Duration(milliseconds: 1500),
                                         //         (){});

@@ -59,7 +59,7 @@ class _OtpInputBoxState extends State<OtpInputBox> {
         textAlign: TextAlign.center,
         textAlignVertical: TextAlignVertical.bottom,
         style: TextStyle(
-          color: AppColors.textColorGrey,
+          color: AppColors.textColorWhite,
           fontSize: 17.5.sp,
           // fontWeight: FontWeight.bold,
           // letterSpacing: 16,

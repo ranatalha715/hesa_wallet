@@ -73,6 +73,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
   var _isLoadingResend = false;
 
   var tokenizedUserPL;
+
   getTokenizedUserPayLoad() async {
     final prefs = await SharedPreferences.getInstance();
     tokenizedUserPL = await prefs.getString('tokenizedUserPayload');
@@ -137,279 +138,294 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
-      return Stack(
-        children: [
-          Scaffold(
-            backgroundColor: themeNotifier.isDark
-                ? AppColors.backgroundColor
-                : AppColors.textColorWhite,
-            body: Column(
-              children: [
-                MainHeader(title: 'Login'.tr()),
-                Expanded(
-                  child: Container(
-                    // color: Colors.red,
-                    height: 85.h,
-                    width: double.infinity,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 20,
-                      ),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 4.h,
-                            ),
-                            Text(
-                              "Login using Mobile Number.".tr(),
-                              style: TextStyle(
-                                  color: AppColors.textColorGrey,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 11.7.sp,
-                                  fontFamily: 'Inter'),
-                            ),
-                            SizedBox(
-                              height: 2.h,
-                            ),
-                            Align(
-                              alignment: isEnglish
-                                  ? Alignment.centerLeft
-                                  : Alignment.centerRight,
-                              child: Text(
-                                'Mobile number'.tr(),
-                                style: TextStyle(
-                                    fontSize: 11.7.sp,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.w600,
-                                    color: themeNotifier.isDark
-                                        ? AppColors.textColorWhite
-                                        : AppColors.textColorBlack),
+      return Builder(builder: (BuildContext context) {
+        return Stack(
+          children: [
+            Scaffold(
+              backgroundColor: themeNotifier.isDark
+                  ? AppColors.backgroundColor
+                  : AppColors.textColorWhite,
+              body: Column(
+                children: [
+                  MainHeader(title: 'Login'.tr()),
+                  Expanded(
+                    child: Container(
+                      // color: Colors.red,
+                      height: 85.h,
+                      width: double.infinity,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20,
+                        ),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 4.h,
                               ),
-                            ),
-                            SizedBox(
-                              height: 1.h,
-                            ),
-                            TextFieldParent(
-                              child: TextFormField(
-                                  controller: _numberController,
-                                  // validator: (v)=>_validateMobileNumber(_numberController.text),
-                                  scrollPadding: EdgeInsets.only(
-                                      bottom: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom +
-                                          150),
-                                  keyboardType: TextInputType.number,
+                              Text(
+                                "Login using Mobile Number.".tr(),
+                                style: TextStyle(
+                                    color: AppColors.textColorGrey,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 11.7.sp,
+                                    fontFamily: 'Inter'),
+                              ),
+                              SizedBox(
+                                height: 2.h,
+                              ),
+                              Align(
+                                alignment: isEnglish
+                                    ? Alignment.centerLeft
+                                    : Alignment.centerRight,
+                                child: Text(
+                                  'Mobile number'.tr(),
                                   style: TextStyle(
-                                      fontSize: 10.2.sp,
+                                      fontSize: 11.7.sp,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w600,
                                       color: themeNotifier.isDark
                                           ? AppColors.textColorWhite
-                                          : AppColors.textColorBlack,
-                                      fontWeight: FontWeight.w400,
-                                      // Off-white color,
-                                      fontFamily: 'Inter'),
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.symmetric(
-                                        vertical: 10.0, horizontal: 16.0),
-                                    hintText: 'Enter your mobile number'.tr(),
-                                    hintStyle: TextStyle(
+                                          : AppColors.textColorBlack),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 1.h,
+                              ),
+                              TextFieldParent(
+                                child: TextFormField(
+                                    controller: _numberController,
+                                    // validator: (v)=>_validateMobileNumber(_numberController.text),
+                                    scrollPadding: EdgeInsets.only(
+                                        bottom: MediaQuery.of(context)
+                                                .viewInsets
+                                                .bottom +
+                                            150),
+                                    keyboardType: TextInputType.number,
+                                    style: TextStyle(
                                         fontSize: 10.2.sp,
-                                        color: AppColors.textColorGrey,
+                                        color: themeNotifier.isDark
+                                            ? AppColors.textColorWhite
+                                            : AppColors.textColorBlack,
                                         fontWeight: FontWeight.w400,
                                         // Off-white color,
                                         fontFamily: 'Inter'),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        borderSide: BorderSide(
-                                          color: Colors.transparent,
-                                          // Off-white color
-                                          // width: 2.0,
-                                        )),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        borderSide: BorderSide(
-                                          color: Colors.transparent,
-                                          // Off-white color
-                                          // width: 2.0,
-                                        )),
-                                    prefixIcon: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 10, top: 14, right: 12),
-                                      child: Text(
-                                        '+966',
-                                        style: TextStyle(
-                                          color: themeNotifier.isDark
-                                              ? AppColors.textColorWhite
-                                              : AppColors.textColorBlack,
+                                    decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 10.0, horizontal: 16.0),
+                                      hintText: 'Enter your mobile number'.tr(),
+                                      hintStyle: TextStyle(
+                                          fontSize: 10.2.sp,
+                                          color: AppColors.textColorGrey,
                                           fontWeight: FontWeight.w400,
-                                          fontSize: 14,
+                                          // Off-white color,
+                                          fontFamily: 'Inter'),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          borderSide: BorderSide(
+                                            color: Colors.transparent,
+                                            // Off-white color
+                                            // width: 2.0,
+                                          )),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          borderSide: BorderSide(
+                                            color: Colors.transparent,
+                                            // Off-white color
+                                            // width: 2.0,
+                                          )),
+                                      prefixIcon: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 10, top: 14, right: 12),
+                                        child: Text(
+                                          '+966',
+                                          style: TextStyle(
+                                            color: themeNotifier.isDark
+                                                ? AppColors.textColorWhite
+                                                : AppColors.textColorBlack,
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  cursorColor: AppColors.textColorGrey),
-                            ),
-                            if (_numberController.text.isEmpty && isValidating)
-                              Padding(
-                                padding: EdgeInsets.only(top: 7.sp),
-                                child: Text(
-                                  // "*Mobile number not recognized",
-                                  "*Mobile number should not be empty",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 10.sp,
-                                      color: AppColors.errorColor),
-                                ),
+                                    cursorColor: AppColors.textColorGrey),
                               ),
-                            Expanded(child: SizedBox()),
-                            // AppButton(
-                            //     title: 'Sign in with password'.tr(),
-                            //     handler: () {
-                            //       Navigator.push(
-                            //         context,
-                            //         SlideRightPageRoute(page: SigninWithEmail()),
-                            //       );
-                            //       // Navigator.push(
-                            //       //   context,
-                            //       //   MaterialPageRoute(
-                            //       //     builder: (context) => SigninWithEmail(),
-                            //       //   ),
-                            //       // );
-                            //     },
-                            //     isGradient: false,
-                            //     textColor: themeNotifier.isDark
-                            //         ? AppColors.textColorWhite
-                            //         : AppColors.textColorBlack,
-                            //     color: Colors.transparent),
-                            // SizedBox(height: 2.h),
-                            AppButton(
-                              title: 'Log in'.tr(),
-                              isactive: isButtonActive ? true : false,
-                              handler: () async {
-                                setState(() {
-                                  isValidating = true;
-                                });
-                                if (_numberController.text.isNotEmpty) {
+                              if (_numberController.text.isEmpty &&
+                                  isValidating)
+                                Padding(
+                                  padding: EdgeInsets.only(top: 7.sp),
+                                  child: Text(
+                                    // "*Mobile number not recognized",
+                                    "*Mobile number should not be empty",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 10.sp,
+                                        color: AppColors.errorColor),
+                                  ),
+                                ),
+                              Expanded(child: SizedBox()),
+                              // AppButton(
+                              //     title: 'Sign in with password'.tr(),
+                              //     handler: () {
+                              //       Navigator.push(
+                              //         context,
+                              //         SlideRightPageRoute(page: SigninWithEmail()),
+                              //       );
+                              //       // Navigator.push(
+                              //       //   context,
+                              //       //   MaterialPageRoute(
+                              //       //     builder: (context) => SigninWithEmail(),
+                              //       //   ),
+                              //       // );
+                              //     },
+                              //     isGradient: false,
+                              //     textColor: themeNotifier.isDark
+                              //         ? AppColors.textColorWhite
+                              //         : AppColors.textColorBlack,
+                              //     color: Colors.transparent),
+                              // SizedBox(height: 2.h),
+                              AppButton(
+                                title: 'Log in'.tr(),
+                                isactive: isButtonActive ? true : false,
+                                handler: () async {
                                   setState(() {
-                                    _isLoading = true;
+                                    isValidating = true;
                                   });
-                                  final result =
-                                      await Provider.of<AuthProvider>(context,
-                                              listen: false)
-                                          .sendLoginOTP(
-                                    mobile: _numberController.text,
-                                    context: context,
-                                  );
-                                  setState(() {
-                                    _isLoading = false;
-                                  });
-                                  if (result == AuthResult.success) {
+                                  if (_numberController.text.isNotEmpty) {
+                                    setState(() {
+                                      _isLoading = true;
+                                      if (_isLoading) {
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
+                                      }
+                                    });
+                                    // final result =
+                                    //     await Provider.of<AuthProvider>(context,
+                                    //             listen: false)
+                                    //         .sendLoginOTP(
+                                    //   mobile: _numberController.text,
+                                    //   context: context,
+                                    // );
+                                    setState(() {
+                                      _isLoading = false;
+                                    });
+                                    // if (result == AuthResult.success) {
                                     otpDialog(
-                                      firstBtnHandler: () async {
-                                        print('first handler calling');
-                                        if (_isLoading) return;
-                                        //
+                                      firstBtnHandler: () {
                                         setState(() {
                                           _isLoading = true;
                                         });
-                                        print('loading first handler calling');
-                                        print(_isLoading.toString());
-
-                                        try {
-                                          print(_numberController.text);
-                                          print(otp6Controller.text);
-
-                                          final result =
-                                              await Provider.of<AuthProvider>(
-                                                      context,
-                                                      listen: false)
-                                                  .verifyUser(
-                                            context: context,
-                                            mobile: _numberController.text,
-                                            code: otp1Controller.text +
-                                                otp2Controller.text +
-                                                otp3Controller.text +
-                                                otp4Controller.text +
-                                                otp5Controller.text +
-                                                otp6Controller.text,
-                                            // token: tokenizedUserPL,
-                                            token: tokenizedUserPL,
-                                            // Provider.of<AuthProvider>(
-                                            //         context,
-                                            //         listen: false)
-                                            //     .tokenizedUserPayload,
-                                          );
-                                          setState(() {
-                                            _isLoading = false;
-                                          });
-                                          if (result == AuthResult.success) {
-                                            //bad mai dekhyngy
-                                            // await Navigator
-                                            //     .push(
-                                            //   context,
-                                            //   MaterialPageRoute(
-                                            //     builder:
-                                            //         (context) =>
-                                            //         TermsAndConditions(),
-                                            //   ),
-                                            // );
-                                            Navigator.of(context)
-                                                .pushNamedAndRemoveUntil(
-                                                    'nfts-page',
-                                                    (Route d) => false,
-                                                    arguments: {});
-                                          }
-                                        } catch (error) {
-                                          print("Error: $error");
-                                          // _showToast('An error occurred'); // Show an error message
-                                        } finally {
-                                          setState(() {
-                                            _isLoading = false;
-                                          });
-                                        }
+                                        print('loading popup' +
+                                            _isLoading.toString());
+                                        Navigator.pop(context);
+                                        Future.delayed(Duration(seconds: 2));
+                                        setState(() {
+                                          _isLoading = false;
+                                        });
+                                        print('loading popup 2' +
+                                            _isLoading.toString());
                                       },
-                                      secondBtnHandler: () async {
-                                        print('second handler calling');
-                                        // if (_isLoading || _isTimerActive) return;
-                                        //
-                                        // setState(() {
-                                        //   _isLoadingResend = true;
-                                        // });
-
-                                        try {
-                                          final result = await Provider.of<
-                                              AuthProvider>(
-                                              context,
-                                              listen:
-                                              false)
-                                              .resendRegisterOTP(
-                                            tokenizedUserPL: tokenizedUserPL,
-                                            context:
-                                            context,
-                                          );
-                                          // setState(() {
-                                          //   _isLoadingResend = false;
-                                          // });
-                                          startTimer();
-                                          if (result ==
-                                              AuthResult
-                                                  .success) {}
-                                        } catch (error) {
-                                          print(
-                                              "Error: $error");
-                                          // _showToast('An error occurred'); // Show an error message
-                                        } finally {
-                                          setState(() {
-                                            _isLoadingResend =
-                                            false;
-                                          });
-                                        }
-
-                                      },
+                                      secondBtnHandler: () {},
+                                      // firstBtnHandler: () async {
+                                      //   print('first handler calling');
+                                      //   if (_isLoading) return;
+                                      //   //
+                                      //   setState(() {
+                                      //     _isLoading = true;
+                                      //   });
+                                      //   print('loading first handler calling');
+                                      //   print(_isLoading.toString());
+                                      //
+                                      //   try {
+                                      //     print(_numberController.text);
+                                      //     print(otp6Controller.text);
+                                      //
+                                      //     final result =
+                                      //         await Provider.of<AuthProvider>(
+                                      //                 context,
+                                      //                 listen: false)
+                                      //             .verifyUser(
+                                      //       context: context,
+                                      //       mobile: _numberController.text,
+                                      //       code: otp1Controller.text +
+                                      //           otp2Controller.text +
+                                      //           otp3Controller.text +
+                                      //           otp4Controller.text +
+                                      //           otp5Controller.text +
+                                      //           otp6Controller.text,
+                                      //       // token: tokenizedUserPL,
+                                      //       token: tokenizedUserPL,
+                                      //       // Provider.of<AuthProvider>(
+                                      //       //         context,
+                                      //       //         listen: false)
+                                      //       //     .tokenizedUserPayload,
+                                      //     );
+                                      //     setState(() {
+                                      //       _isLoading = false;
+                                      //     });
+                                      //     if (result == AuthResult.success) {
+                                      //bad mai dekhyngy
+                                      // await Navigator
+                                      //     .push(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //     builder:
+                                      //         (context) =>
+                                      //         TermsAndConditions(),
+                                      //   ),
+                                      // );
+                                      //       Navigator.of(context)
+                                      //           .pushNamedAndRemoveUntil(
+                                      //               'nfts-page',
+                                      //               (Route d) => false,
+                                      //               arguments: {});
+                                      //     }
+                                      //   } catch (error) {
+                                      //     print("Error: $error");
+                                      //     // _showToast('An error occurred'); // Show an error message
+                                      //   } finally {
+                                      //     setState(() {
+                                      //       _isLoading = false;
+                                      //     });
+                                      //   }
+                                      // },
+                                      // secondBtnHandler: () async {
+                                      //   print('second handler calling');
+                                      //   try {
+                                      //     final result = await Provider.of<
+                                      //         AuthProvider>(
+                                      //         context,
+                                      //         listen:
+                                      //         false)
+                                      //         .resendRegisterOTP(
+                                      //       tokenizedUserPL: tokenizedUserPL,
+                                      //       context:
+                                      //       context,
+                                      //     );
+                                      //     // setState(() {
+                                      //     //   _isLoadingResend = false;
+                                      //     // });
+                                      //     startTimer();
+                                      //     if (result ==
+                                      //         AuthResult
+                                      //             .success) {}
+                                      //   } catch (error) {
+                                      //     print(
+                                      //         "Error: $error");
+                                      //     // _showToast('An error occurred'); // Show an error message
+                                      //   } finally {
+                                      //     setState(() {
+                                      //       _isLoadingResend =
+                                      //       false;
+                                      //     });
+                                      //   }
+                                      //
+                                      // },
                                       firstTitle: 'Confirm',
                                       secondTitle: 'Resend code',
                                       context: context,
@@ -429,17 +445,15 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                       forthFieldFocusNode: forthFieldFocusNode,
                                       fifthFieldFocusNode: fifthFieldFocusNode,
                                       sixthFieldFocusNode: sixthFieldFocusNode,
-                                      firstBtnBgColor: AppColors
-                                          .activeButtonColor,
-                                      firstBtnTextColor: AppColors.textColorBlack,
+                                      firstBtnBgColor:
+                                          AppColors.activeButtonColor,
+                                      firstBtnTextColor:
+                                          AppColors.textColorBlack,
                                       secondBtnBgColor: Colors.transparent,
-                                      secondBtnTextColor:  themeNotifier.isDark
-                                          ? AppColors
-                                          .textColorWhite
-                                          : AppColors
-                                          .textColorBlack
-                                          .withOpacity(
-                                          0.8),
+                                      secondBtnTextColor: themeNotifier.isDark
+                                          ? AppColors.textColorWhite
+                                          : AppColors.textColorBlack
+                                              .withOpacity(0.8),
                                       isLoading: _isLoading,
                                     );
                                     // showDialog(
@@ -775,62 +789,63 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                     //     });
                                     //   },
                                     // );
-                                    ;
+                                    //   ;
+                                    // }
                                   }
-                                }
-                              },
-                              // _isLoading: _isLoading,
-                              isGradient: true,
-                              color: Colors.transparent,
-                              textColor: AppColors.textColorBlack,
-                            ),
-                            SizedBox(height: 2.h),
-                            GestureDetector(
-                              onTap: () => Navigator.pushNamed(
-                                  context, '/SigninWithEmail',
-                                  arguments: {'comingFromWallet': true}),
-                              //     Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) =>  SigninWithEmail(), // Replace YourNewPage with your desired widget/page
-                              //   ),
-                              // ),
-                              child: Container(
-                                // color: Colors.red,
-                                width: double.infinity,
-                                height: 4.h,
-                                child: Align(
-                                  alignment: Alignment.topCenter,
-                                  child: Text(
-                                    "Login with password instead".tr(),
-                                    style: TextStyle(
-                                      color: themeNotifier.isDark
-                                          ? AppColors.textColorWhite
-                                          : AppColors.textColorBlack,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 10.sp,
-                                      fontFamily: 'Inter',
+                                },
+                                // _isLoading: _isLoading,
+                                isGradient: true,
+                                color: Colors.transparent,
+                                textColor: AppColors.textColorBlack,
+                              ),
+                              SizedBox(height: 2.h),
+                              GestureDetector(
+                                onTap: () => Navigator.pushNamed(
+                                    context, '/SigninWithEmail',
+                                    arguments: {'comingFromWallet': true}),
+                                //     Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) =>  SigninWithEmail(), // Replace YourNewPage with your desired widget/page
+                                //   ),
+                                // ),
+                                child: Container(
+                                  // color: Colors.red,
+                                  width: double.infinity,
+                                  height: 4.h,
+                                  child: Align(
+                                    alignment: Alignment.topCenter,
+                                    child: Text(
+                                      "Login with password instead".tr(),
+                                      style: TextStyle(
+                                        color: themeNotifier.isDark
+                                            ? AppColors.textColorWhite
+                                            : AppColors.textColorBlack,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 10.sp,
+                                        fontFamily: 'Inter',
+                                      ),
+                                      // textAlign: TextAlign.center,
                                     ),
-                                    // textAlign: TextAlign.center,
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 2.h,
-                            )
-                          ],
+                              SizedBox(
+                                height: 2.h,
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          if (_isLoading) LoaderBluredScreen(),
-        ],
-      );
+            if (_isLoading) LoaderBluredScreen(),
+          ],
+        );
+      });
     });
   }
 

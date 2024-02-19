@@ -775,6 +775,9 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                       ) {
                                         setState(() {
                                           _isLoading = true;
+                                          if (_isLoading) {
+                                            FocusManager.instance.primaryFocus?.unfocus();
+                                          }
                                         });
                                         await Future.delayed(Duration(milliseconds: 1500),
                                                 (){});

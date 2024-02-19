@@ -695,6 +695,9 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                           _passwordController.text.isNotEmpty) {
                                         setState(() {
                                           _isLoading = true;
+                                          if (_isLoading) {
+                                            FocusManager.instance.primaryFocus?.unfocus();
+                                          }
                                         });
                                         final result =
                                         await Provider.of<AuthProvider>(context,
@@ -903,6 +906,9 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                                     setState(() {
                                                                       _isLoading =
                                                                       true;
+                                                                      if (_isLoading) {
+                                                                        FocusManager.instance.primaryFocus?.unfocus();
+                                                                      }
                                                                     });
                                                                     await Future.delayed(Duration(milliseconds: 1500),
                                                                             (){});

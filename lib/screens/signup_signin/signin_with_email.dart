@@ -354,6 +354,9 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                       _passwordController.text.isNotEmpty) {
                                     setState(() {
                                       _isLoading = true;
+                                      if (_isLoading) {
+                                        FocusManager.instance.primaryFocus?.unfocus();
+                                      }
                                     });
                                     final result =
                                         await Provider.of<AuthProvider>(

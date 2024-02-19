@@ -829,6 +829,9 @@ class _AccountInformationState extends State<AccountInformation> {
                                       ) {
                                         setState(() {
                                           _isLoading = true;
+                                          if (_isLoading) {
+                                            FocusManager.instance.primaryFocus?.unfocus();
+                                          }
                                         });
                                         var result = Provider.of<UserProvider>(
                                             context,
