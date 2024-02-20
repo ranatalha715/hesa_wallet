@@ -8,6 +8,7 @@ import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../constants/app_deep_linking.dart';
 import '../../providers/theme_provider.dart';
 import '../../widgets/button.dart';
 
@@ -139,7 +140,27 @@ class _WalletState extends State<Wallet> {
                                 ? AppColors.textColorWhite
                                 : AppColors.textColorBlack.withOpacity(0.8),
                           ),
-                          SizedBox(height: isEnglish ? 5.h : 2.h),
+                          SizedBox(height: isEnglish ? 1.h : 2.h),
+                          // AppButton(
+                          //     title: 'Navigate to Neo'.tr(),
+                          //     textColor: AppColors.textColorWhite,
+                          //     handler: () async {
+                          //       setState(() {
+                          //         _isLoading = true;
+                          //       });
+                          //       await Future.delayed(Duration(milliseconds: 1500),
+                          //               (){});
+                          //       setState(() {
+                          //         _isLoading = false;
+                          //       });
+                          //       await AppDeepLinking().openNftApp(
+                          //         {
+                          //           "operation": "connectWallet testing",
+                          //         },
+                          //       );
+                          //     },
+                          //     isGradient: false,
+                          //     color: Colors.transparent),
                           // Expanded(
                           //   child: SizedBox(
                           //     // height: 4.h,

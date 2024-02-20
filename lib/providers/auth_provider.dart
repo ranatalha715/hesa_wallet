@@ -529,7 +529,7 @@ class AuthProvider with ChangeNotifier {
 
         print('true ya false');
         print(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet);
-        if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
+        // if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
           await Provider.of<UserProvider>(context,listen: false).getUserDetails(context: context,
               token: accessToken
           );
@@ -543,13 +543,13 @@ class AuthProvider with ChangeNotifier {
             },
           );
           print('go to neo');
-        }
+        // }
         return AuthResult.success;
       } else {
         // Show an error message or handle the response as needed
         print("Login failed: ${response.body}");
         _showToast('Login failed');
-        if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
+        // if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
         await AppDeepLinking().openNftApp(
           {
             "operation": "connectWallet",
@@ -558,14 +558,15 @@ class AuthProvider with ChangeNotifier {
             "coming back from hesa wallet app with wallet address",
             "loginResponse":response.body.toString()
           },
-        ); }
+        );
+      // }
         return AuthResult.failure;
       }
     } on TimeoutException catch (e) {
       // Handle timeout exception
       print("TimeoutException during login: $e");
       _showToast('Timeout occurred during login');
-      if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet) {
+      // if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet) {
         await AppDeepLinking().openNftApp(
           {
             "operation": "connectWallet",
@@ -577,13 +578,13 @@ class AuthProvider with ChangeNotifier {
             "loginResponse": e.toString()
           },
         );
-      }
+      // }
       return AuthResult.failure;
     } catch (e) {
       // Catching any other exception that might occur during the login process
       print("Exception during login: $e");
       _showToast('An error occurred during login');
-      if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet) {
+      // if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet) {
         await AppDeepLinking().openNftApp(
           {
             "operation": "connectWallet",
@@ -595,10 +596,11 @@ class AuthProvider with ChangeNotifier {
             "loginResponse": e.toString()
           },
         );
-      }
+      // }
       return AuthResult.failure;
     }
   }
+
 
 
 

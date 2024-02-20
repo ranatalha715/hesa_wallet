@@ -163,6 +163,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     AppDeepLinking().initDeeplink();
     fToast = FToast();
     fToast.init(context);
+    if(accessToken != "")
     getAccessToken();//31 jan
     // checkAndDeleteExpiredToken();
     WidgetsBinding.instance.addObserver(this);
@@ -174,6 +175,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     initUniLinks();
     print('recieved data' + _receivedData);
     Timer.periodic(Duration(seconds: 3), (timer) {
+      if(accessToken != "")
       getAccessToken();
     });
   }
