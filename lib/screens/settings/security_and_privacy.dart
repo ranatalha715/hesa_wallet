@@ -10,9 +10,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:local_auth/error_codes.dart' as local_auth_error;
 import '../../providers/theme_provider.dart';
+import '../../providers/user_provider.dart';
 import '../../widgets/animated_loader/animated_loader.dart';
 import '../../widgets/app_header.dart';
 import '../../widgets/main_header.dart';
+import '../onboarding_notifications/onboarding_add_email.dart';
 
 class SecurityAndPrivacy extends StatefulWidget {
   const SecurityAndPrivacy({Key? key}) : super(key: key);
@@ -27,22 +29,34 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
   final _localAuthentication = LocalAuthentication();
   bool _isUserAuthorized = false;
   var _isLoading = false;
-  var _isinit= true;
+  var _isinit = true;
+  var accessToken;
+
+  getAccessToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    accessToken = prefs.getString('accessToken')!;
+    print(accessToken);
+  }
+
+  init() async {
+    await getAccessToken();
+    Provider.of<UserProvider>(context, listen: false)
+        .getUserDetails(token: accessToken, context: context);
+  }
+
   @override
   Future<void> didChangeDependencies() async {
     // TODO: implement didChangeDependencies
-    if(_isinit){
+    if (_isinit) {
       setState(() {
-        _isLoading=true;
+        _isLoading = true;
       });
-      await Future.delayed(Duration(milliseconds: 900), () {
-        print('This code will be executed after 2 seconds');
-      });
+      init();
       setState(() {
-        _isLoading=false;
+        _isLoading = false;
       });
     }
-    _isinit=false;
+    _isinit = false;
     super.didChangeDependencies();
   }
 
@@ -91,6 +105,10 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
 
   @override
   Widget build(BuildContext context) {
+    final isEmailVerified =
+        Provider.of<UserProvider>(context, listen: false).isEmailVerified;
+    final verifiedEmail =
+        Provider.of<UserProvider>(context, listen: false).verifiedEmail;
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return Stack(
         children: [
@@ -113,95 +131,121 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              // height: 10.7.h,
-                              decoration: BoxDecoration(
-                                // border: Border.all(
-                                //   color: AppColors.textColorGrey,
-                                //   width: 1.0,
-                                // ),
-                                color: AppColors.textColorGrey.withOpacity(0.10),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 13.sp, vertical: 10.sp),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(8.sp),
-                                          color: AppColors.errorColor
-                                              .withOpacity(0.07)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(12),
-                                        child: Image.asset(
-                                          "assets/images/privacyrisk.png",
-                                          // "assets/images/AElanguage.png",
-                                          height: 3.h,
-                                          width: 3.h,
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          OnboardingAddEmail()),
+                                );
+                              },
+                              child: Container(
+                                // height: 10.7.h,
+                                decoration: BoxDecoration(
+                                  // border: Border.all(
+                                  //   color: AppColors.textColorGrey,
+                                  //   width: 1.0,
+                                  // ),
+                                  color:
+                                      AppColors.textColorGrey.withOpacity(0.10),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 13.sp, vertical: 10.sp),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8.sp),
+                                            color: isEmailVerified != 'true'
+                                                ? AppColors.errorColor
+                                                    .withOpacity(0.07)
+                                                : AppColors.textColorGreen
+                                                    .withOpacity(0.07)
                                         ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 2.5.h,
-                                    ),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          _isUserAuthorized
-                                              ? "Your account is secured".tr()
-                                              : 'Your account is at risk'.tr(),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 11.7.sp,
-                                              color: themeNotifier.isDark
-                                                  ? AppColors.textColorWhite
-                                                  : AppColors.textColorBlack),
-                                        ),
-                                        SizedBox(
-                                          height: 1.h,
-                                        ),
-                                        Text(
-                                          'floyd.miles@email.com'.tr(),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 10.sp,
-                                              color:
-                                                  AppColors.emailSecurityVerified),
-                                        ),
-                                        SizedBox(
-                                          height: 0.8.h,
-                                        ),
-                                        Container(
-                                          // color: AppColors.emailNotVerifiedContainer,
-                                          // height: 3.h,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.sp),
-                                              color: AppColors.errorColor
-                                                  .withOpacity(0.07)),
-                                          // width: double.infinity,
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 9.sp, vertical: 3.sp),
-                                            child: Text(
-                                              'Email not verified'.tr(),
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 9.sp,
-                                                color: AppColors.errorColor,
-                                              ),
-                                            ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(12),
+                                          child: Image.asset(
+                                            isEmailVerified == 'true'
+                                                ? "assets/images/secure.png"
+                                                : "assets/images/privacyrisk.png",
+                                            // "assets/images/AElanguage.png",
+                                            height: 3.h,
+                                            width: 3.h,
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  ],
+                                      ),
+                                      SizedBox(
+                                        width: 2.5.h,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            isEmailVerified == "true"
+                                                ? "Your account is secured".tr()
+                                                : 'Your account is at risk'
+                                                    .tr(),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 11.7.sp,
+                                                color: themeNotifier.isDark
+                                                    ? AppColors.textColorWhite
+                                                    : AppColors.textColorBlack),
+                                          ),
+                                          SizedBox(
+                                            height: 1.h,
+                                          ),
+                                          if (isEmailVerified == "true")
+                                            Text(
+                                              verifiedEmail,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 10.sp,
+                                                  color: AppColors
+                                                      .emailSecurityVerified),
+                                            ),
+                                          SizedBox(
+                                            height: 0.8.h,
+                                          ),
+                                          if (isEmailVerified != "true")
+                                            Container(
+                                              // color: AppColors.emailNotVerifiedContainer,
+                                              // height: 3.h,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.sp),
+                                                  color: AppColors.errorColor
+                                                      .withOpacity(0.07)),
+                                              // width: double.infinity,
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 9.sp,
+                                                    vertical: 3.sp),
+                                                child: Text(
+                                                  'Email not verified'.tr(),
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 9.sp,
+                                                    color: AppColors.errorColor,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -243,8 +287,8 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                           // Top-left corner radius
                                           topRight: Radius.circular(8),
                                           // Top-right corner radius
-                                          bottomLeft:
-                                              Radius.circular(_isSelected ? 0 : 8),
+                                          bottomLeft: Radius.circular(
+                                              _isSelected ? 0 : 8),
                                           // Bottom-left corner radius (optional)
                                           bottomRight: Radius.circular(_isSelected
                                               ? 0
@@ -259,7 +303,8 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                               MainAxisAlignment.center,
                                           children: [
                                             Padding(
-                                              padding: EdgeInsets.only(left: 20.sp),
+                                              padding:
+                                                  EdgeInsets.only(left: 20.sp),
                                               child: Image.asset(
                                                 _isUserAuthorized
                                                     ? "assets/images/biometric_true.png"
@@ -272,34 +317,41 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                               width: 1.h,
                                             ),
                                             Padding(
-                                              padding: EdgeInsets.only(left: 20.sp),
+                                              padding:
+                                                  EdgeInsets.only(left: 20.sp),
                                               child: Text(
                                                 'Biometric lock'.tr(),
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 11.7.sp,
                                                     color: themeNotifier.isDark
-                                                        ? AppColors.textColorWhite
-                                                        : AppColors.textColorBlack),
+                                                        ? AppColors
+                                                            .textColorWhite
+                                                        : AppColors
+                                                            .textColorBlack),
                                               ),
                                             ),
                                             Spacer(),
                                             Container(
-                                                margin:
-                                                    EdgeInsets.only(right: 8.sp),
+                                                margin: EdgeInsets.only(
+                                                    right: 8.sp),
                                                 decoration: BoxDecoration(
                                                     borderRadius:
-                                                        BorderRadius.circular(2.sp),
-                                                    color: AppColors.textColorGrey
+                                                        BorderRadius.circular(
+                                                            2.sp),
+                                                    color: AppColors
+                                                        .textColorGrey
                                                         .withOpacity(0.10)),
                                                 child: Icon(
                                                   _isSelected
                                                       ? Icons.keyboard_arrow_up
-                                                      : Icons.keyboard_arrow_down,
+                                                      : Icons
+                                                          .keyboard_arrow_down,
                                                   size: 21.sp,
                                                   color: themeNotifier.isDark
                                                       ? AppColors.textColorWhite
-                                                      : AppColors.textColorBlack,
+                                                      : AppColors
+                                                          .textColorBlack,
                                                 ))
                                           ],
                                         ),
@@ -314,10 +366,12 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                       children: [
                                         biometricLock(
                                             isFirst: true,
-                                            imageUrl: "assets/images/face_Id2.png",
+                                            imageUrl:
+                                                "assets/images/face_Id2.png",
                                             title: 'Face ID'.tr(),
                                             // subTitle: 'Have been set up'.tr(),
-                                            subTitle: 'Have not been set up'.tr(),
+                                            subTitle:
+                                                'Have not been set up'.tr(),
 
                                             // isSet: true,
                                             setUpHandler: () {},
@@ -333,7 +387,9 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                                 ? "Have been set up".tr()
                                                 : "Have not been set up".tr(),
                                             setUpHandler: authenticateUser,
-                                            isSet: _isUserAuthorized ? true : false,
+                                            isSet: _isUserAuthorized
+                                                ? true
+                                                : false,
                                             isDark: themeNotifier.isDark
                                                 ? true
                                                 : false),
@@ -354,7 +410,8 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                               child: Container(
                                 height: 6.5.h,
                                 decoration: BoxDecoration(
-                                  color: AppColors.textColorGrey.withOpacity(0.10),
+                                  color:
+                                      AppColors.textColorGrey.withOpacity(0.10),
                                   // border: Border.all(
                                   //   color: AppColors.textColorGrey,
                                   //   width: 1.0,
@@ -362,7 +419,8 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                   borderRadius: BorderRadius.circular(8.0),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.only(right: 5, top: 2),
+                                  padding:
+                                      const EdgeInsets.only(right: 5, top: 2),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
@@ -506,8 +564,7 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
               ],
             ),
           ),
-          if(_isLoading)
-            LoaderBluredScreen()
+          if (_isLoading) LoaderBluredScreen()
         ],
       );
     });

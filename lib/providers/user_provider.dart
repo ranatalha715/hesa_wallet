@@ -26,6 +26,8 @@ class UserProvider with ChangeNotifier {
   String? email;
   String? userAvatar;
   String? idNumber;
+  var isEmailVerified;
+  var verifiedEmail;
   bool navigateToNeoForConnectWallet=false;
 
   List<PaymentCard> _paymentCards = [];
@@ -93,6 +95,8 @@ class UserProvider with ChangeNotifier {
       idNumber = jsonResponse['idNumber'];
       // userName = jsonResponse['userName'];
       userAvatar = jsonResponse['userAvatar'];
+      isEmailVerified = jsonResponse['isEmailVerified'].toString();
+      verifiedEmail = jsonResponse['email'].toString();
 
       print("User details getting successfully!");
       print(jsonResponse);
@@ -291,6 +295,83 @@ class UserProvider with ChangeNotifier {
       return AuthResult.failure;
     }
   }
+
+  Future<AuthResult> verifyEmail({
+    required String email,
+    required BuildContext context,
+    required String token,
+  }) async {
+    try {
+      final url = Uri.parse(BASE_URL + '/user/verify-email');
+      final body = {
+        "email": email,
+
+      };
+      final response = await http.post(url, body: body,
+        headers: {
+          // "Content-type": "application/json",
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+
+      );
+      fToast = FToast();
+      fToast.init(context);
+      if (response.statusCode == 201) {
+        // Successful login, handle navigation or other actions
+        print("Email verification sent successfully!");
+        _showToast('Email verified successfully!');
+        return AuthResult.success;
+      } else {
+        // Show an error message or handle the response as needed
+        print("Email verified failed: ${response.body}");
+        _showToast('Email verified failed');
+        return AuthResult.failure;
+      }
+    } catch (e) {
+      print('Error verifying email: $e');
+      // Handle error as necessary
+      _showToast('Error verifying email');
+      return AuthResult.failure;
+    }
+  }
+
+  Future<AuthResult> forgotPassword({
+    required String email,
+    required BuildContext context,
+    // required String token,
+  }) async {
+    try {
+      final url = Uri.parse(BASE_URL + '/user/forgot-password');
+      final body = {"email": email};
+
+      final response = await http.post(
+        url,
+        body: body,
+      );
+      fToast = FToast();
+      fToast.init(context);
+      print('forgot password response' + response.body);
+      if (response.statusCode == 201) {
+        // Successful request
+        print("Email sent successfully!");
+        _showToast('Email sent successfully!');
+        return AuthResult.success;
+      } else {
+        // Request failed
+        print("Email sending failed: ${response.body}");
+        _showToast('Email sending failed');
+        return AuthResult.failure;
+      }
+    } catch (e) {
+      // Exception occurred during request
+      print("Exception occurred: $e");
+      _showToast('An error occurred');
+      return AuthResult.failure;
+    }
+  }
+
+
 
   _showToast(String message, {int duration = 1000}) {
     Widget toast = Container(

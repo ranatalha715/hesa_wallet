@@ -4,9 +4,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hesa_wallet/constants/configs.dart';
 import 'package:hesa_wallet/providers/auth_provider.dart';
+import 'package:hesa_wallet/providers/user_provider.dart';
 import 'package:hesa_wallet/screens/account_recovery/reset_password.dart';
 import 'package:hesa_wallet/widgets/text_field_parent.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../constants/colors.dart';
@@ -15,6 +17,7 @@ import '../../widgets/animated_loader/animated_loader.dart';
 import '../../widgets/app_header.dart';
 import '../../widgets/button.dart';
 import '../../widgets/main_header.dart';
+import '../signup_signin/signin_with_email.dart';
 
 class ResetEmail extends StatefulWidget {
   const ResetEmail({Key? key}) : super(key: key);
@@ -30,11 +33,22 @@ class _ResetEmailState extends State<ResetEmail> {
   bool isLoading = false;
   bool isButtonActive = false;
   var _isLoading = false;
+  var accessToken;
+
+  getAccessToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    accessToken = prefs.getString('accessToken')!;
+    print(accessToken);
+  }
+
+  init() {
+    getAccessToken();
+  }
 
   @override
   void initState() {
     super.initState();
-
+    init();
     // Listen for changes in the text fields and update the button state
     _emailController.addListener(_updateButtonState);
   }
@@ -62,7 +76,7 @@ class _ResetEmailState extends State<ResetEmail> {
             backgroundColor: themeNotifier.isDark
                 ? AppColors.backgroundColor
                 : AppColors.textColorWhite,
-            body:  Column(
+            body: Column(
               children: [
                 MainHeader(title: 'Reset Password'.tr()),
                 Expanded(
@@ -145,7 +159,8 @@ class _ResetEmailState extends State<ResetEmail> {
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.symmetric(
                                             vertical: 10.0, horizontal: 16.0),
-                                        hintText: 'Enter your recovery email'.tr(),
+                                        hintText:
+                                            'Enter your recovery email'.tr(),
                                         hintStyle: TextStyle(
                                             fontSize: 10.2.sp,
                                             color: AppColors.textColorGrey,
@@ -154,7 +169,7 @@ class _ResetEmailState extends State<ResetEmail> {
                                             fontFamily: 'Inter'),
                                         enabledBorder: OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(8.0),
+                                                BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
                                               color: Colors.transparent,
                                               // Off-white color
@@ -162,7 +177,7 @@ class _ResetEmailState extends State<ResetEmail> {
                                             )),
                                         focusedBorder: OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(8.0),
+                                                BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
                                               color: Colors.transparent,
                                               // Off-white color
@@ -171,7 +186,8 @@ class _ResetEmailState extends State<ResetEmail> {
                                       ),
                                       cursorColor: AppColors.textColorGrey),
                                 ),
-                                if (_emailController.text.isEmpty && isValidating)
+                                if (_emailController.text.isEmpty &&
+                                    isValidating)
                                   Padding(
                                     padding: EdgeInsets.only(top: 7.sp),
                                     child: Text(
@@ -207,39 +223,48 @@ class _ResetEmailState extends State<ResetEmail> {
                               if (_emailController.text.isNotEmpty) {
                                 setState(() {
                                   isLoading = true;
+                                  if (isLoading) {
+                                    FocusManager.instance.primaryFocus?.unfocus();
+                                  }
                                 });
-                                final result = await Provider.of<AuthProvider>(context , listen: false)
-                                    .forgetPassword(
-                                    email: _emailController.text, context: context);
+                                final result = await Provider.of<UserProvider>(
+                                  context,
+                                  listen: false,
+                                ).forgotPassword(
+                                  email: _emailController.text,
+                                  context: context,
+                                );
                                 setState(() {
                                   isLoading = false;
                                 });
-                                if(result == AuthResult.success){
-
+                                if (result == AuthResult.success) {
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
-                                      final screenWidth = MediaQuery.of(context).size.width;
+                                      final screenWidth =
+                                          MediaQuery.of(context).size.width;
                                       final dialogWidth = screenWidth * 0.85;
                                       void closeDialogAndNavigate() {
-                                        Navigator.of(context).pop(); // Close the dialog
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ResetPassword()), // Replace 'NewPage' with the actual page you want to navigate to
-                                        );
+                                        Navigator.of(context)
+                                            .pop(); // Close the dialog
+                                        Navigator.of(context).pushNamed(
+                                            SigninWithEmail.routeName,
+                                            arguments: {
+                                              'comingFromWallet': false,
+                                            });
                                       }
 
-                                      Future.delayed(
-                                          Duration(seconds: 3), closeDialogAndNavigate);
+                                      Future.delayed(Duration(seconds: 3),
+                                          closeDialogAndNavigate);
                                       return Dialog(
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8.0),
+                                          borderRadius:
+                                          BorderRadius.circular(8.0),
                                         ),
                                         backgroundColor: Colors.transparent,
                                         child: BackdropFilter(
-                                            filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+                                            filter: ImageFilter.blur(
+                                                sigmaX: 7, sigmaY: 7),
                                             child: Container(
                                               height: 30.h,
                                               width: dialogWidth,
@@ -250,16 +275,19 @@ class _ResetEmailState extends State<ResetEmail> {
                                                 color: themeNotifier.isDark
                                                     ? AppColors.showDialogClr
                                                     : AppColors.textColorWhite,
-                                                borderRadius: BorderRadius.circular(15),
+                                                borderRadius:
+                                                BorderRadius.circular(15),
                                               ),
                                               child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.start,
                                                 children: [
                                                   SizedBox(
                                                     height: 4.h,
                                                   ),
                                                   Align(
-                                                    alignment: Alignment.bottomCenter,
+                                                    alignment:
+                                                    Alignment.bottomCenter,
                                                     child: Image.asset(
                                                       "assets/images/email.png",
                                                       height: 5.9.h,
@@ -268,29 +296,38 @@ class _ResetEmailState extends State<ResetEmail> {
                                                   ),
                                                   SizedBox(height: 2.h),
                                                   Text(
-                                                    'Reset Instruction Sent'.tr(),
+                                                    'Reset Instruction Sent'
+                                                        .tr(),
                                                     style: TextStyle(
-                                                        fontWeight: FontWeight.w600,
+                                                        fontWeight:
+                                                        FontWeight.w600,
                                                         fontSize: 17.sp,
-                                                        color: themeNotifier.isDark
-                                                            ? AppColors.textColorWhite
-                                                            : AppColors.textColorBlack),
+                                                        color: themeNotifier
+                                                            .isDark
+                                                            ? AppColors
+                                                            .textColorWhite
+                                                            : AppColors
+                                                            .textColorBlack),
                                                   ),
                                                   SizedBox(
                                                     height: 2.h,
                                                   ),
                                                   Padding(
-                                                    padding: const EdgeInsets.symmetric(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
                                                         horizontal: 20),
                                                     child: Text(
                                                       'Please check your email to continue resetting your pasword.'
                                                           .tr(),
-                                                      textAlign: TextAlign.center,
+                                                      textAlign:
+                                                      TextAlign.center,
                                                       style: TextStyle(
                                                           height: 1.4,
-                                                          fontWeight: FontWeight.w400,
+                                                          fontWeight:
+                                                          FontWeight.w400,
                                                           fontSize: 10.2.sp,
-                                                          color: AppColors.textColorGrey),
+                                                          color: AppColors
+                                                              .textColorGrey),
                                                     ),
                                                   ),
                                                   // SizedBox(
@@ -305,11 +342,11 @@ class _ResetEmailState extends State<ResetEmail> {
                                 }
                               }
                             },
-                            isLoading : isLoading,
                             isGradient: true,
                             color: Colors.transparent,
                             textColor: AppColors.textColorBlack,
                           ),
+
                         ),
                       ],
                     ),
@@ -318,7 +355,7 @@ class _ResetEmailState extends State<ResetEmail> {
               ],
             ),
           ),
-          if (_isLoading) LoaderBluredScreen()
+          if (isLoading) LoaderBluredScreen()
         ],
       );
     });

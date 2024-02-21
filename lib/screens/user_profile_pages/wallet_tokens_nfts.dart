@@ -51,7 +51,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   int selectedCategoryIndex = 0;
   bool _isloading = false;
 
-  // var _isloading = false;
+
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();

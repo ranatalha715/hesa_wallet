@@ -102,30 +102,6 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<AuthResult> verifyEmail({
-    required String email,
-    required BuildContext context,
-  }) async {
-    final url = Uri.parse(BASE_URL + '/user/verify-email');
-    final body = {
-      "email": email,
-    };
-
-    final response = await http.post(url, body: body);
-    fToast = FToast();
-    fToast.init(context);
-    if (response.statusCode == 201) {
-      // Successful login, handle navigation or other actions
-      print("Email verified successfully!");
-      _showToast('Email verified successfully!');
-      return AuthResult.success;
-    } else {
-      // Show an error message or handle the response as needed
-      print("Email verified failed: ${response.body}");
-      _showToast('Email verified failed');
-      return AuthResult.failure;
-    }
-  }
 
   Future<AuthResult> deleteAccount({
     required String token,
@@ -460,7 +436,7 @@ class AuthProvider with ChangeNotifier {
   //     // await prefs.setString('wsToken', wsToken);
   //     await prefs.setString('accessToken', accessToken);
   //     await prefs.setString('password', password);
-  //     // print(wsToken);
+  //     //
   //     print('navigate to neo to connect wallet');
   //
   //     print('true ya false');
@@ -529,7 +505,7 @@ class AuthProvider with ChangeNotifier {
 
         print('true ya false');
         print(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet);
-        // if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
+        if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
           await Provider.of<UserProvider>(context,listen: false).getUserDetails(context: context,
               token: accessToken
           );
@@ -543,22 +519,22 @@ class AuthProvider with ChangeNotifier {
             },
           );
           print('go to neo');
-        // }
+        }
         return AuthResult.success;
       } else {
         // Show an error message or handle the response as needed
         print("Login failed: ${response.body}");
         _showToast('Login failed');
-        // if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
-        await AppDeepLinking().openNftApp(
-          {
-            "operation": "connectWallet",
-            "Wallet Address": Provider.of<UserProvider>(context,listen: false).walletAddress,
-            "comments":
-            "coming back from hesa wallet app with wallet address",
-            "loginResponse":response.body.toString()
-          },
-        );
+      //   if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
+      //   await AppDeepLinking().openNftApp(
+      //     {
+      //       "operation": "connectWallet",
+      //       "Wallet Address": Provider.of<UserProvider>(context,listen: false).walletAddress,
+      //       "comments":
+      //       "coming back from hesa wallet app with wallet address",
+      //       "loginResponse":response.body.toString()
+      //     },
+      //   );
       // }
         return AuthResult.failure;
       }
@@ -566,7 +542,7 @@ class AuthProvider with ChangeNotifier {
       // Handle timeout exception
       print("TimeoutException during login: $e");
       _showToast('Timeout occurred during login');
-      // if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet) {
+      if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet) {
         await AppDeepLinking().openNftApp(
           {
             "operation": "connectWallet",
@@ -578,7 +554,7 @@ class AuthProvider with ChangeNotifier {
             "loginResponse": e.toString()
           },
         );
-      // }
+      }
       return AuthResult.failure;
     } catch (e) {
       // Catching any other exception that might occur during the login process
@@ -597,34 +573,6 @@ class AuthProvider with ChangeNotifier {
           },
         );
       // }
-      return AuthResult.failure;
-    }
-  }
-
-
-
-
-  Future<AuthResult> forgetPassword({
-    required String email,
-    required BuildContext context,
-  }) async {
-    final url = Uri.parse(BASE_URL + '/user/forgot-password');
-    final body = {
-      "email": email,
-    };
-
-    final response = await http.post(url, body: body);
-    fToast = FToast();
-    fToast.init(context);
-    if (response.statusCode == 201) {
-      // Successful login, handle navigation or other actions
-      print("Email send successfully!");
-      _showToast('Please check your mailbox for password reset link');
-      return AuthResult.success;
-    } else {
-      // Show an error message or handle the response as needed
-      print("Email sending failed: ${response.body}");
-      _showToast('Email sending failed');
       return AuthResult.failure;
     }
   }

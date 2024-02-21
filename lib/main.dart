@@ -163,7 +163,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     AppDeepLinking().initDeeplink();
     fToast = FToast();
     fToast.init(context);
-    if(accessToken != "")
+
     getAccessToken();//31 jan
     // checkAndDeleteExpiredToken();
     WidgetsBinding.instance.addObserver(this);
@@ -175,7 +175,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     initUniLinks();
     print('recieved data' + _receivedData);
     Timer.periodic(Duration(seconds: 3), (timer) {
-      if(accessToken != "")
+
       getAccessToken();
     });
   }
@@ -187,31 +187,36 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
   String _receivedData = 'No UniLink data received';
   Future<void> initUniLinks() async {
-    // Initialize UniLinks
-    // await initPlatformState();
-    // Listen for incoming links
-    // AppDeepLinking().initDeeplink(); muzamil recommended
-    getLinksStream().listen((String? link) {
-      if (link != null) {
-        setState(() {
-          _receivedData = link;
-        });
-
-        Uri uri = Uri.parse(link);
-        String? operation = uri.queryParameters['operation'];
-        print('operation ' + operation.toString());
-        if (operation != null && operation == 'connectWallet') {
-          // Navigate to page for MintNFT
+    try {
+      // Initialize UniLinks
+      // await initPlatformState();
+      // Listen for incoming links
+      // AppDeepLinking().initDeeplink(); muzamil recommended
+      getLinksStream().listen((String? link) {
+        if (link != null) {
           setState(() {
-            fromNeoApp=true; //faltu
-            Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet=true;
-            print(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet);
+            _receivedData = link;
           });
-        }
 
-      }
-    });
+          Uri uri = Uri.parse(link);
+          String? operation = uri.queryParameters['operation'];
+          print('operation ' + operation.toString());
+          if (operation != null && operation == 'connectWallet') {
+            // Navigate to page for MintNFT
+            setState(() {
+              fromNeoApp=true; //faltu
+              Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet=true;
+              print("check kro" + Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet.toString());
+            });
+          }
+        }
+      });
+    } catch (e) {
+      print('Error initializing UniLinks: $e');
+      // Handle error as necessary
+    }
   }
+
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {

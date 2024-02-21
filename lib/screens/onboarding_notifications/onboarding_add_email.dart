@@ -1,9 +1,12 @@
 import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:hesa_wallet/constants/configs.dart';
+import 'package:hesa_wallet/providers/user_provider.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/wallet_tokens_nfts.dart';
 import 'package:hesa_wallet/widgets/text_field_parent.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../constants/colors.dart';
@@ -27,14 +30,29 @@ class _OnboardingAddEmailState extends State<OnboardingAddEmail> {
   bool isValidating = false;
   bool isButtonActive = false;
   var _isLoading = false;
+  var accessToken = "";
+
+  getAccessToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    accessToken = prefs.getString('accessToken')!;
+    // print(accessToken);
+    print(accessToken);
+  }
 
   @override
-  void initState() {
+ initState() {
     super.initState();
-
+    init();
     // Listen for changes in the text fields and update the button state
-    _emailController.addListener(_updateButtonState);
+     _emailController.addListener(_updateButtonState);
   }
+
+  init() async {
+    await getAccessToken();
+    await Provider.of<UserProvider>(context, listen: false)
+        .getUserDetails(token: accessToken, context: context);
+  }
+
 
   void _updateButtonState() {
     setState(() {
@@ -193,115 +211,150 @@ class _OnboardingAddEmailState extends State<OnboardingAddEmail> {
                           left: 20,
                           right: 20,
                           bottom: 30,
-                          child: AppButton(
+                          child:
+                          AppButton(
                             title: 'Confirm'.tr(),
                             isactive: isButtonActive ? true : false,
-                            handler: () {
+                            handler: () async {
                               setState(() {
                                 isValidating = true;
                               });
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  final screenWidth =
-                                      MediaQuery.of(context).size.width;
-                                  final dialogWidth = screenWidth * 0.85;
-                                  void closeDialogAndNavigate() {
-                                    Navigator.of(context)
-                                        .pop(); // Close the dialog
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              WalletTokensNfts()), // Replace 'NewPage' with the actual page you want to navigate to
+
+                              if (_emailController.text.isNotEmpty) {
+                                setState(() {
+                                  _isLoading = true;
+                                  if (_isLoading) {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                  }
+                                });
+
+                                try {
+                                  // Assuming verifyEmail is an asynchronous function
+                                  var result = await Provider.of<UserProvider>(context, listen: false)
+                                      .verifyEmail(
+                                    email: _emailController.text,
+                                    context: context,
+                                    token: accessToken,
+                                  );
+
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
+
+                                  if (result == AuthResult.success) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        final screenWidth =
+                                            MediaQuery.of(context).size.width;
+                                        final dialogWidth = screenWidth * 0.85;
+                                        void closeDialogAndNavigate() {
+                                          Navigator.of(context)
+                                              .pop(); // Close the dialog
+                                          Navigator.of(context).popUntil((route) => route.isFirst);
+
+                                        }
+                                        Future.delayed(Duration(seconds: 2),
+                                            closeDialogAndNavigate);
+                                        return Dialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(8.0),
+                                          ),
+                                          backgroundColor: Colors.transparent,
+                                          child: BackdropFilter(
+                                              filter: ImageFilter.blur(
+                                                  sigmaX: 7, sigmaY: 7),
+                                              child: Container(
+                                                height: 30.h,
+                                                width: dialogWidth,
+                                                decoration: BoxDecoration(
+                                                  // border: Border.all(
+                                                  //     width: 0.1.h,
+                                                  //     color: AppColors.textColorGrey),
+                                                  color: themeNotifier.isDark
+                                                      ? AppColors.showDialogClr
+                                                      : AppColors.textColorWhite,
+                                                  borderRadius:
+                                                  BorderRadius.circular(15),
+                                                ),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                                  children: [
+                                                    SizedBox(
+                                                      height: 4.h,
+                                                    ),
+                                                    Align(
+                                                      alignment:
+                                                      Alignment.bottomCenter,
+                                                      child: Image.asset(
+                                                        "assets/images/email.png",
+                                                        height: 5.9.h,
+                                                        width: 5.6.h,
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 2.h),
+                                                    Text(
+                                                      'Email verification sent'
+                                                          .tr(),
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                          FontWeight.w600,
+                                                          fontSize: 17.sp,
+                                                          color: themeNotifier
+                                                              .isDark
+                                                              ? AppColors
+                                                              .textColorWhite
+                                                              : AppColors
+                                                              .textColorBlack),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 2.h,
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 20),
+                                                      child: Text(
+                                                        'Please complete the verification to complete registration process.'
+                                                            .tr(),
+                                                        textAlign: TextAlign.center,
+                                                        style: TextStyle(
+                                                            height: 1.4,
+                                                            fontWeight:
+                                                            FontWeight.w400,
+                                                            fontSize: 10.2.sp,
+                                                            color: AppColors
+                                                                .textColorGrey),
+                                                      ),
+                                                    ),
+                                                    // SizedBox(
+                                                    //   height: 4.h,
+                                                    // ),
+                                                  ],
+                                                ),
+                                              )),
+                                        );
+                                      },
                                     );
                                   }
-
-                                  Future.delayed(Duration(seconds: 3),
-                                      closeDialogAndNavigate);
-                                  return Dialog(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    backgroundColor: Colors.transparent,
-                                    child: BackdropFilter(
-                                        filter: ImageFilter.blur(
-                                            sigmaX: 7, sigmaY: 7),
-                                        child: Container(
-                                          height: 30.h,
-                                          width: dialogWidth,
-                                          decoration: BoxDecoration(
-                                            // border: Border.all(
-                                            //     width: 0.1.h,
-                                            //     color: AppColors.textColorGrey),
-                                            color: themeNotifier.isDark
-                                                ? AppColors.showDialogClr
-                                                : AppColors.textColorWhite,
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                          ),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              SizedBox(
-                                                height: 4.h,
-                                              ),
-                                              Align(
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                child: Image.asset(
-                                                  "assets/images/email.png",
-                                                  height: 5.9.h,
-                                                  width: 5.6.h,
-                                                ),
-                                              ),
-                                              SizedBox(height: 2.h),
-                                              Text(
-                                                'Email verification sent'.tr(),
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 17.sp,
-                                                    color: themeNotifier.isDark
-                                                        ? AppColors
-                                                            .textColorWhite
-                                                        : AppColors
-                                                            .textColorBlack),
-                                              ),
-                                              SizedBox(
-                                                height: 2.h,
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 20),
-                                                child: Text(
-                                                  'Please complete the verification to complete registration process.'
-                                                      .tr(),
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      height: 1.4,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize: 10.2.sp,
-                                                      color: AppColors
-                                                          .textColorGrey),
-                                                ),
-                                              ),
-                                              // SizedBox(
-                                              //   height: 4.h,
-                                              // ),
-                                            ],
-                                          ),
-                                        )),
-                                  );
-                                },
-                              );
+                                } catch (error) {
+                                  // Error occurred during verification
+                                  print("Error during email verification: $error");
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
+                                  // Handle error, show a snackbar, or display an error message
+                                }
+                              }
                             },
                             isGradient: true,
                             color: Colors.transparent,
                             textColor: AppColors.textColorBlack,
                           ),
+
                         )
                       ],
                     ),
