@@ -1146,19 +1146,24 @@ class TransactionProvider with ChangeNotifier {
 
   ///
   Future<AuthResult> makeCounterOffer({
-    required String params,
+    // required String params,
     required String token,
     required String operation,
     required BuildContext context,
+    required String id,
+    required String offererId,
+    required String offerAmount,
+    required String walletAddress,
   }) async {
     final url = Uri.parse(BASE_URL + '/counter-offer');
-    Map<String, dynamic> paramsMap = jsonDecode(params);
-    String updatedParams = jsonEncode(paramsMap);
-    print('params to send bilal' + updatedParams);
-    final Map<String, dynamic> requestBody = {
-      "params":
-      paramsMap,
-    };
+
+
+     var requestBody = {
+       "id": id,
+       "offererId": walletAddress,
+       // "offererId": offererId,
+       "offerAmount": int.parse(offerAmount),
+     };
 
     try {
       final response = await http.post(
@@ -1168,7 +1173,9 @@ class TransactionProvider with ChangeNotifier {
           "Accept": "application/json",
           'Authorization': 'Bearer $token',
         },
-        body: json.encode(requestBody),
+        body: json.encode(
+         requestBody
+        ),
       );
 
       fToast = FToast();

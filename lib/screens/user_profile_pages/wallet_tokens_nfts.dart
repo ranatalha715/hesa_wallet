@@ -240,8 +240,14 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
         }
         else if(operation != null && operation == 'makeCounterOffer'){
           //makeCounterOffer
+          var data = json.decode(uri.queryParameters["params"]!);
+        String? id = data['id'];
+        String? offererId = data['offererId'];
+        int? offerAmount = int.tryParse(data['offerAmount'].toString() ?? '');
+        print('test params individually');
+        print(id.toString()+ "  " + offererId.toString() + "  " + offerAmount.toString());
           navigateToTransactionRequestAcceptRejectWithMakeCounterOffer(
-              uri.queryParameters, operation, context);
+              uri.queryParameters, operation, context, id.toString(), offererId.toString(), offerAmount.toString());
         }
         else{
           //acceptCounterOffer
@@ -249,7 +255,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
               uri.queryParameters, operation!, context);
         }
       }
-    });
+    }
+    );
   }
 
   Future<void> navigateToTransactionRequestWithMintCollection(
@@ -398,11 +405,18 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   Future<void> navigateToTransactionRequestAcceptRejectWithMakeCounterOffer(
       Map<String, dynamic> queryParams,
       String operation,
-      BuildContext ctx) async {
+      BuildContext ctx,
+      String id,
+      String offererId,
+      String offerAmount,
+      ) async {
     String paramsString = queryParams['params'] ?? '';
     await Navigator.of(ctx).pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
       "operation": operation,
+      "id": id,
+      "offererId": offererId,
+      "offerAmount": offerAmount,
     });
   }
 

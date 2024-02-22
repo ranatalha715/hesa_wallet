@@ -88,6 +88,9 @@ class _TransactionRequestAcceptRejectState
   var ownerid;
   var creatorId;
   var itemCollectionID;
+  var counterId;
+  var counterOffererId;
+  var counterOffererAmount;
 
   late FlutterHyperPay flutterHyperPay;
 
@@ -315,6 +318,9 @@ class _TransactionRequestAcceptRejectState
       // Your code here
       print('args params' + args['params']);
       params = args['params'] ?? "N/A";
+      counterId = args['id'] ?? "N/A";
+      counterOffererId = args['offererId'] ?? "N/A";
+      counterOffererAmount = args['offerAmount'] ?? "N/A";
       operation = args['operation'] ?? "N/A";
       walletAddress = args['walletAddress'] ?? "N/A";
       country = args['country'] ?? "N/A";
@@ -900,25 +906,29 @@ class _TransactionRequestAcceptRejectState
                                                                 operation:
                                                                     operation,
                                                               );
-                                                            } else if(operation ==
+                                                            } else if (operation ==
                                                                 'makeCounterOffer') {
                                                               await Provider.of<
-                                                                  TransactionProvider>(
-                                                                  context,
-                                                                  listen:
-                                                                  false)
+                                                                          TransactionProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
                                                                   .makeCounterOffer(
-                                                                params:
-                                                                params,
+                                                                walletAddress: walletAddress,
+                                                                // params: params,
                                                                 token:
-                                                                accessToken,
+                                                                    accessToken,
                                                                 context:
-                                                                context,
+                                                                    context,
                                                                 operation:
-                                                                operation,
+                                                                    operation,
+                                                                id: counterId,
+                                                                offererId:
+                                                                    counterOffererId,
+                                                                offerAmount:
+                                                                    counterOffererAmount,
                                                               );
-                                                            }
-                                                             else {}
+                                                            } else {}
                                                             setState(() {
                                                               isLoading = false;
                                                             });
