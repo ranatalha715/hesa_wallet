@@ -903,6 +903,83 @@ class TransactionProvider with ChangeNotifier {
     }
   }
 
+  Future<AuthResult> acceptCounterOffer({
+    required String params,
+    required String token,
+    required String walletAddress,
+    required String operation,
+    required BuildContext context,
+    required String tokenId,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/v2/payable-transactions/send');
+    Map<String, dynamic> paramsMap = jsonDecode(params);
+    // String yourWalletAddress = walletAddress;
+    // String collectionId = '8c9b250f-2038-4162-9c9a-6015dc2f16a5';
+
+    // paramsMap['owner'] = yourWalletAddress;
+    String updatedParams = jsonEncode(paramsMap);
+    print('params to send bilal' + updatedParams);
+    final Map<String, dynamic> requestBody = {
+      "orgCode": "{{organization}}",
+      "channel": "{{channel}}",
+      "chaincode": "nft",
+      "func": "AcceptCounterOffer",
+      "walletAddress": walletAddress,
+      "tokenId": tokenId,
+      "type": "tokenized",
+      "country": "PK",
+      "billing": {
+        "country": "PK",
+        "city": "Karachi",
+        "state": "Sindh",
+        "postcode": "75400",
+        "street1": "39 E"
+      },
+      // "params": updatedParams,
+      "params": paramsMap,
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-type": "application/json",
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode(requestBody),
+      );
+
+      fToast = FToast();
+      fToast.init(context);
+      print('payload to send bilal');
+      print(requestBody.toString());
+
+      if (response.statusCode == 201) {
+        print(response.body);
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+        checkoutURL = responseBody['data']['checkoutURL'];
+        checkoutId = responseBody['data']['checkoutId'];
+        _showToast('Payable Transaction Sent!');
+        print("send response " + responseBody.toString());
+
+        return AuthResult.success;
+      } else {
+        print("Error: ${response.body}");
+        _showToast('Payable Transaction not sent');
+        functionToNavigateAfterPayable(response.body.toString(),operation);
+        return AuthResult.failure;
+      }
+    } catch (e) {
+      print('Error: $e');
+      _showToast('Error');
+      functionToNavigateAfterPayable(e.toString(),operation);
+      return AuthResult.failure;
+    }
+  }
+
+
+
   //non payable
   Future<AuthResult> acceptOffer({
     required String params,
@@ -1042,6 +1119,83 @@ class TransactionProvider with ChangeNotifier {
         "comments": "response coming from api /non-payable-transactions/send",
       },
     );
+  }
+
+  functionToNavigateAfterPayable(
+      String response, String operation,) {
+    AppDeepLinking().openNftApp(
+      {
+        "data": response,
+        "operation" : operation,
+        "comments": "response coming from api v2/payable-transactions/send",
+      },
+    );
+  }
+
+  functionToNavigateAfterCounterOffer(
+      String response, String operation,) {
+    AppDeepLinking().openNftApp(
+      {
+        "data": response,
+        "operation" : operation,
+        "comments": "response coming from api /counter-offer",
+      },
+    );
+  }
+
+
+  ///
+  Future<AuthResult> makeCounterOffer({
+    required String params,
+    required String token,
+    required String operation,
+    required BuildContext context,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/counter-offer');
+    Map<String, dynamic> paramsMap = jsonDecode(params);
+    String updatedParams = jsonEncode(paramsMap);
+    print('params to send bilal' + updatedParams);
+    final Map<String, dynamic> requestBody = {
+      "params":
+      paramsMap,
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-type": "application/json",
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode(requestBody),
+      );
+
+      fToast = FToast();
+      fToast.init(context);
+      print('payload to send bilal');
+      print(requestBody.toString());
+      print('Counter offer response' + response.body);
+
+      if (response.statusCode == 201) {
+        print(response.body);
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+        _showToast('Counter Offer Sent!');
+        print("send response " + responseBody.toString());
+        functionToNavigateAfterCounterOffer(response.body.toString(),operation);
+        return AuthResult.success;
+      } else {
+        print("Error: ${response.body}");
+        _showToast('Counter Offer Not Sent');
+        functionToNavigateAfterCounterOffer(response.body.toString(),operation);
+        return AuthResult.failure;
+      }
+    } catch (e) {
+      print('Error: $e');
+      _showToast('Error');
+      functionToNavigateAfterCounterOffer(e.toString(),operation);
+      return AuthResult.failure;
+    }
   }
 
   Future<AuthResult> calculateTransactionSummary({
@@ -1214,65 +1368,7 @@ class TransactionProvider with ChangeNotifier {
     }
   }
 
-  // Future<AuthResult> payableTransactionProcess({
-  //   required String token,
-  //   required String paymentId,
-  //   required BuildContext context,
-  // }) async {
-  //   final url = Uri.parse(BASE_URL + '/v2/payable-transactions/process');
-  //   final Map<String, dynamic> requestBody = {
-  //     "paymentId": paymentId,
-  //   };
-  //   print('paymentId for process' + paymentId);
-  //   try {
-  //     final response = await http.post(
-  //       url,
-  //       headers: {
-  //         "Content-type": "application/json",
-  //         "Accept": "application/json",
-  //         'Authorization': 'Bearer $token',
-  //       },
-  //       body: json.encode(requestBody),
-  //     );
-  //     fToast = FToast();
-  //     fToast.init(context);
-  //     print('process api request body');
-  //     print(requestBody);
-  //     print('process api response');
-  //     print(response.body);
-  //     if (response.statusCode == 201) {
-  //       _showToast('Payment Processed Successfully');
-  //       // Navigator.push(
-  //       //   context,
-  //       //   MaterialPageRoute(builder: (context) => WalletTokensNfts()),
-  //       // ).then((value) {
-  //       // _showToast('opening NEO App');
-  //
-  //       AppDeepLinking().openNftApp(
-  //         {
-  //           "data": response.body.toString(),
-  //           "comments":
-  //               "response coming from api /v2/payable-transactions/process",
-  //         },
-  //       );
-  //
-  //       // }); //response.body
-  //       // print(response.body);
-  //
-  //       return AuthResult.success;
-  //     } else {
-  //       // Handle the error response here if needed
-  //       print("Process Api Error: ${response.body}");
-  //       _showToast('Payment Processing Failed');
-  //       return AuthResult.failure;
-  //     }
-  //   } catch (e) {
-  //     // Handle exceptions here
-  //     print('Process Api Error: $e');
-  //     _showToast('Error');
-  //     return AuthResult.failure;
-  //   }
-  // }
+
 
   Future<AuthResult> startTokenization({
     required String token,
@@ -1337,49 +1433,6 @@ class TransactionProvider with ChangeNotifier {
       return AuthResult.failure;
     }
   }
-
-  // Future<String> tokenizeCardRequest({required String bin, required String token}) async {
-  //   final url = Uri.parse(BASE_URL +"/user/tokenize-card-request");
-  //   final binSubstring = bin.substring(0, 6);
-  //
-  //   Map<String, dynamic> requestBody = {
-  //     "bin": binSubstring,
-  //   };
-  //
-  //   try {
-  //     final response = await http.post(
-  //       url,
-  //       headers: {
-  //         "Content-type": "application/json",
-  //         "Accept": "application/json",
-  //         'Authorization': 'Bearer $token',
-  //       },
-  //       body: json.encode(requestBody),
-  //     );
-  //
-  //     if (response.statusCode == 201) {
-  //       final Map<String, dynamic> responseBody = json.decode(response.body);
-  //       if (responseBody['success'] == true) {
-  //         final String checkoutId = responseBody['data']['checkoutId'];
-  //         print(responseBody);
-  //         return checkoutId;
-  //       } else {
-  //         // Handle error here if needed
-  //         throw Exception('Tokenization request failed: ${responseBody['message']}');
-  //       }
-  //     } else {
-  //       // Handle error here if needed
-  //       throw Exception('HTTP request failed with status code: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     // Handle exception here if needed
-  //     throw Exception('Error: $e');
-  //   }
-  // }
-
-// Example usage:
-// String bin = "411111";
-// Future<String> checkoutId = tokenizeCardRequest(bin);
 
   Future<AuthResult> addUserCard({
     required String token,

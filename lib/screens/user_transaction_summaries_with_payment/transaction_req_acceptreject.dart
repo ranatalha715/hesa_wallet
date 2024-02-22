@@ -876,31 +876,52 @@ class _TransactionRequestAcceptRejectState
                                                           title: "Accept".tr(),
                                                           handler: () async {
                                                             setState(() {
-                                                              isValidating = true;
+                                                              isValidating =
+                                                                  true;
                                                             });
                                                             setState(() {
                                                               isLoading = true;
                                                             });
-                                                            if (operation == 'acceptOfferReceived'){
-                                                              await Provider.of<TransactionProvider>(
-                                                                  context,
-                                                                  listen:
-                                                                  false)
+                                                            if (operation ==
+                                                                'acceptOfferReceived') {
+                                                              await Provider.of<
+                                                                          TransactionProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
                                                                   .acceptOffer(
                                                                 params: params,
                                                                 token:
-                                                                accessToken,
+                                                                    accessToken,
                                                                 walletAddress:
-                                                                walletAddress,
-                                                                context: context,
-                                                                operation: operation,
+                                                                    walletAddress,
+                                                                context:
+                                                                    context,
+                                                                operation:
+                                                                    operation,
+                                                              );
+                                                            } else if(operation ==
+                                                                'makeCounterOffer') {
+                                                              await Provider.of<
+                                                                  TransactionProvider>(
+                                                                  context,
+                                                                  listen:
+                                                                  false)
+                                                                  .makeCounterOffer(
+                                                                params:
+                                                                params,
+                                                                token:
+                                                                accessToken,
+                                                                context:
+                                                                context,
+                                                                operation:
+                                                                operation,
                                                               );
                                                             }
+                                                             else {}
                                                             setState(() {
                                                               isLoading = false;
                                                             });
-
-
                                                           },
                                                           // isLoading: isLoading,r
                                                           isGradient: true,
@@ -913,25 +934,29 @@ class _TransactionRequestAcceptRejectState
                                                                   .tr(),
                                                           handler: () async {
                                                             setState(() {
-                                                              isValidating = true;
+                                                              isValidating =
+                                                                  true;
                                                             });
                                                             setState(() {
                                                               isLoading = true;
                                                             });
-                                                            if (operation == 'rejectOfferReceived'){
+                                                            if (operation ==
+                                                                'rejectOfferReceived') {
                                                               await Provider.of<TransactionProvider>(
-                                                                  context,
-                                                                  listen:
-                                                                  false)
+                                                                      context,
+                                                                      listen:
+                                                                          false)
                                                                   .rejectOffer(
-                                                                params: params,
-                                                                token:
-                                                                accessToken,
-                                                                walletAddress:
-                                                                walletAddress,
-                                                                context: context,
-                                                                operation: operation
-                                                              );
+                                                                      params:
+                                                                          params,
+                                                                      token:
+                                                                          accessToken,
+                                                                      walletAddress:
+                                                                          walletAddress,
+                                                                      context:
+                                                                          context,
+                                                                      operation:
+                                                                          operation);
                                                             }
                                                             setState(() {
                                                               isLoading = false;

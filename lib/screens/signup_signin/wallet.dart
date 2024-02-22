@@ -13,7 +13,7 @@ import '../../providers/theme_provider.dart';
 import '../../widgets/button.dart';
 
 class Wallet extends StatefulWidget {
-   const Wallet({Key? key}) : super(key: key);
+  const Wallet({Key? key}) : super(key: key);
 
   @override
   State<Wallet> createState() => _WalletState();

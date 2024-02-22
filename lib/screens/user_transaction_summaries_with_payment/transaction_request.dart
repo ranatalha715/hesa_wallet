@@ -1692,9 +1692,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   // });
                                                   // }
                                                 });
-                                              } else {
-                                                {
-                                                  // Uncomment this block if needed, adjust parameters accordingly
+                                              } else if (operation ==
+                                              'makeOfferNFT')
+                                              {
                                                   final makeOffer =
                                                       await transactionProvider
                                                           .makeOffer(
@@ -1731,8 +1731,43 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     // }
                                                   });
                                                 }
+                                              else   {
+                                                final acceptCounterOffer =
+                                                await transactionProvider
+                                                    .acceptCounterOffer(
+                                                  params: params,
+                                                  token: accessToken,
+                                                  context: context,
+                                                  walletAddress: userProvider
+                                                      .walletAddress!,
+                                                  tokenId: paymentCards
+                                                      .isEmpty
+                                                      ? ""
+                                                      : trPro
+                                                      .selectedCardTokenId,
+                                                  operation: operation,
+                                                )
+                                                    .then((value) {
+                                                  print(
+                                                      "transactionProvider.checkoutId");
+                                                  print(transactionProvider
+                                                      .checkoutId);
+                                                  payRequestNowReadyUI(
+                                                      operation: operation,
+                                                      brandsName: [
+                                                        "VISA",
+                                                        "MASTER",
+                                                        "MADA",
+                                                      ],
+                                                      checkoutId: Provider.of<
+                                                          TransactionProvider>(
+                                                          context,
+                                                          listen: false)
+                                                          .checkoutId);
+                                                  // });
+                                                  // }
+                                                });
                                               }
-
                                               setState(() {
                                                 isLoading = false;
                                               });

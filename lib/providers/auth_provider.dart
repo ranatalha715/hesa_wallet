@@ -403,68 +403,6 @@ class AuthProvider with ChangeNotifier {
   }
 
 
-  // Future<AuthResult> loginWithUsername({
-  //   required String username,
-  //   required String password,
-  //   required BuildContext context,
-  // }) async {
-  //   final url = Uri.parse(BASE_URL + '/auth/login');
-  //   final body = {
-  //     "username": username,
-  //     "password": password,
-  //   };
-  //
-  //   final response = await http.post(url, body: body);
-  //   fToast = FToast();
-  //   fToast.init(context);
-  //   print("login with username response");
-  //   print(response.body);
-  //   if (response.statusCode == 201) {
-  //     // Successful login
-  //     print("User logged in successfully!");
-  //     _showToast('User logged in successfully!');
-  //
-  //     // Parse the response JSON
-  //     final jsonResponse = json.decode(response.body);
-  //
-  //     // Get the wsToken from the response
-  //     // final wsToken = jsonResponse['data']['wsToken'];
-  //     final accessToken = jsonResponse['data']['accessToken'];
-  //
-  //     // Save the wsToken in SharedPreferences
-  //     final prefs = await SharedPreferences.getInstance();
-  //     // await prefs.setString('wsToken', wsToken);
-  //     await prefs.setString('accessToken', accessToken);
-  //     await prefs.setString('password', password);
-  //     //
-  //     print('navigate to neo to connect wallet');
-  //
-  //     print('true ya false');
-  //     print(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet);
-  //     if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
-  //      await Provider.of<UserProvider>(context,listen: false).getUserDetails(context: context,
-  //      token: accessToken
-  //      );
-  //      await AppDeepLinking().openNftApp(
-  //        {
-  //          "operation": "connectWallet",
-  //          "Wallet Address": Provider.of<UserProvider>(context,listen: false).walletAddress,
-  //          "comments":
-  //          "coming back from hesa wallet app with wallet address",
-  //        },
-  //
-  //      );
-  //       print('go to neo');
-  //     }
-  //     return AuthResult.success;
-  //   } else {
-  //     // Show an error message or handle the response as needed
-  //     print("Login failed: ${response.body}");
-  //     _showToast('Login failed');
-  //     return AuthResult.failure;
-  //   }
-  // }
-
   Future<AuthResult> loginWithUsername({
     required String username,
     required String password,
@@ -525,7 +463,7 @@ class AuthProvider with ChangeNotifier {
         // Show an error message or handle the response as needed
         print("Login failed: ${response.body}");
         _showToast('Login failed');
-      //   if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
+        if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
       //   await AppDeepLinking().openNftApp(
       //     {
       //       "operation": "connectWallet",
@@ -535,7 +473,7 @@ class AuthProvider with ChangeNotifier {
       //       "loginResponse":response.body.toString()
       //     },
       //   );
-      // }
+      }
         return AuthResult.failure;
       }
     } on TimeoutException catch (e) {

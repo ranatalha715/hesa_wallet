@@ -233,9 +233,19 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
           navigateToTransactionRequestAcceptRejectWithAcceptOffer(
               uri.queryParameters, operation, context);
         }
-        else{
+        else if(operation != null && operation == 'rejectOfferReceived'){
           //rejectOfferReceived
           navigateToTransactionRequestAcceptRejectWithRejectOffer(
+              uri.queryParameters, operation, context);
+        }
+        else if(operation != null && operation == 'makeCounterOffer'){
+          //makeCounterOffer
+          navigateToTransactionRequestAcceptRejectWithMakeCounterOffer(
+              uri.queryParameters, operation, context);
+        }
+        else{
+          //acceptCounterOffer
+          navigateToTransactionRequestWithAcceptCounterOffer(
               uri.queryParameters, operation!, context);
         }
       }
@@ -352,6 +362,17 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     });
   }
 
+  Future<void> navigateToTransactionRequestWithAcceptCounterOffer(
+      Map<String, dynamic> queryParams,
+      String operation,
+      BuildContext ctx) async {
+    String paramsString = queryParams['params'] ?? '';
+    await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
+      "params": paramsString,
+      "operation": operation,
+    });
+  }
+
   Future<void> navigateToTransactionRequestAcceptRejectWithAcceptOffer(
       Map<String, dynamic> queryParams,
       String operation,
@@ -364,6 +385,17 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   }
 
   Future<void> navigateToTransactionRequestAcceptRejectWithRejectOffer(
+      Map<String, dynamic> queryParams,
+      String operation,
+      BuildContext ctx) async {
+    String paramsString = queryParams['params'] ?? '';
+    await Navigator.of(ctx).pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
+      "params": paramsString,
+      "operation": operation,
+    });
+  }
+
+  Future<void> navigateToTransactionRequestAcceptRejectWithMakeCounterOffer(
       Map<String, dynamic> queryParams,
       String operation,
       BuildContext ctx) async {
