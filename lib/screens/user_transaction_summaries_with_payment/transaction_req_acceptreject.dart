@@ -319,7 +319,8 @@ class _TransactionRequestAcceptRejectState
       print('args params' + args['params']);
       params = args['params'] ?? "N/A";
       counterId = args['id'] ?? "N/A";
-      counterOffererId = args['offererId'] ?? "N/A";
+      counterOffererId = args['offererId'].toString() ?? "N/A";
+      print("test counterOffererId" + counterOffererId.toString());
       counterOffererAmount = args['offerAmount'] ?? "N/A";
       operation = args['operation'] ?? "N/A";
       walletAddress = args['walletAddress'] ?? "N/A";
@@ -906,8 +907,9 @@ class _TransactionRequestAcceptRejectState
                                                                 operation:
                                                                     operation,
                                                               );
-                                                            } else if (operation ==
-                                                                'makeCounterOffer') {
+                                                            }
+                                                            else if (operation ==
+                                                                'makeNFTCounterOffer') {
                                                               await Provider.of<
                                                                           TransactionProvider>(
                                                                       context,
@@ -928,7 +930,31 @@ class _TransactionRequestAcceptRejectState
                                                                 offerAmount:
                                                                     counterOffererAmount,
                                                               );
-                                                            } else {}
+                                                            }
+                                                            else if (operation ==
+                                                                'makeCollectionCounterOffer') {
+                                                              await Provider.of<
+                                                                  TransactionProvider>(
+                                                                  context,
+                                                                  listen:
+                                                                  false)
+                                                                  .makeCollectionCounterOffer(
+                                                                walletAddress: walletAddress,
+                                                                // params: params,
+                                                                token:
+                                                                accessToken,
+                                                                context:
+                                                                context,
+                                                                operation:
+                                                                operation,
+                                                                id: counterId,
+                                                                offererId:
+                                                                counterOffererId,
+                                                                offerAmount:
+                                                                counterOffererAmount,
+                                                              );
+                                                            }
+                                                            else {}
                                                             setState(() {
                                                               isLoading = false;
                                                             });
@@ -967,6 +993,29 @@ class _TransactionRequestAcceptRejectState
                                                                           context,
                                                                       operation:
                                                                           operation);
+                                                            }
+                                                            else if (operation ==
+                                                                'rejectNFTCounterOffer') {
+                                                              await Provider.of<
+                                                                  TransactionProvider>(
+                                                                  context,
+                                                                  listen:
+                                                                  false)
+                                                                  .rejectNFTCounterOffer(
+                                                                walletAddress: walletAddress,
+                                                                // params: params,
+                                                                token:
+                                                                accessToken,
+                                                                context:
+                                                                context,
+                                                                operation:
+                                                                operation,
+                                                                id: counterId,
+                                                                offererId:
+                                                                counterOffererId,
+                                                                offerAmount:
+                                                                counterOffererAmount,
+                                                              );
                                                             }
                                                             setState(() {
                                                               isLoading = false;

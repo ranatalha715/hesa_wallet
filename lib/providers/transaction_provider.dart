@@ -1138,7 +1138,7 @@ class TransactionProvider with ChangeNotifier {
       {
         "data": response,
         "operation" : operation,
-        "comments": "response coming from api /counter-offer",
+        "comments": "response coming from counter-offer offers",
       },
     );
   }
@@ -1159,10 +1159,17 @@ class TransactionProvider with ChangeNotifier {
 
 
      var requestBody = {
-       "id": id,
-       "offererId": walletAddress,
-       // "offererId": offererId,
-       "offerAmount": int.parse(offerAmount),
+
+         // "id": "501124a2-0135-47da-b1be-b18095bd018f",
+         // "offererId": "0x65BC9C8608688E1FA95247C570F5B72DB945468A",
+         // "offerAmount": 250
+
+    "id": id,
+    "offererId": offererId,
+    // "offererId": offererId,
+    "offerAmount": int.parse(offerAmount),
+
+
      };
 
     try {
@@ -1187,19 +1194,139 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        _showToast('Counter Offer Sent!');
+        // _showToast('Counter Offer Sent!');
         print("send response " + responseBody.toString());
         functionToNavigateAfterCounterOffer(response.body.toString(),operation);
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Counter Offer Not Sent');
+        // _showToast('Counter Offer Not Sent');
         functionToNavigateAfterCounterOffer(response.body.toString(),operation);
         return AuthResult.failure;
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
+      // _showToast('Error');
+      functionToNavigateAfterCounterOffer(e.toString(),operation);
+      return AuthResult.failure;
+    }
+  }
+
+  Future<AuthResult> makeCollectionCounterOffer({
+    // required String params,
+    required String token,
+    required String operation,
+    required BuildContext context,
+    required String id,
+    required String offererId,
+    required String offerAmount,
+    required String walletAddress,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/counter-offer/collection');
+
+
+    var requestBody = {
+        // "id": "a1aa4fc7-ab0b-4589-9fd8-10a8567b6d9e",
+        // "offererId": "0x65BC9C8608688E1FA95247C570F5B72DB945468A",
+        // "offerAmount": 700
+      "id": id,
+      "offererId": offererId,
+      "offerAmount": int.parse(offerAmount),
+    };
+    fToast = FToast();
+    fToast.init(context);
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-type": "application/json",
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode(
+            requestBody
+        ),
+      );
+
+      print('payload to send bilal');
+      print(requestBody.toString());
+      print('Counter offer response' + response.body);
+
+      if (response.statusCode == 201) {
+        print(response.body);
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+        // _showToast('Counter Offer Sent!');
+        print("send response " + responseBody.toString());
+        functionToNavigateAfterCounterOffer(response.body.toString(),operation);
+        return AuthResult.success;
+      } else {
+        print("Error: ${response.body}");
+        // _showToast('Counter Offer Not Sent');
+        functionToNavigateAfterCounterOffer(response.body.toString(),operation);
+        return AuthResult.failure;
+      }
+    } catch (e) {
+      print('Error: $e');
+      // _showToast('Error');
+      functionToNavigateAfterCounterOffer(e.toString(),operation);
+      return AuthResult.failure;
+    }
+  }
+
+  Future<AuthResult> rejectNFTCounterOffer({
+    // required String params,
+    required String token,
+    required String operation,
+    required BuildContext context,
+    required String id,
+    required String offererId,
+    required String offerAmount,
+    required String walletAddress,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/counter-offer/reject');
+
+
+    var requestBody = {
+      "id": id,
+      "offererId": offererId,
+      "offerAmount": int.parse(offerAmount),
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-type": "application/json",
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode(
+            requestBody
+        ),
+      );
+
+      fToast = FToast();
+      fToast.init(context);
+      print('payload to send bilal');
+      print(requestBody.toString());
+      print('Counter offer response' + response.body);
+
+      if (response.statusCode == 201) {
+        print(response.body);
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+        _showToast('Reject Counter Offer Sent!');
+        print("send response " + responseBody.toString());
+        functionToNavigateAfterCounterOffer(response.body.toString(),operation);
+        return AuthResult.success;
+      } else {
+        print("Error: ${response.body}");
+        _showToast('Reject Counter Offer Not Sent');
+        functionToNavigateAfterCounterOffer(response.body.toString(),operation);
+        return AuthResult.failure;
+      }
+    } catch (e) {
+      print('Error: $e');
+      // _showToast('Error');
       functionToNavigateAfterCounterOffer(e.toString(),operation);
       return AuthResult.failure;
     }
