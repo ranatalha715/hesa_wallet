@@ -464,15 +464,6 @@ class AuthProvider with ChangeNotifier {
         print("Login failed: ${response.body}");
         _showToast('Login failed');
         if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
-      //   await AppDeepLinking().openNftApp(
-      //     {
-      //       "operation": "connectWallet",
-      //       "Wallet Address": Provider.of<UserProvider>(context,listen: false).walletAddress,
-      //       "comments":
-      //       "coming back from hesa wallet app with wallet address",
-      //       "loginResponse":response.body.toString()
-      //     },
-      //   );
       }
         return AuthResult.failure;
       }

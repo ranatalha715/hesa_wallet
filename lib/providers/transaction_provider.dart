@@ -74,63 +74,6 @@ class TransactionProvider with ChangeNotifier {
     }
   }
 
-  Future<AuthResult> nonPayableTransactionSend({
-    required String token,
-    required String code,
-    required String walletAddress,
-    required BuildContext context,
-  }) async {
-    final url = Uri.parse(BASE_URL + '/non-payable-transactions/send');
-    final Map<String, dynamic> requestBody = {
-      "orgCode": "Neonft",
-      "channel": "nftchannel",
-      "chaincode": "nft",
-      "func": "MintCollection",
-      "walletAddress": walletAddress,
-      "country": "PK",
-      "signature": ",",
-      "publicKey": ",",
-      "code": code,
-      "params": [
-        "2",
-        "My First Collection",
-        "0x17e6d6e903c1fd7eabe86bc50ff95a2c3301a09a8741947d82db755f",
-        [
-          "e304107f-59d3-45c1-862b-3ab03cd9eb5a",
-          "45b92d9a-2fa2-423b-bed7-511ae7f5c28c"
-        ]
-      ],
-    };
-
-    try {
-      final response = await http.post(
-        url,
-        headers: {
-          "Content-type": "application/json",
-          "Accept": "application/json",
-          'Authorization': 'Bearer $token',
-        },
-        body: json.encode(requestBody),
-      );
-
-      fToast = FToast();
-      fToast.init(context);
-
-      if (response.statusCode == 201) {
-        print(response.body);
-        _showToast('Transaction Send!');
-        return AuthResult.success;
-      } else {
-        print("Error: ${response.body}");
-        _showToast('Transaction not send');
-        return AuthResult.failure;
-      }
-    } catch (e) {
-      print('Error: $e');
-      _showToast('Error');
-      return AuthResult.failure;
-    }
-  }
 
   Future<AuthResult> MintCollectionpayableTransactionSend({
     required String params,
@@ -146,7 +89,7 @@ class TransactionProvider with ChangeNotifier {
     final url = Uri.parse(BASE_URL + '/v2/payable-transactions/send');
     Map<String, dynamic> paramsMap = jsonDecode(params);
     String yourWalletAddress = walletAddress;
-    paramsMap['creatorWalletAddress'] = yourWalletAddress;
+    // paramsMap['creatorWalletAddress'] = yourWalletAddress;
     // Convert the paramsMap to a string
     String updatedParams = jsonEncode(paramsMap);
     print('params to send bilal' + updatedParams);
@@ -194,13 +137,21 @@ class TransactionProvider with ChangeNotifier {
       } else {
         print("Error: ${response.body}");
         _showToast('Payable Transaction not sent');
-        functionToNavigateAfterNonPayable(response.body.toString(),operation);
+        testDialogToCheck(
+            context: context,
+            title: 'Mint Collection not working',
+            description: response.body.toString());
+        functionToNavigateAfterPayable(response.body.toString(), operation, context);
         return AuthResult.failure;
       }
     } catch (e) {
       print('Error: $e');
       _showToast('Error');
-      functionToNavigateAfterNonPayable(e.toString(),operation);
+      testDialogToCheck(
+          context: context,
+          title: 'Mint Collection not working',
+          description: e.toString());
+      functionToNavigateAfterPayable(e.toString(), operation, context);
       return AuthResult.failure;
     }
   }
@@ -217,10 +168,9 @@ class TransactionProvider with ChangeNotifier {
     final url = Uri.parse(BASE_URL + '/v2/payable-transactions/send');
     Map<String, dynamic> paramsMap = jsonDecode(params);
     String yourWalletAddress = walletAddress;
-    paramsMap['creatorWalletAddress'] = yourWalletAddress;
-    // Convert the paramsMap to a string
+    // paramsMap['creatorWalletAddress'] = yourWalletAddress;
     String updatedParams = jsonEncode(paramsMap);
-    print('params to send bilal' + updatedParams);
+    print('minting params to send bilal' + updatedParams);
     final Map<String, dynamic> requestBody = {
       "orgCode": "{{organization}}",
       "channel": "{{channel}}",
@@ -254,11 +204,12 @@ class TransactionProvider with ChangeNotifier {
 
       fToast = FToast();
       fToast.init(context);
-      print('payload to send bilal');
+      print('minitng payload to send bilal');
       print(requestBody.toString());
+      print('minting response');
 
+      print(response.body);
       if (response.statusCode == 201) {
-        print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
         checkoutURL = responseBody['data']['checkoutURL'];
         checkoutId = responseBody['data']['checkoutId'];
@@ -267,15 +218,23 @@ class TransactionProvider with ChangeNotifier {
 
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
+        print("Minting Error: ${response.body}");
         _showToast('Payable Transaction not sent');
-        functionToNavigateAfterNonPayable(response.body.toString(),operation);
+        testDialogToCheck(
+            context: context,
+            title: 'Mint NFT not working',
+            description: response.body.toString());
+        functionToNavigateAfterPayable(response.body.toString(), operation, context);
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
+      print('Minting Error: $e');
       _showToast('Error');
-      functionToNavigateAfterNonPayable(e.toString(),operation);
+      testDialogToCheck(
+          context: context,
+          title: 'Mint NFT not working',
+          description: e.toString());
+      functionToNavigateAfterPayable(e.toString(), operation, context);
       return AuthResult.failure;
     }
   }
@@ -321,7 +280,6 @@ class TransactionProvider with ChangeNotifier {
       // }
     };
 
-
     try {
       final response = await http.post(
         url,
@@ -350,13 +308,13 @@ class TransactionProvider with ChangeNotifier {
       } else {
         print("Error: ${response.body}");
         _showToast('Payable Transaction not sent');
-        functionToNavigateAfterNonPayable(response.body.toString(),operation);
+        functionToNavigateAfterNonPayable(response.body.toString(), operation);
         return AuthResult.failure;
       }
     } catch (e) {
       print('Error: $e');
       _showToast('Error');
-      functionToNavigateAfterNonPayable(e.toString(),operation);
+      functionToNavigateAfterNonPayable(e.toString(), operation);
       return AuthResult.failure;
     }
   }
@@ -374,7 +332,7 @@ class TransactionProvider with ChangeNotifier {
     Map<String, dynamic> paramsMap = jsonDecode(params);
     String yourWalletAddress = walletAddress;
 
-    paramsMap['listedBy'] = yourWalletAddress;
+    // paramsMap['listedBy'] = yourWalletAddress;
     // paramsMap['price'] = 500;
     // Convert the paramsMap to a string
     String updatedParams = jsonEncode(paramsMap);
@@ -427,13 +385,21 @@ class TransactionProvider with ChangeNotifier {
       } else {
         print("Error: ${response.body}");
         _showToast('Payable Transaction not sent');
-        functionToNavigateAfterNonPayable(response.body.toString(),operation);
+        testDialogToCheck(
+            context: context,
+            title: 'ListNFT Fixed price not working',
+            description: response.body.toString());
+        functionToNavigateAfterPayable(response.body.toString(), operation, context);
         return AuthResult.failure;
       }
     } catch (e) {
       print('Error: $e');
       _showToast('Error');
-      functionToNavigateAfterNonPayable(e.toString(),operation);
+      testDialogToCheck(
+          context: context,
+          title: 'ListNFT Fixed price not working',
+          description: e.toString());
+      functionToNavigateAfterPayable(e.toString(), operation, context);
       return AuthResult.failure;
     }
   }
@@ -450,7 +416,7 @@ class TransactionProvider with ChangeNotifier {
     Map<String, dynamic> paramsMap = jsonDecode(params);
     String yourWalletAddress = walletAddress;
 
-    paramsMap['listedBy'] = yourWalletAddress;
+    // paramsMap['listedBy'] = yourWalletAddress;
     // paramsMap['price'] = 500;
     // Convert the paramsMap to a string
     String updatedParams = jsonEncode(paramsMap);
@@ -503,13 +469,21 @@ class TransactionProvider with ChangeNotifier {
       } else {
         print("Error: ${response.body}");
         _showToast('Payable Transaction not sent');
-        functionToNavigateAfterNonPayable(response.body.toString(),operation);
+        testDialogToCheck(
+            context: context,
+            title: 'ListCollection Fixed price not working',
+            description: response.body.toString());
+        functionToNavigateAfterPayable(response.body.toString(), operation, context);
         return AuthResult.failure;
       }
     } catch (e) {
       print('Error: $e');
       _showToast('Error');
-      functionToNavigateAfterNonPayable(e.toString(),operation);
+      testDialogToCheck(
+          context: context,
+          title: 'ListCollection Fixed price not working',
+          description: e.toString());
+      functionToNavigateAfterPayable(e.toString(), operation, context);
       return AuthResult.failure;
     }
   }
@@ -579,13 +553,13 @@ class TransactionProvider with ChangeNotifier {
       } else {
         print("Error: ${response.body}");
         _showToast('Payable Transaction not sent');
-        functionToNavigateAfterNonPayable(response.body.toString(),operation);
+        functionToNavigateAfterNonPayable(response.body.toString(), operation);
         return AuthResult.failure;
       }
     } catch (e) {
       print('Error: $e');
       _showToast('Error');
-      functionToNavigateAfterNonPayable(e.toString(),operation);
+      functionToNavigateAfterNonPayable(e.toString(), operation);
       return AuthResult.failure;
     }
   }
@@ -655,13 +629,13 @@ class TransactionProvider with ChangeNotifier {
       } else {
         print("Error: ${response.body}");
         _showToast('Payable Transaction not sent');
-        functionToNavigateAfterNonPayable(response.body.toString(),operation);
+        functionToNavigateAfterNonPayable(response.body.toString(), operation);
         return AuthResult.failure;
       }
     } catch (e) {
       print('Error: $e');
       _showToast('Error');
-      functionToNavigateAfterNonPayable(e.toString(),operation);
+      functionToNavigateAfterNonPayable(e.toString(), operation);
       return AuthResult.failure;
     }
   }
@@ -731,13 +705,13 @@ class TransactionProvider with ChangeNotifier {
       } else {
         print("Error: ${response.body}");
         _showToast('Payable Transaction not sent');
-        functionToNavigateAfterNonPayable(response.body.toString(),operation);
+        functionToNavigateAfterNonPayable(response.body.toString(), operation);
         return AuthResult.failure;
       }
     } catch (e) {
       print('Error: $e');
       _showToast('Error');
-      functionToNavigateAfterNonPayable(e.toString(),operation);
+      functionToNavigateAfterNonPayable(e.toString(), operation);
       return AuthResult.failure;
     }
   }
@@ -813,13 +787,13 @@ class TransactionProvider with ChangeNotifier {
       } else {
         print("Error: ${response.body}");
         _showToast('Payable Transaction not sent');
-        functionToNavigateAfterNonPayable(response.body.toString(),operation);
+        functionToNavigateAfterNonPayable(response.body.toString(), operation);
         return AuthResult.failure;
       }
     } catch (e) {
       print('Error: $e');
       _showToast('Error');
-      functionToNavigateAfterNonPayable(e.toString(),operation);
+      functionToNavigateAfterNonPayable(e.toString(), operation);
       return AuthResult.failure;
     }
   }
@@ -892,13 +866,13 @@ class TransactionProvider with ChangeNotifier {
       } else {
         print("Error: ${response.body}");
         _showToast('Payable Transaction not sent');
-        functionToNavigateAfterNonPayable(response.body.toString(),operation);
+        functionToNavigateAfterNonPayable(response.body.toString(), operation);
         return AuthResult.failure;
       }
     } catch (e) {
       print('Error: $e');
       _showToast('Error');
-      functionToNavigateAfterNonPayable(e.toString(),operation);
+      functionToNavigateAfterNonPayable(e.toString(), operation);
       return AuthResult.failure;
     }
   }
@@ -967,18 +941,94 @@ class TransactionProvider with ChangeNotifier {
       } else {
         print("Error: ${response.body}");
         _showToast('Payable Transaction not sent');
-        functionToNavigateAfterPayable(response.body.toString(),operation);
+        functionToNavigateAfterPayable(response.body.toString(), operation, context);
         return AuthResult.failure;
       }
     } catch (e) {
       print('Error: $e');
       _showToast('Error');
-      functionToNavigateAfterPayable(e.toString(),operation);
+      functionToNavigateAfterPayable(e.toString(), operation, context);
       return AuthResult.failure;
     }
   }
 
+  Future<AuthResult> acceptCollectionCounterOffer({
+    required String params,
+    required String token,
+    required String walletAddress,
+    required String operation,
+    required BuildContext context,
+    required String tokenId,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/v2/payable-transactions/send');
+    Map<String, dynamic> paramsMap = jsonDecode(params);
+    String updatedParams = jsonEncode(paramsMap);
+    print('params to send bilal' + updatedParams);
+    final Map<String, dynamic> requestBody = {
+      "orgCode": "{{organization}}",
+      "channel": "{{channel}}",
+      "chaincode": "nft",
+      "func": "AcceptCollectionCounterOffer",
+      "walletAddress": walletAddress,
+      "tokenId": tokenId,
+      "type": "tokenized",
+      "country": "PK",
+      "billing": {
+        "country": "PK",
+        "city": "Karachi",
+        "state": "Sindh",
+        "postcode": "75400",
+        "street1": "39 E"
+      },
+      "params": paramsMap,
+    };
 
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-type": "application/json",
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode(requestBody),
+      );
+
+      fToast = FToast();
+      fToast.init(context);
+      print('payload to send bilal');
+      print(requestBody.toString());
+
+      if (response.statusCode == 201) {
+        print(response.body);
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+        checkoutURL = responseBody['data']['checkoutURL'];
+        checkoutId = responseBody['data']['checkoutId'];
+        _showToast('Payable Transaction Sent!');
+        print("send response " + responseBody.toString());
+
+        return AuthResult.success;
+      } else {
+        print("Error: ${response.body}");
+        _showToast('Payable Transaction not sent');
+        testDialogToCheck(
+            context: context,
+            title: 'acceptCollectionCounterOffer not working',
+            description: response.body.toString());
+        functionToNavigateAfterPayable(response.body.toString(), operation, context);
+        return AuthResult.failure;
+      }
+    } catch (e) {
+      print('Error: $e');
+      _showToast('Error');
+      testDialogToCheck(
+          context: context,
+          title: 'acceptCollectionCounterOffer not working',
+          description: e.toString());
+      functionToNavigateAfterPayable(e.toString(), operation, context);
+      return AuthResult.failure;
+    }
+  }
 
   //non payable
   Future<AuthResult> acceptOffer({
@@ -1031,18 +1081,18 @@ class TransactionProvider with ChangeNotifier {
         final Map<String, dynamic> responseBody = json.decode(response.body);
         _showToast('Non Payable Transaction Sent!');
         print("send response " + responseBody.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(),operation);
+        functionToNavigateAfterNonPayable(response.body.toString(), operation);
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
         _showToast('Non Payable Transaction not sent');
-        functionToNavigateAfterNonPayable(response.body.toString(),operation);
+        functionToNavigateAfterNonPayable(response.body.toString(), operation);
         return AuthResult.failure;
       }
     } catch (e) {
       print('Error: $e');
       _showToast('Error');
-      functionToNavigateAfterNonPayable(e.toString(),operation);
+      functionToNavigateAfterNonPayable(e.toString(), operation);
       return AuthResult.failure;
     }
   }
@@ -1092,57 +1142,144 @@ class TransactionProvider with ChangeNotifier {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
         _showToast('Non Payable Transaction Sent!');
-        functionToNavigateAfterNonPayable(response.body.toString(),operation);
+        functionToNavigateAfterNonPayable(response.body.toString(), operation);
         print("send response " + responseBody.toString());
 
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
         _showToast('Non Payable Transaction not sent');
-        functionToNavigateAfterNonPayable(response.body.toString(),operation);
+        functionToNavigateAfterNonPayable(response.body.toString(), operation);
         return AuthResult.failure;
       }
     } catch (e) {
       print('Error: $e');
       _showToast('Error');
-      functionToNavigateAfterNonPayable(e.toString(),operation);
+      functionToNavigateAfterNonPayable(e.toString(), operation);
       return AuthResult.failure;
     }
   }
 
+  Future<AuthResult> CancelNFTOfferMade({
+    required String params,
+    required String token,
+    required String operation,
+    required String walletAddress,
+    // required String country,
+    required BuildContext context,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/non-payable-transactions/send');
+    Map<String, dynamic> paramsMap = jsonDecode(params);
+    String updatedParams = jsonEncode(paramsMap);
+    final Map<String, dynamic> requestBody = {
+      "orgCode": "{{organization}}",
+      "channel": "{{channel}}",
+      "chaincode": "nft",
+      "func": "CancelOffer",
+      // "walletAddress": walletAddress, walletaddress NA mil rha
+      "walletAddress": '0x65BC9C8608688E1FA95247C570F5B72DB945468A',
+      "country": "PK",
+      "code": "0001",
+      "params": paramsMap,
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-type": "application/json",
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode(requestBody),
+      );
+
+      fToast = FToast();
+      fToast.init(context);
+      print('payload to send bilal');
+      print(requestBody.toString());
+      print('accept offer response' + response.body);
+
+      if (response.statusCode == 201) {
+        print(response.body);
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+        _showToast('Non Payable Transaction Sent!');
+        print("send response " + responseBody.toString());
+        return AuthResult.success;
+      } else {
+        print("Error: ${response.body}");
+        _showToast('Non Payable Transaction not sent');
+        testDialogToCheck(
+            context: context,
+            title: 'CancelNFTOfferMade not working',
+            description: response.body.toString());
+        functionToNavigateAfterNonPayable(response.body.toString(), operation);
+        return AuthResult.failure;
+      }
+    } catch (e) {
+      print('Error: $e');
+      _showToast('Error');
+      testDialogToCheck(
+          context: context,
+          title: 'CancelNFTOfferMade not working',
+          description: e.toString());
+      functionToNavigateAfterNonPayable(e.toString(), operation);
+      return AuthResult.failure;
+    }
+  }
+
+
   functionToNavigateAfterNonPayable(
-      String response, String operation,) {
-    AppDeepLinking().openNftApp(
-      {
-        "data": response,
-        "operation" : operation,
-        "comments": "response coming from api /non-payable-transactions/send",
-      },
-    );
+    String response,
+    String operation,
+  ) {
+    Future.delayed(Duration(seconds: 3), () {
+
+      AppDeepLinking().openNftApp(
+        {
+          "operation": operation,
+          "data": response,
+          "comments": "Non payable transactions response",
+        },
+      );
+    });
   }
 
   functionToNavigateAfterPayable(
-      String response, String operation,) {
-    AppDeepLinking().openNftApp(
-      {
-        "data": response,
-        "operation" : operation,
-        "comments": "response coming from api v2/payable-transactions/send",
-      },
-    );
+    String response,
+    String operation,
+      BuildContext context
+  ) {
+    // Future.delayed(Duration(seconds: 1), () {
+    //   testDialogToCheck(context: context,
+    //       title: 'data sending to neo',
+    //       description: "operation: $operation for  $response"
+    //   );
+    // });
+    Future.delayed(Duration(seconds: 3), () {
+
+      AppDeepLinking().openNftApp(
+        {
+          "operation": operation,
+          "data": response,
+          "comments": "payable transactions response",
+        },
+      );
+    });
   }
 
   functionToNavigateAfterCounterOffer(
-      String response, String operation,) {
+    String response,
+    String operation,
+  ) {
     AppDeepLinking().openNftApp(
       {
         "data": response,
-        "operation" : operation,
+        "operation": operation,
         "comments": "response coming from counter-offer offers",
       },
     );
   }
-
 
   ///
   Future<AuthResult> makeCounterOffer({
@@ -1157,20 +1294,16 @@ class TransactionProvider with ChangeNotifier {
   }) async {
     final url = Uri.parse(BASE_URL + '/counter-offer');
 
+    var requestBody = {
+      // "id": "501124a2-0135-47da-b1be-b18095bd018f",
+      // "offererId": "0x65BC9C8608688E1FA95247C570F5B72DB945468A",
+      // "offerAmount": 250
 
-     var requestBody = {
-
-         // "id": "501124a2-0135-47da-b1be-b18095bd018f",
-         // "offererId": "0x65BC9C8608688E1FA95247C570F5B72DB945468A",
-         // "offerAmount": 250
-
-    "id": id,
-    "offererId": offererId,
-    // "offererId": offererId,
-    "offerAmount": int.parse(offerAmount),
-
-
-     };
+      "id": id,
+      "offererId": offererId,
+      // "offererId": offererId,
+      "offerAmount": int.parse(offerAmount),
+    };
 
     try {
       final response = await http.post(
@@ -1180,9 +1313,7 @@ class TransactionProvider with ChangeNotifier {
           "Accept": "application/json",
           'Authorization': 'Bearer $token',
         },
-        body: json.encode(
-         requestBody
-        ),
+        body: json.encode(requestBody),
       );
 
       fToast = FToast();
@@ -1196,18 +1327,20 @@ class TransactionProvider with ChangeNotifier {
         final Map<String, dynamic> responseBody = json.decode(response.body);
         // _showToast('Counter Offer Sent!');
         print("send response " + responseBody.toString());
-        functionToNavigateAfterCounterOffer(response.body.toString(),operation);
+        functionToNavigateAfterCounterOffer(
+            response.body.toString(), operation);
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
         // _showToast('Counter Offer Not Sent');
-        functionToNavigateAfterCounterOffer(response.body.toString(),operation);
+        functionToNavigateAfterCounterOffer(
+            response.body.toString(), operation);
         return AuthResult.failure;
       }
     } catch (e) {
       print('Error: $e');
       // _showToast('Error');
-      functionToNavigateAfterCounterOffer(e.toString(),operation);
+      functionToNavigateAfterCounterOffer(e.toString(), operation);
       return AuthResult.failure;
     }
   }
@@ -1224,11 +1357,10 @@ class TransactionProvider with ChangeNotifier {
   }) async {
     final url = Uri.parse(BASE_URL + '/counter-offer/collection');
 
-
     var requestBody = {
-        // "id": "a1aa4fc7-ab0b-4589-9fd8-10a8567b6d9e",
-        // "offererId": "0x65BC9C8608688E1FA95247C570F5B72DB945468A",
-        // "offerAmount": 700
+      // "id": "a1aa4fc7-ab0b-4589-9fd8-10a8567b6d9e",
+      // "offererId": "0x65BC9C8608688E1FA95247C570F5B72DB945468A",
+      // "offerAmount": 700
       "id": id,
       "offererId": offererId,
       "offerAmount": int.parse(offerAmount),
@@ -1243,9 +1375,7 @@ class TransactionProvider with ChangeNotifier {
           "Accept": "application/json",
           'Authorization': 'Bearer $token',
         },
-        body: json.encode(
-            requestBody
-        ),
+        body: json.encode(requestBody),
       );
 
       print('payload to send bilal');
@@ -1257,18 +1387,20 @@ class TransactionProvider with ChangeNotifier {
         final Map<String, dynamic> responseBody = json.decode(response.body);
         // _showToast('Counter Offer Sent!');
         print("send response " + responseBody.toString());
-        functionToNavigateAfterCounterOffer(response.body.toString(),operation);
+        functionToNavigateAfterCounterOffer(
+            response.body.toString(), operation);
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
         // _showToast('Counter Offer Not Sent');
-        functionToNavigateAfterCounterOffer(response.body.toString(),operation);
+        functionToNavigateAfterCounterOffer(
+            response.body.toString(), operation);
         return AuthResult.failure;
       }
     } catch (e) {
       print('Error: $e');
       // _showToast('Error');
-      functionToNavigateAfterCounterOffer(e.toString(),operation);
+      functionToNavigateAfterCounterOffer(e.toString(), operation);
       return AuthResult.failure;
     }
   }
@@ -1285,7 +1417,6 @@ class TransactionProvider with ChangeNotifier {
   }) async {
     final url = Uri.parse(BASE_URL + '/counter-offer/reject');
 
-
     var requestBody = {
       "id": id,
       "offererId": offererId,
@@ -1300,9 +1431,7 @@ class TransactionProvider with ChangeNotifier {
           "Accept": "application/json",
           'Authorization': 'Bearer $token',
         },
-        body: json.encode(
-            requestBody
-        ),
+        body: json.encode(requestBody),
       );
 
       fToast = FToast();
@@ -1316,18 +1445,20 @@ class TransactionProvider with ChangeNotifier {
         final Map<String, dynamic> responseBody = json.decode(response.body);
         _showToast('Reject Counter Offer Sent!');
         print("send response " + responseBody.toString());
-        functionToNavigateAfterCounterOffer(response.body.toString(),operation);
+        functionToNavigateAfterCounterOffer(
+            response.body.toString(), operation);
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
         _showToast('Reject Counter Offer Not Sent');
-        functionToNavigateAfterCounterOffer(response.body.toString(),operation);
+        functionToNavigateAfterCounterOffer(
+            response.body.toString(), operation);
         return AuthResult.failure;
       }
     } catch (e) {
       print('Error: $e');
       // _showToast('Error');
-      functionToNavigateAfterCounterOffer(e.toString(),operation);
+      functionToNavigateAfterCounterOffer(e.toString(), operation);
       return AuthResult.failure;
     }
   }
@@ -1423,11 +1554,11 @@ class TransactionProvider with ChangeNotifier {
     }
   }
 
-  Future<AuthResult> payableTransactionProcess({
-    required String token,
-    required String paymentId,
-    required BuildContext context,
-  }) async {
+  Future<AuthResult> payableTransactionProcess(
+      {required String token,
+      required String paymentId,
+      required BuildContext context,
+      String? operation}) async {
     final url = Uri.parse(BASE_URL + '/v2/payable-transactions/process');
     final Map<String, dynamic> requestBody = {
       "paymentId": paymentId,
@@ -1443,8 +1574,9 @@ class TransactionProvider with ChangeNotifier {
               'Authorization': 'Bearer $token',
             },
             body: json.encode(requestBody),
-          )
-          .timeout(Duration(seconds: 10)); // Set timeout duration as needed
+          // )
+          // .timeout(Duration(seconds: 30)
+      ); // Set timeout duration as needed
 
       fToast = FToast();
       fToast.init(context);
@@ -1452,57 +1584,47 @@ class TransactionProvider with ChangeNotifier {
       print(requestBody);
       print('process api response');
       print(response.body);
+      testDialogToCheck(
+          context: context,
+          title: 'Process Api Response',
+          description: response.body.toString());
       if (response.statusCode == 201) {
         _showToast('Payment Processed Successfully');
-        AppDeepLinking().openNftApp(
-          {
-            "data": response.body.toString(),
-            "comments":
-                "response coming from api /v2/payable-transactions/process",
-          },
-        );
+        functionToNavigateAfterPayable(response.body.toString(), operation!, context);
+
         return AuthResult.success;
       } else {
         // Handle the error response here if needed
         print("Process Api Error: ${response.body}");
         _showToast('Payment Processing Failed');
-        AppDeepLinking().openNftApp(
-          {
-            "data": response.body.toString(),
-            "comments":
-                "response coming from api /v2/payable-transactions/process",
-          },
-        );
+        functionToNavigateAfterPayable(response.body.toString(), operation!,  context);
         return AuthResult.failure;
       }
-    } on TimeoutException catch (_) {
+    } on TimeoutException catch (error) {
       // Handle timeout error
-      print('Process Api Timeout');
+      print('Process Api Timeout Error: $error');
+
       _showToast('Request Timeout');
-      AppDeepLinking().openNftApp(
-        {
-          "data": "Request Timeout",
-          "comments":
-              "response coming from api /v2/payable-transactions/process",
-        },
-      );
+      testDialogToCheck(
+          context: context,
+          title: 'Process Api Response',
+          description: error.toString());
+      functionToNavigateAfterPayable(error.toString(), operation!, context);
+
       return AuthResult.failure;
     } catch (e) {
       // Handle other exceptions here
       print('Process Api Error: $e');
+
       _showToast('Error');
-      AppDeepLinking().openNftApp(
-        {
-          "data": e.toString(),
-          "comments":
-              "response coming from api /v2/payable-transactions/process",
-        },
-      );
+      testDialogToCheck(
+          context: context,
+          title: 'Process Api Response On catch',
+          description: e.toString());
+      functionToNavigateAfterPayable(e.toString(), operation!, context);
       return AuthResult.failure;
     }
   }
-
-
 
   Future<AuthResult> startTokenization({
     required String token,
@@ -1755,5 +1877,29 @@ class TransactionProvider with ChangeNotifier {
             right: 20,
           );
         });
+  }
+
+  testDialogToCheck({
+    required BuildContext context,
+    required String title,
+    required String description,
+  }) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(description),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

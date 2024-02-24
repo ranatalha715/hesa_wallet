@@ -995,6 +995,24 @@ class _TransactionRequestAcceptRejectState
                                                                           operation);
                                                             }
                                                             else if (operation ==
+                                                                'CancelNFTOfferMade') {
+                                                              await Provider.of<
+                                                                  TransactionProvider>(
+                                                                  context,
+                                                                  listen:
+                                                                  false)
+                                                                  .CancelNFTOfferMade(
+                                                                walletAddress: walletAddress,
+                                                                // params: params,
+                                                                token:
+                                                                accessToken,
+                                                                context:
+                                                                context,
+                                                                operation:
+                                                                operation, params: params,
+                                                              );
+                                                            }
+                                                            else if (operation ==
                                                                 'rejectNFTCounterOffer') {
                                                               await Provider.of<
                                                                   TransactionProvider>(
@@ -1017,6 +1035,7 @@ class _TransactionRequestAcceptRejectState
                                                                 counterOffererAmount,
                                                               );
                                                             }
+                                                            else{}
                                                             setState(() {
                                                               isLoading = false;
                                                             });

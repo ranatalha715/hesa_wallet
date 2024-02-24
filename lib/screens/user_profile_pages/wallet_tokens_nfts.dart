@@ -238,6 +238,11 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
           navigateToTransactionRequestAcceptRejectWithRejectOffer(
               uri.queryParameters, operation, context);
         }
+        else if(operation != null && operation == 'CancelNFTOfferMade'){
+          //CancelNFTOfferMade
+          navigateToTransactionRequestAcceptRejectWithCancelNFTOfferMade(
+              uri.queryParameters, operation, context);
+        }
         else if(operation != null && operation == 'makeNFTCounterOffer'){
           //makeNFTCounterOffer
           var data = json.decode(uri.queryParameters["params"]!);
@@ -275,6 +280,11 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
           print(id.toString()+ "  " + offererId.toString() + "  " + offerAmount.toString());
           navigateToTransactionRequestAcceptRejectWithrejectNFTCounterOffer(
               uri.queryParameters, operation, context, id.toString(), offererId.toString(), offerAmount.toString());
+        }
+        else if(operation != null && operation == 'acceptCollectionCounterOffer'){
+          //acceptCollectionCounterOffer
+          navigateToTransactionRequestWithacceptCollectionCounterOffer(
+              uri.queryParameters, operation, context);
         }
         else{}
       }
@@ -403,6 +413,17 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     });
   }
 
+  Future<void> navigateToTransactionRequestWithacceptCollectionCounterOffer(
+      Map<String, dynamic> queryParams,
+      String operation,
+      BuildContext ctx) async {
+    String paramsString = queryParams['params'] ?? '';
+    await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
+      "params": paramsString,
+      "operation": operation,
+    });
+  }
+
   Future<void> navigateToTransactionRequestAcceptRejectWithAcceptOffer(
       Map<String, dynamic> queryParams,
       String operation,
@@ -415,6 +436,17 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   }
 
   Future<void> navigateToTransactionRequestAcceptRejectWithRejectOffer(
+      Map<String, dynamic> queryParams,
+      String operation,
+      BuildContext ctx) async {
+    String paramsString = queryParams['params'] ?? '';
+    await Navigator.of(ctx).pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
+      "params": paramsString,
+      "operation": operation,
+    });
+  }
+
+  Future<void> navigateToTransactionRequestAcceptRejectWithCancelNFTOfferMade(
       Map<String, dynamic> queryParams,
       String operation,
       BuildContext ctx) async {

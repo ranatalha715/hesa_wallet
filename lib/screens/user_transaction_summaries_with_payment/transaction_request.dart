@@ -148,7 +148,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
                     // paymentResultData.paymentResult.toString()
                     Provider.of<TransactionProvider>(context, listen: false)
                         .checkoutId,
-                context: context);
+                context: context,
+                operation: operation
+        );
         //delay of 1 second
         //go to neo app WITH RESPONSE
 
@@ -162,8 +164,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
         print('Payment failed');
         AppDeepLinking().openNftApp(
           {
+            "operation": "$operation",
             "data": paymentResultData.errorString.toString(),
-            "comments": "response coming from payment method for $operation",
+
           },
         );
         _showToast('Payment failed');
@@ -174,9 +177,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
       print('Error occurred: $e');
       AppDeepLinking().openNftApp(
         {
+          "operation": "$operation",
           "data": e.toString(),
-          "comments": "response coming from payment method for $operation",
-        },
+            },
       );
       _showToast('Payment failed');
     }
@@ -1731,7 +1734,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     // }
                                                   });
                                                 }
-                                              else   {
+                                              else if (operation ==
+                                              'acceptCounterOffer') {
                                                 final acceptCounterOffer =
                                                 await transactionProvider
                                                     .acceptCounterOffer(
@@ -1768,6 +1772,45 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   // }
                                                 });
                                               }
+                                              else if (operation ==
+                                                  'acceptCollectionCounterOffer') {
+                                                final acceptCollectionCounterOffer =
+                                                await transactionProvider
+                                                    .acceptCollectionCounterOffer(
+                                                  params: params,
+                                                  token: accessToken,
+                                                  context: context,
+                                                  walletAddress: userProvider
+                                                      .walletAddress!,
+                                                  tokenId: paymentCards
+                                                      .isEmpty
+                                                      ? ""
+                                                      : trPro
+                                                      .selectedCardTokenId,
+                                                  operation: operation,
+                                                )
+                                                    .then((value) {
+                                                  print(
+                                                      "transactionProvider.checkoutId");
+                                                  print(transactionProvider
+                                                      .checkoutId);
+                                                  payRequestNowReadyUI(
+                                                      operation: operation,
+                                                      brandsName: [
+                                                        "VISA",
+                                                        "MASTER",
+                                                        "MADA",
+                                                      ],
+                                                      checkoutId: Provider.of<
+                                                          TransactionProvider>(
+                                                          context,
+                                                          listen: false)
+                                                          .checkoutId);
+                                                  // });
+                                                  // }
+                                                });
+                                              }
+                                              else{}
                                               setState(() {
                                                 isLoading = false;
                                               });
