@@ -977,12 +977,12 @@ class _TransactionRequestAcceptRejectState
                                                               isLoading = true;
                                                             });
                                                             if (operation ==
-                                                                'rejectOfferReceived') {
+                                                                'rejectNFTOfferReceived') {
                                                               await Provider.of<TransactionProvider>(
                                                                       context,
                                                                       listen:
                                                                           false)
-                                                                  .rejectOffer(
+                                                                  .rejectNFTOfferReceived(
                                                                       params:
                                                                           params,
                                                                       token:
@@ -1013,6 +1013,24 @@ class _TransactionRequestAcceptRejectState
                                                               );
                                                             }
                                                             else if (operation ==
+                                                                'CancelCollectionOfferMade') {
+                                                              await Provider.of<
+                                                                  TransactionProvider>(
+                                                                  context,
+                                                                  listen:
+                                                                  false)
+                                                                  .CancelCollectionOfferMade(
+                                                                walletAddress: walletAddress,
+                                                                // params: params,
+                                                                token:
+                                                                accessToken,
+                                                                context:
+                                                                context,
+                                                                operation:
+                                                                operation, params: params,
+                                                              );
+                                                            }
+                                                            else if (operation ==
                                                                 'rejectNFTCounterOffer') {
                                                               await Provider.of<
                                                                   TransactionProvider>(
@@ -1020,6 +1038,29 @@ class _TransactionRequestAcceptRejectState
                                                                   listen:
                                                                   false)
                                                                   .rejectNFTCounterOffer(
+                                                                walletAddress: walletAddress,
+                                                                // params: params,
+                                                                token:
+                                                                accessToken,
+                                                                context:
+                                                                context,
+                                                                operation:
+                                                                operation,
+                                                                id: counterId,
+                                                                offererId:
+                                                                counterOffererId,
+                                                                offerAmount:
+                                                                counterOffererAmount,
+                                                              );
+                                                            }
+                                                            else if (operation ==
+                                                                'rejectCollectionCounterOffer') {
+                                                              await Provider.of<
+                                                                  TransactionProvider>(
+                                                                  context,
+                                                                  listen:
+                                                                  false)
+                                                                  .rejectCollectionCounterOffer(
                                                                 walletAddress: walletAddress,
                                                                 // params: params,
                                                                 token:

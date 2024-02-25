@@ -52,7 +52,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   bool _isloading = false;
 
 
-
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
@@ -76,6 +75,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     return result;
   }
 
+  var userWalletAddress;
+
   Future<void> init() async {
     setState(() {
       _isloading = true;
@@ -85,7 +86,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     var user = await Provider.of<UserProvider>(context, listen: false);
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
-
+    userWalletAddress = user.walletAddress;
     await Provider.of<NftsProvider>(context, listen: false)
         .getAllNftsCollection(
       token: accessToken,
@@ -134,7 +135,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor:
-          AppColors.profileHeaderDark, // Change to your desired color
+      AppColors.profileHeaderDark, // Change to your desired color
     ));
   }
 
@@ -198,95 +199,123 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
           //purchaseNFT
           navigateToTransactionRequestWithPurchaseNft(
               uri.queryParameters, operation, context);
-        } else if(operation != null && operation == 'listNFT'){
+        } else if (operation != null && operation == 'listNFT') {
           //listNFT
           navigateToTransactionRequestWithListNftFixedPrice(
               uri.queryParameters, operation, context);
-        } else if(operation != null && operation == 'listCollection'){
+        } else if (operation != null && operation == 'listCollection') {
           //listCollection
           navigateToTransactionRequestWithListCollectionFixedPrice(
               uri.queryParameters, operation, context);
-        } else if(operation != null && operation == 'listAuctionNFT'){
+        } else if (operation != null && operation == 'listAuctionNFT') {
           navigateToTransactionRequestWithListNftForAuction(
               uri.queryParameters, operation, context);
-        } else if(operation != null && operation == 'listAuctionCollection'){
+        } else if (operation != null && operation == 'listAuctionCollection') {
           //listAuctionCollection
           navigateToTransactionRequestWithListCollectionForAuction(
               uri.queryParameters, operation, context);
-        } else if(operation != null && operation == 'burnNFT'){
+        } else if (operation != null && operation == 'burnNFT') {
           //burnNFT
           navigateToTransactionRequestWithBurnNFT(
               uri.queryParameters, operation, context);
         }
-        else if(operation != null && operation == 'burnCollection'){
+        else if (operation != null && operation == 'burnCollection') {
           //burnCollection
           navigateToTransactionRequestWithBurnCollection(
               uri.queryParameters, operation, context);
         }
-        else if(operation != null && operation == 'makeOfferNFT'){
+        else if (operation != null && operation == 'makeOfferNFT') {
           //makeOfferNFT
           navigateToTransactionRequestWithMakeOfferNFT(
               uri.queryParameters, operation, context);
         }
-        else if(operation != null && operation == 'acceptOfferReceived'){
+        else if (operation != null && operation == 'acceptOfferReceived') {
           //acceptOfferReceived
           navigateToTransactionRequestAcceptRejectWithAcceptOffer(
               uri.queryParameters, operation, context);
         }
-        else if(operation != null && operation == 'rejectOfferReceived'){
-          //rejectOfferReceived
-          navigateToTransactionRequestAcceptRejectWithRejectOffer(
+        else if (operation != null && operation == 'rejectNFTOfferReceived') {
+          //rejectNFTOfferReceived
+          navigateToTransactionRequestAcceptRejectWithrejectNFTOfferReceived(
               uri.queryParameters, operation, context);
         }
-        else if(operation != null && operation == 'CancelNFTOfferMade'){
+        else if (operation != null && operation == 'CancelNFTOfferMade') {
           //CancelNFTOfferMade
           navigateToTransactionRequestAcceptRejectWithCancelNFTOfferMade(
               uri.queryParameters, operation, context);
         }
-        else if(operation != null && operation == 'makeNFTCounterOffer'){
-          //makeNFTCounterOffer
-          var data = json.decode(uri.queryParameters["params"]!);
-        String? id = data['id'];
-        String? offererId = data['offererId'];
-        int? offerAmount = int.tryParse(data['offerAmount'].toString() ?? '');
-        print('test params individually');
-        print(id.toString()+ "  " + offererId.toString() + "  " + offerAmount.toString());
-          navigateToTransactionRequestAcceptRejectWithMakeCounterOffer(
-              uri.queryParameters, operation, context, id.toString(), offererId.toString(), offerAmount.toString());
+        else
+        if (operation != null && operation == 'CancelCollectionOfferMade') {
+          //CancelCollectionOfferMade
+          navigateToTransactionRequestAcceptRejectWithCancelCollectionOfferMade(
+              uri.queryParameters, operation, context);
         }
-        else if(operation != null && operation == 'makeCollectionCounterOffer'){
+        else if (operation != null && operation == 'makeNFTCounterOffer') {
           //makeNFTCounterOffer
           var data = json.decode(uri.queryParameters["params"]!);
           String? id = data['id'];
           String? offererId = data['offererId'];
           int? offerAmount = int.tryParse(data['offerAmount'].toString() ?? '');
           print('test params individually');
-          print(id.toString()+ "  " + offererId.toString() + "  " + offerAmount.toString());
-          navigateToTransactionRequestAcceptRejectWithmakeCollectionCounterOffer(
-              uri.queryParameters, operation, context, id.toString(), offererId.toString(), offerAmount.toString());
+          print(id.toString() + "  " + offererId.toString() + "  " +
+              offerAmount.toString());
+          navigateToTransactionRequestAcceptRejectWithMakeCounterOffer(
+              uri.queryParameters, operation, context, id.toString(),
+              offererId.toString(), offerAmount.toString());
         }
-        else if(operation != null && operation == 'acceptCounterOffer'){
+        else
+        if (operation != null && operation == 'makeCollectionCounterOffer') {
+          //makeNFTCounterOffer
+          var data = json.decode(uri.queryParameters["params"]!);
+          String? id = data['id'];
+          String? offererId = data['offererId'];
+          int? offerAmount = int.tryParse(data['offerAmount'].toString() ?? '');
+          print('test params individually');
+          print(id.toString() + "  " + offererId.toString() + "  " +
+              offerAmount.toString());
+          navigateToTransactionRequestAcceptRejectWithmakeCollectionCounterOffer(
+              uri.queryParameters, operation, context, id.toString(),
+              offererId.toString(), offerAmount.toString());
+        }
+        else if (operation != null && operation == 'acceptCounterOffer') {
           //acceptCounterOffer
           navigateToTransactionRequestWithAcceptCounterOffer(
               uri.queryParameters, operation, context);
         }
-        else if(operation != null && operation == 'rejectNFTCounterOffer'){
+        else if (operation != null && operation == 'rejectNFTCounterOffer') {
           //makeNFTCounterOffer
           var data = json.decode(uri.queryParameters["params"]!);
           String? id = data['id'];
           String? offererId = data['offererId'];
           int? offerAmount = int.tryParse(data['offerAmount'].toString() ?? '');
           print('test params individually');
-          print(id.toString()+ "  " + offererId.toString() + "  " + offerAmount.toString());
+          print(id.toString() + "  " + offererId.toString() + "  " +
+              offerAmount.toString());
           navigateToTransactionRequestAcceptRejectWithrejectNFTCounterOffer(
-              uri.queryParameters, operation, context, id.toString(), offererId.toString(), offerAmount.toString());
+              uri.queryParameters, operation, context, id.toString(),
+              offererId.toString(), offerAmount.toString());
         }
-        else if(operation != null && operation == 'acceptCollectionCounterOffer'){
+        else
+        if (operation != null && operation == 'rejectCollectionCounterOffer') {
+          //makeNFTCounterOffer
+          var data = json.decode(uri.queryParameters["params"]!);
+          String? id = data['id'];
+          String? offererId = data['offererId'];
+          int? offerAmount = int.tryParse(data['offerAmount'].toString() ?? '');
+          print('test params individually');
+          print(id.toString() + "  " + offererId.toString() + "  " +
+              offerAmount.toString());
+          navigateToTransactionRequestAcceptRejectWithrejectCollectionCounterOffer(
+              uri.queryParameters, operation, context, id.toString(),
+              offererId.toString(), offerAmount.toString());
+        }
+        else
+        if (operation != null && operation == 'acceptCollectionCounterOffer') {
           //acceptCollectionCounterOffer
           navigateToTransactionRequestWithacceptCollectionCounterOffer(
               uri.queryParameters, operation, context);
         }
-        else{}
+        else {}
       }
     }
     );
@@ -300,6 +329,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
       "params": paramsString,
       "operation": operation,
+      "walletAddress":userWalletAddress
     });
   }
 
@@ -311,6 +341,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
       "params": paramsString,
       "operation": operation,
+      "walletAddress":userWalletAddress
     });
   }
 
@@ -322,6 +353,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
       "params": paramsString,
       "operation": operation,
+      "walletAddress":userWalletAddress
     });
   }
 
@@ -333,6 +365,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
       "params": paramsString,
       "operation": operation,
+      "walletAddress":userWalletAddress
     });
   }
 
@@ -344,6 +377,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
       "params": paramsString,
       "operation": operation,
+      "walletAddress":userWalletAddress
     });
   }
 
@@ -355,6 +389,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
       "params": paramsString,
       "operation": operation,
+      "walletAddress":userWalletAddress
     });
   }
 
@@ -366,6 +401,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
       "params": paramsString,
       "operation": operation,
+      "walletAddress":userWalletAddress
     });
   }
 
@@ -377,6 +413,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
       "params": paramsString,
       "operation": operation,
+      "walletAddress":userWalletAddress
     });
   }
 
@@ -388,6 +425,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
       "params": paramsString,
       "operation": operation,
+      "walletAddress":userWalletAddress
     });
   }
 
@@ -410,6 +448,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
       "params": paramsString,
       "operation": operation,
+      "walletAddress":userWalletAddress
     });
   }
 
@@ -421,6 +460,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
       "params": paramsString,
       "operation": operation,
+      "walletAddress":userWalletAddress
     });
   }
 
@@ -429,20 +469,25 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       String operation,
       BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
+    await Navigator.of(ctx).pushNamed(
+        TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
       "operation": operation,
+      "walletAddress":userWalletAddress
     });
   }
 
-  Future<void> navigateToTransactionRequestAcceptRejectWithRejectOffer(
+  Future<
+      void> navigateToTransactionRequestAcceptRejectWithrejectNFTOfferReceived(
       Map<String, dynamic> queryParams,
       String operation,
       BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
+    await Navigator.of(ctx).pushNamed(
+        TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
       "operation": operation,
+      "walletAddress":userWalletAddress
     });
   }
 
@@ -451,9 +496,25 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       String operation,
       BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
+    await Navigator.of(ctx).pushNamed(
+        TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
       "operation": operation,
+      "walletAddress":userWalletAddress
+    });
+  }
+
+  Future<
+      void> navigateToTransactionRequestAcceptRejectWithCancelCollectionOfferMade(
+      Map<String, dynamic> queryParams,
+      String operation,
+      BuildContext ctx) async {
+    String paramsString = queryParams['params'] ?? '';
+    await Navigator.of(ctx).pushNamed(
+        TransactionRequestAcceptReject.routeName, arguments: {
+      "params": paramsString,
+      "operation": operation,
+      "walletAddress":userWalletAddress
     });
   }
 
@@ -463,53 +524,79 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       BuildContext ctx,
       String id,
       String offererId,
-      String offerAmount,
-      ) async {
+      String offerAmount,) async {
     String paramsString = queryParams['params'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
+    await Navigator.of(ctx).pushNamed(
+        TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
       "operation": operation,
       "id": id,
       "offererId": offererId,
       "offerAmount": offerAmount,
-    });
-     print('chal gia');
-  }
-
-  Future<void> navigateToTransactionRequestAcceptRejectWithrejectNFTCounterOffer(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx,
-      String id,
-      String offererId,
-      String offerAmount,
-      ) async {
-    String paramsString = queryParams['params'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
-      "params": paramsString,
-      "operation": operation,
-      "id": id,
-      "offererId": offererId,
-      "offerAmount": offerAmount,
+      "walletAddress":userWalletAddress
     });
     print('chal gia');
   }
 
-  Future<void> navigateToTransactionRequestAcceptRejectWithmakeCollectionCounterOffer(
+  Future<
+      void> navigateToTransactionRequestAcceptRejectWithrejectNFTCounterOffer(
       Map<String, dynamic> queryParams,
       String operation,
       BuildContext ctx,
       String id,
       String offererId,
-      String offerAmount,
-      ) async {
+      String offerAmount,) async {
     String paramsString = queryParams['params'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
+    await Navigator.of(ctx).pushNamed(
+        TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
       "operation": operation,
       "id": id,
       "offererId": offererId,
       "offerAmount": offerAmount,
+      "walletAddress":userWalletAddress
+    });
+    print('chal gia');
+  }
+
+  Future<
+      void> navigateToTransactionRequestAcceptRejectWithrejectCollectionCounterOffer(
+      Map<String, dynamic> queryParams,
+      String operation,
+      BuildContext ctx,
+      String id,
+      String offererId,
+      String offerAmount,) async {
+    String paramsString = queryParams['params'] ?? '';
+    await Navigator.of(ctx).pushNamed(
+        TransactionRequestAcceptReject.routeName, arguments: {
+      "params": paramsString,
+      "operation": operation,
+      "id": id,
+      "offererId": offererId,
+      "offerAmount": offerAmount,
+      "walletAddress":userWalletAddress
+    });
+    print('chal gia');
+  }
+
+  Future<
+      void> navigateToTransactionRequestAcceptRejectWithmakeCollectionCounterOffer(
+      Map<String, dynamic> queryParams,
+      String operation,
+      BuildContext ctx,
+      String id,
+      String offererId,
+      String offerAmount,) async {
+    String paramsString = queryParams['params'] ?? '';
+    await Navigator.of(ctx).pushNamed(
+        TransactionRequestAcceptReject.routeName, arguments: {
+      "params": paramsString,
+      "operation": operation,
+      "id": id,
+      "offererId": offererId,
+      "offerAmount": offerAmount,
+      "walletAddress":userWalletAddress
     });
   }
 
@@ -520,19 +607,29 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
     final nftsCollectionAll =
-        Provider.of<NftsProvider>(context, listen: false).nftsCollectionAll;
-    final nftsAll = Provider.of<NftsProvider>(context, listen: false)
+        Provider
+            .of<NftsProvider>(context, listen: false)
+            .nftsCollectionAll;
+    final nftsAll = Provider
+        .of<NftsProvider>(context, listen: false)
         .nftsCreated; //WILL CHANGE THIS
     final nftsOwned =
-        Provider.of<NftsProvider>(context, listen: false).nftsOwned;
+        Provider
+            .of<NftsProvider>(context, listen: false)
+            .nftsOwned;
     final nftsCollectionOwnedByUser =
-        Provider.of<NftsProvider>(context, listen: false)
+        Provider
+            .of<NftsProvider>(context, listen: false)
             .nftsCollectionOwnedByUser;
 
     final nftsCreated =
-        Provider.of<NftsProvider>(context, listen: false).nftsCreated;
+        Provider
+            .of<NftsProvider>(context, listen: false)
+            .nftsCreated;
     final nftsCollectionCreated =
-        Provider.of<NftsProvider>(context, listen: false).nftsCollectionCreated;
+        Provider
+            .of<NftsProvider>(context, listen: false)
+            .nftsCollectionCreated;
     return Consumer<UserProvider>(builder: (context, user, child) {
       return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
         return Stack(
@@ -565,7 +662,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                   left: 14.sp, right: 20.sp, bottom: 8.sp),
                               child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   GestureDetector(
@@ -573,13 +670,13 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                         _key.currentState!.openDrawer(),
                                     child: Stack(
                                       children: [
-                                             Icon(
-                                              Icons.menu_rounded,
-                                              color: themeNotifier.isDark
-                                                  ? AppColors.textColorWhite
-                                                  : AppColors.textColorBlack,
-                                              size: 25.sp,
-                                            ),
+                                        Icon(
+                                          Icons.menu_rounded,
+                                          color: themeNotifier.isDark
+                                              ? AppColors.textColorWhite
+                                              : AppColors.textColorBlack,
+                                          size: 25.sp,
+                                        ),
 
                                         Positioned(
                                           right: 1,
@@ -590,7 +687,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                             decoration: BoxDecoration(
                                               color: AppColors.errorColor,
                                               borderRadius:
-                                                  BorderRadius.circular(10.sp),
+                                              BorderRadius.circular(10.sp),
                                             ),
                                           ),
                                         )
@@ -635,9 +732,10 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                   //   ),
                                   // ),
                                   GestureDetector(
-                                    onTap: () => setState(() {
-                                      showLockedScreen = true;
-                                    }),
+                                    onTap: () =>
+                                        setState(() {
+                                          showLockedScreen = true;
+                                        }),
                                     //     Navigator.push(
                                     //   context,
                                     //   MaterialPageRoute(
@@ -680,14 +778,14 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                 child: Padding(
                                   padding: EdgeInsets.all(1.sp),
                                   child:
-                                      // SvgPicture.string(
-                                      //   // Replace 'base64EncodedSvg' with your actual Base64-encoded SVG string
-                                      //   Provider.of<UserProvider>(context, listen: false).userAvatar!,
-                                      //   // You can set width and height to adjust the size of the SVG image
-                                      //   width: 55.sp,
-                                      //   height: 55.sp,
-                                      // ),
-                                      Image.asset(
+                                  // SvgPicture.string(
+                                  //   // Replace 'base64EncodedSvg' with your actual Base64-encoded SVG string
+                                  //   Provider.of<UserProvider>(context, listen: false).userAvatar!,
+                                  //   // You can set width and height to adjust the size of the SVG image
+                                  //   width: 55.sp,
+                                  //   height: 55.sp,
+                                  // ),
+                                  Image.asset(
                                     // user.userAvatar!,
                                     //     Provider.of<UserProvider>(context, listen: false).userAvatar ?? "",
                                     "assets/images/profile.png",
@@ -725,7 +823,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                 Text(
                                   user.walletAddress != null
                                       ? replaceMiddleWithDots(
-                                          user.walletAddress!)
+                                      user.walletAddress!)
                                       : "...",
                                   // '0x1647f...87332',
                                   style: TextStyle(
@@ -779,7 +877,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                     controller: _tabController,
                                     indicatorColor: AppColors.activeButtonColor,
                                     unselectedLabelColor:
-                                        AppColors.textColorGrey,
+                                    AppColors.textColorGrey,
                                     labelColor: themeNotifier.isDark
                                         ? AppColors.textColorWhite
                                         : AppColors.textColorBlack,
@@ -800,118 +898,118 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                           ),
                           _isloading
                               ? Padding(
-                                  padding: EdgeInsets.only(top: 25.h),
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      color: AppColors.activeButtonColor,
+                            padding: EdgeInsets.only(top: 25.h),
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.activeButtonColor,
+                              ),
+                            ),
+                          )
+                              : Expanded(
+                            child: TabBarView(
+                              controller: _tabController,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 18.h,
+                                  ),
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "You have no Tokens",
+                                      style: TextStyle(
+                                          color: themeNotifier.isDark
+                                              ? AppColors
+                                              .textColorGreyShade2
+                                              : AppColors.textColorBlack,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 12.sp,
+                                          fontFamily: 'Blogger Sans'),
                                     ),
                                   ),
-                                )
-                              : Expanded(
-                                  child: TabBarView(
-                                    controller: _tabController,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: 18.h,
-                                        ),
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            "You have no Tokens",
-                                            style: TextStyle(
-                                                color: themeNotifier.isDark
-                                                    ? AppColors
-                                                        .textColorGreyShade2
-                                                    : AppColors.textColorBlack,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 12.sp,
-                                                fontFamily: 'Blogger Sans'),
-                                          ),
-                                        ),
-                                      ),
-                                      //show this when data is empty
-                                      // Center(child: Text('You have no NFTs under \nthis wallet ID',
-                                      //   textAlign: TextAlign.center,
-                                      //   style: TextStyle(
-                                      //     color: AppColors.textColorGrey,
-                                      //     fontWeight: FontWeight.w400,
-                                      //     fontSize: 11.5.sp,
-                                      //   ),
-                                      // )),
-                                      Column(
-                                        children: [
-                                          Container(
-                                              height: 8.h,
-                                              width: 100.w,
-                                              color: themeNotifier.isDark
-                                                  ? AppColors.backgroundColor
-                                                  : AppColors.textColorWhite,
-                                              child: SingleChildScrollView(
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                    horizontal: 16.sp,
-                                                  ),
-                                                  // vertical: 10.sp),
-                                                  child: Row(
-                                                    children: [
-                                                      NFTCategoryWidget(
-                                                        title: "All".tr(),
-                                                        // image: "",
-                                                        isFirst: true,
-                                                        index: 0,
-                                                        handler: () =>
-                                                            onCategorySelected(
-                                                                0),
-                                                      ),
-                                                      NFTCategoryWidget(
-                                                        title: "Owned".tr(),
-                                                        // image:
-                                                        //     'assets/images/cat_dig_art.png',
-                                                        index: 1,
-                                                        handler: () =>
-                                                            onCategorySelected(
-                                                                1),
-                                                      ),
-                                                      NFTCategoryWidget(
-                                                        title: "Created".tr(),
-                                                        // image:
-                                                        //     'assets/images/cat_sports.png',
-                                                        index: 2,
-                                                        handler: () =>
-                                                            onCategorySelected(
-                                                                2),
-                                                      ),
-                                                      NFTCategoryWidget(
-                                                        title: "Listed".tr(),
-                                                        // image:
-                                                        //     'assets/images/cat_animals.png',
-                                                        index: 3,
-                                                        handler: () =>
-                                                            onCategorySelected(
-                                                                3),
-                                                      ),
-                                                    ],
-                                                  ),
+                                ),
+                                //show this when data is empty
+                                // Center(child: Text('You have no NFTs under \nthis wallet ID',
+                                //   textAlign: TextAlign.center,
+                                //   style: TextStyle(
+                                //     color: AppColors.textColorGrey,
+                                //     fontWeight: FontWeight.w400,
+                                //     fontSize: 11.5.sp,
+                                //   ),
+                                // )),
+                                Column(
+                                  children: [
+                                    Container(
+                                        height: 8.h,
+                                        width: 100.w,
+                                        color: themeNotifier.isDark
+                                            ? AppColors.backgroundColor
+                                            : AppColors.textColorWhite,
+                                        child: SingleChildScrollView(
+                                          scrollDirection:
+                                          Axis.horizontal,
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 16.sp,
+                                            ),
+                                            // vertical: 10.sp),
+                                            child: Row(
+                                              children: [
+                                                NFTCategoryWidget(
+                                                  title: "All".tr(),
+                                                  // image: "",
+                                                  isFirst: true,
+                                                  index: 0,
+                                                  handler: () =>
+                                                      onCategorySelected(
+                                                          0),
                                                 ),
-                                              )),
-                                          Expanded(
-                                              child: bottomSpaceContent(
-                                            nftsCollectionAll,
-                                            nftsAll,
-                                            nftsCollectionOwnedByUser,
-                                            nftsOwned,
-                                            themeNotifier.isDark,
-                                            nftsCollectionCreated,
-                                            nftsCreated,
-                                          ))
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                )
+                                                NFTCategoryWidget(
+                                                  title: "Owned".tr(),
+                                                  // image:
+                                                  //     'assets/images/cat_dig_art.png',
+                                                  index: 1,
+                                                  handler: () =>
+                                                      onCategorySelected(
+                                                          1),
+                                                ),
+                                                NFTCategoryWidget(
+                                                  title: "Created".tr(),
+                                                  // image:
+                                                  //     'assets/images/cat_sports.png',
+                                                  index: 2,
+                                                  handler: () =>
+                                                      onCategorySelected(
+                                                          2),
+                                                ),
+                                                NFTCategoryWidget(
+                                                  title: "Listed".tr(),
+                                                  // image:
+                                                  //     'assets/images/cat_animals.png',
+                                                  index: 3,
+                                                  handler: () =>
+                                                      onCategorySelected(
+                                                          3),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        )),
+                                    Expanded(
+                                        child: bottomSpaceContent(
+                                          nftsCollectionAll,
+                                          nftsAll,
+                                          nftsCollectionOwnedByUser,
+                                          nftsOwned,
+                                          themeNotifier.isDark,
+                                          nftsCollectionCreated,
+                                          nftsCreated,
+                                        ))
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -921,9 +1019,10 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
             ),
             if (showLockedScreen)
               WelcomeScreen(
-                handler: () => setState(() {
-                  showLockedScreen = false;
-                }),
+                handler: () =>
+                    setState(() {
+                      showLockedScreen = false;
+                    }),
               ),
           ],
         );
@@ -931,12 +1030,11 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     });
   }
 
-  Widget NFTCategoryWidget(
-      {required String title,
-      Function? handler,
-      // String? image,
-      bool isFirst = false,
-      required int index}) {
+  Widget NFTCategoryWidget({required String title,
+    Function? handler,
+    // String? image,
+    bool isFirst = false,
+    required int index}) {
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -975,8 +1073,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     );
   }
 
-  Widget bottomSpaceContent(
-      var nftsCollectionAll,
+  Widget bottomSpaceContent(var nftsCollectionAll,
       var nftsAll,
       var nftsCollectionOwnedByUser,
       var nftsOwned,
@@ -985,11 +1082,11 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       var nftsCreated) {
     switch (selectedCategoryIndex) {
       case 0: // All
-        // Replace AllNFTList with your widget displaying all categories
+      // Replace AllNFTList with your widget displaying all categories
         return NftsCollectionDivision(
             nftsCollection: nftsCollectionAll,
             nfts:
-                nftsAll); // Replace AllNFTList with your widget displaying all categories
+            nftsAll); // Replace AllNFTList with your widget displaying all categories
       case 1: // Owned
         return NftsCollectionDivision(
           nftsCollection: nftsCollectionOwnedByUser,
@@ -1006,7 +1103,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
           nftsCollection: nftsCollectionCreated,
           nfts: nftsCreated,
         ); // Replace ListedNFTList with your widget displaying listed categories
-      // return ListedNFTList(); // Replace ListedNFTList with your widget displaying listed categories
+    // return ListedNFTList(); // Replace ListedNFTList with your widget displaying listed categories
       default:
         return Container(); // Default case, return an empty container or handle as per your requirement
     }
@@ -1044,9 +1141,9 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                 overflow: TextOverflow.ellipsis,
                 // .toUpperCase(),
                 style: TextStyle(
-                        color: AppColors.backgroundColor,
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.bold)
+                    color: AppColors.backgroundColor,
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.bold)
                     .apply(fontWeightDelta: -2),
               ),
             ),

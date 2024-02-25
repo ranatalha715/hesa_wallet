@@ -141,7 +141,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
       print(paymentResultData.paymentResult);
       if (paymentResultData.paymentResult == PaymentResult.success ||
           paymentResultData.paymentResult == PaymentResult.sync) {
-        Provider.of<TransactionProvider>(context, listen: false)
+        setState((){
+          isLoading=true;
+        });
+       await Provider.of<TransactionProvider>(context, listen: false)
             .payableTransactionProcess(
                 token: accessToken,
                 paymentId:
@@ -151,6 +154,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
                 context: context,
                 operation: operation
         );
+        setState((){
+          isLoading=false;
+        });
         //delay of 1 second
         //go to neo app WITH RESPONSE
 
