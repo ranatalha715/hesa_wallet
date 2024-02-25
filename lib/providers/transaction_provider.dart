@@ -88,7 +88,7 @@ class TransactionProvider with ChangeNotifier {
     final url = Uri.parse(BASE_URL + '/v2/payable-transactions/send');
     Map<String, dynamic> paramsMap = jsonDecode(params);
     String yourWalletAddress = walletAddress;
-    // paramsMap['creatorWalletAddress'] = yourWalletAddress;
+    paramsMap['creatorWalletAddress'] = yourWalletAddress;
     // Convert the paramsMap to a string
     String updatedParams = jsonEncode(paramsMap);
     print('params to send bilal' + updatedParams);
@@ -168,7 +168,7 @@ class TransactionProvider with ChangeNotifier {
     final url = Uri.parse(BASE_URL + '/v2/payable-transactions/send');
     Map<String, dynamic> paramsMap = jsonDecode(params);
     String yourWalletAddress = walletAddress;
-    // paramsMap['creatorWalletAddress'] = yourWalletAddress;
+    paramsMap['creatorWalletAddress'] = yourWalletAddress;
     String updatedParams = jsonEncode(paramsMap);
     print('minting params to send bilal' + updatedParams);
     final Map<String, dynamic> requestBody = {
@@ -204,6 +204,8 @@ class TransactionProvider with ChangeNotifier {
 
       fToast = FToast();
       fToast.init(context);
+      print('minitng WAdd to send bilal');
+      print(walletAddress);
       print('minitng payload to send bilal');
       print(requestBody.toString());
       print('minting response');
@@ -342,9 +344,7 @@ class TransactionProvider with ChangeNotifier {
     Map<String, dynamic> paramsMap = jsonDecode(params);
     String yourWalletAddress = walletAddress;
 
-    // paramsMap['listedBy'] = yourWalletAddress;
-    // paramsMap['price'] = 500;
-    // Convert the paramsMap to a string
+    paramsMap['listedBy'] = yourWalletAddress;
     String updatedParams = jsonEncode(paramsMap);
     print('params to send bilal' + updatedParams);
     final Map<String, dynamic> requestBody = {
@@ -426,10 +426,7 @@ class TransactionProvider with ChangeNotifier {
     final url = Uri.parse(BASE_URL + '/v2/payable-transactions/send');
     Map<String, dynamic> paramsMap = jsonDecode(params);
     String yourWalletAddress = walletAddress;
-
-    // paramsMap['listedBy'] = yourWalletAddress;
-    // paramsMap['price'] = 500;
-    // Convert the paramsMap to a string
+    paramsMap['listedBy'] = yourWalletAddress;
     String updatedParams = jsonEncode(paramsMap);
     print('params to send bilal' + updatedParams);
     final Map<String, dynamic> requestBody = {
@@ -448,7 +445,6 @@ class TransactionProvider with ChangeNotifier {
         "postcode": "75400",
         "street1": "39 E"
       },
-      // "params": updatedParams,
       "params": paramsMap,
     };
 
@@ -511,10 +507,7 @@ class TransactionProvider with ChangeNotifier {
     final url = Uri.parse(BASE_URL + '/v2/payable-transactions/send');
     Map<String, dynamic> paramsMap = jsonDecode(params);
     String yourWalletAddress = walletAddress;
-
     paramsMap['listedBy'] = yourWalletAddress;
-    // paramsMap['price'] = 500;
-    // Convert the paramsMap to a string
     String updatedParams = jsonEncode(paramsMap);
     print('params to send bilal' + updatedParams);
     final Map<String, dynamic> requestBody = {
@@ -596,10 +589,7 @@ class TransactionProvider with ChangeNotifier {
     final url = Uri.parse(BASE_URL + '/v2/payable-transactions/send');
     Map<String, dynamic> paramsMap = jsonDecode(params);
     String yourWalletAddress = walletAddress;
-
     paramsMap['listedBy'] = yourWalletAddress;
-    // paramsMap['price'] = 500;
-    // Convert the paramsMap to a string
     String updatedParams = jsonEncode(paramsMap);
     print('params to send bilal' + updatedParams);
     final Map<String, dynamic> requestBody = {
@@ -767,8 +757,6 @@ class TransactionProvider with ChangeNotifier {
     final url = Uri.parse(BASE_URL + '/v2/payable-transactions/send');
     Map<String, dynamic> paramsMap = jsonDecode(params);
     String yourWalletAddress = walletAddress;
-    // String collectionId = '8c9b250f-2038-4162-9c9a-6015dc2f16a5';
-
     paramsMap['owner'] = yourWalletAddress;
     // paramsMap['id'] = collectionId;
     // paramsMap['price'] = 500;
@@ -1298,7 +1286,7 @@ class TransactionProvider with ChangeNotifier {
       fToast.init(context);
       print('payload to send bilal');
       print(requestBody.toString());
-      print('accept offer response' + response.body);
+      print('CancelNFTOfferMade response' + response.body);
 
       if (response.statusCode == 201) {
         print(response.body);
