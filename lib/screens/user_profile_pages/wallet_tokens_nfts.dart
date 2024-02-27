@@ -187,11 +187,12 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
         String? operation = uri.queryParameters['operation'];
         print('operation mint' + operation.toString());
 
-        if (operation != null && operation == 'MintNFT') {
-          // Navigate to page for MintNFT operation
-          navigateToTransactionRequestWithMint(
-              uri.queryParameters, operation, context);
-        } else if (operation != null && operation == 'MintCollection') {
+        // if (operation != null && operation == 'MintNFT') {
+        //   // Navigate to page for MintNFT operation
+        //   navigateToTransactionRequestWithMint(
+        //       uri.queryParameters, operation, context);
+        // } else
+          if (operation != null && operation == 'MintCollection') {
           // Navigate to other page
           navigateToTransactionRequestWithMintCollection(
               uri.queryParameters, operation, context);
