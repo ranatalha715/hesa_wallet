@@ -154,21 +154,16 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   @override
-   initState() async {
-    // AppDeepLinking().openNftApp(null);
-    // _launchUrl();
+   initState()  {
     super.initState();
-    // DeepLinking().getDeepLinkStream.listen((event) {
-    //   print(event.toString());
-    // });
     AppDeepLinking().initDeeplink();
     fToast = FToast();
     fToast.init(context);
 
     getAccessToken();//31 jan
-    user = await Provider.of<UserProvider>(context, listen: false);
-    await Provider.of<UserProvider>(context, listen: false)
-        .getUserDetails(token: accessToken, context: context);
+    // user = await Provider.of<UserProvider>(context, listen: false);
+    // await Provider.of<UserProvider>(context, listen: false)
+    //     .getUserDetails(token: accessToken, context: context);
     // checkAndDeleteExpiredToken();
     WidgetsBinding.instance.addObserver(this);
 
@@ -213,11 +208,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               print("check kro" + Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet.toString());
             });
           }
-         else if (operation != null && operation == 'MintNFT') {
-            // Navigate to page for MintNFT
-            navigateToTransactionRequestWithMint(
-                uri.queryParameters, operation, context);
-          }
         }
       });
     } catch (e) {
@@ -227,17 +217,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   //payable non payable functions
-  Future<void> navigateToTransactionRequestWithMint(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
-      "params": paramsString,
-      "operation": operation,
-      "walletAddress": user.walletAddress,
-    });
-  }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {

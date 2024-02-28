@@ -242,6 +242,92 @@ class TransactionProvider with ChangeNotifier {
     }
   }
 
+  Future<AuthResult> mintNFTWithEditions({
+    required String params,
+    required String token,
+    required String walletAddress,
+    required String country,
+    required String operation,
+    required BuildContext context,
+    required String tokenId,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/v2/payable-transactions/send');
+    Map<String, dynamic> paramsMap = jsonDecode(params);
+    String yourWalletAddress = walletAddress;
+    paramsMap['creatorWalletAddress'] = yourWalletAddress;
+    String updatedParams = jsonEncode(paramsMap);
+    print('minting params to send bilal' + updatedParams);
+    final Map<String, dynamic> requestBody = {
+      "orgCode": "Neonft",
+      "channel": "nftchannel",
+      "chaincode": "nft",
+      "func": "MintNFTWithEditions",
+      "walletAddress": walletAddress,
+      // "tokenId": '8ac7a4a08d117072018d12975ec70f2f',
+      "tokenId": tokenId,
+      "type": "tokenized",
+      "country": "PK",
+      "billing": {
+        "country": "PK",
+        "city": "Karachi",
+        "state": "Sindh",
+        "postcode": "75400",
+        "street1": "39 E"
+      },
+      "params": paramsMap,
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-type": "application/json",
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode(requestBody),
+      );
+
+      fToast = FToast();
+      fToast.init(context);
+      print('minitng WAdd to send bilal');
+      print(walletAddress);
+      print('MintNFTWithEditions payload to send bilal');
+      print(requestBody.toString());
+      print('MintNFTWithEditions response');
+
+      print(response.body);
+      if (response.statusCode == 201) {
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+        checkoutURL = responseBody['data']['checkoutURL'];
+        checkoutId = responseBody['data']['checkoutId'];
+        _showToast('Payable Transaction Sent!');
+        print("send response " + responseBody.toString());
+
+        return AuthResult.success;
+      } else {
+        print("MintNFTWithEditions Error: ${response.body}");
+        _showToast('Payable Transaction not sent');
+        testDialogToCheck(
+            context: context,
+            title: 'MintNFTWithEditions not working',
+            description: response.body.toString());
+        functionToNavigateAfterPayable(
+            response.body.toString(), operation, context);
+        return AuthResult.failure;
+      }
+    } catch (e) {
+      print('MintNFTWithEditions Error: $e');
+      _showToast('Error');
+      testDialogToCheck(
+          context: context,
+          title: 'MintNFTWithEditions not working',
+          description: e.toString());
+      functionToNavigateAfterPayable(e.toString(), operation, context);
+      return AuthResult.failure;
+    }
+  }
+
   Future<AuthResult> purchaseNft({
     required String params,
     required String token,
@@ -414,6 +500,8 @@ class TransactionProvider with ChangeNotifier {
       return AuthResult.failure;
     }
   }
+
+
 
   Future<AuthResult> listCollectionFixedPrice({
     required String params,
@@ -659,6 +747,8 @@ class TransactionProvider with ChangeNotifier {
       return AuthResult.failure;
     }
   }
+
+
 
   Future<AuthResult> burnNFT({
     required String params,
@@ -1171,6 +1261,83 @@ class TransactionProvider with ChangeNotifier {
     }
   }
 
+  Future<AuthResult> acceptCollectionOffer({
+    required String params,
+    required String token,
+    required String operation,
+    required String walletAddress,
+    // required String country,
+    required BuildContext context,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/non-payable-transactions/send');
+    Map<String, dynamic> paramsMap = jsonDecode(params);
+    // String yourWalletAddress = walletAddress;
+    String updatedParams = jsonEncode(paramsMap);
+    print('params to send bilal' + updatedParams);
+    final Map<String, dynamic> requestBody = {
+      "orgCode": "Neonft",
+      "channel": "nftchannel",
+      "chaincode": "nft",
+      "func": "AcceptCollectionOffer",
+      "walletAddress": walletAddress,
+      "country": "PK",
+      "code": "0001",
+      "params": paramsMap,
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-type": "application/json",
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode(requestBody),
+      );
+
+      fToast = FToast();
+      fToast.init(context);
+      print('payload to send bilal');
+      print(requestBody.toString());
+      print('AcceptCollectionOffer response' + response.body);
+
+      if (response.statusCode == 201) {
+        print(response.body);
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+        _showToast('Non Payable Transaction Sent!');
+        print("send response " + responseBody.toString());
+        testDialogToCheck(
+            context: context,
+            title: 'AcceptCollectionOffer',
+            description: response.body.toString());
+        functionToNavigateAfterNonPayable(
+          response.body.toString(), operation,);
+        return AuthResult.success;
+      } else {
+        print("Error: ${response.body}");
+        _showToast('Non Payable Transaction not sent');
+        testDialogToCheck(
+            context: context,
+            title: 'AcceptCollectionOffer',
+            description: response.body.toString());
+        functionToNavigateAfterNonPayable(
+          response.body.toString(), operation,);
+        return AuthResult.failure;
+      }
+    } catch (e) {
+      print('Error: $e');
+      _showToast('Error');
+      testDialogToCheck(
+          context: context,
+          title: 'AcceptCollectionOffer',
+          description: e.toString());
+      functionToNavigateAfterNonPayable(
+        e.toString(), operation,);
+      return AuthResult.failure;
+    }
+  }
+
   Future<AuthResult> rejectNFTOfferReceived({
     required String params,
     required String token,
@@ -1249,6 +1416,84 @@ class TransactionProvider with ChangeNotifier {
     }
   }
 
+  Future<AuthResult> rejectCollectionOfferReceived({
+    required String params,
+    required String token,
+    required String walletAddress,
+    required String operation,
+    // required String country,
+    required BuildContext context,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/non-payable-transactions/send');
+    Map<String, dynamic> paramsMap = jsonDecode(params);
+    // String yourWalletAddress = walletAddress;
+    String updatedParams = jsonEncode(paramsMap);
+    print('params to send bilal' + updatedParams);
+    final Map<String, dynamic> requestBody = {
+      "orgCode": "Neonft",
+      "channel": "nftchannel",
+      "chaincode": "nft",
+      "func": "RejectCollectionOffer",
+      "walletAddress": walletAddress,
+      "country": "PK",
+      "code": "0001",
+      "params": paramsMap,
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-type": "application/json",
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode(requestBody),
+      );
+
+      fToast = FToast();
+      fToast.init(context);
+      print('payload to send bilal');
+      print(requestBody.toString());
+      print('RejectCollectionOffer response' + response.body);
+
+      if (response.statusCode == 201) {
+        print(response.body);
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+        _showToast('Non Payable Transaction Sent!');
+        testDialogToCheck(
+            context: context,
+            title: 'RejectCollectionOffer',
+            description: response.body.toString());
+        functionToNavigateAfterNonPayable(
+          response.body.toString(), operation,);
+        print("send response " + responseBody.toString());
+
+        return AuthResult.success;
+      } else {
+        print("Error: ${response.body}");
+        _showToast('Non Payable Transaction not sent');
+        testDialogToCheck(
+            context: context,
+            title: 'RejectCollectionOffer',
+            description: response.body.toString());
+        functionToNavigateAfterNonPayable(
+          response.body.toString(), operation,);
+        return AuthResult.failure;
+      }
+    } catch (e) {
+      print('Error: $e');
+      _showToast('Error');
+      testDialogToCheck(
+          context: context,
+          title: 'RejectCollectionOffer',
+          description: e.toString());
+      functionToNavigateAfterNonPayable(
+        e.toString(), operation,);
+      return AuthResult.failure;
+    }
+  }
+
   Future<AuthResult> CancelNFTOfferMade({
     required String params,
     required String token,
@@ -1316,6 +1561,152 @@ class TransactionProvider with ChangeNotifier {
       testDialogToCheck(
           context: context,
           title: 'CancelNFTOfferMade',
+          description: e.toString());
+      functionToNavigateAfterNonPayable(e.toString(), operation);
+      return AuthResult.failure;
+    }
+  }
+
+  Future<AuthResult> cancelAuctionListing({
+    required String params,
+    required String token,
+    required String operation,
+    required String walletAddress,
+    // required String country,
+    required BuildContext context,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/non-payable-transactions/send');
+    Map<String, dynamic> paramsMap = jsonDecode(params);
+    String updatedParams = jsonEncode(paramsMap);
+    final Map<String, dynamic> requestBody = {
+      "orgCode": "Neonft",
+      "channel": "nftchannel",
+      "chaincode": "nft",
+      "func": "CancelAuctionListing",
+      "walletAddress": walletAddress,
+      "country": "PK",
+      "code": "0001",
+      "params": paramsMap,
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-type": "application/json",
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode(requestBody),
+      );
+
+      fToast = FToast();
+      fToast.init(context);
+      print('payload to send bilal');
+      print(requestBody.toString());
+      print('CancelAuctionListing response' + response.body);
+
+      if (response.statusCode == 201) {
+        print(response.body);
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+        _showToast('Non Payable Transaction Sent!');
+        testDialogToCheck(
+            context: context,
+            title: 'CancelAuctionListing',
+            description: response.body.toString());
+        functionToNavigateAfterNonPayable(
+          response.body.toString(), operation,);
+        print("send response " + responseBody.toString());
+        return AuthResult.success;
+      } else {
+        print("Error: ${response.body}");
+        _showToast('Non Payable Transaction not sent');
+        testDialogToCheck(
+            context: context,
+            title: 'CancelAuctionListing',
+            description: response.body.toString());
+        functionToNavigateAfterNonPayable(response.body.toString(), operation);
+        return AuthResult.failure;
+      }
+    } catch (e) {
+      print('Error: $e');
+      _showToast('Error');
+      testDialogToCheck(
+          context: context,
+          title: 'CancelAuctionListing',
+          description: e.toString());
+      functionToNavigateAfterNonPayable(e.toString(), operation);
+      return AuthResult.failure;
+    }
+  }
+
+  Future<AuthResult> cancelCollectionAuctionListing({
+    required String params,
+    required String token,
+    required String operation,
+    required String walletAddress,
+    // required String country,
+    required BuildContext context,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/non-payable-transactions/send');
+    Map<String, dynamic> paramsMap = jsonDecode(params);
+    String updatedParams = jsonEncode(paramsMap);
+    final Map<String, dynamic> requestBody = {
+      "orgCode": "Neonft",
+      "channel": "nftchannel",
+      "chaincode": "nft",
+      "func": "CancelAuctionListing",
+      "walletAddress": walletAddress,
+      "country": "PK",
+      "code": "0001",
+      "params": paramsMap,
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-type": "application/json",
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode(requestBody),
+      );
+
+      fToast = FToast();
+      fToast.init(context);
+      print('payload to send bilal');
+      print(requestBody.toString());
+      print('CancelCollectionAuctionListing response' + response.body);
+
+      if (response.statusCode == 201) {
+        print(response.body);
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+        _showToast('Non Payable Transaction Sent!');
+        testDialogToCheck(
+            context: context,
+            title: 'CancelCollectionAuctionListing',
+            description: response.body.toString());
+        functionToNavigateAfterNonPayable(
+          response.body.toString(), operation,);
+        print("send response " + responseBody.toString());
+        return AuthResult.success;
+      } else {
+        print("Error: ${response.body}");
+        _showToast('Non Payable Transaction not sent');
+        testDialogToCheck(
+            context: context,
+            title: 'CancelCollectionAuctionListing',
+            description: response.body.toString());
+        functionToNavigateAfterNonPayable(response.body.toString(), operation);
+        return AuthResult.failure;
+      }
+    } catch (e) {
+      print('Error: $e');
+      _showToast('Error');
+      testDialogToCheck(
+          context: context,
+          title: 'CancelCollectionAuctionListing',
           description: e.toString());
       functionToNavigateAfterNonPayable(e.toString(), operation);
       return AuthResult.failure;

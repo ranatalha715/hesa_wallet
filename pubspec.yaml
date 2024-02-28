@@ -66,6 +66,7 @@ dependencies:
   connectivity_plus: ^5.0.2
   page_transition: ^2.0.9
   deep_linking:
+#   path: C:\Users\Talha's PC\AndroidStudioProjects\deepinking_module
    path: ../deepinking_module
 
 

@@ -320,7 +320,6 @@ class _TransactionRequestAcceptRejectState
       params = args['params'] ?? "N/A";
       counterId = args['id'] ?? "N/A";
       counterOffererId = args['offererId'].toString() ?? "N/A";
-      print("test counterOffererId" + counterOffererId.toString());
       counterOffererAmount = args['offerAmount'] ?? "N/A";
       operation = args['operation'] ?? "N/A";
       walletAddress = args['walletAddress'] ?? "N/A";
@@ -909,6 +908,25 @@ class _TransactionRequestAcceptRejectState
                                                               );
                                                             }
                                                             else if (operation ==
+                                                                'AcceptCollectionOffer') {
+                                                              await Provider.of<
+                                                                  TransactionProvider>(
+                                                                  context,
+                                                                  listen:
+                                                                  false)
+                                                                  .acceptCollectionOffer(
+                                                                params: params,
+                                                                token:
+                                                                accessToken,
+                                                                walletAddress:
+                                                                walletAddress,
+                                                                context:
+                                                                context,
+                                                                operation:
+                                                                operation,
+                                                              );
+                                                            }
+                                                            else if (operation ==
                                                                 'makeNFTCounterOffer') {
                                                               await Provider.of<
                                                                           TransactionProvider>(
@@ -994,6 +1012,24 @@ class _TransactionRequestAcceptRejectState
                                                                       operation:
                                                                           operation);
                                                             }
+                                                            else if(operation ==
+                                                                'rejectCollectionOfferReceived') {
+                                                              await Provider.of<TransactionProvider>(
+                                                                  context,
+                                                                  listen:
+                                                                  false)
+                                                                  .rejectCollectionOfferReceived(
+                                                                  params:
+                                                                  params,
+                                                                  token:
+                                                                  accessToken,
+                                                                  walletAddress:
+                                                                  walletAddress,
+                                                                  context:
+                                                                  context,
+                                                                  operation:
+                                                                  operation);
+                                                            }
                                                             else if (operation ==
                                                                 'CancelNFTOfferMade') {
                                                               await Provider.of<
@@ -1028,6 +1064,42 @@ class _TransactionRequestAcceptRejectState
                                                                 context,
                                                                 operation:
                                                                 operation, params: params,
+                                                              );
+                                                            }
+                                                            else if (operation ==
+                                                                'CancelAuctionListing') {
+                                                              await Provider.of<
+                                                                  TransactionProvider>(
+                                                                  context,
+                                                                  listen:
+                                                                  false)
+                                                                  .cancelAuctionListing(
+                                                                walletAddress: walletAddress,
+                                                                token:
+                                                                accessToken,
+                                                                context:
+                                                                context,
+                                                                operation:
+                                                                operation,
+                                                                params: params,
+                                                              );
+                                                            }
+                                                            else if (operation ==
+                                                                'CancelCollectionAuctionListing') {
+                                                              await Provider.of<
+                                                                  TransactionProvider>(
+                                                                  context,
+                                                                  listen:
+                                                                  false)
+                                                                  .cancelCollectionAuctionListing(
+                                                                walletAddress: walletAddress,
+                                                                token:
+                                                                accessToken,
+                                                                context:
+                                                                context,
+                                                                operation:
+                                                                operation,
+                                                                params: params,
                                                               );
                                                             }
                                                             else if (operation ==

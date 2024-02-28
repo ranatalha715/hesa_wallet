@@ -1399,7 +1399,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                               listen: false)
                                                           .checkoutId);
                                                 });
-                                              } else if (operation ==
+                                              }
+                                              else if (operation ==
                                                   'MintNFT') {
                                                 // Uncomment this block if needed, adjust parameters accordingly
                                                 print('running mint nft');
@@ -1438,7 +1439,46 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   // });
                                                   // }
                                                 });
-                                              } else if (operation ==
+                                              }
+                                              else if (operation ==
+                                                  'MintNFTWithEditions') {
+                                                final nftResult = await transactionProvider
+                                                    .mintNFTWithEditions(
+                                                    params: params,
+                                                    token: accessToken,
+                                                    context: context,
+                                                    walletAddress:
+                                                    userProvider
+                                                        .walletAddress!,
+                                                    tokenId: paymentCards
+                                                        .isEmpty
+                                                        ? ""
+                                                        : trPro
+                                                        .selectedCardTokenId,
+                                                    country: country,
+                                                    operation: operation)
+                                                    .then((value) {
+                                                  print(
+                                                      "transactionProvider.checkoutId");
+                                                  print(transactionProvider
+                                                      .checkoutId);
+                                                  payRequestNowReadyUI(
+                                                      operation: operation,
+                                                      brandsName: [
+                                                        "VISA",
+                                                        "MASTER",
+                                                        "MADA",
+                                                      ],
+                                                      checkoutId: Provider.of<
+                                                          TransactionProvider>(
+                                                          context,
+                                                          listen: false)
+                                                          .checkoutId);
+                                                  // });
+                                                  // }
+                                                });
+                                              }
+                                              else if (operation ==
                                                   'purchaseNFT') {
                                                 // Uncomment this block if needed, adjust parameters accordingly
                                                 print(
