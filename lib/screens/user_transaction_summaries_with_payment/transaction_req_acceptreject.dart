@@ -1037,7 +1037,7 @@ class _TransactionRequestAcceptRejectState
                                                                   context,
                                                                   listen:
                                                                   false)
-                                                                  .CancelNFTOfferMade(
+                                                                  .cancelNFTOfferMade(
                                                                 walletAddress: walletAddress,
                                                                 // params: params,
                                                                 token:
@@ -1055,7 +1055,7 @@ class _TransactionRequestAcceptRejectState
                                                                   context,
                                                                   listen:
                                                                   false)
-                                                                  .CancelCollectionOfferMade(
+                                                                  .cancelCollectionOfferMade(
                                                                 walletAddress: walletAddress,
                                                                 // params: params,
                                                                 token:
