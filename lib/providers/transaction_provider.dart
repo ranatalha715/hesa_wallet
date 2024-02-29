@@ -138,10 +138,11 @@ class TransactionProvider with ChangeNotifier {
         _showToast('Payable Transaction not sent');
         testDialogToCheck(
             context: context,
-            title: 'Mint Collection not working',
+            title: 'MintCollection not working',
             description: response.body.toString());
         functionToNavigateAfterPayable(
-            response.body.toString(), operation, context);
+            response.body.toString(), operation, context,
+            statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -149,7 +150,7 @@ class TransactionProvider with ChangeNotifier {
       _showToast('Error');
       testDialogToCheck(
           context: context,
-          title: 'Mint Collection not working',
+          title: 'MintCollection not working',
           description: e.toString());
       functionToNavigateAfterPayable(e.toString(), operation, context);
       return AuthResult.failure;
@@ -211,6 +212,7 @@ class TransactionProvider with ChangeNotifier {
       print('minting response');
 
       print(response.body);
+
       if (response.statusCode == 201) {
         final Map<String, dynamic> responseBody = json.decode(response.body);
         checkoutURL = responseBody['data']['checkoutURL'];
@@ -227,7 +229,8 @@ class TransactionProvider with ChangeNotifier {
             title: 'Mint NFT not working',
             description: response.body.toString());
         functionToNavigateAfterPayable(
-            response.body.toString(), operation, context);
+            response.body.toString(), operation, context,
+            statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -237,7 +240,7 @@ class TransactionProvider with ChangeNotifier {
           context: context,
           title: 'Mint NFT not working',
           description: e.toString());
-      functionToNavigateAfterPayable(e.toString(), operation, context);
+      functionToNavigateAfterPayable(e.toString(), operation, context,);
       return AuthResult.failure;
     }
   }
@@ -310,10 +313,10 @@ class TransactionProvider with ChangeNotifier {
         _showToast('Payable Transaction not sent');
         testDialogToCheck(
             context: context,
-            title: 'MintNFTWithEditions not working',
+            title: 'MintNFTWithEditions',
             description: response.body.toString());
         functionToNavigateAfterPayable(
-            response.body.toString(), operation, context);
+            response.body.toString(), operation, context, statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -421,7 +424,6 @@ class TransactionProvider with ChangeNotifier {
     required String params,
     required String token,
     required String walletAddress,
-    // required String country,
     required BuildContext context,
     required String tokenId,
     required String operation,
@@ -449,7 +451,6 @@ class TransactionProvider with ChangeNotifier {
         "postcode": "75400",
         "street1": "39 E"
       },
-      // "params": updatedParams,
       "params": paramsMap,
     };
 
@@ -486,7 +487,8 @@ class TransactionProvider with ChangeNotifier {
             title: 'ListNFT Fixed price not working',
             description: response.body.toString());
         functionToNavigateAfterPayable(
-            response.body.toString(), operation, context);
+            response.body.toString(), operation, context,
+            statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -500,7 +502,6 @@ class TransactionProvider with ChangeNotifier {
       return AuthResult.failure;
     }
   }
-
 
 
   Future<AuthResult> listCollectionFixedPrice({
@@ -569,7 +570,8 @@ class TransactionProvider with ChangeNotifier {
             title: 'ListCollection Fixed price not working',
             description: response.body.toString());
         functionToNavigateAfterPayable(
-            response.body.toString(), operation, context);
+            response.body.toString(), operation, context,
+            statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -651,7 +653,8 @@ class TransactionProvider with ChangeNotifier {
             title: 'ListNFTForAuction not working',
             description: response.body.toString());
         functionToNavigateAfterPayable(
-            response.body.toString(), operation, context);
+            response.body.toString(), operation, context,
+            statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -733,7 +736,8 @@ class TransactionProvider with ChangeNotifier {
             title: 'ListCollectionForAuction not working',
             description: response.body.toString());
         functionToNavigateAfterPayable(
-            response.body.toString(), operation, context);
+            response.body.toString(), operation, context,
+            statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -749,7 +753,6 @@ class TransactionProvider with ChangeNotifier {
   }
 
 
-
   Future<AuthResult> burnNFT({
     required String params,
     required String token,
@@ -763,8 +766,6 @@ class TransactionProvider with ChangeNotifier {
     String yourWalletAddress = walletAddress;
 
     paramsMap['owner'] = yourWalletAddress;
-    // paramsMap['price'] = 500;
-    // Convert the paramsMap to a string
     String updatedParams = jsonEncode(paramsMap);
     print('params to send bilal' + updatedParams);
     final Map<String, dynamic> requestBody = {
@@ -820,7 +821,8 @@ class TransactionProvider with ChangeNotifier {
             title: 'BurnNFT not working',
             description: response.body.toString());
         functionToNavigateAfterPayable(
-            response.body.toString(), operation, context);
+            response.body.toString(), operation, context,
+            statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -848,9 +850,6 @@ class TransactionProvider with ChangeNotifier {
     Map<String, dynamic> paramsMap = jsonDecode(params);
     String yourWalletAddress = walletAddress;
     paramsMap['owner'] = yourWalletAddress;
-    // paramsMap['id'] = collectionId;
-    // paramsMap['price'] = 500;
-    // Convert the paramsMap to a string
     String updatedParams = jsonEncode(paramsMap);
     print('params to send bilal' + updatedParams);
     final Map<String, dynamic> requestBody = {
@@ -869,12 +868,7 @@ class TransactionProvider with ChangeNotifier {
         "postcode": "75400",
         "street1": "39 E"
       },
-      // "params": updatedParams,
       "params": paramsMap,
-      // "params": {
-      //   "id": "1cb68dbc-c782-4342-8e02-6eb0bfc385ef",
-      //   "owner":"0x65BC9C8608688E1FA95247C570F5B72DB945468A"
-      // }
     };
 
     try {
@@ -910,7 +904,8 @@ class TransactionProvider with ChangeNotifier {
             title: 'BurnCollection not working',
             description: response.body.toString());
         functionToNavigateAfterPayable(
-            response.body.toString(), operation, context);
+            response.body.toString(), operation, context,
+            statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -958,12 +953,7 @@ class TransactionProvider with ChangeNotifier {
         "postcode": "75400",
         "street1": "39 E"
       },
-      // "params": updatedParams,
       "params": paramsMap,
-      // "params": {
-      //   "id": "1cb68dbc-c782-4342-8e02-6eb0bfc385ef",
-      //   "owner":"0x65BC9C8608688E1FA95247C570F5B72DB945468A"
-      // }
     };
 
     try {
@@ -999,7 +989,8 @@ class TransactionProvider with ChangeNotifier {
             title: 'MakeOfferNFT not working',
             description: response.body.toString());
         functionToNavigateAfterPayable(
-            response.body.toString(), operation, context);
+            response.body.toString(), operation, context,
+            statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -1025,10 +1016,6 @@ class TransactionProvider with ChangeNotifier {
   }) async {
     final url = Uri.parse(BASE_URL + '/v2/payable-transactions/send');
     Map<String, dynamic> paramsMap = jsonDecode(params);
-    // String yourWalletAddress = walletAddress;
-    // String collectionId = '8c9b250f-2038-4162-9c9a-6015dc2f16a5';
-
-    // paramsMap['owner'] = yourWalletAddress;
     String updatedParams = jsonEncode(paramsMap);
     print('params to send bilal' + updatedParams);
     final Map<String, dynamic> requestBody = {
@@ -1047,7 +1034,6 @@ class TransactionProvider with ChangeNotifier {
         "postcode": "75400",
         "street1": "39 E"
       },
-      // "params": updatedParams,
       "params": paramsMap,
     };
 
@@ -1084,7 +1070,8 @@ class TransactionProvider with ChangeNotifier {
             title: 'AcceptCounterOffer',
             description: response.body.toString());
         functionToNavigateAfterPayable(
-            response.body.toString(), operation, context);
+            response.body.toString(), operation, context,
+            statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -1164,7 +1151,8 @@ class TransactionProvider with ChangeNotifier {
             title: 'acceptCollectionCounterOffer',
             description: response.body.toString());
         functionToNavigateAfterPayable(
-            response.body.toString(), operation, context);
+            response.body.toString(), operation, context,
+            statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -1190,7 +1178,6 @@ class TransactionProvider with ChangeNotifier {
   }) async {
     final url = Uri.parse(BASE_URL + '/non-payable-transactions/send');
     Map<String, dynamic> paramsMap = jsonDecode(params);
-    // String yourWalletAddress = walletAddress;
     String updatedParams = jsonEncode(paramsMap);
     print('params to send bilal' + updatedParams);
     final Map<String, dynamic> requestBody = {
@@ -1202,10 +1189,6 @@ class TransactionProvider with ChangeNotifier {
       "country": "PK",
       "code": "0001",
       "params": paramsMap,
-      // "params": {
-      //   "id": " 839c5f8d-sb09-4f91-bf82-2f35b3d87659",
-      //   "offererId": "0x4925D03C16A4CC04CA665A34EC3BC43CD9D8B705"
-      // }
     };
 
     try {
@@ -1235,7 +1218,8 @@ class TransactionProvider with ChangeNotifier {
             title: 'AcceptOfferNFT',
             description: response.body.toString());
         functionToNavigateAfterNonPayable(
-            response.body.toString(), operation,);
+            response.body.toString(), operation,
+            statusCode: response.statusCode.toString());
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -1245,7 +1229,8 @@ class TransactionProvider with ChangeNotifier {
             title: 'AcceptOfferNFT',
             description: response.body.toString());
         functionToNavigateAfterNonPayable(
-          response.body.toString(), operation,);
+            response.body.toString(), operation,
+            statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -1312,7 +1297,8 @@ class TransactionProvider with ChangeNotifier {
             title: 'AcceptCollectionOffer',
             description: response.body.toString());
         functionToNavigateAfterNonPayable(
-          response.body.toString(), operation,);
+            response.body.toString(), operation,
+            statusCode: response.statusCode.toString());
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -1322,21 +1308,23 @@ class TransactionProvider with ChangeNotifier {
             title: 'AcceptCollectionOffer',
             description: response.body.toString());
         functionToNavigateAfterNonPayable(
-          response.body.toString(), operation,);
-        return AuthResult.failure;
+            response.body.toString(), operation,
+            statusCode: response.statusCode.toString());
+            return AuthResult.failure;
+            }
+            } catch (e)
+        {
+          print('Error: $e');
+          _showToast('Error');
+          testDialogToCheck(
+              context: context,
+              title: 'AcceptCollectionOffer',
+              description: e.toString());
+          functionToNavigateAfterNonPayable(
+            e.toString(), operation,);
+          return AuthResult.failure;
+        }
       }
-    } catch (e) {
-      print('Error: $e');
-      _showToast('Error');
-      testDialogToCheck(
-          context: context,
-          title: 'AcceptCollectionOffer',
-          description: e.toString());
-      functionToNavigateAfterNonPayable(
-        e.toString(), operation,);
-      return AuthResult.failure;
-    }
-  }
 
   Future<AuthResult> rejectNFTOfferReceived({
     required String params,
@@ -1388,7 +1376,8 @@ class TransactionProvider with ChangeNotifier {
             title: 'rejectNFTOfferReceived',
             description: response.body.toString());
         functionToNavigateAfterNonPayable(
-          response.body.toString(), operation,);
+            response.body.toString(), operation,
+            statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
 
         return AuthResult.success;
@@ -1400,7 +1389,8 @@ class TransactionProvider with ChangeNotifier {
             title: 'rejectNFTOfferReceived',
             description: response.body.toString());
         functionToNavigateAfterNonPayable(
-          response.body.toString(), operation,);
+            response.body.toString(), operation,
+            statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -1466,7 +1456,8 @@ class TransactionProvider with ChangeNotifier {
             title: 'RejectCollectionOffer',
             description: response.body.toString());
         functionToNavigateAfterNonPayable(
-          response.body.toString(), operation,);
+            response.body.toString(), operation,
+            statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
 
         return AuthResult.success;
@@ -1478,7 +1469,8 @@ class TransactionProvider with ChangeNotifier {
             title: 'RejectCollectionOffer',
             description: response.body.toString());
         functionToNavigateAfterNonPayable(
-          response.body.toString(), operation,);
+            response.body.toString(), operation,
+            statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -1494,7 +1486,7 @@ class TransactionProvider with ChangeNotifier {
     }
   }
 
-  Future<AuthResult> CancelNFTOfferMade({
+  Future<AuthResult> cancelNFTOfferMade({
     required String params,
     required String token,
     required String operation,
@@ -1542,7 +1534,8 @@ class TransactionProvider with ChangeNotifier {
             title: 'CancelNFTOfferMade',
             description: response.body.toString());
         functionToNavigateAfterNonPayable(
-          response.body.toString(), operation,);
+            response.body.toString(), operation,
+            statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
         return AuthResult.success;
       } else {
@@ -1552,7 +1545,8 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'CancelNFTOfferMade',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation);
+        functionToNavigateAfterNonPayable(response.body.toString(), operation,
+            statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -1615,7 +1609,7 @@ class TransactionProvider with ChangeNotifier {
             title: 'CancelAuctionListing',
             description: response.body.toString());
         functionToNavigateAfterNonPayable(
-          response.body.toString(), operation,);
+          response.body.toString(), operation, statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
         return AuthResult.success;
       } else {
@@ -1625,7 +1619,7 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'CancelAuctionListing',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation);
+        functionToNavigateAfterNonPayable(response.body.toString(), operation, statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -1688,7 +1682,7 @@ class TransactionProvider with ChangeNotifier {
             title: 'CancelCollectionAuctionListing',
             description: response.body.toString());
         functionToNavigateAfterNonPayable(
-          response.body.toString(), operation,);
+          response.body.toString(), operation, statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
         return AuthResult.success;
       } else {
@@ -1698,7 +1692,7 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'CancelCollectionAuctionListing',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation);
+        functionToNavigateAfterNonPayable(response.body.toString(), operation, statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -1713,7 +1707,7 @@ class TransactionProvider with ChangeNotifier {
     }
   }
 
-  Future<AuthResult> CancelCollectionOfferMade({
+  Future<AuthResult> cancelCollectionOfferMade({
     required String params,
     required String token,
     required String operation,
@@ -1765,7 +1759,7 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'CancelCollectionOfferMade not working',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation);
+        functionToNavigateAfterNonPayable(response.body.toString(), operation,  statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -1780,14 +1774,14 @@ class TransactionProvider with ChangeNotifier {
     }
   }
 
-  functionToNavigateAfterNonPayable(
-    String response,
-    String operation,
-  ) {
+  functionToNavigateAfterNonPayable(String response,
+      String operation,
+      {String statusCode = ''}) {
     Future.delayed(Duration(seconds: 3), () {
       AppDeepLinking().openNftApp(
         {
           "operation": operation,
+          "statusCode": statusCode.toString(),
           "data": response,
           "comments": "Non payable transactions response",
         },
@@ -1795,18 +1789,16 @@ class TransactionProvider with ChangeNotifier {
     });
   }
 
-  functionToNavigateAfterPayable(
-      String response, String operation, BuildContext context) {
-    // Future.delayed(Duration(seconds: 1), () {
-    //   testDialogToCheck(context: context,
-    //       title: 'data sending to neo',
-    //       description: "operation: $operation for  $response"
-    //   );
-    // });
+  functionToNavigateAfterPayable(String response, String operation,
+      BuildContext context,
+      {String statusCode = ''}) {
     Future.delayed(Duration(seconds: 3), () {
+      //reme later
+      print('statusCode' + statusCode.toString());
       AppDeepLinking().openNftApp(
         {
           "operation": operation,
+          "statusCode": statusCode.toString(),
           "data": response,
           "comments": "payable transactions response",
         },
@@ -1814,14 +1806,14 @@ class TransactionProvider with ChangeNotifier {
     });
   }
 
-  functionToNavigateAfterCounterOffer(
-    String response,
-    String operation,
-  ) {
+  functionToNavigateAfterCounterOffer(String response,
+      String operation,
+      {String statusCode = ''}) {
     Future.delayed(Duration(seconds: 3), () {
       AppDeepLinking().openNftApp(
         {
           "operation": operation,
+          "statusCode": statusCode.toString(),
           "data": response,
           "comments": "Counter Offers response",
         },
@@ -1843,9 +1835,6 @@ class TransactionProvider with ChangeNotifier {
     final url = Uri.parse(BASE_URL + '/counter-offer');
 
     var requestBody = {
-      // "id": "501124a2-0135-47da-b1be-b18095bd018f",
-      // "offererId": "0x65BC9C8608688E1FA95247C570F5B72DB945468A",
-      // "offerAmount": 250
 
       "id": id,
       "offererId": offererId,
@@ -1880,7 +1869,7 @@ class TransactionProvider with ChangeNotifier {
             title: 'MakeCounterOffer',
             description: response.body.toString());
         functionToNavigateAfterCounterOffer(
-            response.body.toString(), operation);
+            response.body.toString(), operation,  statusCode: response.statusCode.toString());
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -1890,7 +1879,7 @@ class TransactionProvider with ChangeNotifier {
             title: 'MakeCounterOffer',
             description: response.body.toString());
         functionToNavigateAfterCounterOffer(
-            response.body.toString(), operation);
+            response.body.toString(), operation,  statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -1919,9 +1908,6 @@ class TransactionProvider with ChangeNotifier {
     final url = Uri.parse(BASE_URL + '/counter-offer/collection');
 
     var requestBody = {
-      // "id": "a1aa4fc7-ab0b-4589-9fd8-10a8567b6d9e",
-      // "offererId": "0x65BC9C8608688E1FA95247C570F5B72DB945468A",
-      // "offerAmount": 700
       "id": id,
       "offererId": offererId,
       "offerAmount": int.parse(offerAmount),
@@ -1953,7 +1939,7 @@ class TransactionProvider with ChangeNotifier {
             title: 'MakeCollectionCounterOffer',
             description: response.body.toString());
         functionToNavigateAfterCounterOffer(
-            response.body.toString(), operation);
+            response.body.toString(), operation,  statusCode: response.statusCode.toString());
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -1963,7 +1949,7 @@ class TransactionProvider with ChangeNotifier {
             title: 'MakeCollectionCounterOffer',
             description: response.body.toString());
         functionToNavigateAfterCounterOffer(
-            response.body.toString(), operation);
+            response.body.toString(), operation,  statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -2024,7 +2010,7 @@ class TransactionProvider with ChangeNotifier {
             title: 'RejectNFTCounterOffer',
             description: response.body.toString());
         functionToNavigateAfterCounterOffer(
-            response.body.toString(), operation);
+            response.body.toString(), operation, statusCode: response.statusCode.toString());
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -2034,7 +2020,7 @@ class TransactionProvider with ChangeNotifier {
             title: 'RejectNFTCounterOffer',
             description: response.body.toString());
         functionToNavigateAfterCounterOffer(
-            response.body.toString(), operation);
+            response.body.toString(), operation, statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -2095,7 +2081,7 @@ class TransactionProvider with ChangeNotifier {
             title: 'RejectCollectionCounterOffer',
             description: response.body.toString());
         functionToNavigateAfterCounterOffer(
-            response.body.toString(), operation);
+            response.body.toString(), operation, statusCode: response.statusCode.toString());
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -2105,7 +2091,7 @@ class TransactionProvider with ChangeNotifier {
             title: 'RejectCollectionCounterOffer',
             description: response.body.toString());
         functionToNavigateAfterCounterOffer(
-            response.body.toString(), operation);
+            response.body.toString(), operation, statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
@@ -2212,11 +2198,10 @@ class TransactionProvider with ChangeNotifier {
     }
   }
 
-  Future<AuthResult> payableTransactionProcess(
-      {required String token,
-      required String paymentId,
-      required BuildContext context,
-      String? operation}) async {
+  Future<AuthResult> payableTransactionProcess({required String token,
+    required String paymentId,
+    required BuildContext context,
+    String? operation}) async {
     final url = Uri.parse(BASE_URL + '/v2/payable-transactions/process');
     final Map<String, dynamic> requestBody = {
       "paymentId": paymentId,
@@ -2248,7 +2233,8 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         _showToast('Payment Processed Successfully');
         functionToNavigateAfterPayable(
-            response.body.toString(), operation!, context);
+            response.body.toString(), operation!, context,
+            statusCode: response.statusCode.toString());
 
         return AuthResult.success;
       } else {
@@ -2256,7 +2242,8 @@ class TransactionProvider with ChangeNotifier {
         print("Process Api Error: ${response.body}");
         _showToast('Payment Processing Failed');
         functionToNavigateAfterPayable(
-            response.body.toString(), operation!, context);
+            response.body.toString(), operation!, context,
+            statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } on TimeoutException catch (error) {
@@ -2268,7 +2255,7 @@ class TransactionProvider with ChangeNotifier {
           context: context,
           title: 'Process Api Response',
           description: error.toString());
-      functionToNavigateAfterPayable(error.toString(), operation!, context);
+      functionToNavigateAfterPayable(error.toString(), operation!, context,);
 
       return AuthResult.failure;
     } catch (e) {
@@ -2280,7 +2267,7 @@ class TransactionProvider with ChangeNotifier {
           context: context,
           title: 'Process Api Response On catch',
           description: e.toString());
-      functionToNavigateAfterPayable(e.toString(), operation!, context);
+      functionToNavigateAfterPayable(e.toString(), operation!, context,);
       return AuthResult.failure;
     }
   }
@@ -2295,7 +2282,7 @@ class TransactionProvider with ChangeNotifier {
     // required String cvv,
   }) async {
     final url =
-        Uri.parse('https://test.oppwa.com/v1/checkouts/$tokenizedId/payment');
+    Uri.parse('https://test.oppwa.com/v1/checkouts/$tokenizedId/payment');
     final Map<String, dynamic> requestData = {
       "entityId": '652e7d7916f7d5046389db76',
       // "entityId": tokenizedId,
@@ -2318,12 +2305,12 @@ class TransactionProvider with ChangeNotifier {
           "Content-type": "application/x-www-form-urlencoded",
           // "Accept": "application/json",
           'Authorization':
-              'Bearer OGFjN2E0Y2E4OWUyOTlkYzAxODllZGU2ZGMxNjA1ZDF8cWNtRVREQWM3RQ==',
+          'Bearer OGFjN2E0Y2E4OWUyOTlkYzAxODllZGU2ZGMxNjA1ZDF8cWNtRVREQWM3RQ==',
           // 'Cookie': 'ak_bmsc=284F4B69BA8EC379C4529CED28341A1A~000000000000000000000000000000~YAAQBig0F27zKGCLAQAAuSJQYxUCDJoWOMOxVzPKdy4m7xHsy9PTe+wKH1y/rnw5Rjh3KrWYYDJgR0ahXH2Fs9gFgBDgMDWPMvImJVZ1gcJhdVth/M0++2zDM42IYcAvD4vSaAnEh63DvnIhT3MitiiN8Ami5X5aQBTgc0Js732vV6+zNCfLRY373v9EHq0L5lHkhe+xO/tYaodLcNyUlze+i8s6cSA5VP0macS9/yf3jbRZavXvqx+QG1Xt6lqInVj1hvBMqTiOC9rT/tu7R07Tt1raHpbojZlSW6MYplBoDNz/YxA65bZDEIvp5Iztjxfz3a8TAvTGQSrWCf3OxyygFhQ3IeyqmUdHrwa7fXL5ZsVgKrZkYjPr'
         },
         body:
-            // body
-            json.encode(requestBody),
+        // body
+        json.encode(requestBody),
       );
       // print(requestBody);
       fToast = FToast();
@@ -2512,9 +2499,9 @@ class TransactionProvider with ChangeNotifier {
                 overflow: TextOverflow.ellipsis,
                 // .toUpperCase(),
                 style: TextStyle(
-                        color: AppColors.backgroundColor,
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.bold)
+                    color: AppColors.backgroundColor,
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.bold)
                     .apply(fontWeightDelta: -2),
               ),
             ),
