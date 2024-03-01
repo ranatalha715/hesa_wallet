@@ -4,9 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hesa_wallet/screens/user_profile_pages/wallet_tokens_nfts.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/cupertino.dart';
 import 'package:sizer/sizer.dart';
 import '../constants/app_deep_linking.dart';
 import '../constants/colors.dart';
@@ -28,13 +26,6 @@ class TransactionProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       // Successfully fetched data
       final Map<String, dynamic> jsonData = json.decode(response.body);
-
-      // Now jsonData contains the parsed JSON data
-      // decodedMetaData = jsonData;
-      print('json data testing');
-      // print(jsonEncode(jsonData.toString()));
-      // print(jsonData.toString());
-      // return jsonEncode(jsonData.toString());
       return jsonData.toString();
     } else {
       // Handle error
@@ -63,7 +54,6 @@ class TransactionProvider with ChangeNotifier {
     fToast.init(context);
     if (response.statusCode == 201) {
       // Successful login, handle navigation or other actions
-      print("OTP sent successfully!");
       _showToast('OTP sent successfully!');
       return AuthResult.success;
     } else {
@@ -74,7 +64,7 @@ class TransactionProvider with ChangeNotifier {
     }
   }
 
-  Future<AuthResult> MintCollectionpayableTransactionSend({
+  Future<AuthResult> mintCollectionpayableTransactionSend({
     required String params,
     required String token,
     required String walletAddress,
@@ -90,8 +80,8 @@ class TransactionProvider with ChangeNotifier {
     String yourWalletAddress = walletAddress;
     paramsMap['creatorWalletAddress'] = yourWalletAddress;
     // Convert the paramsMap to a string
-    String updatedParams = jsonEncode(paramsMap);
-    print('params to send bilal' + updatedParams);
+    // String updatedParams = jsonEncode(paramsMap);
+    // print('params to send bilal' + updatedParams);
     final Map<String, dynamic> requestBody = {
       "orgCode": "Neonft",
       "channel": "nftchannel",
@@ -258,6 +248,11 @@ class TransactionProvider with ChangeNotifier {
     Map<String, dynamic> paramsMap = jsonDecode(params);
     String yourWalletAddress = walletAddress;
     paramsMap['creatorWalletAddress'] = yourWalletAddress;
+    Map<String, dynamic> metadata = paramsMap['metadata'];
+    int numberOfEditions = metadata['numberOfEdtions'];
+    paramsMap['totalEditions'] = numberOfEditions;
+    metadata.remove('numberOfEdtions');
+    paramsMap['metadata'] = metadata;
     String updatedParams = jsonEncode(paramsMap);
     print('minting params to send bilal' + updatedParams);
     final Map<String, dynamic> requestBody = {
@@ -1496,7 +1491,7 @@ class TransactionProvider with ChangeNotifier {
   }) async {
     final url = Uri.parse(BASE_URL + '/non-payable-transactions/send');
     Map<String, dynamic> paramsMap = jsonDecode(params);
-    String updatedParams = jsonEncode(paramsMap);
+    // String updatedParams = jsonEncode(paramsMap);
     final Map<String, dynamic> requestBody = {
       "orgCode": "Neonft",
       "channel": "nftchannel",
@@ -1571,7 +1566,7 @@ class TransactionProvider with ChangeNotifier {
   }) async {
     final url = Uri.parse(BASE_URL + '/non-payable-transactions/send');
     Map<String, dynamic> paramsMap = jsonDecode(params);
-    String updatedParams = jsonEncode(paramsMap);
+    // String updatedParams = jsonEncode(paramsMap);
     final Map<String, dynamic> requestBody = {
       "orgCode": "Neonft",
       "channel": "nftchannel",
@@ -1644,12 +1639,12 @@ class TransactionProvider with ChangeNotifier {
   }) async {
     final url = Uri.parse(BASE_URL + '/non-payable-transactions/send');
     Map<String, dynamic> paramsMap = jsonDecode(params);
-    String updatedParams = jsonEncode(paramsMap);
+    // String updatedParams = jsonEncode(paramsMap);
     final Map<String, dynamic> requestBody = {
       "orgCode": "Neonft",
       "channel": "nftchannel",
       "chaincode": "nft",
-      "func": "CancelAuctionListing",
+      "func": "CancelCollectionAuctionListing",
       "walletAddress": walletAddress,
       "country": "PK",
       "code": "0001",
@@ -1712,12 +1707,11 @@ class TransactionProvider with ChangeNotifier {
     required String token,
     required String operation,
     required String walletAddress,
-    // required String country,
     required BuildContext context,
   }) async {
     final url = Uri.parse(BASE_URL + '/non-payable-transactions/send');
     Map<String, dynamic> paramsMap = jsonDecode(params);
-    String updatedParams = jsonEncode(paramsMap);
+    // String updatedParams = jsonEncode(paramsMap);
     final Map<String, dynamic> requestBody = {
       "orgCode": "Neonft",
       "channel": "nftchannel",
@@ -2117,7 +2111,6 @@ class TransactionProvider with ChangeNotifier {
   }) async {
     final url = Uri.parse(BASE_URL +
         '/payment-fees/calculate-transaction-summary?assetPrice=$assetPrice&func=$func&entries=$entries&creatorRoyaltyPercent=$creatorRoyaltyPercent');
-    final Map<String, dynamic> requestBody = {};
 
     try {
       final response = await http.get(
@@ -2541,7 +2534,7 @@ class TransactionProvider with ChangeNotifier {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );

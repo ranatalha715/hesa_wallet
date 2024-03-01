@@ -1,31 +1,18 @@
 import 'dart:convert';
-import 'dart:ui';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hesa_wallet/constants/app_deep_linking.dart';
-import 'package:hesa_wallet/providers/transaction_provider.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hesa_wallet/constants/colors.dart';
-import 'package:hesa_wallet/models/nfts_model.dart';
-import 'package:hesa_wallet/providers/assets_provider.dart';
 import 'package:hesa_wallet/providers/nfts_provider.dart';
 import 'package:hesa_wallet/widgets/nfts_collection_divisions/nfts_collections_division.dart';
-import 'package:hesa_wallet/widgets/nfts_design.dart';
-import 'package:hesa_wallet/widgets/wallet_nfts_titles.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../widgets/app_drawer.dart';
-import '../../widgets/button.dart';
-import '../../widgets/dialog_button.dart';
-import '../../widgets/nft_caetgory.dart';
-import '../../widgets/nft_collections_design.dart';
 import '../signup_signin/welcome_screen.dart';
 import '../user_transaction_summaries_with_payment/transaction_req_acceptreject.dart';
 import '../user_transaction_summaries_with_payment/transaction_request.dart';
@@ -55,7 +42,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
-    print(accessToken);
   }
 
   String replaceMiddleWithDots(String input) {
@@ -700,8 +686,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
 
   @override
   Widget build(BuildContext context) {
-    Locale currentLocale = context.locale;
-    bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
     final nftsCollectionAll =
         Provider
             .of<NftsProvider>(context, listen: false)
@@ -1210,56 +1194,5 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     fToast = FToast();
     fToast.init(context);
     // _showToast('Wallet address copied!');
-  }
-
-  ///toast
-  _showToast(String message, {int duration = 1000}) {
-    Widget toast = Container(
-      height: 60,
-      // width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.0),
-        color: AppColors.textColorWhite.withOpacity(0.5),
-      ),
-      child: Row(
-        // mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Flexible(
-            child: Container(
-              color: Colors.transparent,
-              child: Text(
-                message,
-                maxLines: 2,
-                softWrap: true,
-                overflow: TextOverflow.ellipsis,
-                // .toUpperCase(),
-                style: TextStyle(
-                    color: AppColors.backgroundColor,
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.bold)
-                    .apply(fontWeightDelta: -2),
-              ),
-            ),
-          ),
-          // Spacer(),
-        ],
-      ),
-    );
-
-    // Custom Toast Position
-    fToast.showToast(
-        child: toast,
-        toastDuration: Duration(milliseconds: duration),
-        positionedToastBuilder: (context, child) {
-          return Positioned(
-            child: Center(child: child),
-            top: 43.0,
-            left: 20,
-            right: 20,
-          );
-        });
   }
 }

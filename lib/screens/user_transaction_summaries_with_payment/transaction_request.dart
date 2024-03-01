@@ -170,6 +170,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
         print('Payment failed');
         AppDeepLinking().openNftApp(
           {
+
             "operation": "$operation",
             "data": paymentResultData.errorString.toString(),
 
@@ -1362,7 +1363,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                 print(itemCollectionID);
                                                 final collectionResult =
                                                     await transactionProvider
-                                                        .MintCollectionpayableTransactionSend(
+                                                        .mintCollectionpayableTransactionSend(
                                                   token: accessToken,
                                                   context: context,
                                                   walletAddress: userProvider

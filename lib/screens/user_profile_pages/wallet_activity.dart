@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hesa_wallet/constants/colors.dart';
 import 'package:hesa_wallet/screens/connection_requests_pages/connect_dapp.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/transaction_summary.dart';
-import 'package:hesa_wallet/widgets/app_header.dart';
 import 'package:hesa_wallet/widgets/wallet_activity_widget.dart';
 import 'package:provider/provider.dart';
 
