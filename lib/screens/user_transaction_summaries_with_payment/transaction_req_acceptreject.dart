@@ -1103,6 +1103,42 @@ class _TransactionRequestAcceptRejectState
                                                               );
                                                             }
                                                             else if (operation ==
+                                                                'CancelListing') {
+                                                              await Provider.of<
+                                                                  TransactionProvider>(
+                                                                  context,
+                                                                  listen:
+                                                                  false)
+                                                                  .cancelListing(
+                                                                walletAddress: walletAddress,
+                                                                token:
+                                                                accessToken,
+                                                                context:
+                                                                context,
+                                                                operation:
+                                                                operation,
+                                                                params: params,
+                                                              );
+                                                            }
+                                                            else if (operation ==
+                                                                'CancelCollectionListing') {
+                                                              await Provider.of<
+                                                                  TransactionProvider>(
+                                                                  context,
+                                                                  listen:
+                                                                  false)
+                                                                  .cancelCollectionListing(
+                                                                walletAddress: walletAddress,
+                                                                token:
+                                                                accessToken,
+                                                                context:
+                                                                context,
+                                                                operation:
+                                                                operation,
+                                                                params: params,
+                                                              );
+                                                            }
+                                                            else if (operation ==
                                                                 'rejectNFTCounterOffer') {
                                                               await Provider.of<
                                                                   TransactionProvider>(

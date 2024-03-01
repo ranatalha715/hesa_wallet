@@ -259,6 +259,16 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
             navigateToTransactionRequestAcceptRejectWithCancelCollectionAuctionListing(
                 uri.queryParameters, operation, context);
           }
+          else if (operation != null && operation == 'CancelListing') {
+            //CancelListing
+            navigateToTransactionRequestAcceptRejectWithCancelListing(
+                uri.queryParameters, operation, context);
+          }
+          else if (operation != null && operation == 'CancelCollectionListing') {
+            //CancelCollectionListing
+            navigateToTransactionRequestAcceptRejectWithCancelCollectionListing(
+                uri.queryParameters, operation, context);
+          }
         else
         if (operation != null && operation == 'CancelCollectionOfferMade') {
           //CancelCollectionOfferMade
@@ -588,6 +598,34 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
 
   Future<
       void> navigateToTransactionRequestAcceptRejectWithCancelCollectionAuctionListing(
+      Map<String, dynamic> queryParams,
+      String operation,
+      BuildContext ctx) async {
+    String paramsString = queryParams['params'] ?? '';
+    await Navigator.of(ctx).pushNamed(
+        TransactionRequestAcceptReject.routeName, arguments: {
+      "params": paramsString,
+      "operation": operation,
+      "walletAddress":userWalletAddress
+    });
+  }
+
+  Future<
+      void> navigateToTransactionRequestAcceptRejectWithCancelListing(
+      Map<String, dynamic> queryParams,
+      String operation,
+      BuildContext ctx) async {
+    String paramsString = queryParams['params'] ?? '';
+    await Navigator.of(ctx).pushNamed(
+        TransactionRequestAcceptReject.routeName, arguments: {
+      "params": paramsString,
+      "operation": operation,
+      "walletAddress":userWalletAddress
+    });
+  }
+
+  Future<
+      void> navigateToTransactionRequestAcceptRejectWithCancelCollectionListing(
       Map<String, dynamic> queryParams,
       String operation,
       BuildContext ctx) async {
