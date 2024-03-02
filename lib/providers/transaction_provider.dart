@@ -1917,7 +1917,7 @@ class TransactionProvider with ChangeNotifier {
   functionToNavigateAfterNonPayable(String response,
       String operation,
       {String statusCode = ''}) {
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 1), () {
       AppDeepLinking().openNftApp(
         {
           "operation": operation,
@@ -1932,7 +1932,7 @@ class TransactionProvider with ChangeNotifier {
   functionToNavigateAfterPayable(String response, String operation,
       BuildContext context,
       {String statusCode = ''}) {
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 1), () {
       //reme later
       print('statusCode' + statusCode.toString());
       AppDeepLinking().openNftApp(
@@ -1949,7 +1949,7 @@ class TransactionProvider with ChangeNotifier {
   functionToNavigateAfterCounterOffer(String response,
       String operation,
       {String statusCode = ''}) {
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 1), () {
       AppDeepLinking().openNftApp(
         {
           "operation": operation,

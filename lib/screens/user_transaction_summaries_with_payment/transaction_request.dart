@@ -326,6 +326,29 @@ class _TransactionRequestState extends State<TransactionRequest> {
     return result;
   }
 
+  //rejectFuncTosendmuamil
+  rejectTransactions(){
+    setState(() {
+      isLoading=true;
+    });
+    Future.delayed(Duration(seconds: 2), () async {
+      print("operation" + operation,);
+      print("data"  + "$operation transaction has been cancelled by the user,");
+      setState(() {
+        isLoading=false;
+      });
+      await AppDeepLinking().openNftApp(
+        {
+          "operation": operation,
+          "statusCode": "300",
+          "data": "$operation transaction has been cancelled by the user",
+          // "comments": "Non payable transactions response",
+        },
+      );
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final args =
@@ -2144,7 +2167,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                         SizedBox(height: 2.h),
                                         AppButton(
                                             title: "Reject request".tr(),
-                                            handler: () {},
+                                            handler: () {
+                                              // if(operation=="MintNFT"){
+                                                rejectTransactions();
+                                              // }
+                                            },
                                             isGradient: false,
                                             textColor: themeNotifier.isDark
                                                 ? AppColors.textColorWhite

@@ -224,8 +224,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
           navigateToTransactionRequestWithMakeOfferNFT(
               uri.queryParameters, operation, context);
         }
-        else if (operation != null && operation == 'acceptOfferReceived') {
-          //acceptOfferReceived
+        else if (operation != null && operation == 'AcceptNFTOfferReceived') {
+          //AcceptNFTOfferReceived
           navigateToTransactionRequestAcceptRejectWithAcceptOffer(
               uri.queryParameters, operation, context);
         }
