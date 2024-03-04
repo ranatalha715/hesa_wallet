@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:hesa_wallet/constants/colors.dart';
 import 'package:hesa_wallet/screens/account_recovery/reset_password.dart';
 import 'package:hesa_wallet/screens/settings/change_password.dart';
+import 'package:hesa_wallet/screens/unlock/set_pin_screen.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -167,8 +168,7 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                                 ? AppColors.errorColor
                                                     .withOpacity(0.07)
                                                 : AppColors.textColorGreen
-                                                    .withOpacity(0.07)
-                                        ),
+                                                    .withOpacity(0.07)),
                                         child: Padding(
                                           padding: const EdgeInsets.all(12),
                                           child: Image.asset(
@@ -387,6 +387,28 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                                 ? "Have been set up".tr()
                                                 : "Have not been set up".tr(),
                                             setUpHandler: authenticateUser,
+                                            isSet: _isUserAuthorized
+                                                ? true
+                                                : false,
+                                            isDark: themeNotifier.isDark
+                                                ? true
+                                                : false),
+                                        biometricLock(
+                                            isLast: true,
+                                            imageUrl:
+                                                "assets/images/passcode.png",
+                                            title: 'Passcode'.tr(),
+                                            subTitle:
+                                                // _isUserAuthorized
+                                                //     ? "Have been set up".tr()
+                                                //     :
+                                                "Have not been set up".tr(),
+                                            setUpHandler: () => Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          PinScreen()),
+                                                ),
                                             isSet: _isUserAuthorized
                                                 ? true
                                                 : false,
@@ -671,17 +693,10 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
           height: 8.5.h,
           decoration: BoxDecoration(
             color: AppColors.textColorGrey.withOpacity(0.10),
-            // border: Border.all(
-            //   color:AppColors.textColorGrey.withOpacity(0.10),
-            //   // width: 1.0,
-            // ),
             borderRadius: BorderRadius.only(
-              // topLeft: Radius.circular(8), // Top-left corner radius
-              // topRight: Radius.circular(8), // Top-right corner radius
               bottomLeft: Radius.circular(isFirst ? 0 : 8),
               // Bottom-left corner radius (optional)
-              bottomRight: Radius.circular(
-                  isFirst ? 0 : 8), // Bottom-right corner radius (optional)
+              bottomRight: Radius.circular(isFirst ? 0 : 8),
             ),
           ),
           child: Padding(

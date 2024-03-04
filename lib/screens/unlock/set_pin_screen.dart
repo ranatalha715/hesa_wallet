@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -11,8 +13,33 @@ class PinScreen extends StatefulWidget {
 }
 
 class _PinScreenState extends State<PinScreen> {
+  late Timer _timer;
   String selectedNumber = '';
   List<String> numbers = List.generate(6, (index) => '');
+  bool isFirstFieldFilled = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _timer = Timer.periodic(Duration(milliseconds: 500), (timer) {
+      setState(() {
+        // Convert entered digits to asterisks
+        for (int i = 0; i < numbers.length; i++) {
+          if (numbers[i].isNotEmpty) {
+            numbers[i] = '*';
+          }
+        }
+        isFirstFieldFilled = numbers[0].isNotEmpty;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +56,7 @@ class _PinScreenState extends State<PinScreen> {
                 'Enter New Pin',
                 style: TextStyle(
                     fontSize: 13.sp,
-                    color: AppColors.textColorWhite,
+                    color: isFirstFieldFilled ? AppColors.activeButtonColor : AppColors.textColorWhite,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'inter'),
               ),
@@ -50,12 +77,6 @@ class _PinScreenState extends State<PinScreen> {
                   circularTextField(3),
                   circularTextField(4),
                   circularTextField(5),
-                  // pinBox(selectedNumber),
-                  // pinBox(selectedNumber),
-                  // pinBox(selectedNumber),
-                  // pinBox(selectedNumber),
-                  // pinBox(selectedNumber),
-                  // pinBox(selectedNumber),
                 ],
               ),
             ),
@@ -130,19 +151,22 @@ class _PinScreenState extends State<PinScreen> {
         height: 5.h,
         width: 5.h,
         decoration: BoxDecoration(
-          border: Border.all( color: numbers[index] != "" ? AppColors.activeButtonColor:Colors.transparent,
+          border: Border.all( color: isFirstFieldFilled  ? AppColors.activeButtonColor:Colors.transparent,
           ),
           borderRadius: BorderRadius.circular(40),
-          color: numbers[index] != "" ? Colors.transparent:Colors.grey.withOpacity(0.2),
+          color: isFirstFieldFilled  ? Colors.transparent:Colors.grey.withOpacity(0.2),
         ),
         child: Center(
-          child: Text(
-            numbers[index],
-            style: TextStyle(
-              fontSize: 24.sp,
-              color: AppColors.activeButtonColor,
-              fontWeight: FontWeight.w400,
-              fontFamily: 'ArialASDCF',
+          child: Padding(
+            padding:  EdgeInsets.only(top:  numbers[index] == '*' ? 5.sp :  0),
+            child: Text(
+              numbers[index],
+              style: TextStyle(
+                fontSize: 20.sp,
+                color: AppColors.activeButtonColor,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'ArialASDCF',
+              ),
             ),
           ),
         ),
@@ -199,8 +223,6 @@ class _PinScreenState extends State<PinScreen> {
         height: 5.h,
         width: 5.h,
         decoration: BoxDecoration(
-            // borderRadius: BorderRadius.circular(40),
-            // color:Colors.white.withOpacity(0.5),
             ),
         child: Center(
           child: imagePath == null
