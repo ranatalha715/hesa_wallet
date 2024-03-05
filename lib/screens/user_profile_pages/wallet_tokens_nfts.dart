@@ -854,11 +854,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                         setState(() {
                                           showLockedScreen = true;
                                         }),
-                                    //     Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //       builder: (context) => WelcomeScreen()),
-                                    // ),
                                     child: Padding(
                                       padding: EdgeInsets.only(bottom: 5.sp),
                                       child: Image.asset(
@@ -896,13 +891,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                 child: Padding(
                                   padding: EdgeInsets.all(1.sp),
                                   child:
-                                  // SvgPicture.string(
-                                  //   // Replace 'base64EncodedSvg' with your actual Base64-encoded SVG string
-                                  //   Provider.of<UserProvider>(context, listen: false).userAvatar!,
-                                  //   // You can set width and height to adjust the size of the SVG image
-                                  //   width: 55.sp,
-                                  //   height: 55.sp,
-                                  // ),
                                   Image.asset(
                                     // user.userAvatar!,
                                     //     Provider.of<UserProvider>(context, listen: false).userAvatar ?? "",

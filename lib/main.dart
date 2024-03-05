@@ -7,6 +7,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hesa_wallet/providers/token_provider.dart';
+import 'package:hesa_wallet/screens/unlock/set_confirm_pin_screen.dart';
 import 'package:hesa_wallet/screens/unlock/set_pin_screen.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:hesa_wallet/widgets/dialog_button.dart';
@@ -303,8 +304,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 //fromNeoApp will be used later
                 Stack(
                         children: [
-                          // PinScreen(),
-                          WalletTokensNfts(),
+                          PinScreen(),
+                          // WalletTokensNfts(),
                          // TransactionRequestAcceptReject(),
                           // ConnectDapp(),
                           // if(isOverlayVisible)
@@ -332,6 +333,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                   const TermsAndConditions(),
               NftsCollectionDetails.routeName: (context) =>
                   const NftsCollectionDetails(),
+              SetConfirmPinScreen.routeName: (context) =>
+              const SetConfirmPinScreen(),
             },
           );
         });
