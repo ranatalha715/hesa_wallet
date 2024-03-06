@@ -152,17 +152,17 @@ class _PinScreenState extends State<PinScreen> {
                     ],
                   ),
                   // SizedBox(height: 2.h,)
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Text(
-                      'I Forget My Pin',
-                      style: TextStyle(
-                          fontSize: 13.sp,
-                          color: AppColors.textColorGreen,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Blogger Sans'),
-                    ),
-                  ),
+                  // Align(
+                  //   alignment: Alignment.bottomCenter,
+                  //   child: Text(
+                  //     'I Forget My Pin',
+                  //     style: TextStyle(
+                  //         fontSize: 13.sp,
+                  //         color: AppColors.textColorGreen,
+                  //         fontWeight: FontWeight.w500,
+                  //         fontFamily: 'Blogger Sans'),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -262,7 +262,7 @@ class _PinScreenState extends State<PinScreen> {
                 }
                 print("passcode" + resultToSave);
                 if (resultToSave.length == 6) {
-                  print('now saving');
+
                   // savePasscode(resultToSave);
                   Navigator.of(context).pushReplacementNamed(
                       SetConfirmPinScreen.routeName,

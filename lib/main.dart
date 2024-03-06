@@ -304,8 +304,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 //fromNeoApp will be used later
                 Stack(
                         children: [
-                          PinScreen(),
-                          // WalletTokensNfts(),
+                          // PinScreen(),
+                          WalletTokensNfts(),
                          // TransactionRequestAcceptReject(),
                           // ConnectDapp(),
                           // if(isOverlayVisible)

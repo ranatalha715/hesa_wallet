@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:hesa_wallet/screens/user_profile_pages/wallet_tokens_nfts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
@@ -20,6 +21,7 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
   List<String> numbers = List.generate(6, (index) => '');
   List<String> numbersToSave = List.generate(6, (index) => '');
   bool isFirstFieldFilled = false;
+  bool isMatched = false;
 
   @override
   void initState() {
@@ -72,7 +74,7 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
                 style: TextStyle(
                     fontSize: 13.sp,
                     color: isFirstFieldFilled
-                        ? AppColors.activeButtonColor
+                        ? isMatched ? AppColors.activeButtonColor:AppColors.errorColor
                         : AppColors.textColorWhite,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'inter'),
@@ -88,12 +90,12 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  circularTextField(0),
-                  circularTextField(1),
-                  circularTextField(2),
-                  circularTextField(3),
-                  circularTextField(4),
-                  circularTextField(5),
+                  circularTextField(0, isMatched),
+                  circularTextField(1, isMatched),
+                  circularTextField(2, isMatched),
+                  circularTextField(3, isMatched),
+                  circularTextField(4, isMatched),
+                  circularTextField(5, isMatched),
                 ],
               ),
             ),
@@ -142,17 +144,18 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
                     ],
                   ),
                   // SizedBox(height: 2.h,)
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Text(
-                      'I Forget My Pin',
-                      style: TextStyle(
-                          fontSize: 13.sp,
-                          color: AppColors.textColorGreen,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Blogger Sans'),
-                    ),
-                  ),
+                  // Align(
+                  //   alignment: Alignment.bottomCenter,
+                  //   child:
+                  //   Text(
+                  //     'I Forget My Pin',
+                  //     style: TextStyle(
+                  //         fontSize: 13.sp,
+                  //         color: AppColors.textColorGreen,
+                  //         fontWeight: FontWeight.w500,
+                  //         fontFamily: 'Blogger Sans'),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -162,7 +165,7 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
     );
   }
 
-  Widget circularTextField(int index) {
+  Widget circularTextField(int index, bool isMatched) {
     return GestureDetector(
       child: Container(
         height: 5.h,
@@ -170,7 +173,7 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
         decoration: BoxDecoration(
           border: Border.all(
             color: isFirstFieldFilled
-                ? AppColors.activeButtonColor
+                ? isMatched ? AppColors.activeButtonColor: AppColors.errorColor
                 : Colors.transparent,
           ),
           borderRadius: BorderRadius.circular(40),
@@ -185,7 +188,7 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
               numbers[index],
               style: TextStyle(
                 fontSize: 20.sp,
-                color: AppColors.activeButtonColor,
+                color: isMatched ? AppColors.activeButtonColor:AppColors.errorColor,
                 fontWeight: FontWeight.w400,
                 fontFamily: 'ArialASDCF',
               ),
@@ -218,7 +221,7 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
             )));
   }
 
-  Widget digitBox(String number, {String? imagePath, Map<String, dynamic>? passcodeToSet }) {
+  Widget digitBox(String number, {String? imagePath, String? passcodeToSet }) {
     return InkWell(
       hoverColor: Colors.grey.withOpacity(0.2),
       borderRadius: BorderRadius.circular(20),
@@ -250,17 +253,33 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
               numbersToSave[i]; // Append the existing number to the result
             }
           }
-          print("passcode" + resultToSave);
+          print("confirm passcode" + resultToSave);
           if (resultToSave.length == 6 ) {
             print('now saving');
             if(passcodeToSet==resultToSave) {
+              setState(() {
+                 isMatched=true;
+              });
               savePasscode(resultToSave);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => WalletTokensNfts(),
+                ),
+              );
+            }else{
+              setState(() {
+                isMatched=false;
+              });
             }
           }
 
           // Print the result after the loop breaks
         })
             : setState(() {
+
+            isMatched=false;
+
           // Remove the last entered digit
           for (int i = numbers.length - 1; i >= 0; i--) {
             if (numbers[i].isNotEmpty) {
