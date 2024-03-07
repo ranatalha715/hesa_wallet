@@ -371,26 +371,20 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                       _isLoading = false;
                                     });
                                     if (result == AuthResult.success) {
-                                      await Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              WalletTokensNfts(),
-                                        ),
-                                      );
-                                      // await Navigator.of(context)
-                                      //     .pushNamedAndRemoveUntil(
-                                      //         'nfts-page', (Route d) => false,
-                                      //         arguments: {});\
+                                      // await Navigator.pushReplacement(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //     builder: (context) =>
+                                      //         WalletTokensNfts(),
+                                      //   ),
+                                      // );
+                                      await Navigator.of(context)
+                                          .pushNamedAndRemoveUntil(
+                                              'nfts-page', (Route d) => false,
+                                              arguments: {});
                                       // runApp(MyApp());
                                     }
                                     // Navigator.popUntil(context, (route) => route.isActive
-                                    // );
-                                    // Navigator.pushReplacement(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) => WalletTokensNfts(),
-                                    //   ),
                                     // );
                                   }
                                 },

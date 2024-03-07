@@ -1,4 +1,4 @@
-String BASE_URL = "http://134.209.249.241:3001";
+String BASE_URL = "https://api.hesawallet.com";
 
 enum AuthResult {
   success,

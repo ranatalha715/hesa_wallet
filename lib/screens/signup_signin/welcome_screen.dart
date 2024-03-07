@@ -26,7 +26,7 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
   bool _obscurePassword = true;
   var _isLoading = false;
-  var _savedPassword;
+  var _savedPassCode;
   bool isButtonActive = false;
 
   final TextEditingController _passwordController = TextEditingController();
@@ -44,15 +44,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
 
-  getSavedPassword() async {
+  getSavedPassCode() async {
     final prefs = await SharedPreferences.getInstance();
-    _savedPassword = prefs.getString('password') ?? "";
+    _savedPassCode = prefs.getString('passcode') ?? "";
   }
 
   @override
    void initState()  {
-    getSavedPassword();
+    getSavedPassCode();
     _passwordController.addListener(_updateButtonState);
+    _passwordController.addListener(_limitInputLength);
     // TODO: implement initState
     super.initState();
 
@@ -65,6 +66,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   bool isValidating = false;
+
+
+
+  void _limitInputLength() {
+    if (_passwordController.text.length > 6) {
+      _passwordController.text = _passwordController.text.substring(0, 6);
+      _passwordController.selection = TextSelection.fromPosition(
+        TextPosition(offset: _passwordController.text.length),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,6 +149,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           ),
                           TextFieldParent(
                             child: TextField(
+                              keyboardType: TextInputType.number,
+                                // maxLength: 6,
                                 scrollPadding: EdgeInsets.only(
                                     bottom:
                                         MediaQuery.of(context).viewInsets.bottom /
@@ -196,7 +210,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  "*Enter your password",
+                                  "*Enter your pin",
+                                  /* textAlign :TextAlign.left,*/
+                                  style: TextStyle(
+                                      fontSize: 10.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.errorColor),
+                                ),
+                              ),
+                            ),
+                          if (_passwordController.text.isNotEmpty && isValidating
+                          && _passwordController.text !=
+                                  _savedPassCode
+                          )
+                            Padding(
+                              padding: EdgeInsets.only(top: 7.sp),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "*Enter correct pin",
                                   /* textAlign :TextAlign.left,*/
                                   style: TextStyle(
                                       fontSize: 10.sp,
@@ -251,7 +283,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                       Duration(milliseconds: 1500),
                                           () {});
                                   if (_passwordController.text ==
-                                      _savedPassword) {
+                                      _savedPassCode) {
                                     widget.handler();
                                   }
 

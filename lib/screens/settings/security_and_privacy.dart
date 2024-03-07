@@ -32,6 +32,7 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
   var _isLoading = false;
   var _isinit = true;
   var accessToken;
+  bool _isPasscodeSet =false;
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -67,13 +68,27 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
     _isUserAuthorized = prefs.getBool("fingerPrint") ?? false;
   }
 
+  getPasscode() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final passcode = prefs.getString('passcode')!;
+    if(passcode!=""){
+      _isPasscodeSet = true;
+    }
+    else{
+      _isPasscodeSet = false;
+    }
+    print("ispasscodeset" + _isPasscodeSet.toString());
+  }
+
   @override
   void initState() {
     getAuthStatus();
+    getPasscode();
     super.initState();
 
     // Some method to fetch initial data
   }
+
 
   Future<void> authenticateUser() async {
     bool isAuthorized = false;
@@ -306,7 +321,7 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                               padding:
                                                   EdgeInsets.only(left: 20.sp),
                                               child: Image.asset(
-                                                _isUserAuthorized
+                                                _isUserAuthorized && _isPasscodeSet
                                                     ? "assets/images/biometric_true.png"
                                                     : "assets/images/alert_biometric.png",
                                                 height: 2.6.h,
@@ -399,9 +414,9 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                                 "assets/images/passcode.png",
                                             title: 'Passcode'.tr(),
                                             subTitle:
-                                                // _isUserAuthorized
-                                                //     ? "Have been set up".tr()
-                                                //     :
+                                                _isPasscodeSet
+                                                    ? "Have been set up".tr()
+                                                    :
                                                 "Have not been set up".tr(),
                                             setUpHandler: () => Navigator.push(
                                                   context,
@@ -409,7 +424,7 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                                       builder: (context) =>
                                                           PinScreen()),
                                                 ),
-                                            isSet: _isUserAuthorized
+                                            isSet: _isPasscodeSet
                                                 ? true
                                                 : false,
                                             isDark: themeNotifier.isDark
