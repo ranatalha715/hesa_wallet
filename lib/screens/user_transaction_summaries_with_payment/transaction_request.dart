@@ -32,6 +32,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../widgets/main_header.dart';
+import '../../widgets/payment_fees/payment_fees.dart';
 import '../userpayment_and_bankingpages/wallet_add_bank.dart';
 import '../userpayment_and_bankingpages/wallet_add_card.dart';
 
@@ -1357,6 +1358,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                             )
                                           ]),
                                         ),
+                                        PaymentFeesWidget(params: params,),
                                         SizedBox(height: 1.5.h),
                                         AppButton(
                                             title: "Pay".tr(),

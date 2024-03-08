@@ -470,7 +470,7 @@ class AuthProvider with ChangeNotifier {
     } on TimeoutException catch (e) {
       // Handle timeout exception
       print("TimeoutException during login: $e");
-      _showToast('Timeout occurred during login');
+      // _showToast('Timeout occurred during login');
       // if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet) {
         await AppDeepLinking().openNftApp(
           {

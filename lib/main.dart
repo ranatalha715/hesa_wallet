@@ -6,6 +6,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hesa_wallet/providers/payment_fees.dart';
 import 'package:hesa_wallet/providers/token_provider.dart';
 import 'package:hesa_wallet/screens/unlock/set_confirm_pin_screen.dart';
 import 'package:hesa_wallet/screens/unlock/set_pin_screen.dart';
@@ -103,8 +104,9 @@ Future<void> main() async {
                 create: (_) => CardProvider(),
               ),
               ChangeNotifierProvider(
-                create: (_) => TokenProvider(),
-              )
+                create: (_) => TokenProvider(),),
+    ChangeNotifierProvider(
+    create: (_) => PaymentFees()),
             ],
         // DevicePreview(
         // enabled: !kReleaseMode,
