@@ -194,7 +194,13 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
           //purchaseNFT
           navigateToTransactionRequestWithPurchaseNft(
               uri.queryParameters, operation, context);
-        } else if (operation != null && operation == 'listNFT') {
+        }
+          else if (operation != null && operation == 'purchaseCollection') {
+            //purchaseNFT
+            navigateToTransactionRequestWithPurchaseCollection(
+                uri.queryParameters, operation, context);
+          }
+          else if (operation != null && operation == 'listNFT') {
           //listNFT
           navigateToTransactionRequestWithListNftFixedPrice(
               uri.queryParameters, operation, context);
@@ -224,6 +230,11 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
           navigateToTransactionRequestWithMakeOfferNFT(
               uri.queryParameters, operation, context);
         }
+          else if (operation != null && operation == 'makeOfferCollection') {
+            //makeOfferCollection
+            navigateToTransactionRequestWithMakeOfferCollection(
+                uri.queryParameters, operation, context);
+          }
         else if (operation != null && operation == 'AcceptNFTOfferReceived') {
           //AcceptNFTOfferReceived
           navigateToTransactionRequestAcceptRejectWithAcceptOffer(
@@ -394,6 +405,18 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     });
   }
 
+  Future<void> navigateToTransactionRequestWithPurchaseCollection(
+      Map<String, dynamic> queryParams,
+      String operation,
+      BuildContext ctx) async {
+    String paramsString = queryParams['params'] ?? '';
+    await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
+      "params": paramsString,
+      "operation": operation,
+      "walletAddress":userWalletAddress
+    });
+  }
+
   Future<void> navigateToTransactionRequestWithListNftFixedPrice(
       Map<String, dynamic> queryParams,
       String operation,
@@ -467,6 +490,17 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   }
 
   Future<void> navigateToTransactionRequestWithMakeOfferNFT(
+      Map<String, dynamic> queryParams,
+      String operation,
+      BuildContext ctx) async {
+    String paramsString = queryParams['params'] ?? '';
+    await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
+      "params": paramsString,
+      "operation": operation,
+    });
+  }
+
+  Future<void> navigateToTransactionRequestWithMakeOfferCollection(
       Map<String, dynamic> queryParams,
       String operation,
       BuildContext ctx) async {

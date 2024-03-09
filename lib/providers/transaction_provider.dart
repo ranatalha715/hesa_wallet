@@ -361,10 +361,6 @@ class TransactionProvider with ChangeNotifier {
         "street1": "39 E"
       },
       "params": paramsMap,
-      // "params": {
-      //   "id": "45318c0b-2430-4f66-8925-8254e627dff2",
-      //   "price": 300
-      // }
     };
 
     try {
@@ -397,7 +393,7 @@ class TransactionProvider with ChangeNotifier {
         _showToast('Payable Transaction not sent');
         testDialogToCheck(
             context: context,
-            title: 'PurchaseNFT not working',
+            title: 'PurchaseNFT',
             description: response.body.toString());
         functionToNavigateAfterPayable(
             response.body.toString(), operation, context);
@@ -408,7 +404,87 @@ class TransactionProvider with ChangeNotifier {
       _showToast('Error');
       testDialogToCheck(
           context: context,
-          title: 'PurchaseNFT not working',
+          title: 'PurchaseNFT',
+          description: e.toString());
+      functionToNavigateAfterPayable(e.toString(), operation, context);
+      return AuthResult.failure;
+    }
+  }
+
+  Future<AuthResult> purchaseCollection({
+    required String params,
+    required String token,
+    required String walletAddress,
+    required String country,
+    required BuildContext context,
+    required String tokenId,
+    required String operation,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/v2/payable-transactions/send');
+    Map<String, dynamic> paramsMap = jsonDecode(params);
+    String updatedParams = jsonEncode(paramsMap);
+    print('params to send bilal' + updatedParams);
+    final Map<String, dynamic> requestBody = {
+      "orgCode": "Neonft",
+      "channel": "nftchannel",
+      "chaincode": "nft",
+      "func": "PurchaseCollection",
+      "walletAddress": walletAddress,
+      "tokenId": tokenId,
+      "type": "tokenized",
+      "country": "PK",
+      "billing": {
+        "country": "PK",
+        "city": "Karachi",
+        "state": "Sindh",
+        "postcode": "75400",
+        "street1": "39 E"
+      },
+      "params": paramsMap,
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-type": "application/json",
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode(requestBody),
+      );
+
+      fToast = FToast();
+      fToast.init(context);
+      print('payload to send bilal');
+      print(requestBody.toString());
+
+      if (response.statusCode == 201) {
+        print(response.body);
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+        checkoutURL = responseBody['data']['checkoutURL'];
+        checkoutId = responseBody['data']['checkoutId'];
+        _showToast('Payable Transaction Sent!');
+        print("send response " + responseBody.toString());
+
+        return AuthResult.success;
+      } else {
+        print("Error: ${response.body}");
+        _showToast('Payable Transaction not sent');
+        testDialogToCheck(
+            context: context,
+            title: 'PurchaseCollection',
+            description: response.body.toString());
+        functionToNavigateAfterPayable(
+            response.body.toString(), operation, context);
+        return AuthResult.failure;
+      }
+    } catch (e) {
+      print('Error: $e');
+      _showToast('Error');
+      testDialogToCheck(
+          context: context,
+          title: 'PurchaseCollection',
           description: e.toString());
       functionToNavigateAfterPayable(e.toString(), operation, context);
       return AuthResult.failure;
@@ -994,6 +1070,87 @@ class TransactionProvider with ChangeNotifier {
       testDialogToCheck(
           context: context,
           title: 'MakeOfferNFT not working',
+          description: e.toString());
+      functionToNavigateAfterPayable(
+          e.toString(), operation, context);
+      return AuthResult.failure;
+    }
+  }
+
+  Future<AuthResult> makeOfferCollection({
+    required String params,
+    required String token,
+    required String walletAddress,
+    required String operation,
+    required BuildContext context,
+    required String tokenId,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/v2/payable-transactions/send');
+    Map<String, dynamic> paramsMap = jsonDecode(params);
+    String updatedParams = jsonEncode(paramsMap);
+    print('params to send bilal' + updatedParams);
+    final Map<String, dynamic> requestBody = {
+      "orgCode": "Neonft",
+      "channel": "nftchannel",
+      "chaincode": "nft",
+      "func": "MakeCollectionOffer",
+      "walletAddress": walletAddress,
+      "tokenId": tokenId,
+      "type": "tokenized",
+      "country": "PK",
+      "billing": {
+        "country": "PK",
+        "city": "Karachi",
+        "state": "Sindh",
+        "postcode": "75400",
+        "street1": "39 E"
+      },
+      "params": paramsMap,
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-type": "application/json",
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode(requestBody),
+      );
+
+      fToast = FToast();
+      fToast.init(context);
+      print('payload to send bilal');
+      print(requestBody.toString());
+
+      if (response.statusCode == 201) {
+        print(response.body);
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+        checkoutURL = responseBody['data']['checkoutURL'];
+        checkoutId = responseBody['data']['checkoutId'];
+        _showToast('Payable Transaction Sent!');
+        print("send response " + responseBody.toString());
+
+        return AuthResult.success;
+      } else {
+        print("Error: ${response.body}");
+        _showToast('Payable Transaction not sent');
+        testDialogToCheck(
+            context: context,
+            title: 'MakeCollectionOffer',
+            description: response.body.toString());
+        functionToNavigateAfterPayable(
+            response.body.toString(), operation, context,
+            statusCode: response.statusCode.toString());
+        return AuthResult.failure;
+      }
+    } catch (e) {
+      print('Error: $e');
+      _showToast('Error');
+      testDialogToCheck(
+          context: context,
+          title: 'MakeCollectionOffer',
           description: e.toString());
       functionToNavigateAfterPayable(
           e.toString(), operation, context);
