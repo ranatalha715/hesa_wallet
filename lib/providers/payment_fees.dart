@@ -9,6 +9,12 @@ import '../constants/configs.dart';
 
 class PaymentFees with ChangeNotifier {
   late FToast fToast;
+  var platformMintingFees;
+  var networkFees;
+  var paymentProcessingFee;
+  var totalFees;
+
+
   Future<AuthResult> paymentFeesForMintNFT({
     // required double assetPrice,
     // required int entries,
@@ -43,8 +49,11 @@ class PaymentFees with ChangeNotifier {
 
       if (response.statusCode == 201) {
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        // checkoutURL = responseBody['data']['checkoutURL'];
-        print("send response " + responseBody.toString());
+        platformMintingFees = responseBody['data']['platformMintingFees'].toString();
+        totalFees = responseBody['data']['totalFees'].toString();
+        paymentProcessingFee = responseBody['data']['paymentProcessingFee'].toString();
+        networkFees = responseBody['data']['networkFees'].toString();
+        print("new values " + totalFees+ platformMintingFees+paymentProcessingFee+networkFees);
 
         return AuthResult.success;
       } else {
@@ -55,6 +64,7 @@ class PaymentFees with ChangeNotifier {
       return AuthResult.failure;
     }
   }
+
 
 
 }

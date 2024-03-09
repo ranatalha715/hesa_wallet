@@ -509,6 +509,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                PaymentFeesWidget(params: params,),
                                 Text(
                                   'Transaction Details'.tr(),
                                   style: TextStyle(
@@ -1358,7 +1359,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                             )
                                           ]),
                                         ),
-                                        PaymentFeesWidget(params: params,),
+
                                         SizedBox(height: 1.5.h),
                                         AppButton(
                                             title: "Pay".tr(),
