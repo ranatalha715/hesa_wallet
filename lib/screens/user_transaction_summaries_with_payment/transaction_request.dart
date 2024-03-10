@@ -90,6 +90,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
   var isInit = true;
   var isValidating = false;
   var setThemeDark = true;
+  var fees = "";
+  Map<String, dynamic>? feesMap;
   var wstoken = "";
   var accessToken = "";
   bool IsScrolled = false;
@@ -358,6 +360,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
       // Your code here
       print('args params' + args['params']);
       params = args['params'] ?? "N/A";
+      fees = args['fees'] ?? "N/A";
+       feesMap = jsonDecode(fees);
       operation = args['operation'] ?? "N/A";
       walletAddress = args['walletAddress'] ?? "N/A";
       country = args['country'] ?? "N/A";
@@ -509,7 +513,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                PaymentFeesWidget(params: params,),
                                 Text(
                                   'Transaction Details'.tr(),
                                   style: TextStyle(
@@ -609,6 +612,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                         SizedBox(
                                           height: 1.h,
                                         ),
+                                        if(feesMap!['saleValue'] != null)
                                         transactionFeesWidget(
                                           title: 'Sale value'.tr(),
                                           details: 'N/A',
@@ -619,15 +623,16 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                         ),
                                         transactionFeesWidget(
                                           title: 'Minting fee'.tr(),
-                                          details: mintingFee,
+                                          details:  feesMap!['platformMintingFees'].toString(),
                                           showCurrency: true,
                                           isDark: themeNotifier.isDark
                                               ? true
                                               : false,
                                         ),
+                                        if(feesMap!['platformsalecomission'] != null)
                                         transactionFeesWidget(
                                           title:
-                                              'Platform sale commission'.tr(),
+                                          'Platform sale comission'.tr(),
                                           details: 'N/A',
                                           showCurrency: true,
                                           isDark: themeNotifier.isDark
@@ -636,7 +641,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                         ),
                                         transactionFeesWidget(
                                           title: 'Network fee'.tr(),
-                                          details: networkFee,
+                                          details: feesMap!['networkFees'].toString(),
                                           showCurrency: true,
                                           isDark: themeNotifier.isDark
                                               ? true
@@ -644,7 +649,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                         ),
                                         transactionFeesWidget(
                                           title: 'Payment processing fee'.tr(),
-                                          details: paymentProcessingFee,
+                                          details: feesMap!['paymentProcessingFee'].toString(),
                                           showCurrency: true,
                                           isDark: themeNotifier.isDark
                                               ? true
@@ -654,8 +659,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                           color: AppColors.textColorGrey,
                                         ),
                                         transactionFeesWidget(
-                                          title: 'Total Receivable Amount'.tr(),
-                                          details: totalTransactionAmount,
+                                          title: 'Total Transaction Amount'.tr(),
+                                          details: feesMap!['totalFees'].toString(),
                                           showCurrency: true,
                                           boldDetails: true,
                                           isDark: themeNotifier.isDark
