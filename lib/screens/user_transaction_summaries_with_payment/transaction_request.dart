@@ -65,6 +65,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
   var ownerid;
   var creatorId;
   var itemCollectionID;
+  var unformatted=DateTime.now();
 
   final ScrollController scrollController = ScrollController();
   final TextEditingController otp1Controller = TextEditingController();
@@ -92,6 +93,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
   var setThemeDark = true;
   var fees = "";
   Map<String, dynamic>? feesMap;
+  Map<String, dynamic>? paramsMap;
   var wstoken = "";
   var accessToken = "";
   bool IsScrolled = false;
@@ -312,9 +314,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
     return chunks.join(' ');
   }
 
+
   String replaceMiddleWithDots(String input) {
     if (input.length <= 30) {
-      // If the input string is 30 characters or less, return it as is.
       return input;
     }
 
@@ -324,10 +326,26 @@ class _TransactionRequestState extends State<TransactionRequest> {
 
     // Split the input string into three parts and join them with '...'
     final String result =
-        input.substring(0, startIndex) + '......' + input.substring(endIndex);
+        input.substring(0, startIndex) + '...' + input.substring(endIndex);
 
     return result;
   }
+  String replaceMiddleWithDotsTokenId(String input) {
+    if (input.length <= 30) {
+      return input;
+    }
+
+    final int middleIndex = input.length ~/ 2; // Find the middle index
+    final int startIndex = middleIndex - 12; // Calculate the start index
+    final int endIndex = middleIndex + 9; // Calculate the end index
+
+    // Split the input string into three parts and join them with '...'
+    final String result =
+        input.substring(0, startIndex) + '...' + input.substring(endIndex);
+
+    return result;
+  }
+
 
   //rejectFuncTosendmuamil
   rejectTransactions(){
@@ -360,10 +378,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
       // Your code here
       print('args params' + args['params']);
       params = args['params'] ?? "N/A";
-      fees = args['fees'] ?? "N/A";
-       feesMap = jsonDecode(fees);
+      paramsMap = jsonDecode(params);
       operation = args['operation'] ?? "N/A";
       walletAddress = args['walletAddress'] ?? "N/A";
+      fees = args['fees'] ?? "N/A";
+      feesMap = jsonDecode(fees);
       country = args['country'] ?? "N/A";
       transactionType = args['transactionType'] ?? "N/A";
       transactionID = args['transactionID'] ?? "N/A";
@@ -530,20 +549,20 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                 ),
                                 transactionDetailsWidget(
                                   title: 'Timestamp'.tr(),
-                                  details: 'N/A',
+                                  details: DateFormat('MMMM dd, yyyy HH:mm:ss').format(unformatted),
                                   isDark: themeNotifier.isDark ? true : false,
                                 ),
                                 transactionDetailsWidget(
                                   title: 'Tx Type:'.tr(),
-                                  details: transactionType,
+                                  details: operation,
                                   isDark: themeNotifier.isDark ? true : false,
                                 ),
-                                transactionDetailsWidget(
-                                  title: 'Tx ID:'.tr(),
-                                  details: replaceMiddleWithDots(transactionID),
-                                  isDark: themeNotifier.isDark ? true : false,
-                                  color: AppColors.textColorToska,
-                                ),
+                                // transactionDetailsWidget(
+                                //   title: 'Tx ID:'.tr(),
+                                //   details: replaceMiddleWithDots(transactionID),
+                                //   isDark: themeNotifier.isDark ? true : false,
+                                //   color: AppColors.textColorToska,
+                                // ),
                                 // transactionDetailsWidget(
                                 //     title: 'Tx Status:'.tr(),
                                 //     details: 'Success'.tr(),
@@ -551,11 +570,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                 //     color: AppColors.gradientColor1),
                                 transactionDetailsWidget(
                                   title: 'Token ID:'.tr(),
-                                  details:
-                                      replaceMiddleWithDots(itemCollectionID),
+                                  details: replaceMiddleWithDotsTokenId(paramsMap!['id'].toString()),
                                   isDark: themeNotifier.isDark ? true : false,
                                   color: AppColors.textColorToska,
                                 ),
+                                if(paramsMap!['Offeredby'] != null)
                                 transactionDetailsWidget(
                                   title: 'Offered by:'.tr(),
                                   details: 'N/A',
@@ -563,14 +582,12 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                 ),
                                 transactionDetailsWidget(
                                   title: 'Creator royalty:'.tr(),
-                                  details: creatorRolaity != "N/A"
-                                      ? creatorRolaity + '%'
-                                      : creatorRolaity,
+                                  details:  paramsMap!['creatorRoyaltyPercent'].toString() + '%',
                                   isDark: themeNotifier.isDark ? true : false,
                                 ),
                                 transactionDetailsWidget(
                                   title: 'Creator ID:'.tr(),
-                                  details: replaceMiddleWithDots(creatorId),
+                                  details: replaceMiddleWithDots(paramsMap!['creatorWalletAddress'].toString()),
                                   isDark: themeNotifier.isDark ? true : false,
                                 ),
                                 SizedBox(
