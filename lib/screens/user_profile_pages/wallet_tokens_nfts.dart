@@ -169,24 +169,20 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
         setState(() {
           _receivedData = link;
         });
-
         Uri uri = Uri.parse(link);
         String? operation = uri.queryParameters['operation'];
-        print('operation mint' + operation.toString());
-
+        print('operation mint' + operation.toString(),);
         if (operation != null && operation == 'MintNFT') {
           // Navigate to page for MintNFT operation
           navigateToTransactionRequestWithMint(
               uri.queryParameters, operation, context);
         } else
           if (operation != null && operation == 'MintCollection') {
-          // Navigate to other page
           navigateToTransactionRequestWithMintCollection(
               uri.queryParameters, operation, context);
         }
           else
           if (operation != null && operation == 'MintNFTWithEditions') {
-            // Navigate to other page
             navigateToTransactionRequestWithMintNFTWithEditions(
                 uri.queryParameters, operation, context);
           }
@@ -428,8 +424,10 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       String operation,
       BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
+    String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
       "params": paramsString,
+      "fees": feesString,
       "operation": operation,
       "walletAddress":userWalletAddress
     });

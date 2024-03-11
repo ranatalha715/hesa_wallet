@@ -580,6 +580,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                   details: 'N/A',
                                   isDark: themeNotifier.isDark ? true : false,
                                 ),
+                                if(paramsMap!['Creator royalty'] != null)
                                 transactionDetailsWidget(
                                   title: 'Creator royalty:'.tr(),
                                   details:  paramsMap!['creatorRoyaltyPercent'].toString() + '%',
