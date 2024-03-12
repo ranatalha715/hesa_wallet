@@ -65,7 +65,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
   var ownerid;
   var creatorId;
   var itemCollectionID;
-  var unformatted=DateTime.now();
+  var unformatted = DateTime.now();
 
   final ScrollController scrollController = ScrollController();
   final TextEditingController otp1Controller = TextEditingController();
@@ -146,10 +146,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
       print(paymentResultData.paymentResult);
       if (paymentResultData.paymentResult == PaymentResult.success ||
           paymentResultData.paymentResult == PaymentResult.sync) {
-        setState((){
-          isLoading=true;
+        setState(() {
+          isLoading = true;
         });
-       await Provider.of<TransactionProvider>(context, listen: false)
+        await Provider.of<TransactionProvider>(context, listen: false)
             .payableTransactionProcess(
                 token: accessToken,
                 paymentId:
@@ -157,10 +157,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
                     Provider.of<TransactionProvider>(context, listen: false)
                         .checkoutId,
                 context: context,
-                operation: operation
-        );
-        setState((){
-          isLoading=false;
+                operation: operation);
+        setState(() {
+          isLoading = false;
         });
         //delay of 1 second
         //go to neo app WITH RESPONSE
@@ -175,10 +174,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
         print('Payment failed');
         AppDeepLinking().openNftApp(
           {
-
             "operation": "$operation",
             "data": paymentResultData.errorString.toString(),
-
           },
         );
         _showToast('Payment failed');
@@ -191,7 +188,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
         {
           "operation": "$operation",
           "data": e.toString(),
-            },
+        },
       );
       _showToast('Payment failed');
     }
@@ -314,7 +311,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
     return chunks.join(' ');
   }
 
-
   String replaceMiddleWithDots(String input) {
     if (input.length <= 30) {
       return input;
@@ -330,6 +326,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
 
     return result;
   }
+
   String replaceMiddleWithDotsTokenId(String input) {
     if (input.length <= 30) {
       return input;
@@ -346,17 +343,25 @@ class _TransactionRequestState extends State<TransactionRequest> {
     return result;
   }
 
+  String capitalizeFirstLetter(String text) {
+    if (text.isEmpty) {
+      return text;
+    }
+    return text[0].toUpperCase() + text.substring(1);
+  }
 
   //rejectFuncTosendmuamil
-  rejectTransactions(){
+  rejectTransactions() {
     setState(() {
-      isLoading=true;
+      isLoading = true;
     });
     Future.delayed(Duration(seconds: 2), () async {
-      print("operation" + operation,);
-      print("data"  + "$operation transaction has been cancelled by the user,");
+      print(
+        "operation" + operation,
+      );
+      print("data" + "$operation transaction has been cancelled by the user,");
       setState(() {
-        isLoading=false;
+        isLoading = false;
       });
       await AppDeepLinking().openNftApp(
         {
@@ -368,7 +373,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
       );
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -549,12 +553,13 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                 ),
                                 transactionDetailsWidget(
                                   title: 'Timestamp'.tr(),
-                                  details: DateFormat('MMMM dd, yyyy HH:mm:ss').format(unformatted),
+                                  details: DateFormat('MMMM dd, yyyy HH:mm:ss')
+                                      .format(unformatted),
                                   isDark: themeNotifier.isDark ? true : false,
                                 ),
                                 transactionDetailsWidget(
                                   title: 'Tx Type:'.tr(),
-                                  details: operation,
+                                  details: capitalizeFirstLetter(operation),
                                   isDark: themeNotifier.isDark ? true : false,
                                 ),
                                 // transactionDetailsWidget(
@@ -569,28 +574,61 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                 //     isDark: themeNotifier.isDark ? true : false,
                                 //     color: AppColors.gradientColor1),
                                 transactionDetailsWidget(
-                                  title: 'Token ID:'.tr(),
-                                  details: replaceMiddleWithDotsTokenId(paramsMap!['id'].toString()),
+                                  title: operation == 'MintCollection' ||
+                                          operation == 'listCollection' ||
+                                          operation ==
+                                              'listAuctionCollection' ||
+                                          operation == 'burnCollection'
+                                      ? 'Collection ID:'.tr()
+                                      : 'Token ID:'.tr(),
+                                  details: replaceMiddleWithDotsTokenId(
+                                      paramsMap!['id'].toString()),
                                   isDark: themeNotifier.isDark ? true : false,
                                   color: AppColors.textColorToska,
                                 ),
-                                if(paramsMap!['Offeredby'] != null)
-                                transactionDetailsWidget(
-                                  title: 'Offered by:'.tr(),
-                                  details: 'N/A',
-                                  isDark: themeNotifier.isDark ? true : false,
-                                ),
-                                if(paramsMap!['Creator royalty'] != null)
-                                transactionDetailsWidget(
-                                  title: 'Creator royalty:'.tr(),
-                                  details:  paramsMap!['creatorRoyaltyPercent'].toString() + '%',
-                                  isDark: themeNotifier.isDark ? true : false,
-                                ),
-                                transactionDetailsWidget(
-                                  title: 'Creator ID:'.tr(),
-                                  details: replaceMiddleWithDots(paramsMap!['creatorWalletAddress'].toString()),
-                                  isDark: themeNotifier.isDark ? true : false,
-                                ),
+                                if (paramsMap!['Offeredby'] != null)
+                                  transactionDetailsWidget(
+                                    title: 'Offered by:'.tr(),
+                                    details: 'N/A',
+                                    isDark: themeNotifier.isDark ? true : false,
+                                  ),
+                                if (paramsMap!['Creator royalty'] != null)
+                                  transactionDetailsWidget(
+                                    title: 'Creator royalty:'.tr(),
+                                    details: paramsMap!['creatorRoyaltyPercent']
+                                            .toString() +
+                                        '%',
+                                    isDark: themeNotifier.isDark ? true : false,
+                                  ),
+                                if (paramsMap!['owner'] != null)
+                                  transactionDetailsWidget(
+                                    title: 'Owner:'.tr(),
+                                    details: replaceMiddleWithDots(
+                                                paramsMap!['owner'])
+                                            .toString(),
+                                    isDark: themeNotifier.isDark ? true : false,
+                                  ),
+                                if (paramsMap!['listedBy'] != null ||
+                                    paramsMap!['creatorWalletAddress'] != null)
+                                  transactionDetailsWidget(
+                                    title: operation == 'listNFT' ||
+                                            operation == 'listCollection' ||
+                                            operation ==
+                                                'listAuctionCollection' ||
+                                            operation == 'listAuctionNFT'
+                                        ? 'Listed By:'
+                                        : 'Creator ID:'.tr(),
+                                    details: replaceMiddleWithDots(
+                                        operation == 'listNFT' ||
+                                                operation == 'listCollection' ||
+                                                operation ==
+                                                    'listAuctionCollection' ||
+                                                operation == 'listAuctionNFT'
+                                            ? paramsMap!['listedBy'].toString()
+                                            : paramsMap!['creatorWalletAddress']
+                                                .toString()),
+                                    isDark: themeNotifier.isDark ? true : false,
+                                  ),
                                 SizedBox(
                                   height: 2.h,
                                 ),
@@ -630,55 +668,84 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                         SizedBox(
                                           height: 1.h,
                                         ),
-                                        if(feesMap!['saleValue'] != null)
+                                        if (feesMap!['saleValue'] != null)
+                                          transactionFeesWidget(
+                                            title: 'Sale value'.tr(),
+                                            details: 'N/A',
+                                            showCurrency: true,
+                                            isDark: themeNotifier.isDark
+                                                ? true
+                                                : false,
+                                          ),
                                         transactionFeesWidget(
-                                          title: 'Sale value'.tr(),
-                                          details: 'N/A',
+                                          title: 'Minting Fees'.tr(),
+                                          details:
+                                              feesMap!['platformMintingFees']
+                                                  .toString(),
+                                          showCurrency: true,
+                                          isDark: themeNotifier.isDark
+                                              ? true
+                                              : false,
+                                        ),
+                                        if (feesMap!['platformsalecomission'] !=
+                                            null)
+                                          transactionFeesWidget(
+                                            title:
+                                                'Platform Sale Comission'.tr(),
+                                            details: 'N/A',
+                                            showCurrency: true,
+                                            isDark: themeNotifier.isDark
+                                                ? true
+                                                : false,
+                                          ),
+                                        transactionFeesWidget(
+                                          title: 'Network Fees'.tr(),
+                                          details: feesMap!['networkFees']
+                                              .toString(),
                                           showCurrency: true,
                                           isDark: themeNotifier.isDark
                                               ? true
                                               : false,
                                         ),
                                         transactionFeesWidget(
-                                          title: 'Minting fee'.tr(),
-                                          details:  feesMap!['platformMintingFees'].toString(),
+                                          title: 'Payment Processing Fee'.tr(),
+                                          details:
+                                              feesMap!['paymentProcessingFee'].toStringAsFixed(2)
+                                                  .toString(),
                                           showCurrency: true,
                                           isDark: themeNotifier.isDark
                                               ? true
                                               : false,
                                         ),
-                                        if(feesMap!['platformsalecomission'] != null)
-                                        transactionFeesWidget(
-                                          title:
-                                          'Platform sale comission'.tr(),
-                                          details: 'N/A',
-                                          showCurrency: true,
-                                          isDark: themeNotifier.isDark
-                                              ? true
-                                              : false,
-                                        ),
-                                        transactionFeesWidget(
-                                          title: 'Network fee'.tr(),
-                                          details: feesMap!['networkFees'].toString(),
-                                          showCurrency: true,
-                                          isDark: themeNotifier.isDark
-                                              ? true
-                                              : false,
-                                        ),
-                                        transactionFeesWidget(
-                                          title: 'Payment processing fee'.tr(),
-                                          details: feesMap!['paymentProcessingFee'].toString(),
-                                          showCurrency: true,
-                                          isDark: themeNotifier.isDark
-                                              ? true
-                                              : false,
-                                        ),
+                                        if (feesMap!['perEntryFee'] != null)
+                                          transactionFeesWidget(
+                                            title: 'Per Entry Fee'.tr(),
+                                            details: feesMap!['perEntryFee']
+                                                .toString(),
+                                            showCurrency: true,
+                                            isDark: themeNotifier.isDark
+                                                ? true
+                                                : false,
+                                          ),
+                                        if (feesMap!['assetPrice'] != null)
+                                          transactionFeesWidget(
+                                            title: 'Asset Price'.tr(),
+                                            details: feesMap!['assetPrice']
+                                                .toString(),
+                                            showCurrency: true,
+                                            isDark: themeNotifier.isDark
+                                                ? true
+                                                : false,
+                                          ),
+
                                         Divider(
                                           color: AppColors.textColorGrey,
                                         ),
                                         transactionFeesWidget(
-                                          title: 'Total Transaction Amount'.tr(),
-                                          details: feesMap!['totalFees'].toString(),
+                                          title:
+                                              'Total Transaction Amount'.tr(),
+                                          details:
+                                              feesMap!['totalFees'].toString(),
                                           showCurrency: true,
                                           boldDetails: true,
                                           isDark: themeNotifier.isDark
@@ -1428,7 +1495,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                       .walletAddress!,
                                                   params: params,
                                                   operation: operation,
-                                                ).then((value) {
+                                                )
+                                                        .then((value) {
                                                   print(
                                                       "transactionProvider.checkoutId.collection");
                                                   print(transactionProvider
@@ -1449,8 +1517,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                               listen: false)
                                                           .checkoutId);
                                                 });
-                                              }
-                                              else if (operation ==
+                                              } else if (operation ==
                                                   'MintNFT') {
                                                 // Uncomment this block if needed, adjust parameters accordingly
                                                 print('running mint nft');
@@ -1489,25 +1556,26 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   // });
                                                   // }
                                                 });
-                                              }
-                                              else if (operation ==
+                                              } else if (operation ==
                                                   'MintNFTWithEditions') {
-                                                final nftResult = await transactionProvider
-                                                    .mintNFTWithEditions(
-                                                    params: params,
-                                                    token: accessToken,
-                                                    context: context,
-                                                    walletAddress:
-                                                    userProvider
-                                                        .walletAddress!,
-                                                    tokenId: paymentCards
-                                                        .isEmpty
-                                                        ? ""
-                                                        : trPro
-                                                        .selectedCardTokenId,
-                                                    country: country,
-                                                    operation: operation)
-                                                    .then((value) {
+                                                final nftResult =
+                                                    await transactionProvider
+                                                        .mintNFTWithEditions(
+                                                            params: params,
+                                                            token: accessToken,
+                                                            context: context,
+                                                            walletAddress:
+                                                                userProvider
+                                                                    .walletAddress!,
+                                                            tokenId: paymentCards
+                                                                    .isEmpty
+                                                                ? ""
+                                                                : trPro
+                                                                    .selectedCardTokenId,
+                                                            country: country,
+                                                            operation:
+                                                                operation)
+                                                        .then((value) {
                                                   print(
                                                       "transactionProvider.checkoutId");
                                                   print(transactionProvider
@@ -1520,15 +1588,14 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         "MADA",
                                                       ],
                                                       checkoutId: Provider.of<
-                                                          TransactionProvider>(
-                                                          context,
-                                                          listen: false)
+                                                                  TransactionProvider>(
+                                                              context,
+                                                              listen: false)
                                                           .checkoutId);
                                                   // });
                                                   // }
                                                 });
-                                              }
-                                              else if (operation ==
+                                              } else if (operation ==
                                                   'purchaseNFT') {
                                                 final purchasenftResult =
                                                     await transactionProvider
@@ -1567,27 +1634,26 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   // });
                                                   // }
                                                 });
-                                              }
-                                              else if (operation ==
+                                              } else if (operation ==
                                                   'purchaseCollection') {
                                                 final purchaseCollectionResult =
-                                                await transactionProvider
-                                                    .purchaseCollection(
-                                                    params: params,
-                                                    token: accessToken,
-                                                    context: context,
-                                                    walletAddress:
-                                                    userProvider
-                                                        .walletAddress!,
-                                                    tokenId: paymentCards
-                                                        .isEmpty
-                                                        ? ""
-                                                        : trPro
-                                                        .selectedCardTokenId,
-                                                    country: country,
-                                                    operation:
-                                                    operation)
-                                                    .then((value) {
+                                                    await transactionProvider
+                                                        .purchaseCollection(
+                                                            params: params,
+                                                            token: accessToken,
+                                                            context: context,
+                                                            walletAddress:
+                                                                userProvider
+                                                                    .walletAddress!,
+                                                            tokenId: paymentCards
+                                                                    .isEmpty
+                                                                ? ""
+                                                                : trPro
+                                                                    .selectedCardTokenId,
+                                                            country: country,
+                                                            operation:
+                                                                operation)
+                                                        .then((value) {
                                                   print(
                                                       "transactionProvider.checkoutId");
                                                   print(transactionProvider
@@ -1600,15 +1666,14 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         "MADA",
                                                       ],
                                                       checkoutId: Provider.of<
-                                                          TransactionProvider>(
-                                                          context,
-                                                          listen: false)
+                                                                  TransactionProvider>(
+                                                              context,
+                                                              listen: false)
                                                           .checkoutId);
                                                   // });
                                                   // }
                                                 });
-                                              }
-                                              else if (operation ==
+                                              } else if (operation ==
                                                   'listNFT') {
                                                 // Uncomment this block if needed, adjust parameters accordingly
                                                 final listNftFixedPrice =
@@ -1807,7 +1872,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   tokenId: paymentCards.isEmpty
                                                       ? ""
                                                       : trPro
-                                                          .selectedCardTokenId, operation: operation,
+                                                          .selectedCardTokenId,
+                                                  operation: operation,
                                                 )
                                                         .then((value) {
                                                   print(
@@ -1829,65 +1895,59 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   // });
                                                   // }
                                                 });
-                                              }
-                                              else if (operation ==
-                                              'makeOfferNFT')
-                                              {
-                                                  final makeOffer =
-                                                      await transactionProvider
-                                                          .makeOffer(
-                                                    params: params,
-                                                    token: accessToken,
-                                                    context: context,
-                                                    walletAddress: userProvider
-                                                        .walletAddress!,
-                                                    tokenId: paymentCards
-                                                            .isEmpty
-                                                        ? ""
-                                                        : trPro
-                                                            .selectedCardTokenId,
-                                                    operation: operation,
-                                                  )
-                                                          .then((value) {
-                                                    print(
-                                                        "transactionProvider.checkoutId");
-                                                    print(transactionProvider
-                                                        .checkoutId);
-                                                    payRequestNowReadyUI(
-                                                        operation: operation,
-                                                        brandsName: [
-                                                          "VISA",
-                                                          "MASTER",
-                                                          "MADA",
-                                                        ],
-                                                        checkoutId: Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .checkoutId);
-                                                    // });
-                                                    // }
-                                                  });
-                                                }
-                                              else if (operation ==
-                                                  'makeOfferCollection')
-                                              {
+                                              } else if (operation ==
+                                                  'makeOfferNFT') {
+                                                final makeOffer =
+                                                    await transactionProvider
+                                                        .makeOffer(
+                                                  params: params,
+                                                  token: accessToken,
+                                                  context: context,
+                                                  walletAddress: userProvider
+                                                      .walletAddress!,
+                                                  tokenId: paymentCards.isEmpty
+                                                      ? ""
+                                                      : trPro
+                                                          .selectedCardTokenId,
+                                                  operation: operation,
+                                                )
+                                                        .then((value) {
+                                                  print(
+                                                      "transactionProvider.checkoutId");
+                                                  print(transactionProvider
+                                                      .checkoutId);
+                                                  payRequestNowReadyUI(
+                                                      operation: operation,
+                                                      brandsName: [
+                                                        "VISA",
+                                                        "MASTER",
+                                                        "MADA",
+                                                      ],
+                                                      checkoutId: Provider.of<
+                                                                  TransactionProvider>(
+                                                              context,
+                                                              listen: false)
+                                                          .checkoutId);
+                                                  // });
+                                                  // }
+                                                });
+                                              } else if (operation ==
+                                                  'makeOfferCollection') {
                                                 final makeOfferCollection =
-                                                await transactionProvider
-                                                    .makeOfferCollection(
+                                                    await transactionProvider
+                                                        .makeOfferCollection(
                                                   params: params,
                                                   token: accessToken,
                                                   context: context,
                                                   walletAddress: userProvider
                                                       .walletAddress!,
-                                                  tokenId: paymentCards
-                                                      .isEmpty
+                                                  tokenId: paymentCards.isEmpty
                                                       ? ""
                                                       : trPro
-                                                      .selectedCardTokenId,
+                                                          .selectedCardTokenId,
                                                   operation: operation,
                                                 )
-                                                    .then((value) {
+                                                        .then((value) {
                                                   print(
                                                       "transactionProvider.checkoutId");
                                                   print(transactionProvider
@@ -1900,32 +1960,30 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         "MADA",
                                                       ],
                                                       checkoutId: Provider.of<
-                                                          TransactionProvider>(
-                                                          context,
-                                                          listen: false)
+                                                                  TransactionProvider>(
+                                                              context,
+                                                              listen: false)
                                                           .checkoutId);
                                                   // });
                                                   // }
                                                 });
-                                              }
-                                              else if (operation ==
-                                              'acceptCounterOffer') {
+                                              } else if (operation ==
+                                                  'acceptCounterOffer') {
                                                 final acceptCounterOffer =
-                                                await transactionProvider
-                                                    .acceptCounterOffer(
+                                                    await transactionProvider
+                                                        .acceptCounterOffer(
                                                   params: params,
                                                   token: accessToken,
                                                   context: context,
                                                   walletAddress: userProvider
                                                       .walletAddress!,
-                                                  tokenId: paymentCards
-                                                      .isEmpty
+                                                  tokenId: paymentCards.isEmpty
                                                       ? ""
                                                       : trPro
-                                                      .selectedCardTokenId,
+                                                          .selectedCardTokenId,
                                                   operation: operation,
                                                 )
-                                                    .then((value) {
+                                                        .then((value) {
                                                   print(
                                                       "transactionProvider.checkoutId");
                                                   print(transactionProvider
@@ -1938,32 +1996,30 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         "MADA",
                                                       ],
                                                       checkoutId: Provider.of<
-                                                          TransactionProvider>(
-                                                          context,
-                                                          listen: false)
+                                                                  TransactionProvider>(
+                                                              context,
+                                                              listen: false)
                                                           .checkoutId);
                                                   // });
                                                   // }
                                                 });
-                                              }
-                                              else if (operation ==
+                                              } else if (operation ==
                                                   'acceptCollectionCounterOffer') {
                                                 final acceptCollectionCounterOffer =
-                                                await transactionProvider
-                                                    .acceptCollectionCounterOffer(
+                                                    await transactionProvider
+                                                        .acceptCollectionCounterOffer(
                                                   params: params,
                                                   token: accessToken,
                                                   context: context,
                                                   walletAddress: userProvider
                                                       .walletAddress!,
-                                                  tokenId: paymentCards
-                                                      .isEmpty
+                                                  tokenId: paymentCards.isEmpty
                                                       ? ""
                                                       : trPro
-                                                      .selectedCardTokenId,
+                                                          .selectedCardTokenId,
                                                   operation: operation,
                                                 )
-                                                    .then((value) {
+                                                        .then((value) {
                                                   print(
                                                       "transactionProvider.checkoutId");
                                                   print(transactionProvider
@@ -1976,15 +2032,14 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         "MADA",
                                                       ],
                                                       checkoutId: Provider.of<
-                                                          TransactionProvider>(
-                                                          context,
-                                                          listen: false)
+                                                                  TransactionProvider>(
+                                                              context,
+                                                              listen: false)
                                                           .checkoutId);
                                                   // });
                                                   // }
                                                 });
-                                              }
-                                              else{}
+                                              } else {}
                                               setState(() {
                                                 isLoading = false;
                                               });
@@ -2273,7 +2328,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                             title: "Reject request".tr(),
                                             handler: () {
                                               // if(operation=="MintNFT"){
-                                                rejectTransactions();
+                                              rejectTransactions();
                                               // }
                                             },
                                             isGradient: false,
