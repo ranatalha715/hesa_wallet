@@ -288,7 +288,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
           String? id = data['id'];
           String? offererId = data['offererId'];
           int? offerAmount = int.tryParse(data['offerAmount'].toString() ?? '');
-          print('test params individually');
           print(id.toString() + "  " + offererId.toString() + "  " +
               offerAmount.toString());
           navigateToTransactionRequestAcceptRejectWithMakeCounterOffer(
@@ -302,7 +301,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
           String? id = data['id'];
           String? offererId = data['offererId'];
           int? offerAmount = int.tryParse(data['offerAmount'].toString() ?? '');
-          print('test params individually');
           print(id.toString() + "  " + offererId.toString() + "  " +
               offerAmount.toString());
           navigateToTransactionRequestAcceptRejectWithmakeCollectionCounterOffer(
@@ -320,7 +318,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
           String? id = data['id'];
           String? offererId = data['offererId'];
           int? offerAmount = int.tryParse(data['offerAmount'].toString() ?? '');
-          print('test params individually');
           print(id.toString() + "  " + offererId.toString() + "  " +
               offerAmount.toString());
           navigateToTransactionRequestAcceptRejectWithrejectNFTCounterOffer(
@@ -334,7 +331,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
           String? id = data['id'];
           String? offererId = data['offererId'];
           int? offerAmount = int.tryParse(data['offerAmount'].toString() ?? '');
-          print('test params individually');
           print(id.toString() + "  " + offererId.toString() + "  " +
               offerAmount.toString());
           navigateToTransactionRequestAcceptRejectWithrejectCollectionCounterOffer(
@@ -706,9 +702,11 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       String offererId,
       String offerAmount,) async {
     String paramsString = queryParams['params'] ?? '';
+    String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx).pushNamed(
         TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
+      "fees": feesString,
       "operation": operation,
       "id": id,
       "offererId": offererId,

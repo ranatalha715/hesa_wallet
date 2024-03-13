@@ -578,7 +578,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                           operation == 'listCollection' ||
                                           operation ==
                                               'listAuctionCollection' ||
-                                          operation == 'burnCollection'
+                                          operation == 'burnCollection'||
+                                      operation == 'makeOfferCollection'||
+                                      operation == 'purchaseCollection'
                                       ? 'Collection ID:'.tr()
                                       : 'Token ID:'.tr(),
                                   details: replaceMiddleWithDotsTokenId(
