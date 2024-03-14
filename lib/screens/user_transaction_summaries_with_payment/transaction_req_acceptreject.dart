@@ -599,7 +599,9 @@ class _TransactionRequestAcceptRejectState
                                                 ),
                                                 transactionDetailsWidget(
                                                   title: operation ==
-                                                          'makeCollectionCounterOffer'
+                                                          'makeCollectionCounterOffer' ||
+                                                      operation ==
+                                                          'AcceptCollectionOffer'
                                                       ? 'Collection ID:'.tr()
                                                       : 'Token ID:'.tr(),
                                                   details:
@@ -639,14 +641,20 @@ class _TransactionRequestAcceptRejectState
                                                               'makeNFTCounterOffer' ||
                                                           operation ==
                                                               'makeCollectionCounterOffer' || operation ==
-                                                      'AcceptNFTOfferReceived'
+                                                      'AcceptNFTOfferReceived'  || operation ==
+                                                      'AcceptCollectionOffer' || operation ==
+                                                      'rejectNFTOfferReceived' || operation ==
+                                                      'rejectCollectionOfferReceived'
                                                       ? 'Offerer ID:'
                                                       : 'Creator ID:'.tr(),
                                                   details: replaceMiddleWithDots(operation ==
                                                               'makeNFTCounterOffer' ||
                                                           operation ==
                                                               'makeCollectionCounterOffer'|| operation ==
-                                                      'AcceptNFTOfferReceived'
+                                                      'AcceptNFTOfferReceived' || operation ==
+                                                      'AcceptCollectionOffer' || operation ==
+                                                      'rejectNFTOfferReceived'  || operation ==
+                                                      'rejectCollectionOfferReceived'
                                                       ? paramsMap!['offererId']
                                                           .toString()
                                                       : paramsMap![
@@ -674,7 +682,11 @@ class _TransactionRequestAcceptRejectState
                                                 if (operation !=
                                                         "makeNFTCounterOffer" &&
                                                     operation !=
-                                                        "makeCollectionCounterOffer")
+                                                        "makeCollectionCounterOffer" &&
+                                                    operation !=
+                                                        "rejectNFTOfferReceived" &&
+                                                    operation !=
+                                                        "rejectCollectionOfferReceived")
                                                   Container(
                                                     decoration: BoxDecoration(
                                                         color: AppColors
@@ -820,7 +832,11 @@ class _TransactionRequestAcceptRejectState
                                                 if (operation !=
                                                         "makeNFTCounterOffer" &&
                                                     operation !=
-                                                        "makeCollectionCounterOffer")
+                                                        "makeCollectionCounterOffer" &&
+                                                    operation !=
+                                                        "rejectNFTOfferReceived" &&
+                                                    operation !=
+                                                        "rejectCollectionOfferReceived")
                                                   Align(
                                                     alignment:
                                                         Alignment.centerLeft,
@@ -860,7 +876,11 @@ class _TransactionRequestAcceptRejectState
                                                 if (operation !=
                                                         "makeNFTCounterOffer" &&
                                                     operation !=
-                                                        "makeCollectionCounterOffer")
+                                                        "makeCollectionCounterOffer" &&
+                                                    operation !=
+                                                        "rejectNFTOfferReceived" &&
+                                                    operation !=
+                                                        "rejectCollectionOfferReceived")
                                                   Padding(
                                                     padding:
                                                         EdgeInsets.symmetric(
@@ -939,7 +959,9 @@ class _TransactionRequestAcceptRejectState
                                                 operation !=
                                                             "makeNFTCounterOffer" &&
                                                         operation !=
-                                                            "makeCollectionCounterOffer"
+                                                            "makeCollectionCounterOffer" && operation !=
+                                                    "rejectNFTOfferReceived" && operation !=
+                                                    "rejectCollectionOfferReceived"
                                                     ? SizedBox(
                                                         height: 3.h,
                                                       )
