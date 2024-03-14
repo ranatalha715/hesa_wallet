@@ -580,7 +580,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                               'listAuctionCollection' ||
                                           operation == 'burnCollection'||
                                       operation == 'makeOfferCollection'||
-                                      operation == 'purchaseCollection'
+                                      operation == 'purchaseCollection' ||
+                                      operation == 'acceptCollectionCounterOffer'
                                       ? 'Collection ID:'.tr()
                                       : 'Token ID:'.tr(),
                                   details: replaceMiddleWithDotsTokenId(
@@ -630,6 +631,18 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                             : paramsMap!['creatorWalletAddress']
                                                 .toString()),
                                     isDark: themeNotifier.isDark ? true : false,
+                                  ),
+                                if (paramsMap!['offerAmount'] !=
+                                    null)
+                                  transactionDetailsWidget(
+                                    title: 'Offer Amount:'.tr(),
+                                    details:
+                                    paramsMap!['offerAmount']
+                                        .toString() +
+                                        " SAR",
+                                    isDark: themeNotifier.isDark
+                                        ? true
+                                        : false,
                                   ),
                                 SizedBox(
                                   height: 2.h,
@@ -713,7 +726,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                           title: 'Payment Processing Fee'.tr(),
                                           details:
                                               feesMap!['paymentProcessingFee'].toStringAsFixed(2)
-                                                  .toString(),
+                                                  .toString() ,
                                           showCurrency: true,
                                           isDark: themeNotifier.isDark
                                               ? true

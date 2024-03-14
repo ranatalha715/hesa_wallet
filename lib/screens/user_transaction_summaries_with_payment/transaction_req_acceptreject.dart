@@ -387,7 +387,7 @@ class _TransactionRequestAcceptRejectState
       params = args['params'] ?? "N/A";
       paramsMap = jsonDecode(params);
       fees = args['fees'] ?? "N/A";
-      feesMap = fees != "" ? jsonDecode(fees):null;
+      feesMap = fees != "" ? jsonDecode(fees) : null;
       counterId = args['id'] ?? "N/A";
       counterOffererId = args['offererId'].toString() ?? "N/A";
       counterOffererAmount = args['offerAmount'] ?? "N/A";
@@ -541,12 +541,10 @@ class _TransactionRequestAcceptRejectState
                                         height: 4.h,
                                       ),
                                       Container(
-                                        height:71.h,
+                                        height: 71.h,
                                         decoration: BoxDecoration(
                                             color: AppColors
                                                 .transactionReqBorderWhole,
-
-
                                             borderRadius: BorderRadius.only(
                                               topLeft: Radius.circular(15.sp),
                                               // Adjust the radius as needed
@@ -564,7 +562,8 @@ class _TransactionRequestAcceptRejectState
                                                 Text(
                                                   'Transaction Details'.tr(),
                                                   style: TextStyle(
-                                                      color: themeNotifier.isDark
+                                                      color: themeNotifier
+                                                              .isDark
                                                           ? AppColors
                                                               .textColorWhite
                                                           : AppColors
@@ -591,18 +590,18 @@ class _TransactionRequestAcceptRejectState
                                                 ),
                                                 transactionDetailsWidget(
                                                   title: 'Tx Type:'.tr(),
-                                                  details: capitalizeFirstLetter(
-                                                      operation),
+                                                  details:
+                                                      capitalizeFirstLetter(
+                                                          operation),
                                                   isDark: themeNotifier.isDark
                                                       ? true
                                                       : false,
                                                 ),
                                                 transactionDetailsWidget(
-                                                  title:
-                                                      // operation == 'MintCollection'
-                                                      // ? 'Collection ID:'.tr()
-                                                      // :
-                                                      'Token ID:'.tr(),
+                                                  title: operation ==
+                                                          'makeCollectionCounterOffer'
+                                                      ? 'Collection ID:'.tr()
+                                                      : 'Token ID:'.tr(),
                                                   details:
                                                       replaceMiddleWithDotsTokenId(
                                                           paramsMap!['id']
@@ -610,7 +609,8 @@ class _TransactionRequestAcceptRejectState
                                                   isDark: themeNotifier.isDark
                                                       ? true
                                                       : false,
-                                                  color: AppColors.textColorToska,
+                                                  color:
+                                                      AppColors.textColorToska,
                                                 ),
                                                 if (paramsMap!['Offeredby'] !=
                                                     null)
@@ -634,20 +634,36 @@ class _TransactionRequestAcceptRejectState
                                                   ),
                                                 // if (paramsMap!['listedBy'] !=
                                                 //         null)
+                                                transactionDetailsWidget(
+                                                  title: operation ==
+                                                              'makeNFTCounterOffer' ||
+                                                          operation ==
+                                                              'makeCollectionCounterOffer' || operation ==
+                                                      'AcceptNFTOfferReceived'
+                                                      ? 'Offerer ID:'
+                                                      : 'Creator ID:'.tr(),
+                                                  details: replaceMiddleWithDots(operation ==
+                                                              'makeNFTCounterOffer' ||
+                                                          operation ==
+                                                              'makeCollectionCounterOffer'|| operation ==
+                                                      'AcceptNFTOfferReceived'
+                                                      ? paramsMap!['offererId']
+                                                          .toString()
+                                                      : paramsMap![
+                                                              'creatorWalletAddress']
+                                                          .toString()),
+                                                  isDark: themeNotifier.isDark
+                                                      ? true
+                                                      : false,
+                                                ),
+                                                if (paramsMap!['offerAmount'] !=
+                                                    null)
                                                   transactionDetailsWidget(
-                                                    title: operation ==
-                                                            'makeNFTCounterOffer'
-                                                        ? 'Offerer ID:'
-                                                        : 'Creator ID:'.tr(),
-                                                    details: replaceMiddleWithDots(
-                                                        operation ==
-                                                                'makeNFTCounterOffer'
-                                                            ? paramsMap![
-                                                                    'offererId']
-                                                                .toString()
-                                                            : paramsMap![
-                                                                    'creatorWalletAddress']
-                                                                .toString()),
+                                                    title: 'Offer Amount:'.tr(),
+                                                    details:
+                                                    paramsMap!['offerAmount']
+                                                                .toString() +
+                                                            " SAR",
                                                     isDark: themeNotifier.isDark
                                                         ? true
                                                         : false,
@@ -655,224 +671,181 @@ class _TransactionRequestAcceptRejectState
                                                 SizedBox(
                                                   height: 2.h,
                                                 ),
-                                                if(operation!="makeNFTCounterOffer")
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                      color: AppColors
-                                                          .transactionFeeContainer,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10.sp),
-                                                      border: Border.all(
-                                                          color: AppColors
-                                                              .transactionFeeBorder)),
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        top: 13.sp,
-                                                        left: 13.sp,
-                                                        right: 13.sp,
-                                                        bottom: 7.sp),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        // SizedBox(
-                                                        //   height: 4.h,
-                                                        // ),
-                                                        Text(
-                                                          'Transaction fees'.tr(),
-                                                          style: TextStyle(
-                                                              color: themeNotifier.isDark
-                                                                  ? AppColors
-                                                                      .textColorWhite
-                                                                  : AppColors
-                                                                      .textColorBlack,
-                                                              fontSize: 12.5.sp,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600),
-                                                        ),
-                                                        Divider(
-                                                          color: AppColors
-                                                              .textColorGrey,
-                                                        ),
-                                                        SizedBox(
-                                                          height: 1.h,
-                                                        ),
-                                                        transactionFeesWidget(
-                                                          title:
-                                                              'Sale value'.tr(),
-                                                          details:
-                                                              '444.44 SAR'.tr(),
-                                                          isDark:
-                                                              themeNotifier.isDark
-                                                                  ? true
-                                                                  : false,
-                                                        ),
-                                                        transactionFeesWidget(
-                                                          title:
-                                                              'Platform sale commission'
-                                                                  .tr(),
-                                                          details:
-                                                              '-50.00 SAR'.tr(),
-                                                          isDark:
-                                                              themeNotifier.isDark
-                                                                  ? true
-                                                                  : false,
-                                                        ),
-                                                        transactionFeesWidget(
-                                                          title:
-                                                              'Network fee'.tr(),
-                                                          details:
-                                                              '-32.00 SAR'.tr(),
-                                                          isDark:
-                                                              themeNotifier.isDark
-                                                                  ? true
-                                                                  : false,
-                                                        ),
-                                                        transactionFeesWidget(
-                                                          title:
-                                                              'Payment processing fee'
-                                                                  .tr(),
-                                                          details:
-                                                              '-22.00 SAR'.tr(),
-                                                          isDark:
-                                                              themeNotifier.isDark
-                                                                  ? true
-                                                                  : false,
-                                                        ),
-                                                        Divider(
-                                                          color: AppColors
-                                                              .textColorGrey,
-                                                        ),
-                                                        transactionFeesWidget(
-                                                          title:
-                                                              'Total Receivable Amount'
-                                                                  .tr(),
-                                                          details:
-                                                              '350.75 SAR'.tr(),
-                                                          isDark:
-                                                              themeNotifier.isDark
-                                                                  ? true
-                                                                  : false,
-                                                        ),
-                                                        SizedBox(
-                                                          height: 1.h,
-                                                        ),
-                                                        Text(
-                                                          'The transaction request is automatically signed and submitted to the Blockchain once you have accepted this transaction.'
-                                                              .tr(),
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight.w400,
-                                                              fontSize: 10.5.sp,
-                                                              color: AppColors
-                                                                  .textColorGreyShade2),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 2.h,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 3.h,
-                                                ),
-
-                                                if(operation!="makeNFTCounterOffer")
-                                                Align(
-                                                  alignment: Alignment.centerLeft,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.symmetric(
-                                                        horizontal: 0),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Text(
-                                                          'Bank Account'.tr(),
-                                                          style: TextStyle(
-                                                              fontSize: 13.5.sp,
-                                                              fontFamily: 'Inter',
-                                                              fontWeight:
-                                                                  FontWeight.w600,
-                                                              color: themeNotifier.isDark
-                                                                  ? AppColors
-                                                                      .textColorWhite
-                                                                  : AppColors
-                                                                      .textColorBlack),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(height: 2.h),
-                                                if(operation!="makeNFTCounterOffer")
-                                                Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 0),
-                                                  child: Container(
-                                                    height: 6.5.h,
-                                                    margin: EdgeInsets.only(
-                                                        bottom: 1.h),
+                                                if (operation !=
+                                                        "makeNFTCounterOffer" &&
+                                                    operation !=
+                                                        "makeCollectionCounterOffer")
+                                                  Container(
                                                     decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                      border: Border.all(
                                                         color: AppColors
-                                                            .textColorGrey
-                                                            .withOpacity(0.50),
-                                                        // Off-white color
-                                                        width: 1.0,
-                                                      ),
-                                                    ),
+                                                            .transactionFeeContainer,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    10.sp),
+                                                        border: Border.all(
+                                                            color: AppColors
+                                                                .transactionFeeBorder)),
                                                     child: Padding(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 10.sp),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
+                                                      padding: EdgeInsets.only(
+                                                          top: 13.sp,
+                                                          left: 13.sp,
+                                                          right: 13.sp,
+                                                          bottom: 7.sp),
+                                                      child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
-                                                                .center,
+                                                                .start,
                                                         children: [
-                                                          SizedBox(
-                                                            width: 1.w,
-                                                          ),
+                                                          // SizedBox(
+                                                          //   height: 4.h,
+                                                          // ),
                                                           Text(
-                                                            "SNB".tr(),
+                                                            'Transaction fees'
+                                                                .tr(),
                                                             style: TextStyle(
-                                                                fontSize: 11.7.sp,
-                                                                fontFamily:
-                                                                    'Inter',
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
                                                                 color: themeNotifier.isDark
                                                                     ? AppColors
                                                                         .textColorWhite
                                                                     : AppColors
-                                                                        .textColorBlack),
+                                                                        .textColorBlack,
+                                                                fontSize:
+                                                                    12.5.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600),
                                                           ),
-                                                          Spacer(),
+                                                          Divider(
+                                                            color: AppColors
+                                                                .textColorGrey,
+                                                          ),
+                                                          SizedBox(
+                                                            height: 1.h,
+                                                          ),
+                                                          if (feesMap!['salePrice'] != null)
+                                                            transactionFeesWidget(
+                                                              title: 'Sale Price'.tr(),
+                                                              details: feesMap!['salePrice']
+                                                                  .toString(),
+                                                              showCurrency: true,
+                                                              isDark: themeNotifier.isDark
+                                                                  ? true
+                                                                  : false,
+                                                            ),
+                                                          if (feesMap!['platformCommission'] != null)
+                                                          transactionFeesWidget(
+                                                            title:
+                                                                'Platform sale commission'
+                                                                    .tr(),
+                                                            details:
+                                                            "-" + feesMap!['platformCommission']
+                                                                .toString(),
+                                                            showCurrency: true,
+                                                            isDark:
+                                                                themeNotifier
+                                                                        .isDark
+                                                                    ? true
+                                                                    : false,
+                                                          ),
+                                                          transactionFeesWidget(
+                                                            title: 'Network fee'
+                                                                .tr(),
+                                                            details:
+                                                            "-" +  feesMap!['networkFees']
+                                                                .toString(),
+                                                            showCurrency: true,
+                                                            isDark:
+                                                                themeNotifier
+                                                                        .isDark
+                                                                    ? true
+                                                                    : false,
+                                                          ),
+                                                          transactionFeesWidget(
+                                                            title:
+                                                                'Payment processing fee'
+                                                                    .tr(),
+                                                            details:
+                                                            "-" +  feesMap!['paymentProcessingFee']
+                                                                .toString(),
+                                                            showCurrency: true,
+                                                            isDark:
+                                                                themeNotifier
+                                                                        .isDark
+                                                                    ? true
+                                                                    : false,
+                                                          ),
+                                                          Divider(
+                                                            color: AppColors
+                                                                .textColorGrey,
+                                                          ),
+                                                          transactionFeesWidget(
+                                                            title:
+                                                                'Total Receivable Amount'
+                                                                    .tr(),
+                                                            details:
+                                                            feesMap!['totalReceivable']
+                                                                .toString(),
+                                                            showCurrency: true,
+                                                            isDark:
+                                                                themeNotifier
+                                                                        .isDark
+                                                                    ? true
+                                                                    : false,
+                                                          ),
+                                                          SizedBox(
+                                                            height: 1.h,
+                                                          ),
                                                           Text(
-                                                            "**** 1234".tr(),
+                                                            'The transaction request is automatically signed and submitted to the Blockchain once you have accepted this transaction.'
+                                                                .tr(),
                                                             style: TextStyle(
-                                                                fontSize: 11.7.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                fontSize:
+                                                                    10.5.sp,
+                                                                color: AppColors
+                                                                    .textColorGreyShade2),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 2.h,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                SizedBox(
+                                                  height: 3.h,
+                                                ),
+                                                if (operation !=
+                                                        "makeNFTCounterOffer" &&
+                                                    operation !=
+                                                        "makeCollectionCounterOffer")
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Padding(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 0),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            'Bank Account'.tr(),
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    13.5.sp,
                                                                 fontFamily:
                                                                     'Inter',
                                                                 fontWeight:
                                                                     FontWeight
-                                                                        .w400,
+                                                                        .w600,
                                                                 color: themeNotifier.isDark
                                                                     ? AppColors
                                                                         .textColorWhite
@@ -883,36 +856,120 @@ class _TransactionRequestAcceptRejectState
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                                operation != "makeNFTCounterOffer" ?
-                                                SizedBox(
-                                                  height: 3.h,
-                                                ):
-                                                SizedBox(
-                                                  height: 15.h,
-                                                ),
-                                                Container(
-                                                  decoration: BoxDecoration(
+                                                SizedBox(height: 2.h),
+                                                if (operation !=
+                                                        "makeNFTCounterOffer" &&
+                                                    operation !=
+                                                        "makeCollectionCounterOffer")
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 0),
+                                                    child: Container(
+                                                      height: 6.5.h,
+                                                      margin: EdgeInsets.only(
+                                                          bottom: 1.h),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
+                                                        border: Border.all(
+                                                          color: AppColors
+                                                              .textColorGrey
+                                                              .withOpacity(
+                                                                  0.50),
+                                                          // Off-white color
+                                                          width: 1.0,
+                                                        ),
                                                       ),
+                                                      child: Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal:
+                                                                    10.sp),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            SizedBox(
+                                                              width: 1.w,
+                                                            ),
+                                                            Text(
+                                                              "SNB".tr(),
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      11.7.sp,
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: themeNotifier.isDark
+                                                                      ? AppColors
+                                                                          .textColorWhite
+                                                                      : AppColors
+                                                                          .textColorBlack),
+                                                            ),
+                                                            Spacer(),
+                                                            Text(
+                                                              "**** 1234".tr(),
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      11.7.sp,
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: themeNotifier.isDark
+                                                                      ? AppColors
+                                                                          .textColorWhite
+                                                                      : AppColors
+                                                                          .textColorBlack),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                operation !=
+                                                            "makeNFTCounterOffer" &&
+                                                        operation !=
+                                                            "makeCollectionCounterOffer"
+                                                    ? SizedBox(
+                                                        height: 3.h,
+                                                      )
+                                                    : SizedBox(
+                                                        height: 15.h,
+                                                      ),
+                                                Container(
+                                                  decoration: BoxDecoration(),
                                                   // margin: EdgeInsets.symmetric(horizontal: 20.sp),
                                                   child: Padding(
-                                                    padding: EdgeInsets.symmetric(
-                                                        horizontal: 0.sp),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 0.sp),
                                                     child: Column(
                                                       children: [
                                                         SizedBox(height: 2.5.h),
                                                         Padding(
                                                           padding: EdgeInsets
                                                               .symmetric(
-                                                                  horizontal: 0),
+                                                                  horizontal:
+                                                                      0),
                                                           child: Column(
                                                               children: [
                                                                 RichText(
-                                                                  text: TextSpan(
+                                                                  text:
+                                                                      TextSpan(
                                                                     children: [
                                                                       TextSpan(
-                                                                          text: 'By continuing you agree to the  '
-                                                                              .tr(),
+                                                                          text:
+                                                                              'By continuing you agree to the  '.tr(),
                                                                           style: TextStyle(
                                                                               // height: 2,
                                                                               color: AppColors.textColorWhite,
@@ -932,12 +989,9 @@ class _TransactionRequestAcceptRejectState
                                                                           text: 'Terms & Conditions'.tr() +
                                                                               " ",
                                                                           style: TextStyle(
-                                                                              decoration: TextDecoration
-                                                                                  .underline,
-                                                                              height:
-                                                                                  1.5,
-                                                                              color:
-                                                                                  AppColors.textColorToska,
+                                                                              decoration: TextDecoration.underline,
+                                                                              height: 1.5,
+                                                                              color: AppColors.textColorToska,
                                                                               fontWeight: FontWeight.w600,
                                                                               fontSize: 10.sp,
                                                                               fontFamily: 'Inter')),
@@ -945,8 +999,7 @@ class _TransactionRequestAcceptRejectState
                                                                           text: '  of Hesa Wallet Payments.'
                                                                               .tr(),
                                                                           style: TextStyle(
-                                                                              color:
-                                                                                  AppColors.textColorWhite,
+                                                                              color: AppColors.textColorWhite,
                                                                               fontWeight: FontWeight.w400,
                                                                               fontSize: 10.sp,
                                                                               fontFamily: 'Inter'))
@@ -957,14 +1010,16 @@ class _TransactionRequestAcceptRejectState
                                                         ),
                                                         SizedBox(height: 1.5.h),
                                                         AppButton(
-                                                            title: "Accept".tr(),
+                                                            title:
+                                                                "Accept".tr(),
                                                             handler: () async {
                                                               setState(() {
                                                                 isValidating =
                                                                     true;
                                                               });
                                                               setState(() {
-                                                                isLoading = true;
+                                                                isLoading =
+                                                                    true;
                                                               });
                                                               if (operation ==
                                                                   'AcceptNFTOfferReceived') {
@@ -974,7 +1029,8 @@ class _TransactionRequestAcceptRejectState
                                                                         listen:
                                                                             false)
                                                                     .acceptOffer(
-                                                                  params: params,
+                                                                  params:
+                                                                      params,
                                                                   token:
                                                                       accessToken,
                                                                   walletAddress:
@@ -1009,7 +1065,8 @@ class _TransactionRequestAcceptRejectState
                                                                         listen:
                                                                             false)
                                                                     .acceptCollectionOffer(
-                                                                  params: params,
+                                                                  params:
+                                                                      params,
                                                                   token:
                                                                       accessToken,
                                                                   walletAddress:
@@ -1077,7 +1134,8 @@ class _TransactionRequestAcceptRejectState
                                                                       context,
                                                                   operation:
                                                                       operation,
-                                                                  params: params,
+                                                                  params:
+                                                                      params,
                                                                 );
                                                               } else if (operation ==
                                                                   'rejectNFTCounterOffer') {
@@ -1165,7 +1223,8 @@ class _TransactionRequestAcceptRejectState
                                                                       context,
                                                                   operation:
                                                                       operation,
-                                                                  params: params,
+                                                                  params:
+                                                                      params,
                                                                 );
                                                               }
                                                               if (operation ==
@@ -1184,7 +1243,8 @@ class _TransactionRequestAcceptRejectState
                                                                       context,
                                                                   operation:
                                                                       operation,
-                                                                  params: params,
+                                                                  params:
+                                                                      params,
                                                                 );
                                                               } else if (operation ==
                                                                   'CancelCollectionAuctionListing') {
@@ -1202,7 +1262,8 @@ class _TransactionRequestAcceptRejectState
                                                                       context,
                                                                   operation:
                                                                       operation,
-                                                                  params: params,
+                                                                  params:
+                                                                      params,
                                                                 );
                                                               } else if (operation ==
                                                                   'CancelListing') {
@@ -1220,7 +1281,8 @@ class _TransactionRequestAcceptRejectState
                                                                       context,
                                                                   operation:
                                                                       operation,
-                                                                  params: params,
+                                                                  params:
+                                                                      params,
                                                                 );
                                                               } else if (operation ==
                                                                   'CancelCollectionListing') {
@@ -1238,11 +1300,13 @@ class _TransactionRequestAcceptRejectState
                                                                       context,
                                                                   operation:
                                                                       operation,
-                                                                  params: params,
+                                                                  params:
+                                                                      params,
                                                                 );
                                                               } else {}
                                                               setState(() {
-                                                                isLoading = false;
+                                                                isLoading =
+                                                                    false;
                                                               });
                                                             },
                                                             // isLoading: isLoading,r
@@ -1335,6 +1399,8 @@ class _TransactionRequestAcceptRejectState
     required String title,
     required String details,
     bool isDark = true,
+    bool showCurrency = false,
+    bool boldDetails = false,
   }) {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.sp),
@@ -1361,13 +1427,14 @@ class _TransactionRequestAcceptRejectState
             child: Align(
               alignment: Alignment.centerRight,
               child: Text(
-                details,
+                details != 'N/A' && showCurrency ? details + ' SAR' : details,
                 style: TextStyle(
                     color: isDark
                         ? AppColors.textColorWhite
                         : AppColors.textColorBlack,
                     fontSize: 11.sp,
-                    fontWeight: FontWeight.w500),
+                    fontWeight:
+                    boldDetails ? FontWeight.w800 : FontWeight.w500),
               ),
             ),
           ),

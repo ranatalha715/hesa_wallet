@@ -562,9 +562,11 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       String operation,
       BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
+    String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx).pushNamed(
         TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
+      "fees": feesString,
       "operation": operation,
       "walletAddress":userWalletAddress
     });
@@ -713,7 +715,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       "offerAmount": offerAmount,
       "walletAddress":userWalletAddress
     });
-    print('chal gia');
   }
 
   Future<
@@ -725,9 +726,11 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       String offererId,
       String offerAmount,) async {
     String paramsString = queryParams['params'] ?? '';
+    String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx).pushNamed(
         TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
+      "fees": feesString,
       "operation": operation,
       "id": id,
       "offererId": offererId,
@@ -746,10 +749,12 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       String offererId,
       String offerAmount,) async {
     String paramsString = queryParams['params'] ?? '';
+    String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx).pushNamed(
         TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
       "operation": operation,
+      "fees": feesString,
       "id": id,
       "offererId": offererId,
       "offerAmount": offerAmount,
@@ -767,9 +772,11 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       String offererId,
       String offerAmount,) async {
     String paramsString = queryParams['params'] ?? '';
+    String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx).pushNamed(
         TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
+      "fees": feesString,
       "operation": operation,
       "id": id,
       "offererId": offererId,
