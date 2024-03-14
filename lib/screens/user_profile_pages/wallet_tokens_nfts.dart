@@ -624,9 +624,11 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       String operation,
       BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
+    String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx).pushNamed(
         TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
+      "fees": feesString,
       "operation": operation,
       "walletAddress":userWalletAddress
     });
@@ -638,9 +640,11 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       String operation,
       BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
+    String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx).pushNamed(
         TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
+      "fees": feesString,
       "operation": operation,
       "walletAddress":userWalletAddress
     });
@@ -652,9 +656,11 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       String operation,
       BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
+    String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx).pushNamed(
         TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
+      "fees": feesString,
       "operation": operation,
       "walletAddress":userWalletAddress
     });
@@ -666,9 +672,11 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       String operation,
       BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
+    String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx).pushNamed(
         TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
+      "fees": feesString,
       "operation": operation,
       "walletAddress":userWalletAddress
     });
@@ -680,9 +688,11 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       String operation,
       BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
+    String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx).pushNamed(
         TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
+      "fees": feesString,
       "operation": operation,
       "walletAddress":userWalletAddress
     });
@@ -694,9 +704,11 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       String operation,
       BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
+    String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx).pushNamed(
         TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
+      "fees": feesString,
       "operation": operation,
       "walletAddress":userWalletAddress
     });
