@@ -386,7 +386,8 @@ class _TransactionRequestAcceptRejectState
       print('args params' + args['params']);
       params = args['params'] ?? "N/A";
       paramsMap = jsonDecode(params);
-      feesMap = jsonDecode(fees);
+      fees = args['fees'] ?? "N/A";
+      feesMap = fees != "" ? jsonDecode(fees):null;
       counterId = args['id'] ?? "N/A";
       counterOffererId = args['offererId'].toString() ?? "N/A";
       counterOffererAmount = args['offerAmount'] ?? "N/A";
@@ -540,9 +541,12 @@ class _TransactionRequestAcceptRejectState
                                         height: 4.h,
                                       ),
                                       Container(
+                                        height:71.h,
                                         decoration: BoxDecoration(
                                             color: AppColors
                                                 .transactionReqBorderWhole,
+
+
                                             borderRadius: BorderRadius.only(
                                               topLeft: Radius.circular(15.sp),
                                               // Adjust the radius as needed
@@ -552,321 +556,252 @@ class _TransactionRequestAcceptRejectState
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 25.sp,
                                               vertical: 20.sp),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Transaction Details'.tr(),
-                                                style: TextStyle(
-                                                    color: themeNotifier.isDark
-                                                        ? AppColors
-                                                            .textColorWhite
-                                                        : AppColors
-                                                            .textColorBlack,
-                                                    fontSize: 12.5.sp,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                              Divider(
-                                                color: AppColors
-                                                    .transactionFeeBorder,
-                                              ),
-                                              SizedBox(
-                                                height: 1.h,
-                                              ),
-                                              transactionDetailsWidget(
-                                                title: 'Timestamp'.tr(),
-                                                details: DateFormat(
-                                                        'MMMM dd, yyyy HH:mm:ss')
-                                                    .format(unformatted),
-                                                isDark: themeNotifier.isDark
-                                                    ? true
-                                                    : false,
-                                              ),
-                                              transactionDetailsWidget(
-                                                title: 'Tx Type:'.tr(),
-                                                details: capitalizeFirstLetter(
-                                                    operation),
-                                                isDark: themeNotifier.isDark
-                                                    ? true
-                                                    : false,
-                                              ),
-                                              transactionDetailsWidget(
-                                                title:
-                                                    // operation == 'MintCollection'
-                                                    // ? 'Collection ID:'.tr()
-                                                    // :
-                                                    'Token ID:'.tr(),
-                                                details:
-                                                    replaceMiddleWithDotsTokenId(
-                                                        paramsMap!['id']
-                                                            .toString()),
-                                                isDark: themeNotifier.isDark
-                                                    ? true
-                                                    : false,
-                                                color: AppColors.textColorToska,
-                                              ),
-                                              if (paramsMap!['Offeredby'] !=
-                                                  null)
+                                          child: SingleChildScrollView(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Transaction Details'.tr(),
+                                                  style: TextStyle(
+                                                      color: themeNotifier.isDark
+                                                          ? AppColors
+                                                              .textColorWhite
+                                                          : AppColors
+                                                              .textColorBlack,
+                                                      fontSize: 12.5.sp,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                Divider(
+                                                  color: AppColors
+                                                      .transactionFeeBorder,
+                                                ),
+                                                SizedBox(
+                                                  height: 1.h,
+                                                ),
                                                 transactionDetailsWidget(
-                                                  title: 'Offered by:'.tr(),
-                                                  details: 'N/A',
+                                                  title: 'Timestamp'.tr(),
+                                                  details: DateFormat(
+                                                          'MMMM dd, yyyy HH:mm:ss')
+                                                      .format(unformatted),
                                                   isDark: themeNotifier.isDark
                                                       ? true
                                                       : false,
                                                 ),
-                                              if (paramsMap![
-                                                      'Creator royalty'] !=
-                                                  null)
+                                                transactionDetailsWidget(
+                                                  title: 'Tx Type:'.tr(),
+                                                  details: capitalizeFirstLetter(
+                                                      operation),
+                                                  isDark: themeNotifier.isDark
+                                                      ? true
+                                                      : false,
+                                                ),
                                                 transactionDetailsWidget(
                                                   title:
-                                                      'Creator royalty:'.tr(),
-                                                  details: '10%'.tr(),
-                                                  isDark: themeNotifier.isDark
-                                                      ? true
-                                                      : false,
-                                                ),
-                                              if (paramsMap!['listedBy'] !=
-                                                      null ||
-                                                  paramsMap![
-                                                          'creatorWalletAddress'] !=
-                                                      null)
-                                                transactionDetailsWidget(
-                                                  title: operation ==
-                                                          'makeNFTCounterOffer'
-                                                      ? 'Offerer ID:'
-                                                      : 'Creator ID:'.tr(),
-                                                  details: replaceMiddleWithDots(
-                                                      operation ==
-                                                              'makeNFTCounterOffer'
-                                                          ? paramsMap![
-                                                                  'Offerer ID:']
-                                                              .toString()
-                                                          : paramsMap![
-                                                                  'creatorWalletAddress']
+                                                      // operation == 'MintCollection'
+                                                      // ? 'Collection ID:'.tr()
+                                                      // :
+                                                      'Token ID:'.tr(),
+                                                  details:
+                                                      replaceMiddleWithDotsTokenId(
+                                                          paramsMap!['id']
                                                               .toString()),
                                                   isDark: themeNotifier.isDark
                                                       ? true
                                                       : false,
+                                                  color: AppColors.textColorToska,
                                                 ),
-                                              SizedBox(
-                                                height: 2.h,
-                                              ),
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                    color: AppColors
-                                                        .transactionFeeContainer,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.sp),
-                                                    border: Border.all(
-                                                        color: AppColors
-                                                            .transactionFeeBorder)),
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      top: 13.sp,
-                                                      left: 13.sp,
-                                                      right: 13.sp,
-                                                      bottom: 7.sp),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      // SizedBox(
-                                                      //   height: 4.h,
-                                                      // ),
-                                                      Text(
-                                                        'Transaction fees'.tr(),
-                                                        style: TextStyle(
-                                                            color: themeNotifier.isDark
-                                                                ? AppColors
-                                                                    .textColorWhite
-                                                                : AppColors
-                                                                    .textColorBlack,
-                                                            fontSize: 12.5.sp,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w600),
-                                                      ),
-                                                      Divider(
-                                                        color: AppColors
-                                                            .textColorGrey,
-                                                      ),
-                                                      SizedBox(
-                                                        height: 1.h,
-                                                      ),
-                                                      transactionFeesWidget(
-                                                        title:
-                                                            'Sale value'.tr(),
-                                                        details:
-                                                            '444.44 SAR'.tr(),
-                                                        isDark:
-                                                            themeNotifier.isDark
-                                                                ? true
-                                                                : false,
-                                                      ),
-                                                      transactionFeesWidget(
-                                                        title:
-                                                            'Platform sale commission'
-                                                                .tr(),
-                                                        details:
-                                                            '-50.00 SAR'.tr(),
-                                                        isDark:
-                                                            themeNotifier.isDark
-                                                                ? true
-                                                                : false,
-                                                      ),
-                                                      transactionFeesWidget(
-                                                        title:
-                                                            'Network fee'.tr(),
-                                                        details:
-                                                            '-32.00 SAR'.tr(),
-                                                        isDark:
-                                                            themeNotifier.isDark
-                                                                ? true
-                                                                : false,
-                                                      ),
-                                                      transactionFeesWidget(
-                                                        title:
-                                                            'Payment processing fee'
-                                                                .tr(),
-                                                        details:
-                                                            '-22.00 SAR'.tr(),
-                                                        isDark:
-                                                            themeNotifier.isDark
-                                                                ? true
-                                                                : false,
-                                                      ),
-                                                      Divider(
-                                                        color: AppColors
-                                                            .textColorGrey,
-                                                      ),
-                                                      transactionFeesWidget(
-                                                        title:
-                                                            'Total Receivable Amount'
-                                                                .tr(),
-                                                        details:
-                                                            '350.75 SAR'.tr(),
-                                                        isDark:
-                                                            themeNotifier.isDark
-                                                                ? true
-                                                                : false,
-                                                      ),
-                                                      SizedBox(
-                                                        height: 1.h,
-                                                      ),
-                                                      Text(
-                                                        'The transaction request is automatically signed and submitted to the Blockchain once you have accepted this transaction.'
-                                                            .tr(),
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            fontSize: 10.5.sp,
-                                                            color: AppColors
-                                                                .textColorGreyShade2),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 2.h,
-                                                      ),
-                                                    ],
+                                                if (paramsMap!['Offeredby'] !=
+                                                    null)
+                                                  transactionDetailsWidget(
+                                                    title: 'Offered by:'.tr(),
+                                                    details: 'N/A',
+                                                    isDark: themeNotifier.isDark
+                                                        ? true
+                                                        : false,
                                                   ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 3.h,
-                                              ),
-                                              Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 0),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text(
-                                                        'Bank Account'.tr(),
-                                                        style: TextStyle(
-                                                            fontSize: 13.5.sp,
-                                                            fontFamily: 'Inter',
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            color: themeNotifier.isDark
-                                                                ? AppColors
-                                                                    .textColorWhite
-                                                                : AppColors
-                                                                    .textColorBlack),
-                                                      ),
-                                                    ],
+                                                if (paramsMap![
+                                                        'Creator royalty'] !=
+                                                    null)
+                                                  transactionDetailsWidget(
+                                                    title:
+                                                        'Creator royalty:'.tr(),
+                                                    details: '10%'.tr(),
+                                                    isDark: themeNotifier.isDark
+                                                        ? true
+                                                        : false,
                                                   ),
+                                                // if (paramsMap!['listedBy'] !=
+                                                //         null)
+                                                  transactionDetailsWidget(
+                                                    title: operation ==
+                                                            'makeNFTCounterOffer'
+                                                        ? 'Offerer ID:'
+                                                        : 'Creator ID:'.tr(),
+                                                    details: replaceMiddleWithDots(
+                                                        operation ==
+                                                                'makeNFTCounterOffer'
+                                                            ? paramsMap![
+                                                                    'offererId']
+                                                                .toString()
+                                                            : paramsMap![
+                                                                    'creatorWalletAddress']
+                                                                .toString()),
+                                                    isDark: themeNotifier.isDark
+                                                        ? true
+                                                        : false,
+                                                  ),
+                                                SizedBox(
+                                                  height: 2.h,
                                                 ),
-                                              ),
-                                              SizedBox(height: 2.h),
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 0),
-                                                child: Container(
-                                                  height: 6.5.h,
-                                                  margin: EdgeInsets.only(
-                                                      bottom: 1.h),
+                                                if(operation!="makeNFTCounterOffer")
+                                                Container(
                                                   decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                    border: Border.all(
                                                       color: AppColors
-                                                          .textColorGrey
-                                                          .withOpacity(0.50),
-                                                      // Off-white color
-                                                      width: 1.0,
-                                                    ),
-                                                  ),
+                                                          .transactionFeeContainer,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10.sp),
+                                                      border: Border.all(
+                                                          color: AppColors
+                                                              .transactionFeeBorder)),
                                                   child: Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 10.sp),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
+                                                    padding: EdgeInsets.only(
+                                                        top: 13.sp,
+                                                        left: 13.sp,
+                                                        right: 13.sp,
+                                                        bottom: 7.sp),
+                                                    child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
-                                                              .center,
+                                                              .start,
                                                       children: [
-                                                        SizedBox(
-                                                          width: 1.w,
-                                                        ),
+                                                        // SizedBox(
+                                                        //   height: 4.h,
+                                                        // ),
                                                         Text(
-                                                          "SNB".tr(),
+                                                          'Transaction fees'.tr(),
                                                           style: TextStyle(
-                                                              fontSize: 11.7.sp,
-                                                              fontFamily:
-                                                                  'Inter',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
                                                               color: themeNotifier.isDark
                                                                   ? AppColors
                                                                       .textColorWhite
                                                                   : AppColors
-                                                                      .textColorBlack),
-                                                        ),
-                                                        Spacer(),
-                                                        Text(
-                                                          "**** 1234".tr(),
-                                                          style: TextStyle(
-                                                              fontSize: 11.7.sp,
-                                                              fontFamily:
-                                                                  'Inter',
+                                                                      .textColorBlack,
+                                                              fontSize: 12.5.sp,
                                                               fontWeight:
                                                                   FontWeight
-                                                                      .w400,
+                                                                      .w600),
+                                                        ),
+                                                        Divider(
+                                                          color: AppColors
+                                                              .textColorGrey,
+                                                        ),
+                                                        SizedBox(
+                                                          height: 1.h,
+                                                        ),
+                                                        transactionFeesWidget(
+                                                          title:
+                                                              'Sale value'.tr(),
+                                                          details:
+                                                              '444.44 SAR'.tr(),
+                                                          isDark:
+                                                              themeNotifier.isDark
+                                                                  ? true
+                                                                  : false,
+                                                        ),
+                                                        transactionFeesWidget(
+                                                          title:
+                                                              'Platform sale commission'
+                                                                  .tr(),
+                                                          details:
+                                                              '-50.00 SAR'.tr(),
+                                                          isDark:
+                                                              themeNotifier.isDark
+                                                                  ? true
+                                                                  : false,
+                                                        ),
+                                                        transactionFeesWidget(
+                                                          title:
+                                                              'Network fee'.tr(),
+                                                          details:
+                                                              '-32.00 SAR'.tr(),
+                                                          isDark:
+                                                              themeNotifier.isDark
+                                                                  ? true
+                                                                  : false,
+                                                        ),
+                                                        transactionFeesWidget(
+                                                          title:
+                                                              'Payment processing fee'
+                                                                  .tr(),
+                                                          details:
+                                                              '-22.00 SAR'.tr(),
+                                                          isDark:
+                                                              themeNotifier.isDark
+                                                                  ? true
+                                                                  : false,
+                                                        ),
+                                                        Divider(
+                                                          color: AppColors
+                                                              .textColorGrey,
+                                                        ),
+                                                        transactionFeesWidget(
+                                                          title:
+                                                              'Total Receivable Amount'
+                                                                  .tr(),
+                                                          details:
+                                                              '350.75 SAR'.tr(),
+                                                          isDark:
+                                                              themeNotifier.isDark
+                                                                  ? true
+                                                                  : false,
+                                                        ),
+                                                        SizedBox(
+                                                          height: 1.h,
+                                                        ),
+                                                        Text(
+                                                          'The transaction request is automatically signed and submitted to the Blockchain once you have accepted this transaction.'
+                                                              .tr(),
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight.w400,
+                                                              fontSize: 10.5.sp,
+                                                              color: AppColors
+                                                                  .textColorGreyShade2),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 2.h,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 3.h,
+                                                ),
+
+                                                if(operation!="makeNFTCounterOffer")
+                                                Align(
+                                                  alignment: Alignment.centerLeft,
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(
+                                                        horizontal: 0),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          'Bank Account'.tr(),
+                                                          style: TextStyle(
+                                                              fontSize: 13.5.sp,
+                                                              fontFamily: 'Inter',
+                                                              fontWeight:
+                                                                  FontWeight.w600,
                                                               color: themeNotifier.isDark
                                                                   ? AppColors
                                                                       .textColorWhite
@@ -877,413 +812,474 @@ class _TransactionRequestAcceptRejectState
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                height: 3.h,
-                                              ),
-                                              // SizedBox(
-                                              //   height: 3.h,
-                                              // ),
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                    // color: themeNotifier.isDark
-                                                    //     ? AppColors.transactionFeeContainer
-                                                    //     : AppColors.textColorWhite,
-                                                    // border: Border(
-                                                    //   top: BorderSide(
-                                                    //     color: AppColors.textColorGrey, // Border color
-                                                    //     width: 1.0, // Border width
-                                                    //   ),
-                                                    // ),
-                                                    ),
-                                                // margin: EdgeInsets.symmetric(horizontal: 20.sp),
-                                                child: Padding(
+                                                SizedBox(height: 2.h),
+                                                if(operation!="makeNFTCounterOffer")
+                                                Padding(
                                                   padding: EdgeInsets.symmetric(
-                                                      horizontal: 0.sp),
-                                                  child: Column(
-                                                    children: [
-                                                      SizedBox(height: 2.5.h),
-                                                      Padding(
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 0),
-                                                        child: Column(
-                                                            children: [
-                                                              RichText(
-                                                                text: TextSpan(
-                                                                  children: [
-                                                                    TextSpan(
-                                                                        text: 'By continuing you agree to the  '
-                                                                            .tr(),
-                                                                        style: TextStyle(
-                                                                            // height: 2,
-                                                                            color: AppColors.textColorWhite,
-                                                                            fontWeight: FontWeight.w400,
-                                                                            fontSize: 10.sp,
-                                                                            fontFamily: 'Inter')),
-                                                                    TextSpan(
-                                                                        recognizer:
-                                                                            TapGestureRecognizer()
-                                                                              ..onTap =
-                                                                                  () {
-                                                                                Navigator.push(
-                                                                                  context,
-                                                                                  MaterialPageRoute(builder: (context) => TermsAndConditions()),
-                                                                                );
-                                                                              },
-                                                                        text: 'Terms & Conditions'.tr() +
-                                                                            " ",
-                                                                        style: TextStyle(
-                                                                            decoration: TextDecoration
-                                                                                .underline,
-                                                                            height:
-                                                                                1.5,
-                                                                            color:
-                                                                                AppColors.textColorToska,
-                                                                            fontWeight: FontWeight.w600,
-                                                                            fontSize: 10.sp,
-                                                                            fontFamily: 'Inter')),
-                                                                    TextSpan(
-                                                                        text: '  of Hesa Wallet Payments.'
-                                                                            .tr(),
-                                                                        style: TextStyle(
-                                                                            color:
-                                                                                AppColors.textColorWhite,
-                                                                            fontWeight: FontWeight.w400,
-                                                                            fontSize: 10.sp,
-                                                                            fontFamily: 'Inter'))
-                                                                  ],
-                                                                ),
-                                                              )
-                                                            ]),
+                                                      horizontal: 0),
+                                                  child: Container(
+                                                    height: 6.5.h,
+                                                    margin: EdgeInsets.only(
+                                                        bottom: 1.h),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.0),
+                                                      border: Border.all(
+                                                        color: AppColors
+                                                            .textColorGrey
+                                                            .withOpacity(0.50),
+                                                        // Off-white color
+                                                        width: 1.0,
                                                       ),
-                                                      SizedBox(height: 1.5.h),
-                                                      AppButton(
-                                                          title: "Accept".tr(),
-                                                          handler: () async {
-                                                            setState(() {
-                                                              isValidating =
-                                                                  true;
-                                                            });
-                                                            setState(() {
-                                                              isLoading = true;
-                                                            });
-                                                            if (operation ==
-                                                                'AcceptNFTOfferReceived') {
-                                                              await Provider.of<
-                                                                          TransactionProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .acceptOffer(
-                                                                params: params,
-                                                                token:
-                                                                    accessToken,
-                                                                walletAddress:
-                                                                    walletAddress,
-                                                                context:
-                                                                    context,
-                                                                operation:
-                                                                    operation,
-                                                              );
-                                                            } else if (operation ==
-                                                                'rejectNFTOfferReceived') {
-                                                              await Provider.of<TransactionProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .rejectNFTOfferReceived(
-                                                                      params:
-                                                                          params,
-                                                                      token:
-                                                                          accessToken,
-                                                                      walletAddress:
-                                                                          walletAddress,
-                                                                      context:
-                                                                          context,
-                                                                      operation:
-                                                                          operation);
-                                                            } else if (operation ==
-                                                                'AcceptCollectionOffer') {
-                                                              await Provider.of<
-                                                                          TransactionProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .acceptCollectionOffer(
-                                                                params: params,
-                                                                token:
-                                                                    accessToken,
-                                                                walletAddress:
-                                                                    walletAddress,
-                                                                context:
-                                                                    context,
-                                                                operation:
-                                                                    operation,
-                                                              );
-                                                            } else if (operation ==
-                                                                'rejectCollectionOfferReceived') {
-                                                              await Provider.of<TransactionProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .rejectCollectionOfferReceived(
-                                                                      params:
-                                                                          params,
-                                                                      token:
-                                                                          accessToken,
-                                                                      walletAddress:
-                                                                          walletAddress,
-                                                                      context:
-                                                                          context,
-                                                                      operation:
-                                                                          operation);
-                                                            } else if (operation ==
-                                                                'makeNFTCounterOffer') {
-                                                              await Provider.of<
-                                                                          TransactionProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .makeCounterOffer(
-                                                                walletAddress:
-                                                                    walletAddress,
-                                                                // params: params,
-                                                                token:
-                                                                    accessToken,
-                                                                context:
-                                                                    context,
-                                                                operation:
-                                                                    operation,
-                                                                id: counterId,
-                                                                offererId:
-                                                                    counterOffererId,
-                                                                offerAmount:
-                                                                    counterOffererAmount,
-                                                              );
-                                                            }
-                                                            if (operation ==
-                                                                'CancelNFTOfferMade') {
-                                                              await Provider.of<
-                                                                          TransactionProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .cancelNFTOfferMade(
-                                                                walletAddress:
-                                                                    walletAddress,
-                                                                // params: params,
-                                                                token:
-                                                                    accessToken,
-                                                                context:
-                                                                    context,
-                                                                operation:
-                                                                    operation,
-                                                                params: params,
-                                                              );
-                                                            } else if (operation ==
-                                                                'rejectNFTCounterOffer') {
-                                                              await Provider.of<
-                                                                          TransactionProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .rejectNFTCounterOffer(
-                                                                walletAddress:
-                                                                    walletAddress,
-                                                                // params: params,
-                                                                token:
-                                                                    accessToken,
-                                                                context:
-                                                                    context,
-                                                                operation:
-                                                                    operation,
-                                                                id: counterId,
-                                                                offererId:
-                                                                    counterOffererId,
-                                                                offerAmount:
-                                                                    counterOffererAmount,
-                                                              );
-                                                            } else if (operation ==
-                                                                'makeCollectionCounterOffer') {
-                                                              await Provider.of<
-                                                                          TransactionProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .makeCollectionCounterOffer(
-                                                                walletAddress:
-                                                                    walletAddress,
-                                                                // params: params,
-                                                                token:
-                                                                    accessToken,
-                                                                context:
-                                                                    context,
-                                                                operation:
-                                                                    operation,
-                                                                id: counterId,
-                                                                offererId:
-                                                                    counterOffererId,
-                                                                offerAmount:
-                                                                    counterOffererAmount,
-                                                              );
-                                                            } else if (operation ==
-                                                                'rejectCollectionCounterOffer') {
-                                                              await Provider.of<
-                                                                          TransactionProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .rejectCollectionCounterOffer(
-                                                                walletAddress:
-                                                                    walletAddress,
-                                                                // params: params,
-                                                                token:
-                                                                    accessToken,
-                                                                context:
-                                                                    context,
-                                                                operation:
-                                                                    operation,
-                                                                id: counterId,
-                                                                offererId:
-                                                                    counterOffererId,
-                                                                offerAmount:
-                                                                    counterOffererAmount,
-                                                              );
-                                                            } else if (operation ==
-                                                                'CancelCollectionOfferMade') {
-                                                              await Provider.of<
-                                                                          TransactionProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .cancelCollectionOfferMade(
-                                                                walletAddress:
-                                                                    walletAddress,
-                                                                // params: params,
-                                                                token:
-                                                                    accessToken,
-                                                                context:
-                                                                    context,
-                                                                operation:
-                                                                    operation,
-                                                                params: params,
-                                                              );
-                                                            }
-                                                            if (operation ==
-                                                                'CancelAuctionListing') {
-                                                              await Provider.of<
-                                                                          TransactionProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .cancelAuctionListing(
-                                                                walletAddress:
-                                                                    walletAddress,
-                                                                token:
-                                                                    accessToken,
-                                                                context:
-                                                                    context,
-                                                                operation:
-                                                                    operation,
-                                                                params: params,
-                                                              );
-                                                            } else if (operation ==
-                                                                'CancelCollectionAuctionListing') {
-                                                              await Provider.of<
-                                                                          TransactionProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .cancelCollectionAuctionListing(
-                                                                walletAddress:
-                                                                    walletAddress,
-                                                                token:
-                                                                    accessToken,
-                                                                context:
-                                                                    context,
-                                                                operation:
-                                                                    operation,
-                                                                params: params,
-                                                              );
-                                                            } else if (operation ==
-                                                                'CancelListing') {
-                                                              await Provider.of<
-                                                                          TransactionProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .cancelListing(
-                                                                walletAddress:
-                                                                    walletAddress,
-                                                                token:
-                                                                    accessToken,
-                                                                context:
-                                                                    context,
-                                                                operation:
-                                                                    operation,
-                                                                params: params,
-                                                              );
-                                                            } else if (operation ==
-                                                                'CancelCollectionListing') {
-                                                              await Provider.of<
-                                                                          TransactionProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .cancelCollectionListing(
-                                                                walletAddress:
-                                                                    walletAddress,
-                                                                token:
-                                                                    accessToken,
-                                                                context:
-                                                                    context,
-                                                                operation:
-                                                                    operation,
-                                                                params: params,
-                                                              );
-                                                            } else {}
-                                                            setState(() {
-                                                              isLoading = false;
-                                                            });
-                                                          },
-                                                          // isLoading: isLoading,r
-                                                          isGradient: true,
-                                                          color: AppColors
-                                                              .textColorBlack),
-                                                      SizedBox(height: 2.h),
-                                                      AppButton(
-                                                          title:
-                                                              "Reject request"
-                                                                  .tr(),
-                                                          handler: () {
-                                                            // if(operation=="MintNFT"){
-                                                            rejectTransactions();
-                                                            // }
-                                                          },
-                                                          isGradient: false,
-                                                          textColor: themeNotifier.isDark
-                                                              ? AppColors
-                                                                  .textColorWhite
-                                                              : AppColors
-                                                                  .textColorBlack
-                                                                  .withOpacity(
-                                                                      0.8),
-                                                          color: AppColors
-                                                              .appSecondButton
-                                                              .withOpacity(
-                                                                  0.10)),
-                                                      SizedBox(
-                                                        height: 1.h,
-                                                      )
-                                                    ],
+                                                    ),
+                                                    child: Padding(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 10.sp),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          SizedBox(
+                                                            width: 1.w,
+                                                          ),
+                                                          Text(
+                                                            "SNB".tr(),
+                                                            style: TextStyle(
+                                                                fontSize: 11.7.sp,
+                                                                fontFamily:
+                                                                    'Inter',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: themeNotifier.isDark
+                                                                    ? AppColors
+                                                                        .textColorWhite
+                                                                    : AppColors
+                                                                        .textColorBlack),
+                                                          ),
+                                                          Spacer(),
+                                                          Text(
+                                                            "**** 1234".tr(),
+                                                            style: TextStyle(
+                                                                fontSize: 11.7.sp,
+                                                                fontFamily:
+                                                                    'Inter',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color: themeNotifier.isDark
+                                                                    ? AppColors
+                                                                        .textColorWhite
+                                                                    : AppColors
+                                                                        .textColorBlack),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              // SizedBox(
-                                              //   height: 10.h,
-                                              // ),
-                                            ],
+                                                operation != "makeNFTCounterOffer" ?
+                                                SizedBox(
+                                                  height: 3.h,
+                                                ):
+                                                SizedBox(
+                                                  height: 15.h,
+                                                ),
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                      ),
+                                                  // margin: EdgeInsets.symmetric(horizontal: 20.sp),
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(
+                                                        horizontal: 0.sp),
+                                                    child: Column(
+                                                      children: [
+                                                        SizedBox(height: 2.5.h),
+                                                        Padding(
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                                  horizontal: 0),
+                                                          child: Column(
+                                                              children: [
+                                                                RichText(
+                                                                  text: TextSpan(
+                                                                    children: [
+                                                                      TextSpan(
+                                                                          text: 'By continuing you agree to the  '
+                                                                              .tr(),
+                                                                          style: TextStyle(
+                                                                              // height: 2,
+                                                                              color: AppColors.textColorWhite,
+                                                                              fontWeight: FontWeight.w400,
+                                                                              fontSize: 10.sp,
+                                                                              fontFamily: 'Inter')),
+                                                                      TextSpan(
+                                                                          recognizer:
+                                                                              TapGestureRecognizer()
+                                                                                ..onTap =
+                                                                                    () {
+                                                                                  Navigator.push(
+                                                                                    context,
+                                                                                    MaterialPageRoute(builder: (context) => TermsAndConditions()),
+                                                                                  );
+                                                                                },
+                                                                          text: 'Terms & Conditions'.tr() +
+                                                                              " ",
+                                                                          style: TextStyle(
+                                                                              decoration: TextDecoration
+                                                                                  .underline,
+                                                                              height:
+                                                                                  1.5,
+                                                                              color:
+                                                                                  AppColors.textColorToska,
+                                                                              fontWeight: FontWeight.w600,
+                                                                              fontSize: 10.sp,
+                                                                              fontFamily: 'Inter')),
+                                                                      TextSpan(
+                                                                          text: '  of Hesa Wallet Payments.'
+                                                                              .tr(),
+                                                                          style: TextStyle(
+                                                                              color:
+                                                                                  AppColors.textColorWhite,
+                                                                              fontWeight: FontWeight.w400,
+                                                                              fontSize: 10.sp,
+                                                                              fontFamily: 'Inter'))
+                                                                    ],
+                                                                  ),
+                                                                )
+                                                              ]),
+                                                        ),
+                                                        SizedBox(height: 1.5.h),
+                                                        AppButton(
+                                                            title: "Accept".tr(),
+                                                            handler: () async {
+                                                              setState(() {
+                                                                isValidating =
+                                                                    true;
+                                                              });
+                                                              setState(() {
+                                                                isLoading = true;
+                                                              });
+                                                              if (operation ==
+                                                                  'AcceptNFTOfferReceived') {
+                                                                await Provider.of<
+                                                                            TransactionProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .acceptOffer(
+                                                                  params: params,
+                                                                  token:
+                                                                      accessToken,
+                                                                  walletAddress:
+                                                                      walletAddress,
+                                                                  context:
+                                                                      context,
+                                                                  operation:
+                                                                      operation,
+                                                                );
+                                                              } else if (operation ==
+                                                                  'rejectNFTOfferReceived') {
+                                                                await Provider.of<TransactionProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .rejectNFTOfferReceived(
+                                                                        params:
+                                                                            params,
+                                                                        token:
+                                                                            accessToken,
+                                                                        walletAddress:
+                                                                            walletAddress,
+                                                                        context:
+                                                                            context,
+                                                                        operation:
+                                                                            operation);
+                                                              } else if (operation ==
+                                                                  'AcceptCollectionOffer') {
+                                                                await Provider.of<
+                                                                            TransactionProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .acceptCollectionOffer(
+                                                                  params: params,
+                                                                  token:
+                                                                      accessToken,
+                                                                  walletAddress:
+                                                                      walletAddress,
+                                                                  context:
+                                                                      context,
+                                                                  operation:
+                                                                      operation,
+                                                                );
+                                                              } else if (operation ==
+                                                                  'rejectCollectionOfferReceived') {
+                                                                await Provider.of<TransactionProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .rejectCollectionOfferReceived(
+                                                                        params:
+                                                                            params,
+                                                                        token:
+                                                                            accessToken,
+                                                                        walletAddress:
+                                                                            walletAddress,
+                                                                        context:
+                                                                            context,
+                                                                        operation:
+                                                                            operation);
+                                                              } else if (operation ==
+                                                                  'makeNFTCounterOffer') {
+                                                                await Provider.of<
+                                                                            TransactionProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .makeCounterOffer(
+                                                                  walletAddress:
+                                                                      walletAddress,
+                                                                  // params: params,
+                                                                  token:
+                                                                      accessToken,
+                                                                  context:
+                                                                      context,
+                                                                  operation:
+                                                                      operation,
+                                                                  id: counterId,
+                                                                  offererId:
+                                                                      counterOffererId,
+                                                                  offerAmount:
+                                                                      counterOffererAmount,
+                                                                );
+                                                              }
+                                                              if (operation ==
+                                                                  'CancelNFTOfferMade') {
+                                                                await Provider.of<
+                                                                            TransactionProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .cancelNFTOfferMade(
+                                                                  walletAddress:
+                                                                      walletAddress,
+                                                                  // params: params,
+                                                                  token:
+                                                                      accessToken,
+                                                                  context:
+                                                                      context,
+                                                                  operation:
+                                                                      operation,
+                                                                  params: params,
+                                                                );
+                                                              } else if (operation ==
+                                                                  'rejectNFTCounterOffer') {
+                                                                await Provider.of<
+                                                                            TransactionProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .rejectNFTCounterOffer(
+                                                                  walletAddress:
+                                                                      walletAddress,
+                                                                  // params: params,
+                                                                  token:
+                                                                      accessToken,
+                                                                  context:
+                                                                      context,
+                                                                  operation:
+                                                                      operation,
+                                                                  id: counterId,
+                                                                  offererId:
+                                                                      counterOffererId,
+                                                                  offerAmount:
+                                                                      counterOffererAmount,
+                                                                );
+                                                              } else if (operation ==
+                                                                  'makeCollectionCounterOffer') {
+                                                                await Provider.of<
+                                                                            TransactionProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .makeCollectionCounterOffer(
+                                                                  walletAddress:
+                                                                      walletAddress,
+                                                                  // params: params,
+                                                                  token:
+                                                                      accessToken,
+                                                                  context:
+                                                                      context,
+                                                                  operation:
+                                                                      operation,
+                                                                  id: counterId,
+                                                                  offererId:
+                                                                      counterOffererId,
+                                                                  offerAmount:
+                                                                      counterOffererAmount,
+                                                                );
+                                                              } else if (operation ==
+                                                                  'rejectCollectionCounterOffer') {
+                                                                await Provider.of<
+                                                                            TransactionProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .rejectCollectionCounterOffer(
+                                                                  walletAddress:
+                                                                      walletAddress,
+                                                                  // params: params,
+                                                                  token:
+                                                                      accessToken,
+                                                                  context:
+                                                                      context,
+                                                                  operation:
+                                                                      operation,
+                                                                  id: counterId,
+                                                                  offererId:
+                                                                      counterOffererId,
+                                                                  offerAmount:
+                                                                      counterOffererAmount,
+                                                                );
+                                                              } else if (operation ==
+                                                                  'CancelCollectionOfferMade') {
+                                                                await Provider.of<
+                                                                            TransactionProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .cancelCollectionOfferMade(
+                                                                  walletAddress:
+                                                                      walletAddress,
+                                                                  // params: params,
+                                                                  token:
+                                                                      accessToken,
+                                                                  context:
+                                                                      context,
+                                                                  operation:
+                                                                      operation,
+                                                                  params: params,
+                                                                );
+                                                              }
+                                                              if (operation ==
+                                                                  'CancelAuctionListing') {
+                                                                await Provider.of<
+                                                                            TransactionProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .cancelAuctionListing(
+                                                                  walletAddress:
+                                                                      walletAddress,
+                                                                  token:
+                                                                      accessToken,
+                                                                  context:
+                                                                      context,
+                                                                  operation:
+                                                                      operation,
+                                                                  params: params,
+                                                                );
+                                                              } else if (operation ==
+                                                                  'CancelCollectionAuctionListing') {
+                                                                await Provider.of<
+                                                                            TransactionProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .cancelCollectionAuctionListing(
+                                                                  walletAddress:
+                                                                      walletAddress,
+                                                                  token:
+                                                                      accessToken,
+                                                                  context:
+                                                                      context,
+                                                                  operation:
+                                                                      operation,
+                                                                  params: params,
+                                                                );
+                                                              } else if (operation ==
+                                                                  'CancelListing') {
+                                                                await Provider.of<
+                                                                            TransactionProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .cancelListing(
+                                                                  walletAddress:
+                                                                      walletAddress,
+                                                                  token:
+                                                                      accessToken,
+                                                                  context:
+                                                                      context,
+                                                                  operation:
+                                                                      operation,
+                                                                  params: params,
+                                                                );
+                                                              } else if (operation ==
+                                                                  'CancelCollectionListing') {
+                                                                await Provider.of<
+                                                                            TransactionProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .cancelCollectionListing(
+                                                                  walletAddress:
+                                                                      walletAddress,
+                                                                  token:
+                                                                      accessToken,
+                                                                  context:
+                                                                      context,
+                                                                  operation:
+                                                                      operation,
+                                                                  params: params,
+                                                                );
+                                                              } else {}
+                                                              setState(() {
+                                                                isLoading = false;
+                                                              });
+                                                            },
+                                                            // isLoading: isLoading,r
+                                                            isGradient: true,
+                                                            color: AppColors
+                                                                .textColorBlack),
+                                                        SizedBox(height: 2.h),
+                                                        AppButton(
+                                                            title:
+                                                                "Reject request"
+                                                                    .tr(),
+                                                            handler: () {
+                                                              // if(operation=="MintNFT"){
+                                                              rejectTransactions();
+                                                              // }
+                                                            },
+                                                            isGradient: false,
+                                                            textColor: themeNotifier.isDark
+                                                                ? AppColors
+                                                                    .textColorWhite
+                                                                : AppColors
+                                                                    .textColorBlack
+                                                                    .withOpacity(
+                                                                        0.8),
+                                                            color: AppColors
+                                                                .appSecondButton
+                                                                .withOpacity(
+                                                                    0.10)),
+                                                        SizedBox(
+                                                          height: 1.h,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -1295,13 +1291,6 @@ class _TransactionRequestAcceptRejectState
                           )
                   ],
                 ),
-                // Positioned(
-                //   bottom: 0,
-                //   left: 0,
-                //   right: 0,
-                //   child:
-                //
-                // )
               ],
             ),
           ),
