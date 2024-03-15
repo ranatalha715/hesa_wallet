@@ -628,7 +628,8 @@ class _TransactionRequestAcceptRejectState
                                                     null)
                                                 transactionDetailsWidget(
                                                   title: operation ==
-                                                              'makeNFTCounterOffer' ||
+                                                              'makeNFTCounterOffer' || operation ==
+                                                      'rejectNFTCounterOffer'||
                                                           operation ==
                                                               'makeCollectionCounterOffer' || operation ==
                                                       'AcceptNFTOfferReceived'  || operation ==
@@ -656,7 +657,7 @@ class _TransactionRequestAcceptRejectState
                                                       operation ==
                                                           'rejectCollectionCounterOffer' ||
                                                       operation ==
-                                                          'CancelNFTOfferMade' ||
+                                                          'CancelNFTOfferMade'   ||
                                                       operation ==
                                                           'CancelCollectionOfferMade'
                                                       ? paramsMap!['offererId']
@@ -671,7 +672,7 @@ class _TransactionRequestAcceptRejectState
                                                 if (paramsMap!['offerAmount'] !=
                                                     null)
                                                   transactionDetailsWidget(
-                                                    title: 'Offer Amount:'.tr(),
+                                                    title: 'Counter Offer Value:'.tr(),
                                                     details:
                                                     paramsMap!['offerAmount']
                                                                 .toString() +
