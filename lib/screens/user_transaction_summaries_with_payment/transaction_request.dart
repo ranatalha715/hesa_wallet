@@ -1982,7 +1982,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   // });
                                                   // }
                                                 });
-                                              } else if (operation ==
+                                              }
+                                              else if (operation ==
                                                   'acceptCounterOffer') {
                                                 final acceptCounterOffer =
                                                     await transactionProvider

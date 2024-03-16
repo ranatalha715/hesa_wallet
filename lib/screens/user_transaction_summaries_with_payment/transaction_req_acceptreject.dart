@@ -1395,7 +1395,9 @@ class _TransactionRequestAcceptRejectState
                                                                   params:
                                                                       params,
                                                                 );
-                                                              } else {}
+                                                              }
+
+                                                              else {}
                                                               setState(() {
                                                                 isLoading =
                                                                     false;
