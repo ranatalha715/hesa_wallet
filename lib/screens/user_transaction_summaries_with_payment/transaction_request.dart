@@ -122,10 +122,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
 
   ScrollController _scrollController = ScrollController();
 
-  void payRequestNowReadyUI(
-      {required List<String> brandsName,
-      required String checkoutId,
-      required operation}) async {
+  void payRequestNowReadyUI({required List<String> brandsName,
+    required String checkoutId,
+    required operation}) async {
     try {
       PaymentResultData paymentResultData;
       paymentResultData = await flutterHyperPay.readyUICards(
@@ -139,7 +138,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
           themColorHexIOS: "#000000",
           // FOR IOS ONLY
           setStorePaymentDetailsMode:
-              true, // store payment details for future use
+          true, // store payment details for future use
         ),
       );
       print("paymentResultData.paymentResult=");
@@ -151,13 +150,14 @@ class _TransactionRequestState extends State<TransactionRequest> {
         });
         await Provider.of<TransactionProvider>(context, listen: false)
             .payableTransactionProcess(
-                token: accessToken,
-                paymentId:
-                    // paymentResultData.paymentResult.toString()
-                    Provider.of<TransactionProvider>(context, listen: false)
-                        .checkoutId,
-                context: context,
-                operation: operation);
+            token: accessToken,
+            paymentId:
+            // paymentResultData.paymentResult.toString()
+            Provider
+                .of<TransactionProvider>(context, listen: false)
+                .checkoutId,
+            context: context,
+            operation: operation);
         setState(() {
           isLoading = false;
         });
@@ -220,9 +220,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
                 overflow: TextOverflow.ellipsis,
                 // .toUpperCase(),
                 style: TextStyle(
-                        color: AppColors.backgroundColor,
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.bold)
+                    color: AppColors.backgroundColor,
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.bold)
                     .apply(fontWeightDelta: -2),
               ),
             ),
@@ -304,7 +304,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
 
     for (int i = 0; i < input.length; i += chunkSize) {
       final end =
-          (i + chunkSize <= input.length) ? i + chunkSize : input.length;
+      (i + chunkSize <= input.length) ? i + chunkSize : input.length;
       chunks.add(input.substring(i, end));
     }
 
@@ -377,7 +377,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
   @override
   Widget build(BuildContext context) {
     final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+    ModalRoute
+        .of(context)!
+        .settings
+        .arguments as Map<String, dynamic>?;
     if (args != null) {
       // Your code here
       print('args params' + args['params']);
@@ -405,7 +408,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
     final formattedText = addSpacesToText(displayedText);
     final paymentCards =
-        Provider.of<UserProvider>(context, listen: false).paymentCards;
+        Provider
+            .of<UserProvider>(context, listen: false)
+            .paymentCards;
     var trPro = Provider.of<TransactionProvider>(context, listen: false);
     if (trPro.selectedCardNum == null || trPro.selectedCardNum == "") {
       if (paymentCards.isNotEmpty) {
@@ -455,7 +460,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                             ),
                             child: Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 12),
+                              const EdgeInsets.symmetric(horizontal: 12),
                               child: Row(
                                 mainAxisAlignment: isEnglish
                                     ? MainAxisAlignment.start
@@ -575,13 +580,14 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                 //     color: AppColors.gradientColor1),
                                 transactionDetailsWidget(
                                   title: operation == 'MintCollection' ||
-                                          operation == 'listCollection' ||
-                                          operation ==
-                                              'listAuctionCollection' ||
-                                          operation == 'burnCollection'||
-                                      operation == 'makeOfferCollection'||
+                                      operation == 'listCollection' ||
+                                      operation ==
+                                          'listAuctionCollection' ||
+                                      operation == 'burnCollection' ||
+                                      operation == 'makeOfferCollection' ||
                                       operation == 'purchaseCollection' ||
-                                      operation == 'acceptCollectionCounterOffer'
+                                      operation ==
+                                          'acceptCollectionCounterOffer'
                                       ? 'Collection ID:'.tr()
                                       : 'Token ID:'.tr(),
                                   details: replaceMiddleWithDotsTokenId(
@@ -599,7 +605,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                   transactionDetailsWidget(
                                     title: 'Creator royalty:'.tr(),
                                     details: paramsMap!['creatorRoyaltyPercent']
-                                            .toString() +
+                                        .toString() +
                                         '%',
                                     isDark: themeNotifier.isDark ? true : false,
                                   ),
@@ -607,29 +613,29 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                   transactionDetailsWidget(
                                     title: 'Owner:'.tr(),
                                     details: replaceMiddleWithDots(
-                                                paramsMap!['owner'])
-                                            .toString(),
+                                        paramsMap!['owner'])
+                                        .toString(),
                                     isDark: themeNotifier.isDark ? true : false,
                                   ),
                                 if (paramsMap!['listedBy'] != null ||
                                     paramsMap!['creatorWalletAddress'] != null)
                                   transactionDetailsWidget(
                                     title: operation == 'listNFT' ||
-                                            operation == 'listCollection' ||
-                                            operation ==
-                                                'listAuctionCollection' ||
-                                            operation == 'listAuctionNFT'
+                                        operation == 'listCollection' ||
+                                        operation ==
+                                            'listAuctionCollection' ||
+                                        operation == 'listAuctionNFT'
                                         ? 'Listed By:'
                                         : 'Creator ID:'.tr(),
                                     details: replaceMiddleWithDots(
                                         operation == 'listNFT' ||
-                                                operation == 'listCollection' ||
-                                                operation ==
-                                                    'listAuctionCollection' ||
-                                                operation == 'listAuctionNFT'
+                                            operation == 'listCollection' ||
+                                            operation ==
+                                                'listAuctionCollection' ||
+                                            operation == 'listAuctionNFT'
                                             ? paramsMap!['listedBy'].toString()
                                             : paramsMap!['creatorWalletAddress']
-                                                .toString()),
+                                            .toString()),
                                     isDark: themeNotifier.isDark ? true : false,
                                   ),
                                 if (paramsMap!['offerAmount'] !=
@@ -651,10 +657,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                   decoration: BoxDecoration(
                                       color: AppColors.transactionFeeContainer,
                                       borderRadius:
-                                          BorderRadius.circular(10.sp),
+                                      BorderRadius.circular(10.sp),
                                       border: Border.all(
                                           color:
-                                              AppColors.transactionFeeBorder)),
+                                          AppColors.transactionFeeBorder)),
                                   child: Padding(
                                     padding: EdgeInsets.only(
                                         top: 13.sp,
@@ -663,7 +669,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                         bottom: 7.sp),
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
                                         // SizedBox(
                                         //   height: 4.h,
@@ -695,8 +701,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                         transactionFeesWidget(
                                           title: 'Minting Fees'.tr(),
                                           details:
-                                              feesMap!['platformMintingFees']
-                                                  .toString(),
+                                          feesMap!['platformMintingFees']
+                                              .toString(),
                                           showCurrency: true,
                                           isDark: themeNotifier.isDark
                                               ? true
@@ -706,7 +712,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                             null)
                                           transactionFeesWidget(
                                             title:
-                                                'Platform Sale Comission'.tr(),
+                                            'Platform Sale Comission'.tr(),
                                             details: 'N/A',
                                             showCurrency: true,
                                             isDark: themeNotifier.isDark
@@ -725,8 +731,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                         transactionFeesWidget(
                                           title: 'Payment Processing Fee'.tr(),
                                           details:
-                                              feesMap!['paymentProcessingFee'].toStringAsFixed(2)
-                                                  .toString() ,
+                                          feesMap!['paymentProcessingFee']
+                                              .toStringAsFixed(2)
+                                              .toString(),
                                           showCurrency: true,
                                           isDark: themeNotifier.isDark
                                               ? true
@@ -758,9 +765,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                         ),
                                         transactionFeesWidget(
                                           title:
-                                              'Total Transaction Amount'.tr(),
+                                          'Total Transaction Amount'.tr(),
                                           details:
-                                              feesMap!['totalFees'].toString(),
+                                          feesMap!['totalFees'].toString(),
                                           showCurrency: true,
                                           boldDetails: true,
                                           isDark: themeNotifier.isDark
@@ -771,7 +778,13 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                           height: 1.h,
                                         ),
                                         Text(
+                                          operation !=
+                                              "acceptCounterOffer" &&
+                                              operation !=
+                                                  "acceptCollectionCounterOffer"
+                                              ?
                                           'The transaction request is automatically signed and submitted to the Blockchain once this transaction is paid.'
+                                              : 'Your original offer amount will be fully refunded once the counter offer amount is confirmed.'
                                               .tr(),
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
@@ -793,12 +806,12 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                   alignment: Alignment.centerLeft,
                                   child: Padding(
                                     padding:
-                                        EdgeInsets.symmetric(horizontal: 0),
+                                    EdgeInsets.symmetric(horizontal: 0),
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      CrossAxisAlignment.center,
                                       children: [
                                         Text(
                                           'Payments Types'.tr(),
@@ -814,25 +827,26 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                         GestureDetector(
                                           onTap: () async {
                                             var result = await Provider.of<
-                                                        TransactionProvider>(
-                                                    context,
-                                                    listen: false)
+                                                TransactionProvider>(
+                                                context,
+                                                listen: false)
                                                 .tokenizeCardRequest(
-                                                    token: accessToken,
-                                                    context: context);
+                                                token: accessToken,
+                                                context: context);
                                             if (result == AuthResult.success) {
                                               Navigator.pushReplacement(
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       WalletAddCard(
-                                                    fromTransactionReq: true,
-                                                    tokenizedCheckoutId: Provider
-                                                            .of<TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                        .tokenizedCheckoutId,
-                                                  ),
+                                                        fromTransactionReq: true,
+                                                        tokenizedCheckoutId: Provider
+                                                            .of<
+                                                            TransactionProvider>(
+                                                            context,
+                                                            listen: false)
+                                                            .tokenizedCheckoutId,
+                                                      ),
                                                 ),
                                               );
                                             }
@@ -852,7 +866,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                               size: 10,
                                               color: themeNotifier.isDark
                                                   ? AppColors
-                                                      .textColorGreyShade2
+                                                  .textColorGreyShade2
                                                   : AppColors.textColorBlack,
                                             ),
                                           ),
@@ -878,25 +892,26 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                             //   });
                                             // },
                                             var result = await Provider.of<
-                                                        TransactionProvider>(
-                                                    context,
-                                                    listen: false)
+                                                TransactionProvider>(
+                                                context,
+                                                listen: false)
                                                 .tokenizeCardRequest(
-                                                    token: accessToken,
-                                                    context: context);
+                                                token: accessToken,
+                                                context: context);
                                             if (result == AuthResult.success) {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       WalletAddCard(
-                                                    fromTransactionReq: true,
-                                                    tokenizedCheckoutId: Provider
-                                                            .of<TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                        .tokenizedCheckoutId,
-                                                  ),
+                                                        fromTransactionReq: true,
+                                                        tokenizedCheckoutId: Provider
+                                                            .of<
+                                                            TransactionProvider>(
+                                                            context,
+                                                            listen: false)
+                                                            .tokenizedCheckoutId,
+                                                      ),
                                                 ),
                                               );
                                             }
@@ -1139,12 +1154,13 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                     ),
                                     child: Column(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                      MainAxisAlignment.start,
                                       children: [
                                         GestureDetector(
-                                          onTap: () => setState(() {
-                                            _isSelected = !_isSelected;
-                                          }),
+                                          onTap: () =>
+                                              setState(() {
+                                                _isSelected = !_isSelected;
+                                              }),
                                           child: Container(
                                             height: 6.5.h,
                                             decoration: BoxDecoration(
@@ -1154,10 +1170,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                 color: _isSelected
                                                     ? Colors.transparent
                                                     : themeNotifier.isDark
-                                                        ? AppColors
-                                                            .selectedCardAndBankBorder
-                                                        : AppColors
-                                                            .textColorGrey,
+                                                    ? AppColors
+                                                    .selectedCardAndBankBorder
+                                                    : AppColors
+                                                    .textColorGrey,
                                                 width: 1,
                                               ),
                                               borderRadius: BorderRadius.only(
@@ -1177,36 +1193,37 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   left: 10.sp, right: 5.sp),
                                               child: Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.start,
+                                                MainAxisAlignment.start,
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
+                                                CrossAxisAlignment.center,
                                                 children: [
                                                   // SizedBox(
                                                   //   width: 0.5.h,
                                                   // ),
                                                   Text(
                                                     trPro.selectedCardNum ==
-                                                                "" ||
-                                                            trPro.selectedCardNum ==
-                                                                null
+                                                        "" ||
+                                                        trPro.selectedCardNum ==
+                                                            null
                                                         ? "**** **** **** ****"
-                                                        : trPro.selectedCardNum +
-                                                            " **********",
+                                                        : trPro
+                                                        .selectedCardNum +
+                                                        " **********",
                                                     // "2561 **** **** 1234",
                                                     style: TextStyle(
                                                         fontSize: 11.7.sp,
                                                         fontFamily: 'Inter',
                                                         fontWeight:
-                                                            FontWeight.w400,
+                                                        FontWeight.w400,
                                                         color: AppColors
                                                             .selectedCardAndBankBorder
-                                                        // color: themeNotifier
-                                                        //     .isDark
-                                                        //     ? AppColors
-                                                        //     .textColorWhite
-                                                        //     : AppColors
-                                                        //     .textColorBlack
-                                                        ),
+                                                      // color: themeNotifier
+                                                      //     .isDark
+                                                      //     ? AppColors
+                                                      //     .textColorWhite
+                                                      //     : AppColors
+                                                      //     .textColorBlack
+                                                    ),
                                                   ),
 
                                                   // SizedBox(
@@ -1218,9 +1235,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     height: 20.sp,
                                                     color: themeNotifier.isDark
                                                         ? AppColors
-                                                            .textColorWhite
+                                                        .textColorWhite
                                                         : AppColors
-                                                            .textColorBlack,
+                                                        .textColorBlack,
                                                     // width: 20.sp,
                                                   ),
                                                   SizedBox(
@@ -1232,16 +1249,16 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     child: Icon(
                                                       _isSelected
                                                           ? Icons
-                                                              .keyboard_arrow_up
+                                                          .keyboard_arrow_up
                                                           : Icons
-                                                              .keyboard_arrow_down,
+                                                          .keyboard_arrow_down,
                                                       size: 28.sp,
                                                       color: themeNotifier
-                                                              .isDark
+                                                          .isDark
                                                           ? AppColors
-                                                              .textColorWhite
+                                                          .textColorWhite
                                                           : AppColors
-                                                              .textColorBlack,
+                                                          .textColorBlack,
                                                     ),
                                                   ),
                                                 ],
@@ -1253,80 +1270,81 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                             paymentCards.isNotEmpty)
                                           isCardLoading
                                               ? CircularProgressIndicator(
-                                                  color:
-                                                      AppColors.gradientColor1,
-                                                )
+                                            color:
+                                            AppColors.gradientColor1,
+                                          )
                                               : Container(
-                                                  child: ListView.builder(
-                                                      controller:
-                                                          scrollController,
-                                                      itemCount:
-                                                          paymentCards.length,
-                                                      shrinkWrap: true,
-                                                      padding: EdgeInsets.zero,
-                                                      itemBuilder:
-                                                          (context, index) {
-                                                        bool isFirst =
-                                                            index == 0;
+                                            child: ListView.builder(
+                                                controller:
+                                                scrollController,
+                                                itemCount:
+                                                paymentCards.length,
+                                                shrinkWrap: true,
+                                                padding: EdgeInsets.zero,
+                                                itemBuilder:
+                                                    (context, index) {
+                                                  bool isFirst =
+                                                      index == 0;
 
-                                                        bool isLast = index ==
-                                                            paymentCards
-                                                                    .length -
-                                                                1;
+                                                  bool isLast = index ==
+                                                      paymentCards
+                                                          .length -
+                                                          1;
 
-                                                        return GestureDetector(
-                                                          onTap: () {
-                                                            print(trPro
-                                                                .selectedCardTokenId);
-                                                            setState(() {
-                                                              trPro.selectedCardNum =
-                                                                  paymentCards[
-                                                                          index]
-                                                                      .bin;
-                                                              _isSelected =
-                                                                  false;
-                                                              trPro.selectedCardTokenId =
-                                                                  paymentCards[
-                                                                          index]
-                                                                      .id;
-                                                            });
-                                                          },
-                                                          child: paymentTypes(
-                                                              isFirst: isFirst,
-                                                              isDark:
-                                                                  themeNotifier
-                                                                          .isDark
-                                                                      ? true
-                                                                      : false,
-                                                              index: index,
-                                                              isLast: isLast,
-                                                              cardNum:
-                                                                  paymentCards[
-                                                                          index]
-                                                                      .bin,
-                                                              isCardSelected: trPro
-                                                                          .selectedCardNum ==
-                                                                      paymentCards[
-                                                                              index]
-                                                                          .bin
-                                                                  ? true
-                                                                  : false),
-                                                        );
-                                                        // Card(
-                                                        //   margin: EdgeInsets.all(8.0),
-                                                        //   child: ListTile(
-                                                        //     title: Text('Card ${index + 1}'),
-                                                        //     subtitle: Text(
-                                                        //       'BIN: ${paymentCards[index].bin}',
-                                                        //       style: TextStyle(
-                                                        //           color: Colors.red),
-                                                        //     ),
-                                                        //     onTap: () {
-                                                        //       // Handle card tap if needed
-                                                        //     },
-                                                        //   ));
-                                                      }),
-                                                )
+                                                  return GestureDetector(
+                                                    onTap: () {
+                                                      print(trPro
+                                                          .selectedCardTokenId);
+                                                      setState(() {
+                                                        trPro.selectedCardNum =
+                                                            paymentCards[
+                                                            index]
+                                                                .bin;
+                                                        _isSelected =
+                                                        false;
+                                                        trPro
+                                                            .selectedCardTokenId =
+                                                            paymentCards[
+                                                            index]
+                                                                .id;
+                                                      });
+                                                    },
+                                                    child: paymentTypes(
+                                                        isFirst: isFirst,
+                                                        isDark:
+                                                        themeNotifier
+                                                            .isDark
+                                                            ? true
+                                                            : false,
+                                                        index: index,
+                                                        isLast: isLast,
+                                                        cardNum:
+                                                        paymentCards[
+                                                        index]
+                                                            .bin,
+                                                        isCardSelected: trPro
+                                                            .selectedCardNum ==
+                                                            paymentCards[
+                                                            index]
+                                                                .bin
+                                                            ? true
+                                                            : false),
+                                                  );
+                                                  // Card(
+                                                  //   margin: EdgeInsets.all(8.0),
+                                                  //   child: ListTile(
+                                                  //     title: Text('Card ${index + 1}'),
+                                                  //     subtitle: Text(
+                                                  //       'BIN: ${paymentCards[index].bin}',
+                                                  //       style: TextStyle(
+                                                  //           color: Colors.red),
+                                                  //     ),
+                                                  //     onTap: () {
+                                                  //       // Handle card tap if needed
+                                                  //     },
+                                                  //   ));
+                                                }),
+                                          )
                                       ],
                                     ),
                                   ),
@@ -1350,9 +1368,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                           horizontal: 10.sp),
                                       child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                        MainAxisAlignment.start,
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                         children: [
                                           SizedBox(
                                             width: 1.w,
@@ -1386,20 +1404,20 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                 // ),
                                 Container(
                                   decoration: BoxDecoration(
-                                      // color: themeNotifier.isDark
-                                      //     ? AppColors.transactionFeeContainer
-                                      //     : AppColors.textColorWhite,
-                                      // border: Border(
-                                      //   top: BorderSide(
-                                      //     color: AppColors.textColorGrey, // Border color
-                                      //     width: 1.0, // Border width
-                                      //   ),
-                                      // ),
-                                      ),
+                                    // color: themeNotifier.isDark
+                                    //     ? AppColors.transactionFeeContainer
+                                    //     : AppColors.textColorWhite,
+                                    // border: Border(
+                                    //   top: BorderSide(
+                                    //     color: AppColors.textColorGrey, // Border color
+                                    //     width: 1.0, // Border width
+                                    //   ),
+                                    // ),
+                                  ),
                                   // margin: EdgeInsets.symmetric(horizontal: 20.sp),
                                   child: Padding(
                                     padding:
-                                        EdgeInsets.symmetric(horizontal: 0.sp),
+                                    EdgeInsets.symmetric(horizontal: 0.sp),
                                     child: Column(
                                       children: [
                                         SizedBox(height: 2.5.h),
@@ -1412,51 +1430,51 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                 children: [
                                                   TextSpan(
                                                       text:
-                                                          'By continuing you agree to the  '
-                                                              .tr(),
+                                                      'By continuing you agree to the  '
+                                                          .tr(),
                                                       style: TextStyle(
-                                                          // height: 2,
+                                                        // height: 2,
                                                           color: AppColors
                                                               .textColorWhite,
                                                           fontWeight:
-                                                              FontWeight.w400,
+                                                          FontWeight.w400,
                                                           fontSize: 10.sp,
                                                           fontFamily: 'Inter')),
                                                   TextSpan(
                                                       recognizer:
-                                                          TapGestureRecognizer()
-                                                            ..onTap = () {
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            TermsAndConditions()),
-                                                              );
-                                                            },
+                                                      TapGestureRecognizer()
+                                                        ..onTap = () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                    TermsAndConditions()),
+                                                          );
+                                                        },
                                                       text: 'Terms & Conditions'
-                                                              .tr() +
+                                                          .tr() +
                                                           " ",
                                                       style: TextStyle(
                                                           decoration:
-                                                              TextDecoration
-                                                                  .underline,
+                                                          TextDecoration
+                                                              .underline,
                                                           height: 1.5,
                                                           color: AppColors
                                                               .textColorToska,
                                                           fontWeight:
-                                                              FontWeight.w600,
+                                                          FontWeight.w600,
                                                           fontSize: 10.sp,
                                                           fontFamily: 'Inter')),
                                                   TextSpan(
                                                       text:
-                                                          '  of Hesa Wallet Payments.'
-                                                              .tr(),
+                                                      '  of Hesa Wallet Payments.'
+                                                          .tr(),
                                                       style: TextStyle(
                                                           color: AppColors
                                                               .textColorWhite,
                                                           fontWeight:
-                                                              FontWeight.w400,
+                                                          FontWeight.w400,
                                                           fontSize: 10.sp,
                                                           fontFamily: 'Inter'))
                                                 ],
@@ -1477,15 +1495,15 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                               });
                                               // var result;
                                               TransactionProvider
-                                                  transactionProvider = Provider
-                                                      .of<TransactionProvider>(
-                                                          context,
-                                                          listen: false);
+                                              transactionProvider = Provider
+                                                  .of<TransactionProvider>(
+                                                  context,
+                                                  listen: false);
 
                                               UserProvider userProvider =
-                                                  Provider.of<UserProvider>(
-                                                      context,
-                                                      listen: false);
+                                              Provider.of<UserProvider>(
+                                                  context,
+                                                  listen: false);
 
                                               if (operation ==
                                                   'MintCollection') {
@@ -1493,8 +1511,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     'running mint collection');
                                                 print(itemCollectionID);
                                                 final collectionResult =
-                                                    await transactionProvider
-                                                        .mintCollectionpayableTransactionSend(
+                                                await transactionProvider
+                                                    .mintCollectionpayableTransactionSend(
                                                   token: accessToken,
                                                   context: context,
                                                   walletAddress: userProvider
@@ -1502,16 +1520,16 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   tokenId: paymentCards.isEmpty
                                                       ? ""
                                                       : trPro
-                                                          .selectedCardTokenId,
+                                                      .selectedCardTokenId,
                                                   country: country,
                                                   mintCollectionId:
-                                                      itemCollectionID,
+                                                  itemCollectionID,
                                                   ownerId: userProvider
                                                       .walletAddress!,
                                                   params: params,
                                                   operation: operation,
                                                 )
-                                                        .then((value) {
+                                                    .then((value) {
                                                   print(
                                                       "transactionProvider.checkoutId.collection");
                                                   print(transactionProvider
@@ -1526,10 +1544,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         // "STC_PAY",
                                                         // "APPLEPAY"
                                                       ],
-                                                      checkoutId: Provider.of<
-                                                                  TransactionProvider>(
-                                                              context,
-                                                              listen: false)
+                                                      checkoutId: Provider
+                                                          .of<
+                                                          TransactionProvider>(
+                                                          context,
+                                                          listen: false)
                                                           .checkoutId);
                                                 });
                                               } else if (operation ==
@@ -1538,19 +1557,19 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                 print('running mint nft');
                                                 final nftResult = await transactionProvider
                                                     .mintNftpayableTransactionSend(
-                                                        params: params,
-                                                        token: accessToken,
-                                                        context: context,
-                                                        walletAddress:
-                                                            userProvider
-                                                                .walletAddress!,
-                                                        tokenId: paymentCards
-                                                                .isEmpty
-                                                            ? ""
-                                                            : trPro
-                                                                .selectedCardTokenId,
-                                                        country: country,
-                                                        operation: operation)
+                                                    params: params,
+                                                    token: accessToken,
+                                                    context: context,
+                                                    walletAddress:
+                                                    userProvider
+                                                        .walletAddress!,
+                                                    tokenId: paymentCards
+                                                        .isEmpty
+                                                        ? ""
+                                                        : trPro
+                                                        .selectedCardTokenId,
+                                                    country: country,
+                                                    operation: operation)
                                                     .then((value) {
                                                   print(
                                                       "transactionProvider.checkoutId");
@@ -1563,10 +1582,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         "MASTER",
                                                         "MADA",
                                                       ],
-                                                      checkoutId: Provider.of<
-                                                                  TransactionProvider>(
-                                                              context,
-                                                              listen: false)
+                                                      checkoutId: Provider
+                                                          .of<
+                                                          TransactionProvider>(
+                                                          context,
+                                                          listen: false)
                                                           .checkoutId);
                                                   // });
                                                   // }
@@ -1574,23 +1594,23 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                               } else if (operation ==
                                                   'MintNFTWithEditions') {
                                                 final nftResult =
-                                                    await transactionProvider
-                                                        .mintNFTWithEditions(
-                                                            params: params,
-                                                            token: accessToken,
-                                                            context: context,
-                                                            walletAddress:
-                                                                userProvider
-                                                                    .walletAddress!,
-                                                            tokenId: paymentCards
-                                                                    .isEmpty
-                                                                ? ""
-                                                                : trPro
-                                                                    .selectedCardTokenId,
-                                                            country: country,
-                                                            operation:
-                                                                operation)
-                                                        .then((value) {
+                                                await transactionProvider
+                                                    .mintNFTWithEditions(
+                                                    params: params,
+                                                    token: accessToken,
+                                                    context: context,
+                                                    walletAddress:
+                                                    userProvider
+                                                        .walletAddress!,
+                                                    tokenId: paymentCards
+                                                        .isEmpty
+                                                        ? ""
+                                                        : trPro
+                                                        .selectedCardTokenId,
+                                                    country: country,
+                                                    operation:
+                                                    operation)
+                                                    .then((value) {
                                                   print(
                                                       "transactionProvider.checkoutId");
                                                   print(transactionProvider
@@ -1602,10 +1622,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         "MASTER",
                                                         "MADA",
                                                       ],
-                                                      checkoutId: Provider.of<
-                                                                  TransactionProvider>(
-                                                              context,
-                                                              listen: false)
+                                                      checkoutId: Provider
+                                                          .of<
+                                                          TransactionProvider>(
+                                                          context,
+                                                          listen: false)
                                                           .checkoutId);
                                                   // });
                                                   // }
@@ -1613,23 +1634,23 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                               } else if (operation ==
                                                   'purchaseNFT') {
                                                 final purchasenftResult =
-                                                    await transactionProvider
-                                                        .purchaseNft(
-                                                            params: params,
-                                                            token: accessToken,
-                                                            context: context,
-                                                            walletAddress:
-                                                                userProvider
-                                                                    .walletAddress!,
-                                                            tokenId: paymentCards
-                                                                    .isEmpty
-                                                                ? ""
-                                                                : trPro
-                                                                    .selectedCardTokenId,
-                                                            country: country,
-                                                            operation:
-                                                                operation)
-                                                        .then((value) {
+                                                await transactionProvider
+                                                    .purchaseNft(
+                                                    params: params,
+                                                    token: accessToken,
+                                                    context: context,
+                                                    walletAddress:
+                                                    userProvider
+                                                        .walletAddress!,
+                                                    tokenId: paymentCards
+                                                        .isEmpty
+                                                        ? ""
+                                                        : trPro
+                                                        .selectedCardTokenId,
+                                                    country: country,
+                                                    operation:
+                                                    operation)
+                                                    .then((value) {
                                                   print(
                                                       "transactionProvider.checkoutId");
                                                   print(transactionProvider
@@ -1641,10 +1662,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         "MASTER",
                                                         "MADA",
                                                       ],
-                                                      checkoutId: Provider.of<
-                                                                  TransactionProvider>(
-                                                              context,
-                                                              listen: false)
+                                                      checkoutId: Provider
+                                                          .of<
+                                                          TransactionProvider>(
+                                                          context,
+                                                          listen: false)
                                                           .checkoutId);
                                                   // });
                                                   // }
@@ -1652,23 +1674,23 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                               } else if (operation ==
                                                   'purchaseCollection') {
                                                 final purchaseCollectionResult =
-                                                    await transactionProvider
-                                                        .purchaseCollection(
-                                                            params: params,
-                                                            token: accessToken,
-                                                            context: context,
-                                                            walletAddress:
-                                                                userProvider
-                                                                    .walletAddress!,
-                                                            tokenId: paymentCards
-                                                                    .isEmpty
-                                                                ? ""
-                                                                : trPro
-                                                                    .selectedCardTokenId,
-                                                            country: country,
-                                                            operation:
-                                                                operation)
-                                                        .then((value) {
+                                                await transactionProvider
+                                                    .purchaseCollection(
+                                                    params: params,
+                                                    token: accessToken,
+                                                    context: context,
+                                                    walletAddress:
+                                                    userProvider
+                                                        .walletAddress!,
+                                                    tokenId: paymentCards
+                                                        .isEmpty
+                                                        ? ""
+                                                        : trPro
+                                                        .selectedCardTokenId,
+                                                    country: country,
+                                                    operation:
+                                                    operation)
+                                                    .then((value) {
                                                   print(
                                                       "transactionProvider.checkoutId");
                                                   print(transactionProvider
@@ -1680,10 +1702,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         "MASTER",
                                                         "MADA",
                                                       ],
-                                                      checkoutId: Provider.of<
-                                                                  TransactionProvider>(
-                                                              context,
-                                                              listen: false)
+                                                      checkoutId: Provider
+                                                          .of<
+                                                          TransactionProvider>(
+                                                          context,
+                                                          listen: false)
                                                           .checkoutId);
                                                   // });
                                                   // }
@@ -1692,8 +1715,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   'listNFT') {
                                                 // Uncomment this block if needed, adjust parameters accordingly
                                                 final listNftFixedPrice =
-                                                    await transactionProvider
-                                                        .listNftFixedPrice(
+                                                await transactionProvider
+                                                    .listNftFixedPrice(
                                                   params: params,
                                                   token: accessToken,
                                                   context: context,
@@ -1702,10 +1725,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   tokenId: paymentCards.isEmpty
                                                       ? ""
                                                       : trPro
-                                                          .selectedCardTokenId,
+                                                      .selectedCardTokenId,
                                                   operation: operation,
                                                 )
-                                                        .then((value) {
+                                                    .then((value) {
                                                   print(
                                                       "transactionProvider.checkoutId");
                                                   print(transactionProvider
@@ -1717,10 +1740,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         "MASTER",
                                                         "MADA",
                                                       ],
-                                                      checkoutId: Provider.of<
-                                                                  TransactionProvider>(
-                                                              context,
-                                                              listen: false)
+                                                      checkoutId: Provider
+                                                          .of<
+                                                          TransactionProvider>(
+                                                          context,
+                                                          listen: false)
                                                           .checkoutId);
                                                   // });
                                                   // }
@@ -1729,8 +1753,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   'listCollection') {
                                                 // Uncomment this block if needed, adjust parameters accordingly
                                                 final listCollectionFixedPrice =
-                                                    await transactionProvider
-                                                        .listCollectionFixedPrice(
+                                                await transactionProvider
+                                                    .listCollectionFixedPrice(
                                                   params: params,
                                                   token: accessToken,
                                                   context: context,
@@ -1739,10 +1763,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   tokenId: paymentCards.isEmpty
                                                       ? ""
                                                       : trPro
-                                                          .selectedCardTokenId,
+                                                      .selectedCardTokenId,
                                                   operation: operation,
                                                 )
-                                                        .then((value) {
+                                                    .then((value) {
                                                   print(
                                                       "transactionProvider.checkoutId");
                                                   print(transactionProvider
@@ -1754,10 +1778,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         "MASTER",
                                                         "MADA",
                                                       ],
-                                                      checkoutId: Provider.of<
-                                                                  TransactionProvider>(
-                                                              context,
-                                                              listen: false)
+                                                      checkoutId: Provider
+                                                          .of<
+                                                          TransactionProvider>(
+                                                          context,
+                                                          listen: false)
                                                           .checkoutId);
                                                   // });
                                                   // }
@@ -1766,8 +1791,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   'listAuctionNFT') {
                                                 // Uncomment this block if needed, adjust parameters accordingly
                                                 final listNftForAuction =
-                                                    await transactionProvider
-                                                        .listNftForAuction(
+                                                await transactionProvider
+                                                    .listNftForAuction(
                                                   params: params,
                                                   token: accessToken,
                                                   context: context,
@@ -1776,10 +1801,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   tokenId: paymentCards.isEmpty
                                                       ? ""
                                                       : trPro
-                                                          .selectedCardTokenId,
+                                                      .selectedCardTokenId,
                                                   operation: operation,
                                                 )
-                                                        .then((value) {
+                                                    .then((value) {
                                                   print(
                                                       "transactionProvider.checkoutId");
                                                   print(transactionProvider
@@ -1791,10 +1816,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         "MASTER",
                                                         "MADA",
                                                       ],
-                                                      checkoutId: Provider.of<
-                                                                  TransactionProvider>(
-                                                              context,
-                                                              listen: false)
+                                                      checkoutId: Provider
+                                                          .of<
+                                                          TransactionProvider>(
+                                                          context,
+                                                          listen: false)
                                                           .checkoutId);
                                                   // });
                                                   // }
@@ -1803,8 +1829,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   'listAuctionCollection') {
                                                 // Uncomment this block if needed, adjust parameters accordingly
                                                 final listCollectionForAuction =
-                                                    await transactionProvider
-                                                        .listCollectionForAuction(
+                                                await transactionProvider
+                                                    .listCollectionForAuction(
                                                   params: params,
                                                   token: accessToken,
                                                   context: context,
@@ -1813,10 +1839,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   tokenId: paymentCards.isEmpty
                                                       ? ""
                                                       : trPro
-                                                          .selectedCardTokenId,
+                                                      .selectedCardTokenId,
                                                   operation: operation,
                                                 )
-                                                        .then((value) {
+                                                    .then((value) {
                                                   print(
                                                       "transactionProvider.checkoutId");
                                                   print(transactionProvider
@@ -1828,10 +1854,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         "MASTER",
                                                         "MADA",
                                                       ],
-                                                      checkoutId: Provider.of<
-                                                                  TransactionProvider>(
-                                                              context,
-                                                              listen: false)
+                                                      checkoutId: Provider
+                                                          .of<
+                                                          TransactionProvider>(
+                                                          context,
+                                                          listen: false)
                                                           .checkoutId);
                                                   // });
                                                   // }
@@ -1840,8 +1867,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   'burnNFT') {
                                                 // Uncomment this block if needed, adjust parameters accordingly
                                                 final burnNFT =
-                                                    await transactionProvider
-                                                        .burnNFT(
+                                                await transactionProvider
+                                                    .burnNFT(
                                                   params: params,
                                                   token: accessToken,
                                                   context: context,
@@ -1850,10 +1877,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   tokenId: paymentCards.isEmpty
                                                       ? ""
                                                       : trPro
-                                                          .selectedCardTokenId,
+                                                      .selectedCardTokenId,
                                                   operation: operation,
                                                 )
-                                                        .then((value) {
+                                                    .then((value) {
                                                   print(
                                                       "transactionProvider.checkoutId");
                                                   print(transactionProvider
@@ -1865,10 +1892,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         "MASTER",
                                                         "MADA",
                                                       ],
-                                                      checkoutId: Provider.of<
-                                                                  TransactionProvider>(
-                                                              context,
-                                                              listen: false)
+                                                      checkoutId: Provider
+                                                          .of<
+                                                          TransactionProvider>(
+                                                          context,
+                                                          listen: false)
                                                           .checkoutId);
                                                   // });
                                                   // }
@@ -1877,8 +1905,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   'burnCollection') {
                                                 // Uncomment this block if needed, adjust parameters accordingly
                                                 final burnCollection =
-                                                    await transactionProvider
-                                                        .burnCollection(
+                                                await transactionProvider
+                                                    .burnCollection(
                                                   params: params,
                                                   token: accessToken,
                                                   context: context,
@@ -1887,10 +1915,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   tokenId: paymentCards.isEmpty
                                                       ? ""
                                                       : trPro
-                                                          .selectedCardTokenId,
+                                                      .selectedCardTokenId,
                                                   operation: operation,
                                                 )
-                                                        .then((value) {
+                                                    .then((value) {
                                                   print(
                                                       "transactionProvider.checkoutId");
                                                   print(transactionProvider
@@ -1902,10 +1930,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         "MASTER",
                                                         "MADA",
                                                       ],
-                                                      checkoutId: Provider.of<
-                                                                  TransactionProvider>(
-                                                              context,
-                                                              listen: false)
+                                                      checkoutId: Provider
+                                                          .of<
+                                                          TransactionProvider>(
+                                                          context,
+                                                          listen: false)
                                                           .checkoutId);
                                                   // });
                                                   // }
@@ -1913,8 +1942,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                               } else if (operation ==
                                                   'makeOfferNFT') {
                                                 final makeOffer =
-                                                    await transactionProvider
-                                                        .makeOffer(
+                                                await transactionProvider
+                                                    .makeOffer(
                                                   params: params,
                                                   token: accessToken,
                                                   context: context,
@@ -1923,10 +1952,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   tokenId: paymentCards.isEmpty
                                                       ? ""
                                                       : trPro
-                                                          .selectedCardTokenId,
+                                                      .selectedCardTokenId,
                                                   operation: operation,
                                                 )
-                                                        .then((value) {
+                                                    .then((value) {
                                                   print(
                                                       "transactionProvider.checkoutId");
                                                   print(transactionProvider
@@ -1938,10 +1967,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         "MASTER",
                                                         "MADA",
                                                       ],
-                                                      checkoutId: Provider.of<
-                                                                  TransactionProvider>(
-                                                              context,
-                                                              listen: false)
+                                                      checkoutId: Provider
+                                                          .of<
+                                                          TransactionProvider>(
+                                                          context,
+                                                          listen: false)
                                                           .checkoutId);
                                                   // });
                                                   // }
@@ -1949,8 +1979,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                               } else if (operation ==
                                                   'makeOfferCollection') {
                                                 final makeOfferCollection =
-                                                    await transactionProvider
-                                                        .makeOfferCollection(
+                                                await transactionProvider
+                                                    .makeOfferCollection(
                                                   params: params,
                                                   token: accessToken,
                                                   context: context,
@@ -1959,10 +1989,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   tokenId: paymentCards.isEmpty
                                                       ? ""
                                                       : trPro
-                                                          .selectedCardTokenId,
+                                                      .selectedCardTokenId,
                                                   operation: operation,
                                                 )
-                                                        .then((value) {
+                                                    .then((value) {
                                                   print(
                                                       "transactionProvider.checkoutId");
                                                   print(transactionProvider
@@ -1974,10 +2004,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         "MASTER",
                                                         "MADA",
                                                       ],
-                                                      checkoutId: Provider.of<
-                                                                  TransactionProvider>(
-                                                              context,
-                                                              listen: false)
+                                                      checkoutId: Provider
+                                                          .of<
+                                                          TransactionProvider>(
+                                                          context,
+                                                          listen: false)
                                                           .checkoutId);
                                                   // });
                                                   // }
@@ -1986,8 +2017,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                               else if (operation ==
                                                   'acceptCounterOffer') {
                                                 final acceptCounterOffer =
-                                                    await transactionProvider
-                                                        .acceptCounterOffer(
+                                                await transactionProvider
+                                                    .acceptCounterOffer(
                                                   params: params,
                                                   token: accessToken,
                                                   context: context,
@@ -1996,10 +2027,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   tokenId: paymentCards.isEmpty
                                                       ? ""
                                                       : trPro
-                                                          .selectedCardTokenId,
+                                                      .selectedCardTokenId,
                                                   operation: operation,
                                                 )
-                                                        .then((value) {
+                                                    .then((value) {
                                                   print(
                                                       "transactionProvider.checkoutId");
                                                   print(transactionProvider
@@ -2011,10 +2042,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         "MASTER",
                                                         "MADA",
                                                       ],
-                                                      checkoutId: Provider.of<
-                                                                  TransactionProvider>(
-                                                              context,
-                                                              listen: false)
+                                                      checkoutId: Provider
+                                                          .of<
+                                                          TransactionProvider>(
+                                                          context,
+                                                          listen: false)
                                                           .checkoutId);
                                                   // });
                                                   // }
@@ -2022,8 +2054,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                               } else if (operation ==
                                                   'acceptCollectionCounterOffer') {
                                                 final acceptCollectionCounterOffer =
-                                                    await transactionProvider
-                                                        .acceptCollectionCounterOffer(
+                                                await transactionProvider
+                                                    .acceptCollectionCounterOffer(
                                                   params: params,
                                                   token: accessToken,
                                                   context: context,
@@ -2032,10 +2064,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   tokenId: paymentCards.isEmpty
                                                       ? ""
                                                       : trPro
-                                                          .selectedCardTokenId,
+                                                      .selectedCardTokenId,
                                                   operation: operation,
                                                 )
-                                                        .then((value) {
+                                                    .then((value) {
                                                   print(
                                                       "transactionProvider.checkoutId");
                                                   print(transactionProvider
@@ -2047,10 +2079,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         "MASTER",
                                                         "MADA",
                                                       ],
-                                                      checkoutId: Provider.of<
-                                                                  TransactionProvider>(
-                                                              context,
-                                                              listen: false)
+                                                      checkoutId: Provider
+                                                          .of<
+                                                          TransactionProvider>(
+                                                          context,
+                                                          listen: false)
                                                           .checkoutId);
                                                   // });
                                                   // }
@@ -2351,7 +2384,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                             textColor: themeNotifier.isDark
                                                 ? AppColors.textColorWhite
                                                 : AppColors.textColorBlack
-                                                    .withOpacity(0.8),
+                                                .withOpacity(0.8),
                                             color: AppColors.appSecondButton
                                                 .withOpacity(0.10)),
                                         // SizedBox(
@@ -2382,11 +2415,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
     });
   }
 
-  Widget transactionDetailsWidget(
-      {required String title,
-      required String details,
-      Color? color,
-      bool isDark = true}) {
+  Widget transactionDetailsWidget({required String title,
+    required String details,
+    Color? color,
+    bool isDark = true}) {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.sp),
       child: Row(
@@ -2452,7 +2484,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                         : AppColors.textColorBlack,
                     fontSize: 11.sp,
                     fontWeight:
-                        boldDetails ? FontWeight.w800 : FontWeight.w500),
+                    boldDetails ? FontWeight.w800 : FontWeight.w500),
               ),
             ),
           ),
@@ -2503,13 +2535,12 @@ class _TransactionRequestState extends State<TransactionRequest> {
     );
   }
 
-  Widget paymentTypes(
-      {bool isFirst = false,
-      bool isLast = false,
-      bool isDark = true,
-      bool isCardSelected = false,
-      required int index,
-      required String cardNum}) {
+  Widget paymentTypes({bool isFirst = false,
+    bool isLast = false,
+    bool isDark = true,
+    bool isCardSelected = false,
+    required int index,
+    required String cardNum}) {
     return Column(
       children: [
         if (isFirst)
@@ -2543,8 +2574,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                       color: isCardSelected
                           ? AppColors.selectedCardAndBankBorder
                           : isDark
-                              ? AppColors.textColorWhite
-                              : AppColors.textColorBlack),
+                          ? AppColors.textColorWhite
+                          : AppColors.textColorBlack),
                 ),
                 if (isCardSelected)
                   Container(
@@ -2583,11 +2614,12 @@ class _TransactionRequestState extends State<TransactionRequest> {
                   width: 2.w,
                 ),
                 GestureDetector(
-                  onTap: () => showPopupCardRemove(
-                    isDark: isDark,
-                    cardNumber: " ********** " + cardNum,
-                    index: index,
-                  ),
+                  onTap: () =>
+                      showPopupCardRemove(
+                        isDark: isDark,
+                        cardNumber: " ********** " + cardNum,
+                        index: index,
+                      ),
                   // Provider.of<CardProvider>(context, listen: false)
                   // .deletePaymentCards(
                   //     token: accessToken, index: index, context: context),
@@ -2696,7 +2728,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        final screenWidth = MediaQuery.of(context).size.width;
+        final screenWidth = MediaQuery
+            .of(context)
+            .size
+            .width;
         final dialogWidth = screenWidth * 0.90;
 
         return Dialog(
@@ -2769,7 +2804,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                             TextSpan(
                                 text: 'Tx ID:'.tr(),
                                 style: TextStyle(
-                                    // height: 2,
+                                  // height: 2,
                                     color: AppColors.textColorWhite,
                                     fontWeight: FontWeight.w400,
                                     fontSize: 11.7.sp,
@@ -2779,8 +2814,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                   ..onTap = () {},
                                 text: ' xyeafa...wrbqwurqw'.tr(),
                                 style: TextStyle(
-                                    // decoration: TextDecoration.underline,
-                                    // height: 1.5,
+                                  // decoration: TextDecoration.underline,
+                                  // height: 1.5,
                                     color: AppColors.textColorToska,
                                     fontWeight: FontWeight.w600,
                                     fontSize: 11.7.sp,
@@ -2827,7 +2862,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        final screenWidth = MediaQuery.of(context).size.width;
+        final screenWidth = MediaQuery
+            .of(context)
+            .size
+            .width;
         final dialogWidth = screenWidth * 0.90;
 
         return Dialog(
@@ -2946,73 +2984,73 @@ class _TransactionRequestState extends State<TransactionRequest> {
                       //   ),
                       // ),
                     ]
-                    // SizedBox(height: 3.5.h,),
-                    // Padding(
-                    //   padding: EdgeInsets.symmetric(
-                    //       horizontal: 20.sp),
-                    //   child: Container(
-                    //     height: 6.5.h,
-                    //     margin:
-                    //     EdgeInsets.only(bottom: 1.h),
-                    //     decoration: BoxDecoration(
-                    //       borderRadius:
-                    //       BorderRadius.circular(8.0),
-                    //       border: Border.all(
-                    //         color: AppColors
-                    //             .textColorGrey.withOpacity(0.50),
-                    //         // Off-white color
-                    //         width: 1.0,
-                    //       ),
-                    //     ),
-                    //     child: Padding(
-                    //       padding: EdgeInsets.symmetric(
-                    //           horizontal: 10.sp),
-                    //       child: Row(
-                    //         mainAxisAlignment:
-                    //         MainAxisAlignment.start,
-                    //         crossAxisAlignment:
-                    //         CrossAxisAlignment.center,
-                    //         children: [
-                    //           SizedBox(
-                    //             width: 1.w,
-                    //           ),
-                    //           Text(
-                    //             "Riyad Bank".tr(),
-                    //             style: TextStyle(
-                    //                 fontSize: 11.7.sp,
-                    //                 fontFamily: 'Inter',
-                    //                 fontWeight:
-                    //                 FontWeight.w500,
-                    //                 color:
-                    //                 isDark
-                    //                     ? AppColors
-                    //                     .textColorWhite
-                    //                     : AppColors
-                    //                     .textColorBlack),
-                    //           ),
-                    //           Spacer(),
-                    //           Text(
-                    //             "**** 1234".tr(),
-                    //             style: TextStyle(
-                    //                 fontSize: 11.7.sp,
-                    //                 fontFamily: 'Inter',
-                    //                 fontWeight:
-                    //                 FontWeight.w400,
-                    //                 color:
-                    //                     isDark
-                    //                     ? AppColors
-                    //                     .textColorWhite
-                    //                     : AppColors
-                    //                     .textColorBlack),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                    // SizedBox(height: 2.h,),
+                  // SizedBox(height: 3.5.h,),
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(
+                  //       horizontal: 20.sp),
+                  //   child: Container(
+                  //     height: 6.5.h,
+                  //     margin:
+                  //     EdgeInsets.only(bottom: 1.h),
+                  //     decoration: BoxDecoration(
+                  //       borderRadius:
+                  //       BorderRadius.circular(8.0),
+                  //       border: Border.all(
+                  //         color: AppColors
+                  //             .textColorGrey.withOpacity(0.50),
+                  //         // Off-white color
+                  //         width: 1.0,
+                  //       ),
+                  //     ),
+                  //     child: Padding(
+                  //       padding: EdgeInsets.symmetric(
+                  //           horizontal: 10.sp),
+                  //       child: Row(
+                  //         mainAxisAlignment:
+                  //         MainAxisAlignment.start,
+                  //         crossAxisAlignment:
+                  //         CrossAxisAlignment.center,
+                  //         children: [
+                  //           SizedBox(
+                  //             width: 1.w,
+                  //           ),
+                  //           Text(
+                  //             "Riyad Bank".tr(),
+                  //             style: TextStyle(
+                  //                 fontSize: 11.7.sp,
+                  //                 fontFamily: 'Inter',
+                  //                 fontWeight:
+                  //                 FontWeight.w500,
+                  //                 color:
+                  //                 isDark
+                  //                     ? AppColors
+                  //                     .textColorWhite
+                  //                     : AppColors
+                  //                     .textColorBlack),
+                  //           ),
+                  //           Spacer(),
+                  //           Text(
+                  //             "**** 1234".tr(),
+                  //             style: TextStyle(
+                  //                 fontSize: 11.7.sp,
+                  //                 fontFamily: 'Inter',
+                  //                 fontWeight:
+                  //                 FontWeight.w400,
+                  //                 color:
+                  //                     isDark
+                  //                     ? AppColors
+                  //                     .textColorWhite
+                  //                     : AppColors
+                  //                     .textColorBlack),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  // SizedBox(height: 2.h,),
 
-                    ),
+                ),
               )),
         );
       },
@@ -3025,7 +3063,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        final screenWidth = MediaQuery.of(context).size.width;
+        final screenWidth = MediaQuery
+            .of(context)
+            .size
+            .width;
         final dialogWidth = screenWidth * 0.90;
 
         return Dialog(
@@ -3140,73 +3181,73 @@ class _TransactionRequestState extends State<TransactionRequest> {
                       //   ),
                       // ),
                     ]
-                    // SizedBox(height: 3.5.h,),
-                    // Padding(
-                    //   padding: EdgeInsets.symmetric(
-                    //       horizontal: 20.sp),
-                    //   child: Container(
-                    //     height: 6.5.h,
-                    //     margin:
-                    //     EdgeInsets.only(bottom: 1.h),
-                    //     decoration: BoxDecoration(
-                    //       borderRadius:
-                    //       BorderRadius.circular(8.0),
-                    //       border: Border.all(
-                    //         color: AppColors
-                    //             .textColorGrey.withOpacity(0.50),
-                    //         // Off-white color
-                    //         width: 1.0,
-                    //       ),
-                    //     ),
-                    //     child: Padding(
-                    //       padding: EdgeInsets.symmetric(
-                    //           horizontal: 10.sp),
-                    //       child: Row(
-                    //         mainAxisAlignment:
-                    //         MainAxisAlignment.start,
-                    //         crossAxisAlignment:
-                    //         CrossAxisAlignment.center,
-                    //         children: [
-                    //           SizedBox(
-                    //             width: 1.w,
-                    //           ),
-                    //           Text(
-                    //             "Riyad Bank".tr(),
-                    //             style: TextStyle(
-                    //                 fontSize: 11.7.sp,
-                    //                 fontFamily: 'Inter',
-                    //                 fontWeight:
-                    //                 FontWeight.w500,
-                    //                 color:
-                    //                 isDark
-                    //                     ? AppColors
-                    //                     .textColorWhite
-                    //                     : AppColors
-                    //                     .textColorBlack),
-                    //           ),
-                    //           Spacer(),
-                    //           Text(
-                    //             "**** 1234".tr(),
-                    //             style: TextStyle(
-                    //                 fontSize: 11.7.sp,
-                    //                 fontFamily: 'Inter',
-                    //                 fontWeight:
-                    //                 FontWeight.w400,
-                    //                 color:
-                    //                     isDark
-                    //                     ? AppColors
-                    //                     .textColorWhite
-                    //                     : AppColors
-                    //                     .textColorBlack),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                    // SizedBox(height: 2.h,),
+                  // SizedBox(height: 3.5.h,),
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(
+                  //       horizontal: 20.sp),
+                  //   child: Container(
+                  //     height: 6.5.h,
+                  //     margin:
+                  //     EdgeInsets.only(bottom: 1.h),
+                  //     decoration: BoxDecoration(
+                  //       borderRadius:
+                  //       BorderRadius.circular(8.0),
+                  //       border: Border.all(
+                  //         color: AppColors
+                  //             .textColorGrey.withOpacity(0.50),
+                  //         // Off-white color
+                  //         width: 1.0,
+                  //       ),
+                  //     ),
+                  //     child: Padding(
+                  //       padding: EdgeInsets.symmetric(
+                  //           horizontal: 10.sp),
+                  //       child: Row(
+                  //         mainAxisAlignment:
+                  //         MainAxisAlignment.start,
+                  //         crossAxisAlignment:
+                  //         CrossAxisAlignment.center,
+                  //         children: [
+                  //           SizedBox(
+                  //             width: 1.w,
+                  //           ),
+                  //           Text(
+                  //             "Riyad Bank".tr(),
+                  //             style: TextStyle(
+                  //                 fontSize: 11.7.sp,
+                  //                 fontFamily: 'Inter',
+                  //                 fontWeight:
+                  //                 FontWeight.w500,
+                  //                 color:
+                  //                 isDark
+                  //                     ? AppColors
+                  //                     .textColorWhite
+                  //                     : AppColors
+                  //                     .textColorBlack),
+                  //           ),
+                  //           Spacer(),
+                  //           Text(
+                  //             "**** 1234".tr(),
+                  //             style: TextStyle(
+                  //                 fontSize: 11.7.sp,
+                  //                 fontFamily: 'Inter',
+                  //                 fontWeight:
+                  //                 FontWeight.w400,
+                  //                 color:
+                  //                     isDark
+                  //                     ? AppColors
+                  //                     .textColorWhite
+                  //                     : AppColors
+                  //                     .textColorBlack),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  // SizedBox(height: 2.h,),
 
-                    ),
+                ),
               )),
         );
       },
@@ -3221,160 +3262,170 @@ class _TransactionRequestState extends State<TransactionRequest> {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        final screenWidth = MediaQuery.of(context).size.width;
+        final screenWidth = MediaQuery
+            .of(context)
+            .size
+            .width;
         final dialogWidth = screenWidth * 0.85;
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
-          return Dialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              backgroundColor: Colors.transparent,
-              child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
-                  child: Container(
-                    height: 43.h,
-                    width: dialogWidth,
-                    decoration: BoxDecoration(
-                      color: isDark
-                          ? AppColors.showDialogClr
-                          : AppColors.textColorWhite,
-                      // border: Border.all(
-                      //     width: 0.1.h, color: AppColors.textColorGrey),
-                      // color: AppColors.backgroundColor,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 4.h,
+              return Dialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  backgroundColor: Colors.transparent,
+                  child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+                      child: Container(
+                        height: 43.h,
+                        width: dialogWidth,
+                        decoration: BoxDecoration(
+                          color: isDark
+                              ? AppColors.showDialogClr
+                              : AppColors.textColorWhite,
+                          // border: Border.all(
+                          //     width: 0.1.h, color: AppColors.textColorGrey),
+                          // color: AppColors.backgroundColor,
+                          borderRadius: BorderRadius.circular(15),
                         ),
-                        Text(
-                          'Are you sure you want to remove this Card?'.tr(),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16.sp,
-                              color: isDark
-                                  ? AppColors.textColorWhite
-                                  : AppColors.textColorBlack),
-                        ),
-                        SizedBox(
-                          height: 4.h,
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 20.sp),
-                          height: 6.5.h,
-                          decoration: BoxDecoration(
-                            color: AppColors.textColorWhite.withOpacity(0.15),
-                            // border: Border.all(
-                            //   color: AppColors.textFieldParentDark,
-                            //   width: 1.0,
-                            // ),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10.sp),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Spacer(),
-                                Text(
-                                  cardNumber,
-                                  // "**** 1234",
-                                  style: TextStyle(
-                                    fontSize: 11.5.sp,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.w500,
-                                    color: isDark
-                                        ? AppColors.textColorWhite
-                                        : AppColors.textColorBlack,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 2.w,
-                                ),
-                                Image.asset(
-                                  "assets/images/Visa.png",
-                                  height: 18.sp,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 4.h,
+                            ),
+                            Text(
+                              'Are you sure you want to remove this Card?'.tr(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16.sp,
                                   color: isDark
                                       ? AppColors.textColorWhite
-                                      : AppColors.textColorBlack,
-                                  // width: 20.sp,
-                                ),
-                              ],
+                                      : AppColors.textColorBlack),
                             ),
-                          ),
-                        ),
-                        Expanded(child: SizedBox()),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 22),
-                          child: AppButton(
-                            title: 'Remove'.tr(),
-                            handler: () async {
-                              setState(() {
-                                isDialogLoading = true;
-                              });
-                              var result = await Provider.of<CardProvider>(
+                            SizedBox(
+                              height: 4.h,
+                            ),
+                            Container(
+                              margin: EdgeInsets.symmetric(horizontal: 20.sp),
+                              height: 6.5.h,
+                              decoration: BoxDecoration(
+                                color: AppColors.textColorWhite.withOpacity(
+                                    0.15),
+                                // border: Border.all(
+                                //   color: AppColors.textFieldParentDark,
+                                //   width: 1.0,
+                                // ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10.sp),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Spacer(),
+                                    Text(
+                                      cardNumber,
+                                      // "**** 1234",
+                                      style: TextStyle(
+                                        fontSize: 11.5.sp,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w500,
+                                        color: isDark
+                                            ? AppColors.textColorWhite
+                                            : AppColors.textColorBlack,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 2.w,
+                                    ),
+                                    Image.asset(
+                                      "assets/images/Visa.png",
+                                      height: 18.sp,
+                                      color: isDark
+                                          ? AppColors.textColorWhite
+                                          : AppColors.textColorBlack,
+                                      // width: 20.sp,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Expanded(child: SizedBox()),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 22),
+                              child: AppButton(
+                                title: 'Remove'.tr(),
+                                handler: () async {
+                                  setState(() {
+                                    isDialogLoading = true;
+                                  });
+                                  var result = await Provider.of<CardProvider>(
                                       context,
                                       listen: false)
-                                  .deletePaymentCards(
+                                      .deletePaymentCards(
                                       token: accessToken,
-                                      tokenId: Provider.of<TransactionProvider>(
-                                              context,
-                                              listen: false)
+                                      tokenId: Provider
+                                          .of<TransactionProvider>(
+                                          context,
+                                          listen: false)
                                           .selectedCardTokenId,
                                       context: context);
-                              setState(() {
-                                isDialogLoading = false;
-                              });
-                              if (result == AuthResult.success) {
-                                Navigator.pop(context);
-                                // Navigator.pop(context);
-                                // Navigator.pushReplacement(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (BuildContext context) {
-                                //       return TransactionRequest(); // Replace NewScreen() with the widget for your new screen
-                                //     },
-                                //   ),
-                                // );
-                              }
-                            },
-                            isLoading: isDialogLoading,
-                            isGradient: true,
-                            // color: Colors.transparent,
-                            color: AppColors.appSecondButton.withOpacity(0.10),
-                            textColor: AppColors.textColorBlack,
-                          ),
-                        ),
-                        SizedBox(height: 2.h),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 22),
-                          child: AppButton(
-                              title: 'Cancel'.tr(),
-                              handler: () {
-                                Navigator.pop(context);
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => TermsAndConditions(),
-                                //   ),
-                                // );
-                              },
-                              isGradient: false,
-                              textColor: isDark
-                                  ? AppColors.textColorWhite
-                                  : AppColors.textColorBlack.withOpacity(0.8),
-                              color:
+                                  setState(() {
+                                    isDialogLoading = false;
+                                  });
+                                  if (result == AuthResult.success) {
+                                    Navigator.pop(context);
+                                    // Navigator.pop(context);
+                                    // Navigator.pushReplacement(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //     builder: (BuildContext context) {
+                                    //       return TransactionRequest(); // Replace NewScreen() with the widget for your new screen
+                                    //     },
+                                    //   ),
+                                    // );
+                                  }
+                                },
+                                isLoading: isDialogLoading,
+                                isGradient: true,
+                                // color: Colors.transparent,
+                                color: AppColors.appSecondButton.withOpacity(
+                                    0.10),
+                                textColor: AppColors.textColorBlack,
+                              ),
+                            ),
+                            SizedBox(height: 2.h),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 22),
+                              child: AppButton(
+                                  title: 'Cancel'.tr(),
+                                  handler: () {
+                                    Navigator.pop(context);
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //     builder: (context) => TermsAndConditions(),
+                                    //   ),
+                                    // );
+                                  },
+                                  isGradient: false,
+                                  textColor: isDark
+                                      ? AppColors.textColorWhite
+                                      : AppColors.textColorBlack.withOpacity(
+                                      0.8),
+                                  color:
                                   AppColors.appSecondButton.withOpacity(0.10)),
+                            ),
+                            Expanded(child: SizedBox())
+                          ],
                         ),
-                        Expanded(child: SizedBox())
-                      ],
-                    ),
-                  )));
-        });
+                      )));
+            });
       },
     );
   }
