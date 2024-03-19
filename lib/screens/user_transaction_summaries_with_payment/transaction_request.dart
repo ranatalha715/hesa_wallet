@@ -789,8 +789,13 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontSize: 10.5.sp,
-                                              color: AppColors
-                                                  .textColorGreyShade2),
+                                              color:  operation !=
+                                                  "acceptCounterOffer" &&
+                                                  operation !=
+                                                      "acceptCollectionCounterOffer"
+                                                  ?AppColors
+                                                  .textColorGreyShade2 : AppColors
+                                                  .activeButtonColor ),
                                         ),
                                         SizedBox(
                                           height: 2.h,

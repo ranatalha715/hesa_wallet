@@ -672,7 +672,15 @@ class _TransactionRequestAcceptRejectState
                                                 if (paramsMap!['offerAmount'] !=
                                                     null)
                                                   transactionDetailsWidget(
-                                                    title: 'Counter Offer Value:'.tr(),
+                                                    title: operation !=
+                                                        "AcceptNFTOfferReceived" &&
+                                                        operation !=
+                                                            "AcceptCollectionOffer" &&
+                                                        operation !=
+                                                            "rejectNFTOfferReceived" &&
+                                                        operation !=
+                                                            "rejectCollectionOfferReceived"
+                                                        ? 'Counter Offer Value:'.tr() : 'Offer Value'.tr(),
                                                     details:
                                                     paramsMap!['offerAmount']
                                                                 .toString() +
