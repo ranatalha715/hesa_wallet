@@ -435,11 +435,8 @@ class AuthProvider with ChangeNotifier {
 
         // Save the wsToken in SharedPreferences
         final prefs = await SharedPreferences.getInstance();
-        // await prefs.setString('wsToken', wsToken);
         await prefs.setString('accessToken', accessToken);
         await prefs.setString('password', password);
-        // print(wsToken);
-        print('navigate to neo to connect wallet');
 
         print('true ya false');
         print(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet);
@@ -450,7 +447,9 @@ class AuthProvider with ChangeNotifier {
           await AppDeepLinking().openNftApp(
             {
               "operation": "connectWallet",
-              "Wallet Address": Provider.of<UserProvider>(context,listen: false).walletAddress,
+              "walletAddress": Provider.of<UserProvider>(context,listen: false).walletAddress,
+              "userName": Provider.of<UserProvider>(context,listen: false).userName,
+              "userIcon": Provider.of<UserProvider>(context,listen: false).userAvatar,
               "comments":
               "coming back from hesa wallet app with wallet address",
               "loginResponse":response.body.toString()
@@ -475,9 +474,11 @@ class AuthProvider with ChangeNotifier {
         await AppDeepLinking().openNftApp(
           {
             "operation": "connectWallet",
-            "Wallet Address": Provider
+            "walletAddress": Provider
                 .of<UserProvider>(context, listen: false)
                 .walletAddress,
+            "userName": Provider.of<UserProvider>(context,listen: false).userName,
+            "userIcon": Provider.of<UserProvider>(context,listen: false).userAvatar,
             "comments":
             "coming back from hesa wallet app with wallet address",
             "loginResponse": e.toString()
@@ -492,10 +493,9 @@ class AuthProvider with ChangeNotifier {
       // if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet) {
         await AppDeepLinking().openNftApp(
           {
-            "operation": "connectWallet",
-            "Wallet Address": Provider
-                .of<UserProvider>(context, listen: false)
-                .walletAddress,
+            "walletAddress": Provider.of<UserProvider>(context,listen: false).walletAddress,
+            "userName": Provider.of<UserProvider>(context,listen: false).userName,
+            "userIcon": Provider.of<UserProvider>(context,listen: false).userAvatar,
             "comments":
             "coming back from hesa wallet app with wallet address",
             "loginResponse": e.toString()

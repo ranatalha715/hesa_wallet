@@ -93,7 +93,7 @@ class UserProvider with ChangeNotifier {
       firstName = jsonResponse['firstName'];
       lastName = jsonResponse['lastName'];
       idNumber = jsonResponse['idNumber'];
-      // userName = jsonResponse['userName'];
+      userName = jsonResponse['userName'];
       userAvatar = jsonResponse['userAvatar'];
       isEmailVerified = jsonResponse['isEmailVerified'].toString();
       verifiedEmail = jsonResponse['email'].toString();
