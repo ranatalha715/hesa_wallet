@@ -790,7 +790,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                               fontWeight: FontWeight.w400,
                                               fontSize: 10.5.sp,
                                               color:  operation !=
-                                                  "acceptCounterOffer" &&
+                                                  "acceptNFTCounterOffer" &&
                                                   operation !=
                                                       "acceptCollectionCounterOffer"
                                                   ?AppColors
@@ -2020,8 +2020,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                 });
                                               }
                                               else if (operation ==
-                                                  'acceptCounterOffer') {
-                                                final acceptCounterOffer =
+                                                  'acceptNFTCounterOffer') {
+                                                final acceptNFTCounterOffer =
                                                 await transactionProvider
                                                     .acceptCounterOffer(
                                                   params: params,

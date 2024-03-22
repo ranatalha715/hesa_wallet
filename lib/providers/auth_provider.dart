@@ -450,8 +450,6 @@ class AuthProvider with ChangeNotifier {
               "walletAddress": Provider.of<UserProvider>(context,listen: false).walletAddress,
               "userName": Provider.of<UserProvider>(context,listen: false).userName,
               "userIcon": Provider.of<UserProvider>(context,listen: false).userAvatar,
-              "comments":
-              "coming back from hesa wallet app with wallet address",
               "loginResponse":response.body.toString()
             },
           );
@@ -479,8 +477,6 @@ class AuthProvider with ChangeNotifier {
                 .walletAddress,
             "userName": Provider.of<UserProvider>(context,listen: false).userName,
             "userIcon": Provider.of<UserProvider>(context,listen: false).userAvatar,
-            "comments":
-            "coming back from hesa wallet app with wallet address",
             "loginResponse": e.toString()
           },
         );
@@ -496,8 +492,6 @@ class AuthProvider with ChangeNotifier {
             "walletAddress": Provider.of<UserProvider>(context,listen: false).walletAddress,
             "userName": Provider.of<UserProvider>(context,listen: false).userName,
             "userIcon": Provider.of<UserProvider>(context,listen: false).userAvatar,
-            "comments":
-            "coming back from hesa wallet app with wallet address",
             "loginResponse": e.toString()
           },
         );

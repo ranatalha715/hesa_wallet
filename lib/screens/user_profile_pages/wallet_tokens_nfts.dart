@@ -307,9 +307,9 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
               uri.queryParameters, operation, context, id.toString(),
               offererId.toString(), offerAmount.toString());
         }
-        else if (operation != null && operation == 'acceptCounterOffer') {
-          //acceptCounterOffer
-          navigateToTransactionRequestWithAcceptCounterOffer(
+        else if (operation != null && operation == 'acceptNFTCounterOffer') {
+          //acceptNFTCounterOffer
+          navigateToTransactionRequestWithacceptNFTCounterOffer(
               uri.queryParameters, operation, context);
         }
         else if (operation != null && operation == 'rejectNFTCounterOffer') {
@@ -529,7 +529,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     });
   }
 
-  Future<void> navigateToTransactionRequestWithAcceptCounterOffer(
+  Future<void> navigateToTransactionRequestWithacceptNFTCounterOffer(
       Map<String, dynamic> queryParams,
       String operation,
       BuildContext ctx) async {
