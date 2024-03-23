@@ -173,58 +173,6 @@ class UserProvider with ChangeNotifier {
   }
 
 
-
-  // Future<AuthResult> getUserDetails({
-  //   required String token,
-  //   required BuildContext context,
-  // }) async {
-  //   final dio = Dio();
-  //   final url =
-  //       BASE_URL + '/user'; // Replace BASE_URL with your actual base URL
-  //
-  //   // Create a Dio options object with the token as a cookie
-  //   final options = Options(headers: {
-  //     // 'Cookie': 'token=$token',
-  //     'User-Agent': 'PostmanRuntime/7.33.0',
-  //   });
-  //
-  //   try {
-  //     final response = await dio.get(url, options: options);
-  //
-  //     fToast = FToast();
-  //     fToast.init(context);
-  //
-  //     if (response.statusCode == 200) {
-  //       // Successful response handling here
-  //       final jsonResponse = json.decode(response.data.toString());
-  //       walletAddress = jsonResponse['accounts'][0]['walletAddress'];
-  //
-  //       print("User details getting successfully!");
-  //       print(jsonResponse);
-  //       _showToast('User details getting successfully!');
-  //       return AuthResult.success;
-  //     } else if (response.statusCode == 403) {
-  //       // Handle a 403 error (Forbidden)
-  //       print("Permission denied: ${response.data}");
-  //       _showToast('Permission denied. Check your token or permissions.');
-  //       return AuthResult.failure;
-  //     } else {
-  //       // Handle other status codes as needed
-  //       print("Request failed with status code: ${response.statusCode}");
-  //       _showToast('Request failed with status code: ${response.statusCode}');
-  //       return AuthResult.failure;
-  //     }
-  //   } catch (e) {
-  //     // Handle network errors or exceptions
-  //     print('Error: $e');
-  //     _showToast('Error fetching user details');
-  //     return AuthResult.failure;
-  //   } finally {
-  //     dio.close(); // Close the Dio instance to free up resources
-  //   }
-  // }
-
-
   Future<AuthResult> connectDapps({
     required String siteUrl,
     required String token,

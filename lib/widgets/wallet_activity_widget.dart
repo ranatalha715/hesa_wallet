@@ -8,7 +8,9 @@ import '../providers/theme_provider.dart';
 
 class WalletActivityWidget extends StatefulWidget {
   final String title, subTitle, image, time;
-  final int? priceUp, priceDown, priceNormal;
+  final int?
+  priceDown, priceNormal;
+  final String? priceUp;
   final bool isPending;
   final Function handler;
 
@@ -63,7 +65,7 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(5.sp),
-                  child: Image.asset(
+                  child: Image.network(
                     widget.image,
                     // Replace with your image assets
                     fit: BoxFit.cover,

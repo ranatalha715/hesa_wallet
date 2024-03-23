@@ -9,6 +9,7 @@ import 'package:sizer/sizer.dart';
 import '../constants/app_deep_linking.dart';
 import '../constants/colors.dart';
 import '../constants/configs.dart';
+import '../models/activity.dart';
 
 class TransactionProvider with ChangeNotifier {
   late FToast fToast;
@@ -31,6 +32,57 @@ class TransactionProvider with ChangeNotifier {
       // Handle error
       print('Failed to fetch data. Status code: ${response.statusCode}');
       return "";
+    }
+  }
+
+  List<ActivityModel> _activities = [];
+
+  List<ActivityModel> get activities {
+    return [..._activities];
+  }
+
+  Future<AuthResult> getWalletActivities({
+    required String walletAddress,
+    required BuildContext context,
+  }) async {
+    final url = Uri.parse(
+        BASE_URL + '/user/getWalletTransaction?walletID=$walletAddress');
+
+    final response = await http.get(
+      url,
+      headers: {
+        // "Content-type": "application/json",
+        "Accept": "application/json",
+        'Authorization': "6f382aafe37d128ceaabd2d3238aefb46460176189f5af448209eef88a812d66aa232001",
+      },
+    );
+    final dynamic responseBody = json.decode(response.body);
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body)['data'];
+
+      if (jsonData != null && jsonData.containsKey('activities')) {
+        final List<dynamic> extractedData = jsonData['activities'] as List<dynamic>;
+        print("extracted data" + extractedData.toString());
+        final List<ActivityModel> loadedActivities = extractedData.map((prodData) {
+          final metaData = prodData['metaData'];
+          return ActivityModel(
+            transactionType: prodData['transactionType'].toString(),
+            transactionAmount: prodData['transactionAmount'].toString(),
+            tokenName: metaData['nameEn'].toString(), // Fetching nameEn
+            image: metaData['linkUrl'].toString(),
+          );
+        }).toList();
+
+        _activities = loadedActivities;
+        notifyListeners();
+        return AuthResult.success;
+      } else {
+        print("Activity not found in response data");
+        return AuthResult.failure;
+      }
+    } else {
+      print("Failed to fetch wallet Activities: ${response.statusCode}");
+      return AuthResult.failure;
     }
   }
 
