@@ -41,6 +41,27 @@ class TransactionProvider with ChangeNotifier {
     return [..._activities];
   }
 
+  String calculateTimeDifference(DateTime createdAt) {
+    DateTime now = DateTime.now();
+    Duration difference = now.difference(createdAt);
+
+    if (difference.inSeconds < 60) {
+      return '${difference.inSeconds}s';
+    } else if (difference.inMinutes < 60) {
+      return '${difference.inMinutes}m';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours}h';
+    } else if (difference.inDays < 30) {
+      return '${difference.inDays}d';
+    } else if (difference.inDays < 365) {
+      int months = now.month - createdAt.month + (12 * (now.year - createdAt.year));
+      return '$months m';
+    } else {
+      int years = now.year - createdAt.year;
+      return '$years y';
+    }
+  }
+
   Future<AuthResult> getWalletActivities({
     required String walletAddress,
     required BuildContext context,
@@ -56,20 +77,23 @@ class TransactionProvider with ChangeNotifier {
         'Authorization': "6f382aafe37d128ceaabd2d3238aefb46460176189f5af448209eef88a812d66aa232001",
       },
     );
-    final dynamic responseBody = json.decode(response.body);
+    // final dynamic responseBody = json.decode(response.body);
+    final jsonData = json.decode(response.body)['data'];
+    print('jsonData' + response.body);
     if (response.statusCode == 200) {
-      final jsonData = json.decode(response.body)['data'];
-
       if (jsonData != null && jsonData.containsKey('activities')) {
         final List<dynamic> extractedData = jsonData['activities'] as List<dynamic>;
         print("extracted data" + extractedData.toString());
         final List<ActivityModel> loadedActivities = extractedData.map((prodData) {
           final metaData = prodData['metaData'];
+          final bool containsCollection = prodData['transactionType'].toString().toLowerCase().contains('collection');
           return ActivityModel(
             transactionType: prodData['transactionType'].toString(),
             transactionAmount: prodData['transactionAmount'].toString(),
             tokenName: metaData['nameEn'].toString(), // Fetching nameEn
-            image: metaData['linkUrl'].toString(),
+            image: containsCollection ?  metaData['cardLink'].toString() : metaData['linkUrl'].toString(),
+            time: calculateTimeDifference( DateTime.parse(prodData['createdAt'])),
+
           );
         }).toList();
 

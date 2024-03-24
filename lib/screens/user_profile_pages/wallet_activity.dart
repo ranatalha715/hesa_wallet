@@ -80,7 +80,7 @@ class _WalletActivityState extends State<WalletActivity> {
                                         subTitle: activities[index].transactionType,
                                         // image: 'assets/images/nft.png',
                                         image: activities[index].image,
-                                        time: '3h',
+                                        time: activities[index].time,
                                         priceUp: activities[index].transactionAmount,
                                         handler: () => Navigator.push(
                                           context,
