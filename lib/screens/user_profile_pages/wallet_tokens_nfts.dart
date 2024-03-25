@@ -9,6 +9,7 @@ import 'package:hesa_wallet/providers/nfts_provider.dart';
 import 'package:hesa_wallet/widgets/nfts_collection_divisions/nfts_collections_division.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sizer/sizer.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
@@ -35,6 +36,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   var _isSelected = 0;
   var accessToken;
   var _isinit = true;
+  late Uint8List bytes;
   int selectedCategoryIndex = 0;
   bool _isloading = false;
 
@@ -73,6 +75,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
     var user = await Provider.of<UserProvider>(context, listen: false);
+    String base64SVG = user.userAvatar!;
+     bytes = base64Decode(base64SVG);
     userWalletAddress = user.walletAddress;
     await Provider.of<NftsProvider>(context, listen: false)
         .getAllNftsCollection(
@@ -974,6 +978,13 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                 child: Padding(
                                   padding: EdgeInsets.all(1.sp),
                                   child:
+                                  // SvgPicture.network(
+                                  //   user.userAvatar!,
+                                  //   semanticsLabel: 'A shark?!',
+                                  //   placeholderBuilder: (BuildContext context) => Container(
+                                  //       padding: const EdgeInsets.all(30.0),
+                                  //       child: const CircularProgressIndicator()),
+                                  // ),
                                   Image.asset(
                                     // user.userAvatar!,
                                     //     Provider.of<UserProvider>(context, listen: false).userAvatar ?? "",

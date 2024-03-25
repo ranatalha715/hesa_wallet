@@ -281,6 +281,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                     brightness: Brightness.dark,
                     fontFamily: 'Inter',
                     hintColor: AppColors.backgroundColor,
+              highlightColor: Colors.transparent,
                   )
                 : ThemeData(
                     brightness: Brightness.light,
