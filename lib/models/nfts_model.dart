@@ -21,6 +21,11 @@ class NftsCollectionModel {
   final List<String> nftIds;
   final String creatorId;
   final String creatorRoyalty;
+  final String? collectionStandard;
+  final String? chain;
+  final String? logo;
+  final String? banner;
+  final String? createdAt;
 
   NftsCollectionModel(
       {required this.id,
@@ -30,5 +35,10 @@ class NftsCollectionModel {
       required this.nftIds,
       required this.creatorId,
       required this.creatorRoyalty,
+        this.collectionStandard,
+        this.chain,
+        this.logo,
+        this.banner,
+        this.createdAt,
       });
 }

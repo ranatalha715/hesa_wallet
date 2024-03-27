@@ -9,8 +9,9 @@ import '../providers/theme_provider.dart';
 class WalletActivityWidget extends StatefulWidget {
   final String title, subTitle, image, time;
   final int?
-  priceDown, priceNormal;
+  priceNormal;
   final String? priceUp;
+  final String? priceDown;
   final bool isPending;
   final Function handler;
 

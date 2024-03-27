@@ -36,7 +36,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   var _isSelected = 0;
   var accessToken;
   var _isinit = true;
-  late Uint8List bytes;
   int selectedCategoryIndex = 0;
   bool _isloading = false;
 
@@ -75,8 +74,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
     var user = await Provider.of<UserProvider>(context, listen: false);
-    String base64SVG = user.userAvatar!;
-     bytes = base64Decode(base64SVG);
     userWalletAddress = user.walletAddress;
     await Provider.of<NftsProvider>(context, listen: false)
         .getAllNftsCollection(
@@ -1273,7 +1270,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     );
   }
 
-  Widget bottomSpaceContent(var nftsCollectionAll,
+  Widget bottomSpaceContent(
+      var nftsCollectionAll,
       var nftsAll,
       var nftsCollectionOwnedByUser,
       var nftsOwned,

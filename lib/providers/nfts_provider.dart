@@ -130,7 +130,7 @@ class NftsProvider with ChangeNotifier {
       extractedData?.forEach((prodData) {
         List<dynamic> nftIdsDynamic = prodData['nftIds'] as List<dynamic>;
         List<String> nftIds = nftIdsDynamic.map((id) => id.toString()).toList();
-
+        // final metaData = prodData['metaData'] as Map<String, dynamic>;
         loadedNftsCollection.add(NftsCollectionModel(
           id: prodData['id'].toString(),
           collectionName: prodData['collectionName'].toString(),
@@ -139,6 +139,12 @@ class NftsProvider with ChangeNotifier {
           ownerId: prodData['ownerId'].toString(),
           creatorRoyalty: prodData['creatorRoyalty'].toString(),
           nftIds: nftIds,
+            collectionStandard: prodData['standard'].toString(),
+            chain: prodData['chain'].toString(),
+            // logo: metaData['logoLink'].toString(),
+            // banner: metaData['bannerLink'].toString(),
+          createdAt: prodData['createdAt'].toString()
+
         ));
       });
       _nftsCollectionAll = loadedNftsCollection;

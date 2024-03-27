@@ -541,7 +541,7 @@ class _TransactionRequestAcceptRejectState
                                         height: 4.h,
                                       ),
                                       Container(
-                                        height: 72.h,
+                                        height: 73.5.h,
                                         decoration: BoxDecoration(
                                             color: AppColors
                                                 // .errorColor,
@@ -1047,7 +1047,411 @@ class _TransactionRequestAcceptRejectState
                                                     : SizedBox(
                                                         height: 15.h,
                                                       ),
+                                                if(operation ==
+                                                    "AcceptNFTOfferReceived" ||
+                                                    operation ==
+                                                        "AcceptCollectionOffer" )
+                                                  Container(
+                                                    decoration: BoxDecoration(),
+                                                    // margin: EdgeInsets.symmetric(horizontal: 20.sp),
+                                                    child: Padding(
+                                                      padding:
+                                                      EdgeInsets.symmetric(
+                                                          horizontal: 0.sp),
+                                                      child: Column(
+                                                        children: [
+                                                          SizedBox(height: 2.5.h),
+                                                          Padding(
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                horizontal:
+                                                                0),
+                                                            child: Column(
+                                                                children: [
+                                                                  RichText(
+                                                                    text:
+                                                                    TextSpan(
+                                                                      children: [
+                                                                        TextSpan(
+                                                                            text:
+                                                                            'By continuing you agree to the  '.tr(),
+                                                                            style: TextStyle(
+                                                                              // height: 2,
+                                                                                color: AppColors.textColorWhite,
+                                                                                fontWeight: FontWeight.w400,
+                                                                                fontSize: 10.sp,
+                                                                                fontFamily: 'Inter')),
+                                                                        TextSpan(
+                                                                            recognizer:
+                                                                            TapGestureRecognizer()
+                                                                              ..onTap =
+                                                                                  () {
+                                                                                Navigator.push(
+                                                                                  context,
+                                                                                  MaterialPageRoute(builder: (context) => TermsAndConditions()),
+                                                                                );
+                                                                              },
+                                                                            text: 'Terms & Conditions'.tr() +
+                                                                                " ",
+                                                                            style: TextStyle(
+                                                                                decoration: TextDecoration.underline,
+                                                                                height: 1.5,
+                                                                                color: AppColors.textColorToska,
+                                                                                fontWeight: FontWeight.w600,
+                                                                                fontSize: 10.sp,
+                                                                                fontFamily: 'Inter')),
+                                                                        TextSpan(
+                                                                            text: '  of Hesa Wallet Payments.'
+                                                                                .tr(),
+                                                                            style: TextStyle(
+                                                                                color: AppColors.textColorWhite,
+                                                                                fontWeight: FontWeight.w400,
+                                                                                fontSize: 10.sp,
+                                                                                fontFamily: 'Inter'))
+                                                                      ],
+                                                                    ),
+                                                                  )
+                                                                ]),
+                                                          ),
+                                                          SizedBox(height: 1.5.h),
+                                                          AppButton(
+                                                              title:
+                                                              "Accept".tr(),
+                                                              handler: () async {
+                                                                setState(() {
+                                                                  isValidating =
+                                                                  true;
+                                                                });
+                                                                setState(() {
+                                                                  isLoading =
+                                                                  true;
+                                                                });
+                                                                if (operation ==
+                                                                    'AcceptNFTOfferReceived') {
+                                                                  await Provider.of<
+                                                                      TransactionProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                      false)
+                                                                      .acceptOffer(
+                                                                    params:
+                                                                    params,
+                                                                    token:
+                                                                    accessToken,
+                                                                    walletAddress:
+                                                                    walletAddress,
+                                                                    context:
+                                                                    context,
+                                                                    operation:
+                                                                    operation,
+                                                                  );
+                                                                } else if (operation ==
+                                                                    'rejectNFTOfferReceived') {
+                                                                  await Provider.of<TransactionProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                      false)
+                                                                      .rejectNFTOfferReceived(
+                                                                      params:
+                                                                      params,
+                                                                      token:
+                                                                      accessToken,
+                                                                      walletAddress:
+                                                                      walletAddress,
+                                                                      context:
+                                                                      context,
+                                                                      operation:
+                                                                      operation);
+                                                                } else if (operation ==
+                                                                    'AcceptCollectionOffer') {
+                                                                  await Provider.of<
+                                                                      TransactionProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                      false)
+                                                                      .acceptCollectionOffer(
+                                                                    params:
+                                                                    params,
+                                                                    token:
+                                                                    accessToken,
+                                                                    walletAddress:
+                                                                    walletAddress,
+                                                                    context:
+                                                                    context,
+                                                                    operation:
+                                                                    operation,
+                                                                  );
+                                                                } else if (operation ==
+                                                                    'rejectCollectionOfferReceived') {
+                                                                  await Provider.of<TransactionProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                      false)
+                                                                      .rejectCollectionOfferReceived(
+                                                                      params:
+                                                                      params,
+                                                                      token:
+                                                                      accessToken,
+                                                                      walletAddress:
+                                                                      walletAddress,
+                                                                      context:
+                                                                      context,
+                                                                      operation:
+                                                                      operation);
+                                                                } else if (operation ==
+                                                                    'makeNFTCounterOffer') {
+                                                                  await Provider.of<
+                                                                      TransactionProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                      false)
+                                                                      .makeCounterOffer(
+                                                                    walletAddress:
+                                                                    walletAddress,
+                                                                    // params: params,
+                                                                    token:
+                                                                    accessToken,
+                                                                    context:
+                                                                    context,
+                                                                    operation:
+                                                                    operation,
+                                                                    id: counterId,
+                                                                    offererId:
+                                                                    counterOffererId,
+                                                                    offerAmount:
+                                                                    counterOffererAmount,
+                                                                  );
+                                                                }
+                                                                if (operation ==
+                                                                    'CancelNFTOfferMade') {
+                                                                  await Provider.of<
+                                                                      TransactionProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                      false)
+                                                                      .cancelNFTOfferMade(
+                                                                    walletAddress:
+                                                                    walletAddress,
+                                                                    // params: params,
+                                                                    token:
+                                                                    accessToken,
+                                                                    context:
+                                                                    context,
+                                                                    operation:
+                                                                    operation,
+                                                                    params:
+                                                                    params,
+                                                                  );
+                                                                } else if (operation ==
+                                                                    'rejectNFTCounterOffer') {
+                                                                  await Provider.of<
+                                                                      TransactionProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                      false)
+                                                                      .rejectNFTCounterOffer(
+                                                                    walletAddress:
+                                                                    walletAddress,
+                                                                    // params: params,
+                                                                    token:
+                                                                    accessToken,
+                                                                    context:
+                                                                    context,
+                                                                    operation:
+                                                                    operation,
+                                                                    id: counterId,
+                                                                    offererId:
+                                                                    counterOffererId,
+                                                                    offerAmount:
+                                                                    counterOffererAmount,
+                                                                  );
+                                                                } else if (operation ==
+                                                                    'makeCollectionCounterOffer') {
+                                                                  await Provider.of<
+                                                                      TransactionProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                      false)
+                                                                      .makeCollectionCounterOffer(
+                                                                    walletAddress:
+                                                                    walletAddress,
+                                                                    // params: params,
+                                                                    token:
+                                                                    accessToken,
+                                                                    context:
+                                                                    context,
+                                                                    operation:
+                                                                    operation,
+                                                                    id: counterId,
+                                                                    offererId:
+                                                                    counterOffererId,
+                                                                    offerAmount:
+                                                                    counterOffererAmount,
+                                                                  );
+                                                                } else if (operation ==
+                                                                    'rejectCollectionCounterOffer') {
+                                                                  await Provider.of<
+                                                                      TransactionProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                      false)
+                                                                      .rejectCollectionCounterOffer(
+                                                                    walletAddress:
+                                                                    walletAddress,
+                                                                    // params: params,
+                                                                    token:
+                                                                    accessToken,
+                                                                    context:
+                                                                    context,
+                                                                    operation:
+                                                                    operation,
+                                                                    id: counterId,
+                                                                    offererId:
+                                                                    counterOffererId,
+                                                                    offerAmount:
+                                                                    counterOffererAmount,
+                                                                  );
+                                                                } else if (operation ==
+                                                                    'CancelCollectionOfferMade') {
+                                                                  await Provider.of<
+                                                                      TransactionProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                      false)
+                                                                      .cancelCollectionOfferMade(
+                                                                    walletAddress:
+                                                                    walletAddress,
+                                                                    // params: params,
+                                                                    token:
+                                                                    accessToken,
+                                                                    context:
+                                                                    context,
+                                                                    operation:
+                                                                    operation,
+                                                                    params:
+                                                                    params,
+                                                                  );
+                                                                }
+                                                                if (operation ==
+                                                                    'CancelAuctionListing') {
+                                                                  await Provider.of<
+                                                                      TransactionProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                      false)
+                                                                      .cancelAuctionListing(
+                                                                    walletAddress:
+                                                                    walletAddress,
+                                                                    token:
+                                                                    accessToken,
+                                                                    context:
+                                                                    context,
+                                                                    operation:
+                                                                    operation,
+                                                                    params:
+                                                                    params,
+                                                                  );
+                                                                } else if (operation ==
+                                                                    'CancelCollectionAuctionListing') {
+                                                                  await Provider.of<
+                                                                      TransactionProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                      false)
+                                                                      .cancelCollectionAuctionListing(
+                                                                    walletAddress:
+                                                                    walletAddress,
+                                                                    token:
+                                                                    accessToken,
+                                                                    context:
+                                                                    context,
+                                                                    operation:
+                                                                    operation,
+                                                                    params:
+                                                                    params,
+                                                                  );
+                                                                } else if (operation ==
+                                                                    'CancelListing') {
+                                                                  await Provider.of<
+                                                                      TransactionProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                      false)
+                                                                      .cancelListing(
+                                                                    walletAddress:
+                                                                    walletAddress,
+                                                                    token:
+                                                                    accessToken,
+                                                                    context:
+                                                                    context,
+                                                                    operation:
+                                                                    operation,
+                                                                    params:
+                                                                    params,
+                                                                  );
+                                                                } else if (operation ==
+                                                                    'CancelCollectionListing') {
+                                                                  await Provider.of<
+                                                                      TransactionProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                      false)
+                                                                      .cancelCollectionListing(
+                                                                    walletAddress:
+                                                                    walletAddress,
+                                                                    token:
+                                                                    accessToken,
+                                                                    context:
+                                                                    context,
+                                                                    operation:
+                                                                    operation,
+                                                                    params:
+                                                                    params,
+                                                                  );
+                                                                }
 
+                                                                else {}
+                                                                setState(() {
+                                                                  isLoading =
+                                                                  false;
+                                                                });
+                                                              },
+                                                              // isLoading: isLoading,r
+                                                              isGradient: true,
+                                                              color: AppColors
+                                                                  .textColorBlack),
+                                                          SizedBox(height: 2.h),
+                                                          AppButton(
+                                                              title:
+                                                              "Reject request"
+                                                                  .tr(),
+                                                              handler: () {
+                                                                // if(operation=="MintNFT"){
+                                                                rejectTransactions();
+                                                                // }
+                                                              },
+                                                              isGradient: false,
+                                                              textColor: themeNotifier.isDark
+                                                                  ? AppColors
+                                                                  .textColorWhite
+                                                                  : AppColors
+                                                                  .textColorBlack
+                                                                  .withOpacity(
+                                                                  0.8),
+                                                              color: AppColors
+                                                                  .appSecondButton
+                                                                  .withOpacity(
+                                                                  0.10)),
+                                                          SizedBox(
+                                                            height: operation !=
+      "AcceptNFTOfferReceived" &&
+      operation !=
+      "AcceptCollectionOffer" ? 2.h : 3.h,
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  )
                                               ],
                                             ),
                                           ),
@@ -1061,9 +1465,13 @@ class _TransactionRequestAcceptRejectState
                           )
                   ],
                 ),
+                if(operation !=
+                    "AcceptNFTOfferReceived" &&
+                    operation !=
+                        "AcceptCollectionOffer" )
                 Positioned(
-                  left: 27,
-                  right: 27,
+                  left: 28,
+                  right: 28,
                   bottom: 10,
                   child: Container(
                   decoration: BoxDecoration(),

@@ -8,7 +8,8 @@ import '../models/nfts_model.dart';
 import '../screens/user_profile_pages/nfts_collection_details.dart';
 
 class NftsCollectionDesign extends StatefulWidget {
-  const NftsCollectionDesign({Key? key , required this.nftsCollection}) : super(key: key);
+  const NftsCollectionDesign({Key? key, required this.nftsCollection})
+      : super(key: key);
 
   final NftsCollectionModel nftsCollection;
 
@@ -23,23 +24,26 @@ class _NftsCollectionDesignState extends State<NftsCollectionDesign> {
   Widget build(BuildContext context) {
     print('collectionId' + widget.nftsCollection.collectionId);
     return GestureDetector(
-      onTap: ()=>  Navigator.of(context).pushNamed(NftsCollectionDetails.routeName,
-          arguments: {
-            'collectionName': widget.nftsCollection.collectionName,
-            'collectionId': widget.nftsCollection.collectionId ,
-            'creatorId': widget.nftsCollection.creatorId ,
-            'creatorRoyalty': widget.nftsCollection.creatorRoyalty ,
-            'ownerId': widget.nftsCollection.ownerId,
-            'nftsIdsLength': widget.nftsCollection.nftIds.length.toString(),
-            // 'id': _identificationnumberController.text,
-            // 'idType': _selectedIDType,
+      onTap: () =>
+          Navigator.of(context).pushNamed(NftsCollectionDetails.routeName,
+              arguments: {
+                'collectionName': widget.nftsCollection.collectionName,
+                'collectionId': widget.nftsCollection.collectionId,
+                'creatorId': widget.nftsCollection.creatorId,
+                'creatorRoyalty': widget.nftsCollection.creatorRoyalty,
+                'ownerId': widget.nftsCollection.ownerId,
+                'nftsIdsLength': widget.nftsCollection.nftIds.length.toString(),
+                'standard': widget.nftsCollection.collectionStandard.toString(),
+                'chain': widget.nftsCollection.chain.toString(),
+                'createdAt': widget.nftsCollection.createdAt.toString(),
 
-          }
-      ),
+              }
+          ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: Stack(
           children: [
+            // Image.network(widget.nftsCollection.logo!, fit: BoxFit.cover,),
             Image.asset(
               'assets/images/nft.png',
               // Replace with your image assets

@@ -39,6 +39,29 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
     return result;
   }
 
+  String replaceMiddleWithDotsCollectionId(String input) {
+    if (input.length <= 30) {
+      return input;
+    }
+
+    final int middleIndex = input.length ~/ 2; // Find the middle index
+    final int startIndex = middleIndex - 12; // Calculate the start index
+    final int endIndex = middleIndex + 9; // Calculate the end index
+
+    // Split the input string into three parts and join them with '...'
+    final String result =
+        input.substring(0, startIndex) + '...' + input.substring(endIndex);
+
+    return result;
+  }
+
+  String formatDate(String dateString) {
+    final DateTime dateTime = DateTime.parse(dateString);
+    final DateFormat formatter = DateFormat('MMM dd, yyyy HH:mm:ss');
+    return formatter.format(dateTime);
+  }
+
+
 
 
 
@@ -57,7 +80,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
             children: [
               MainHeader(
                 title: args["collectionName"],
-                subTitle:  replaceMiddleWithDots(args["collectionId"]),
+                subTitle:  replaceMiddleWithDotsCollectionId(args["collectionId"]),
                 showSubTitle: true,
               ),
               SizedBox(height: 3.h),
@@ -74,12 +97,12 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
               SizedBox(height:2.h),
               nftsDetailsWidget(
                 title: 'Created:'.tr(),
-                details: 'May 24, 2023 04:19:35'.tr(),
+                details: formatDate(args["createdAt"]),
                 isDark: themeNotifier.isDark ? true : false,
               ),
               nftsDetailsWidget(
                 title: 'Collection ID:'.tr(),
-                details: args["collectionId"],
+                details: replaceMiddleWithDotsCollectionId(args["collectionId"]),
                 isDark: themeNotifier.isDark ? true : false,
               ),
               nftsDetailsWidget(
@@ -106,7 +129,12 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
               ),
               nftsDetailsWidget(
                 title: 'Collection Standard:'.tr(),
-                details: "MTS 1101",
+                details: args["standard"],
+                isDark: themeNotifier.isDark ? true : false,
+              ),
+              nftsDetailsWidget(
+                title: 'Chain:'.tr(),
+                details: args["chain"],
                 isDark: themeNotifier.isDark ? true : false,
               ),
             ],

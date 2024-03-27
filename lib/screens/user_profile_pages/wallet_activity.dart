@@ -81,7 +81,7 @@ class _WalletActivityState extends State<WalletActivity> {
                                         // image: 'assets/images/nft.png',
                                         image: activities[index].image,
                                         time: activities[index].time,
-                                        priceUp: activities[index].transactionAmount,
+                                        priceDown: activities[index].transactionAmount,
                                         handler: () => Navigator.push(
                                           context,
                                           MaterialPageRoute(
