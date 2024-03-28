@@ -32,10 +32,11 @@ class _NftsCollectionDesignState extends State<NftsCollectionDesign> {
                 'creatorId': widget.nftsCollection.creatorId,
                 'creatorRoyalty': widget.nftsCollection.creatorRoyalty,
                 'ownerId': widget.nftsCollection.ownerId,
-                'nftsIdsLength': widget.nftsCollection.nftIds.length.toString(),
+                'nftIds': widget.nftsCollection.nftIds.length.toString(),
                 'standard': widget.nftsCollection.collectionStandard.toString(),
                 'chain': widget.nftsCollection.chain.toString(),
                 'createdAt': widget.nftsCollection.createdAt.toString(),
+                'collectionStatus': widget.nftsCollection.status.toString(),
 
               }
           ),

@@ -143,7 +143,8 @@ class NftsProvider with ChangeNotifier {
             chain: prodData['chain'].toString(),
             // logo: metaData['logoLink'].toString(),
             // banner: metaData['bannerLink'].toString(),
-          createdAt: prodData['createdAt'].toString()
+          createdAt: prodData['createdAt'].toString(),
+          status: prodData['collectionStatus'].toString(),
 
         ));
       });
@@ -262,7 +263,7 @@ class NftsProvider with ChangeNotifier {
     required String walletAddress,
     required BuildContext context,
   }) async {
-    final url = Uri.parse(BASE_URL + '/collection/ownedByUser?address=0x65BC9C8608688E1FA95247C570F5B72DB945468A');
+    final url = Uri.parse(BASE_URL + '/collection/ownedByUser?address=$walletAddress');
     // final body = {
     //   "walletAddress": walletAddress,
     // };
@@ -294,6 +295,12 @@ class NftsProvider with ChangeNotifier {
           ownerId: prodData['ownerId'].toString(),
           creatorRoyalty: prodData['creatorRoyalty'].toString(),
           nftIds: nftIds,
+          collectionStandard: prodData['standard'].toString(),
+          chain: prodData['chain'].toString(),
+          // logo: metaData['logoLink'].toString(),
+          // banner: metaData['bannerLink'].toString(),
+          createdAt: prodData['createdAt'].toString(),
+          status: prodData['collectionStatus'].toString(),
         ));
       });
       _nftsCollectionOwnedByUser = loadedNftsCollection;
@@ -393,6 +400,12 @@ class NftsProvider with ChangeNotifier {
           ownerId: prodData['ownerId'].toString(),
           creatorRoyalty: prodData['creatorRoyalty'].toString(),
           nftIds: nftIds,
+          collectionStandard: prodData['standard'].toString(),
+          chain: prodData['chain'].toString(),
+          // logo: metaData['logoLink'].toString(),
+          // banner: metaData['bannerLink'].toString(),
+          createdAt: prodData['createdAt'].toString(),
+          status: prodData['collectionStatus'].toString(),
         ));
       });
       _nftsCollectionCreated = loadedNftsCollection;

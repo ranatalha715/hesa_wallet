@@ -8,20 +8,16 @@ import '../../constants/colors.dart';
 import '../../providers/theme_provider.dart';
 import '../../widgets/main_header.dart';
 
-class NftsCollectionDetails extends StatefulWidget {
-  const NftsCollectionDetails();
+class NftsDetails extends StatefulWidget {
+  const NftsDetails();
 
-  static const routeName='nfts_collection_details';
-
-
+  static const routeName = 'nfts_details';
 
   @override
-  State<NftsCollectionDetails> createState() => _NftsCollectionDetailsState();
-
+  State<NftsDetails> createState() => _NftsDetailsState();
 }
 
-
-class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
+class _NftsDetailsState extends State<NftsDetails> {
   String replaceMiddleWithDots(String input) {
     if (input.length <= 20) {
       // If the input string is 30 characters or less, return it as is.
@@ -61,26 +57,20 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
     return formatter.format(dateTime);
   }
 
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     final args =
-    ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
-    return Consumer<ThemeProvider>(builder: (context, themeNotifier, child)
-    {
+    return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return Scaffold(
-        backgroundColor: AppColors.backgroundColor,
+          backgroundColor: AppColors.backgroundColor,
           body: Column(
             children: [
               MainHeader(
-                title: args["collectionName"],
-                subTitle:  replaceMiddleWithDotsCollectionId(args["collectionId"]),
+                title: args["tokenName"],
+                subTitle: replaceMiddleWithDotsCollectionId(args["tokenId"]),
                 showSubTitle: true,
               ),
               SizedBox(height: 3.h),
@@ -94,69 +84,69 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                 ),
               ),
               Divider(color: AppColors.transactionSummNeoBorder),
-              SizedBox(height:2.h),
-              nftsDetailsWidget(
-                title: 'Created:'.tr(),
-                details: formatDate(args["createdAt"]),
-                isDark: themeNotifier.isDark ? true : false,
-              ),
-              nftsDetailsWidget(
-                title: 'Collection Status:'.tr(),
-                details: args["collectionStatus"],
-                isDark: themeNotifier.isDark ? true : false,
-              ),
-              nftsDetailsWidget(
-                title: 'Collection ID:'.tr(),
-                details: replaceMiddleWithDotsCollectionId(args["collectionId"]),
-                isDark: themeNotifier.isDark ? true : false,
-              ),
-              if(args["creatorId"] != null)
-              nftsDetailsWidget(
-                title: 'Creator ID:'.tr(),
-                details: replaceMiddleWithDots(args["creatorId"])?? "N/A",
-                isDark: themeNotifier.isDark ? true : false,
-                color: AppColors.textColorToska,
-              ),
-              if(args["creatorRoyalty"] != "null")
-              nftsDetailsWidget(
-                  title: 'Creator royalty:'.tr(),
-                  details: args["creatorRoyalty"] ?? "N/A",
-                  isDark: themeNotifier.isDark ? true : false,
-              ),
-              if(args["ownerId"] != "null")
-              nftsDetailsWidget(
-                title: 'Owned by:'.tr(),
-                details: replaceMiddleWithDots(args["ownerId"])?? "N/A",
-                isDark: themeNotifier.isDark ? true : false,
-                color: AppColors.textColorToska,
-              ),
-              if(args["nftIds"] != "null")
-              nftsDetailsWidget(
-                title: 'Collection Items:'.tr(),
-                details: args["nftIds"],
-                isDark: themeNotifier.isDark ? true : false,
-              ),
-              if(args["standard"] != "null")
-              nftsDetailsWidget(
-                title: 'Collection Standard:'.tr(),
-                details: args["standard"],
-                isDark: themeNotifier.isDark ? true : false,
-              ),
-              if(args["chain"] != "null")
-              nftsDetailsWidget(
-                title: 'Chain:'.tr(),
-                details: args["chain"],
-                isDark: themeNotifier.isDark ? true : false,
-              ),
+              SizedBox(height: 2.h),
+              // nftsDetailsWidget(
+              //   title: 'Created:'.tr(),
+              //   details: formatDate(args["createdAt"]),
+              //   isDark: themeNotifier.isDark ? true : false,
+              // ),
+              // nftsDetailsWidget(
+              //   title: 'Collection Status:'.tr(),
+              //   details: args["collectionStatus"],
+              //   isDark: themeNotifier.isDark ? true : false,
+              // ),
+              // nftsDetailsWidget(
+              //   title: 'Collection ID:'.tr(),
+              //   details:
+              //       replaceMiddleWithDotsCollectionId(args["collectionId"]),
+              //   isDark: themeNotifier.isDark ? true : false,
+              // ),
+              // if (args["creatorId"] != null)
+              //   nftsDetailsWidget(
+              //     title: 'Creator ID:'.tr(),
+              //     details: replaceMiddleWithDots(args["creatorId"]) ?? "N/A",
+              //     isDark: themeNotifier.isDark ? true : false,
+              //     color: AppColors.textColorToska,
+              //   ),
+              // if (args["creatorRoyalty"] != "null")
+              //   nftsDetailsWidget(
+              //     title: 'Creator royalty:'.tr(),
+              //     details: args["creatorRoyalty"] ?? "N/A",
+              //     isDark: themeNotifier.isDark ? true : false,
+              //   ),
+              // if (args["ownerId"] != "null")
+              //   nftsDetailsWidget(
+              //     title: 'Owned by:'.tr(),
+              //     details: replaceMiddleWithDots(args["ownerId"]) ?? "N/A",
+              //     isDark: themeNotifier.isDark ? true : false,
+              //     color: AppColors.textColorToska,
+              //   ),
+              // if (args["nftIds"] != "null")
+              //   nftsDetailsWidget(
+              //     title: 'Collection Items:'.tr(),
+              //     details: args["nftIds"],
+              //     isDark: themeNotifier.isDark ? true : false,
+              //   ),
+              // nftsDetailsWidget(
+              //   title: 'Collection Standard:'.tr(),
+              //   details: args["standard"],
+              //   isDark: themeNotifier.isDark ? true : false,
+              // ),
+              // nftsDetailsWidget(
+              //   title: 'Chain:'.tr(),
+              //   details: args["chain"],
+              //   isDark: themeNotifier.isDark ? true : false,
+              // ),
             ],
           ));
     });
   }
+
   Widget nftsDetailsWidget(
       {required String title,
-        required String details,
-        Color? color,
-        bool isDark = true}) {
+      required String details,
+      Color? color,
+      bool isDark = true}) {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.sp, left: 20.sp, right: 20.sp),
       child: Row(
@@ -184,7 +174,8 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                 details,
                 textAlign: TextAlign.right,
                 style: TextStyle(
-                    color: color == null ? AppColors.textColorGreyShade2 : color,
+                    color:
+                        color == null ? AppColors.textColorGreyShade2 : color,
                     fontSize: 11.sp,
                     fontWeight: FontWeight.w400),
               ),

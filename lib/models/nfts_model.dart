@@ -26,6 +26,7 @@ class NftsCollectionModel {
   final String? logo;
   final String? banner;
   final String? createdAt;
+  final String? status;
 
   NftsCollectionModel(
       {required this.id,
@@ -40,5 +41,6 @@ class NftsCollectionModel {
         this.logo,
         this.banner,
         this.createdAt,
+        this.status,
       });
 }

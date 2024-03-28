@@ -5,6 +5,8 @@ import 'package:sizer/sizer.dart';
 
 import '../constants/colors.dart';
 import '../models/nfts_model.dart';
+import '../screens/user_profile_pages/nfts_collection_details.dart';
+import '../screens/user_profile_pages/nfts_details.dart';
 
 class NftsDesign extends StatefulWidget {
   const NftsDesign({Key? key, required this.nfts}) : super(key: key);
@@ -21,6 +23,22 @@ class _NftsDesignState extends State<NftsDesign> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: () =>
+          Navigator.of(context).pushNamed(NftsDetails.routeName,
+              arguments: {
+                'tokenName': widget.nfts.tokenName,
+                'tokenId': widget.nfts.tokenId,
+                'creatorId': widget.nfts.id,
+                // 'creatorRoyalty': widget.nftsCollection.creatorRoyalty,
+                // 'ownerId': widget.nftsCollection.ownerId,
+                // 'nftIds': widget.nftsCollection.nftIds.length.toString(),
+                // 'standard': widget.nftsCollection.collectionStandard.toString(),
+                // 'chain': widget.nftsCollection.chain.toString(),
+                // 'createdAt': widget.nftsCollection.createdAt.toString(),
+                // 'collectionStatus': widget.nftsCollection.status.toString(),
+
+              }
+          ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: Stack(
@@ -33,19 +51,16 @@ class _NftsDesignState extends State<NftsDesign> {
                 child: Container(
                   decoration: BoxDecoration(color: AppColors.textColorGreyShade2.withOpacity(0.25)),
                 )),
-            GestureDetector(
-              onTap: ()=> null,
-              child: Image.network(
-                widget.nfts.tokenURI,
-                fit: BoxFit.cover,
-                width: double.infinity,
-                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                  return Image.network(
-                    'https://cdn-icons-png.flaticon.com/512/6298/6298900.png', // Path to your placeholder image
-                    fit: BoxFit.cover,
-                  );
-                },
-              ),
+            Image.network(
+              widget.nfts.tokenURI,
+              fit: BoxFit.cover,
+              width: double.infinity,
+              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                return Image.network(
+                  'https://cdn-icons-png.flaticon.com/512/6298/6298900.png', // Path to your placeholder image
+                  fit: BoxFit.cover,
+                );
+              },
             ),
 
             Positioned(

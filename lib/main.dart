@@ -10,6 +10,7 @@ import 'package:hesa_wallet/providers/payment_fees.dart';
 import 'package:hesa_wallet/providers/token_provider.dart';
 import 'package:hesa_wallet/screens/unlock/set_confirm_pin_screen.dart';
 import 'package:hesa_wallet/screens/unlock/set_pin_screen.dart';
+import 'package:hesa_wallet/screens/user_profile_pages/nfts_details.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:hesa_wallet/widgets/dialog_button.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -338,6 +339,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                   const NftsCollectionDetails(),
               SetConfirmPinScreen.routeName: (context) =>
               const SetConfirmPinScreen(),
+              NftsDetails.routeName: (context) =>
+              const NftsDetails(),
             },
           );
         });
