@@ -42,6 +42,65 @@ class NftsProvider with ChangeNotifier {
     return [..._nftsCollectionOwnedByUser];
   }
 
+  List<NftsModel> _nftsListed = [];
+  List<NftsModel> get nftsListed {
+    return [..._nftsListed];
+  }
+
+  Future<AuthResult> getNftsCollectionListed({
+    required String token,
+    required String walletAddress,
+    required BuildContext context,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/user/assets?walletID=0x65BC9C8608688E1FA95247C570F5B72DB945468A&pageNo=1&pageSize=5&type=listed&assetType=nft');
+    // final body = {
+    //   "walletAddress": walletAddress,
+    // };
+
+    final response = await http.get(
+      url,
+      // body: body,
+      headers: {
+        "Content-type": "application/json",
+        "Accept": "application/json",
+        'Authorization': 'Bearer $token',
+      },
+    );
+    // final extractedData = json.decode(response.body)["data"] as List<dynamic>;
+    final responseData = json.decode(response.body);
+    print("sara");
+    print(responseData.toString());
+    final  extractedData = responseData["data"] as List<dynamic>?;
+    print('listedNfts');
+    print(extractedData);
+    if (response.statusCode == 200) {
+
+
+      final List<NftsModel> loadedNfts = [];
+      extractedData?.forEach((prodData) {
+        loadedNfts.add(  NftsModel(
+        tokenName: "",
+        //prodData['TokenName'].toString(),
+        tokenId: prodData['tokenId'].toString(),
+        tokenURI: "",
+        //prodData['tokenURI'].toString(),
+        price: "",
+            //prodData['tokenPrice'].toString(),
+        id: prodData['id'].toString(),
+        ));
+      });
+      _nftsListed = loadedNfts;
+
+      notifyListeners();
+      return AuthResult.success;
+    } else {
+      // Show an error message or handle the response as needed
+      print("Nfts not found: ${response.body}");
+      // _showToast('Assets not found');
+      return AuthResult.failure;
+    }
+  }
+
 
   Future<AuthResult> getWalletNftsAndCollection({
     required String token,

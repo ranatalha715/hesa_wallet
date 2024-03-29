@@ -105,6 +105,12 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       walletAddress: user.walletAddress!,
     );
 
+    await Provider.of<NftsProvider>(context, listen: false)
+        .getNftsCollectionListed(
+      token: accessToken,
+      context: context,
+      walletAddress: user.walletAddress!,
+    );
     setState(() {
       _isloading = false;
     });
@@ -832,6 +838,10 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
         Provider
             .of<NftsProvider>(context, listen: false)
             .nftsCollectionCreated;
+    final nftsListed =
+        Provider
+            .of<NftsProvider>(context, listen: false)
+            .nftsListed;
     return Consumer<UserProvider>(builder: (context, user, child) {
       return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
         return Stack(
@@ -1201,6 +1211,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                           themeNotifier.isDark,
                                           nftsCollectionCreated,
                                           nftsCreated,
+                                            nftsListed
                                         ))
                                   ],
                                 ),
@@ -1277,7 +1288,10 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       var nftsOwned,
       var isDark,
       var nftsCollectionCreated,
-      var nftsCreated) {
+      var nftsCreated,
+      var nftsListed,
+
+      ) {
     switch (selectedCategoryIndex) {
       case 0: // All
       // Replace AllNFTList with your widget displaying all categories
@@ -1299,7 +1313,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       case 3: // Listed
         return NftsCollectionDivision(
           nftsCollection: nftsCollectionCreated,
-          nfts: nftsCreated,
+          nfts: nftsListed,
         ); // Replace ListedNFTList with your widget displaying listed categories
     // return ListedNFTList(); // Replace ListedNFTList with your widget displaying listed categories
       default:
