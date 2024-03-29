@@ -404,6 +404,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
     final formattedText = addSpacesToText(displayedText);
+
+    List<dynamic> feeses = feesMap!.values.toList();
+
     final paymentCards =
         Provider.of<UserProvider>(context, listen: false).paymentCards;
     var trPro = Provider.of<TransactionProvider>(context, listen: false);
@@ -596,7 +599,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                     details: 'N/A',
                                     isDark: themeNotifier.isDark ? true : false,
                                   ),
-                                if (paramsMap!['Creator royalty'] != null)
+                                if (paramsMap!['creatorRoyaltyPercent'] != null)
                                   transactionDetailsWidget(
                                     title: 'Creator royalty:'.tr(),
                                     details: paramsMap!['creatorRoyaltyPercent']
@@ -706,6 +709,27 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                 ? true
                                                 : false,
                                           ),
+                                        if (feesMap!['editionsMintingFees'] != null)
+                                        ListView.builder(
+                                          padding: EdgeInsets.zero,
+                                          controller: scrollController,
+                                          itemCount: feesMap!['editionsMintingFees'].length,
+                                          shrinkWrap: true,
+                                          itemBuilder: (BuildContext context, int index) {
+                                            final editionFee = feesMap!['editionsMintingFees'][index];
+                                            String feeLabel = editionFee['label'].toString();
+                                            String feeValue = editionFee['value'].toString();
+
+                                            return  transactionFeesWidget(
+                                              title: feeLabel,
+                                              details: feeValue,
+                                              showCurrency: true,
+                                              isDark: themeNotifier.isDark
+                                                  ? true
+                                                  : false,
+                                            );
+                                          },
+                                        ),
                                         if (feesMap!['assetListingFee'] != null)
                                           transactionFeesWidget(
                                             title: feesMap!['assetListingFee']
