@@ -673,7 +673,8 @@ class _TransactionRequestAcceptRejectState
                                                 if (paramsMap!['offerAmount'] !=
                                                     null)
                                                   transactionDetailsWidget(
-                                                    title: operation !=
+                                                    title:
+                                                    operation !=
                                                         "AcceptNFTOfferReceived" &&
                                                         operation !=
                                                             "AcceptCollectionOffer" &&
@@ -681,7 +682,7 @@ class _TransactionRequestAcceptRejectState
                                                             "rejectNFTOfferReceived" &&
                                                         operation !=
                                                             "rejectCollectionOfferReceived"
-                                                        ? 'Counter Offer Value:'.tr() : 'Offer Value'.tr(),
+                                                        ? 'Counter Offer Value:'.tr() : 'Offer Amount'.tr(),
                                                     details:
                                                     paramsMap!['offerAmount']
                                                                 .toString() +
@@ -765,76 +766,76 @@ class _TransactionRequestAcceptRejectState
                                                           SizedBox(
                                                             height: 1.h,
                                                           ),
-                                                          if (feesMap!['salePrice'] != null)
+                                                          if (feesMap!['offerAmount'] != null)
                                                             transactionFeesWidget(
-                                                              title: 'Sale Price'.tr(),
-                                                              details: feesMap!['salePrice']
+                                                              title: feesMap!['offerAmount']
+                                                              ['label']
+                                                                  .toString(),
+                                                              details: feesMap!['offerAmount']
+                                                              ['value']
                                                                   .toString(),
                                                               showCurrency: true,
                                                               isDark: themeNotifier.isDark
                                                                   ? true
                                                                   : false,
                                                             ),
-                                                          if (feesMap!['platformCommission'] != null)
-                                                          transactionFeesWidget(
-                                                            title:
-                                                                'Platform sale commission'
-                                                                    .tr(),
-                                                            details:
-                                                            "-" + feesMap!['platformCommission']
-                                                                .toString(),
-                                                            showCurrency: true,
-                                                            isDark:
-                                                                themeNotifier
-                                                                        .isDark
+                                                          if (feesMap!['saleCommission'] != null)
+                                                            transactionFeesWidget(
+                                                              title: feesMap!['saleCommission']
+                                                              ['label']
+                                                                  .toString(),
+                                                              details: feesMap!['saleCommission']
+                                                              ['value']
+                                                                  .toString(),
+                                                              showCurrency: true,
+                                                              isDark: themeNotifier.isDark
+                                                                  ? true
+                                                                  : false,
+                                                            ),
+                                                          if (feesMap!['creatorRoyalty'] != null)
+                                                            transactionFeesWidget(
+                                                              title: feesMap!['creatorRoyalty']
+                                                              ['label']
+                                                                  .toString(),
+                                                              details: feesMap!['creatorRoyalty']
+                                                              ['value']
+                                                                  .toString(),
+                                                              showCurrency: true,
+                                                              isDark: themeNotifier.isDark
+                                                                  ? true
+                                                                  : false,
+                                                            ),
+                                                          if (feesMap!['networkFees'] != null)
+                                                            transactionFeesWidget(
+                                                              title: feesMap!['networkFees']
+                                                              ['label']
+                                                                  .toString(),
+                                                              details: feesMap!['networkFees']
+                                                              ['value']
+                                                                  .toString(),
+                                                              showCurrency: true,
+                                                              isDark: themeNotifier.isDark
+                                                                  ? true
+                                                                  : false,
+                                                            ),
+                                                          if (feesMap!['totalReceivable'] != null)
+                                                            Column(children: [
+                                                              Divider(
+                                                                color: AppColors.textColorGrey,
+                                                              ),
+                                                              transactionFeesWidget(
+                                                                title: feesMap!['totalReceivable']
+                                                                ['label']
+                                                                    .toString(),
+                                                                details: feesMap!['totalReceivable']
+                                                                ['value']
+                                                                    .toString(),
+                                                                showCurrency: true,
+                                                                isDark: themeNotifier.isDark
                                                                     ? true
                                                                     : false,
-                                                          ),
-                                                          transactionFeesWidget(
-                                                            title: 'Network fee'
-                                                                .tr(),
-                                                            details:
-                                                            "-" +  feesMap!['networkFees']
-                                                                .toString(),
-                                                            showCurrency: true,
-                                                            isDark:
-                                                                themeNotifier
-                                                                        .isDark
-                                                                    ? true
-                                                                    : false,
-                                                          ),
-                                                          transactionFeesWidget(
-                                                            title:
-                                                                'Payment processing fee'
-                                                                    .tr(),
-                                                            details:
-                                                            "-" +  feesMap!['paymentProcessingFee']
-                                                                .toString(),
-                                                            showCurrency: true,
-                                                            isDark:
-                                                                themeNotifier
-                                                                        .isDark
-                                                                    ? true
-                                                                    : false,
-                                                          ),
-                                                          Divider(
-                                                            color: AppColors
-                                                                .textColorGrey,
-                                                          ),
-                                                          transactionFeesWidget(
-                                                            title:
-                                                                'Total Receivable Amount'
-                                                                    .tr(),
-                                                            details:
-                                                            feesMap!['totalReceivable']
-                                                                .toString(),
-                                                            showCurrency: true,
-                                                            isDark:
-                                                                themeNotifier
-                                                                        .isDark
-                                                                    ? true
-                                                                    : false,
-                                                          ),
+                                                              ),
+                                                            ]),
                                                           SizedBox(
                                                             height: 1.h,
                                                           ),

@@ -782,6 +782,19 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                 ? true
                                                 : false,
                                           ),
+                                        if (feesMap!['offerAmount'] != null)
+                                          transactionFeesWidget(
+                                            title: feesMap!['offerAmount']
+                                            ['label']
+                                                .toString(),
+                                            details: feesMap!['offerAmount']
+                                            ['value']
+                                                .toString(),
+                                            showCurrency: true,
+                                            isDark: themeNotifier.isDark
+                                                ? true
+                                                : false,
+                                          ),
                                         if (feesMap!['platformServiceFee'] != null)
                                           transactionFeesWidget(
                                             title: feesMap!['platformServiceFee']
