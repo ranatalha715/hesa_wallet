@@ -44,9 +44,7 @@ class _WalletActivityState extends State<WalletActivity> {
       await Provider.of<UserProvider>(context, listen: false)
           .getUserDetails(token: accessToken, context: context);
      await Provider.of<TransactionProvider>(context, listen: false).getWalletActivities(
-          walletAddress: Provider
-              .of<UserProvider>(context, listen: false)
-              .walletAddress!, context: context);
+          accessToken: accessToken, context: context);
       setState(() {
         _isLoading = false;
       });
@@ -81,12 +79,17 @@ class _WalletActivityState extends State<WalletActivity> {
                                         // image: 'assets/images/nft.png',
                                         image: activities[index].image,
                                         time: activities[index].time,
-                                        priceDown: activities[index].transactionAmount,
-                                        handler: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => TransactionSummary()),
-                                        ),
+                                        priceDown: activities[index].amountType == 'debit' ?
+                                        activities[index].transactionAmount : null,
+                                        priceUp: activities[index].amountType == 'credit' ?
+                                activities[index].transactionAmount : null,
+                                        siteURL:activities[index].siteURL ,
+                                        handler: () =>  null,
+                                        //     Navigator.of(context).pushNamed(NftsDetails.routeName,
+                                        //     arguments: {
+                                        //
+                                        //     }
+                                        // ),
                                       );
                           },
                         ),)

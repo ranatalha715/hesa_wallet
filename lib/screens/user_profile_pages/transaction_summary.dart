@@ -20,6 +20,10 @@ class TransactionSummary extends StatefulWidget {
 
 class _TransactionSummaryState extends State<TransactionSummary> {
   var accessToken = "";
+  var _isLoading = false;
+  var _isInit = true;
+  var id;
+  var type;
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -33,22 +37,33 @@ class _TransactionSummaryState extends State<TransactionSummary> {
     await getAccessToken();
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
-    // await Provider.of<TransactionProvider>(context, listen: false)
-    //     .calculateTransactionSummary(
-    //   token: accessToken,
-    //   assetPrice: '150',
-    //   func: 'AcceptOffer',
-    //   entries: '1',
-    //   creatorRoyaltyPercent: '10',
-    //   context: context,
-    // );
   }
 
   @override
   void initState() {
     // TODO: implement initState
     init();
+    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+    id = args!['id'];
+    type = args!['type'];
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<TransactionProvider>(context).getTransactionSummary(
+          accessToken: accessToken, id: id, type: type, context: context);
+      setState(() {
+        _isLoading = false;
+      });
+    }
+    _isInit = false;
   }
 
   @override
@@ -84,10 +99,10 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: AppColors.connectedSitesPopupsClr,
-                              borderRadius: BorderRadius.circular(10),
-                              // border: Border.all(
-                              //     color: AppColors.transactionSummNeoBorder,
-                              //     width: 1),
+                            borderRadius: BorderRadius.circular(10),
+                            // border: Border.all(
+                            //     color: AppColors.transactionSummNeoBorder,
+                            //     width: 1),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 12),

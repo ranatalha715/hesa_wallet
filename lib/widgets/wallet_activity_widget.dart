@@ -7,7 +7,7 @@ import 'package:sizer/sizer.dart';
 import '../providers/theme_provider.dart';
 
 class WalletActivityWidget extends StatefulWidget {
-  final String title, subTitle, image, time;
+  final String title, subTitle, image, time, siteURL;
   final int?
   priceNormal;
   final String? priceUp;
@@ -20,6 +20,7 @@ class WalletActivityWidget extends StatefulWidget {
       required this.title,
       required this.subTitle,
       required this.image,
+      required this.siteURL,
       this.isPending = false,
       this.priceDown,
       this.priceNormal,
@@ -159,12 +160,12 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                         children: [
                           Container(
                             // color: Colors.yellow,
-                            width: 40.w,
+                            width: 42.w,
                             child: Text(
-                              'https://neo-nft.com',
+                              widget.siteURL,
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 10.5.sp,
+                                  fontSize: 10.sp,
                                   color: AppColors.textColorGreyShade2),
                               overflow: TextOverflow.ellipsis,
                             ),

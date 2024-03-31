@@ -63,36 +63,90 @@ class TransactionProvider with ChangeNotifier {
   }
 
   Future<AuthResult> getWalletActivities({
-    required String walletAddress,
+    required String accessToken,
     required BuildContext context,
   }) async {
     final url = Uri.parse(
-        BASE_URL + '/user/getWalletTransaction?walletID=$walletAddress');
+        BASE_URL + '/user/wallet-activity?limit=5&page=1');
 
     final response = await http.get(
       url,
       headers: {
         // "Content-type": "application/json",
         "Accept": "application/json",
-        'Authorization': "6f382aafe37d128ceaabd2d3238aefb46460176189f5af448209eef88a812d66aa232001",
+        'Authorization': 'Bearer $accessToken',
       },
     );
     // final dynamic responseBody = json.decode(response.body);
-    final jsonData = json.decode(response.body)['data'];
+    // final jsonData = json.decode(response.body)['data'];
+    final jsonData = json.decode(response.body);
     print('jsonData' + response.body);
     if (response.statusCode == 200) {
-      if (jsonData != null && jsonData.containsKey('activities')) {
-        final List<dynamic> extractedData = jsonData['activities'] as List<dynamic>;
+      if (jsonData != null) {
+        final List<dynamic> extractedData = jsonData as List<dynamic>;
         print("extracted data" + extractedData.toString());
         final List<ActivityModel> loadedActivities = extractedData.map((prodData) {
           final metaData = prodData['metaData'];
           final bool containsCollection = prodData['transactionType'].toString().toLowerCase().contains('collection');
           return ActivityModel(
-            transactionType: prodData['transactionType'].toString(),
-            transactionAmount: prodData['transactionAmount'].toString(),
-            tokenName: metaData['nameEn'].toString(), // Fetching nameEn
-            image: containsCollection ?  metaData['cardLink'].toString() : metaData['linkUrl'].toString(),
-            time: calculateTimeDifference( DateTime.parse(prodData['createdAt'])),
+            transactionType: prodData['func'].toString(),
+            transactionAmount:  prodData['amount']['value'].toString(),
+            tokenName: prodData['name'].toString(), // Fetching nameEn
+            image:  prodData['image'].toString(),
+            time: calculateTimeDifference( DateTime.parse(prodData['timestamp'])),
+            siteURL: prodData['siteURL'].toString(),
+            amountType: prodData['amount']['type'].toString(),
+
+          );
+        }).toList();
+
+        _activities = loadedActivities;
+        notifyListeners();
+        return AuthResult.success;
+      } else {
+        print("Activity not found in response data");
+        return AuthResult.failure;
+      }
+    } else {
+      print("Failed to fetch wallet Activities: ${response.statusCode}");
+      return AuthResult.failure;
+    }
+  }
+
+  Future<AuthResult> getTransactionSummary({
+    required String accessToken,
+    required String id,
+    required String type,
+    required BuildContext context,
+  }) async {
+    final url = Uri.parse(
+        BASE_URL + '/user/wallet-activity/$id?type=$type');
+
+    final response = await http.get(
+      url,
+      headers: {
+        // "Content-type": "application/json",
+        "Accept": "application/json",
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    final jsonData = json.decode(response.body);
+    print('activity details' + response.body);
+    if (response.statusCode == 200) {
+      if (jsonData != null) {
+        final List<dynamic> extractedData = jsonData as List<dynamic>;
+        print("extracted data" + extractedData.toString());
+        final List<ActivityModel> loadedActivities = extractedData.map((prodData) {
+          final metaData = prodData['metaData'];
+          final bool containsCollection = prodData['transactionType'].toString().toLowerCase().contains('collection');
+          return ActivityModel(
+            transactionType: prodData['func'].toString(),
+            transactionAmount:  prodData['amount']['value'].toString(),
+            tokenName: prodData['name'].toString(), // Fetching nameEn
+            image:  prodData['image'].toString(),
+            time: calculateTimeDifference( DateTime.parse(prodData['timestamp'])),
+            siteURL: prodData['siteURL'].toString(),
+            amountType: prodData['amount']['type'].toString(),
 
           );
         }).toList();
@@ -2476,51 +2530,6 @@ class TransactionProvider with ChangeNotifier {
           description: e.toString());
       functionToNavigateAfterCounterOffer(
           e.toString(), operation);
-      return AuthResult.failure;
-    }
-  }
-
-  Future<AuthResult> calculateTransactionSummary({
-    required String token,
-    required String assetPrice,
-    required String func,
-    required String entries,
-    required String creatorRoyaltyPercent,
-    required BuildContext context,
-  }) async {
-    final url = Uri.parse(BASE_URL +
-        '/payment-fees/calculate-transaction-summary?assetPrice=$assetPrice&func=$func&entries=$entries&creatorRoyaltyPercent=$creatorRoyaltyPercent');
-
-    try {
-      final response = await http.get(
-        url,
-        headers: {
-          "Content-type": "application/json",
-          "Accept": "application/json",
-          'Authorization': 'Bearer $token',
-        },
-        // body: json.encode(requestBody),
-      );
-
-      fToast = FToast();
-      fToast.init(context);
-      print('transaction summary response' + response.body);
-
-      if (response.statusCode == 200) {
-        print(response.body);
-        final Map<String, dynamic> responseBody = json.decode(response.body);
-
-        print("transaction summary response " + responseBody.toString());
-
-        return AuthResult.success;
-      } else {
-        print("Error: ${response.body}");
-        _showToast('Payable Transaction not sent');
-        return AuthResult.failure;
-      }
-    } catch (e) {
-      print('Error: $e');
-      _showToast('Error');
       return AuthResult.failure;
     }
   }
