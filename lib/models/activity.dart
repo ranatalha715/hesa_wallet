@@ -6,6 +6,8 @@ class ActivityModel {
   final String time;
   final String siteURL;
   final String amountType;
+  final String id;
+  final String type;
 
   ActivityModel(
       {required this.transactionType,
@@ -14,5 +16,8 @@ class ActivityModel {
       required this.transactionAmount,
       required this.time,
       required this.siteURL,
-      required this.amountType});
+      required this.amountType,
+      required this.id,
+        required this.type
+      });
 }

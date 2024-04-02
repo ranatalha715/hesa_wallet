@@ -96,6 +96,8 @@ class TransactionProvider with ChangeNotifier {
             time: calculateTimeDifference( DateTime.parse(prodData['timestamp'])),
             siteURL: prodData['siteURL'].toString(),
             amountType: prodData['amount']['type'].toString(),
+            id: prodData['id'].toString(),
+            type: prodData['type'].toString(),
 
           );
         }).toList();
@@ -120,7 +122,7 @@ class TransactionProvider with ChangeNotifier {
     required BuildContext context,
   }) async {
     final url = Uri.parse(
-        BASE_URL + '/user/wallet-activity/$id?type=$type');
+        BASE_URL + '/user/wallet-activity/$id');
 
     final response = await http.get(
       url,
@@ -147,7 +149,8 @@ class TransactionProvider with ChangeNotifier {
             time: calculateTimeDifference( DateTime.parse(prodData['timestamp'])),
             siteURL: prodData['siteURL'].toString(),
             amountType: prodData['amount']['type'].toString(),
-
+            id: prodData['id'].toString(),
+            type: prodData['type'].toString(),
           );
         }).toList();
 

@@ -14,6 +14,8 @@ import '../../widgets/main_header.dart';
 class TransactionSummary extends StatefulWidget {
   const TransactionSummary({Key? key}) : super(key: key);
 
+  static const routeName = 'transactionsummary';
+
   @override
   State<TransactionSummary> createState() => _TransactionSummaryState();
 }
@@ -29,7 +31,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
     // accessToken = prefs.getString('accessToken')!;
-    // print(accessToken);
+    print('accessToken'+accessToken);
     // print(accessToken);
   }
 
@@ -40,25 +42,33 @@ class _TransactionSummaryState extends State<TransactionSummary> {
   }
 
   @override
-  void initState() {
+  initState() {
     // TODO: implement initState
     init();
-    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
-    id = args!['id'];
-    type = args!['type'];
     super.initState();
   }
 
   @override
-  void didChangeDependencies() {
+  didChangeDependencies() async {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     if (_isInit) {
+      final args =
+      ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+      if (args != null) {
+        id = args['id'];
+        type = args['type'];
+        print('Aik bhi' + id + type);
+      }
       setState(() {
         _isLoading = true;
       });
-      Provider.of<TransactionProvider>(context).getTransactionSummary(
+      Future.delayed(Duration(milliseconds: 1000), () {});
+     await getAccessToken();
+      print('phlyToken' + accessToken);
+      await Provider.of<TransactionProvider>(context, listen: false).getTransactionSummary(
           accessToken: accessToken, id: id, type: type, context: context);
+      print('bad');
       setState(() {
         _isLoading = false;
       });
@@ -70,6 +80,14 @@ class _TransactionSummaryState extends State<TransactionSummary> {
   Widget build(BuildContext context) {
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+    if (args != null) {
+      id = args['id'];
+      type = args['type'];
+      print('Aik bhi' + id + type);
+    }
+
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return Scaffold(
         backgroundColor: themeNotifier.isDark

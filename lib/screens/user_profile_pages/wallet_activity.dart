@@ -16,6 +16,8 @@ import '../../widgets/main_header.dart';
 class WalletActivity extends StatefulWidget {
   const WalletActivity({Key? key}) : super(key: key);
 
+
+
   @override
   State<WalletActivity> createState() => _WalletActivityState();
 }
@@ -84,12 +86,13 @@ class _WalletActivityState extends State<WalletActivity> {
                                         priceUp: activities[index].amountType == 'credit' ?
                                 activities[index].transactionAmount : null,
                                         siteURL:activities[index].siteURL ,
-                                        handler: () =>  null,
-                                        //     Navigator.of(context).pushNamed(NftsDetails.routeName,
-                                        //     arguments: {
-                                        //
-                                        //     }
-                                        // ),
+                                        handler: () =>
+                                            Navigator.of(context).pushNamed(TransactionSummary.routeName,
+                                            arguments: {
+                                             'id': activities[index].id,
+                                             'type': activities[index].type,
+                                            }
+                                        ),
                                       );
                           },
                         ),)

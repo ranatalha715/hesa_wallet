@@ -135,33 +135,6 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  // Future<AuthResult> logoutUser({
-  //   required String token,
-  //   required BuildContext context,
-  // }) async {
-  //   final url = Uri.parse(BASE_URL + '/auth/logout');
-  //   final body = {};
-  //
-  //   final response = await http.post(
-  //     url,
-  //     body: body,
-  //
-  //   );
-  //   fToast = FToast();
-  //   fToast.init(context);
-  //   if (response.statusCode == 201) {
-  //     print(response.body);
-  //     // Successful login, handle navigation or other actions
-  //     print("Logged out successfully!");
-  //     _showToast('Logged out successfully!');
-  //     return AuthResult.success;
-  //   } else {
-  //     // Show an error message or handle the response as needed
-  //     print("Log out failed: ${response.body}");
-  //     _showToast('Log out failed');
-  //     return AuthResult.failure;
-  //   }
-  // }
   Future<AuthResult> logoutUser({
     required String token,
     required BuildContext context,
@@ -318,55 +291,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  _showToast(String message, {int duration = 1000}) {
-    Widget toast = Container(
-      height: 60,
-      // width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.0),
-        color: AppColors.textColorWhite.withOpacity(0.5),
-      ),
-      child: Row(
-        // mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Flexible(
-            child: Container(
-              color: Colors.transparent,
-              child: Text(
-                message,
-                maxLines: 2,
-                softWrap: true,
-                overflow: TextOverflow.ellipsis,
-                // .toUpperCase(),
-                style: TextStyle(
-                        color: AppColors.backgroundColor,
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.bold)
-                    .apply(fontWeightDelta: -2),
-              ),
-            ),
-          ),
-          // Spacer(),
-        ],
-      ),
-    );
 
-    // Custom Toast Position
-    fToast.showToast(
-        child: toast,
-        toastDuration: Duration(milliseconds: duration),
-        positionedToastBuilder: (context, child) {
-          return Positioned(
-            child: Center(child: child),
-            top: 43.0,
-            left: 20,
-            right: 20,
-          );
-        });
-  }
 
   Future<AuthResult> verifyUser({
     required String mobile,
@@ -536,4 +461,55 @@ class AuthProvider with ChangeNotifier {
       return AuthResult.failure;
     }
   }
+
+  _showToast(String message, {int duration = 1000}) {
+    Widget toast = Container(
+      height: 60,
+      // width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12.0),
+        color: AppColors.textColorWhite.withOpacity(0.5),
+      ),
+      child: Row(
+        // mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Flexible(
+            child: Container(
+              color: Colors.transparent,
+              child: Text(
+                message,
+                maxLines: 2,
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
+                // .toUpperCase(),
+                style: TextStyle(
+                    color: AppColors.backgroundColor,
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.bold)
+                    .apply(fontWeightDelta: -2),
+              ),
+            ),
+          ),
+          // Spacer(),
+        ],
+      ),
+    );
+
+    // Custom Toast Position
+    fToast.showToast(
+        child: toast,
+        toastDuration: Duration(milliseconds: duration),
+        positionedToastBuilder: (context, child) {
+          return Positioned(
+            child: Center(child: child),
+            top: 43.0,
+            left: 20,
+            right: 20,
+          );
+        });
+  }
+
 }

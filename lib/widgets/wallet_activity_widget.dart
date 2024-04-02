@@ -68,7 +68,8 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(5.sp),
                   child: Image.network(
-                    widget.image,
+                    'https://images.pexels.com/photos/14354112/pexels-photo-14354112.jpeg?auto=compress&cs=tinysrgb&w=800',
+                    // widget.image,
                     // Replace with your image assets
                     fit: BoxFit.cover,
                     height: 40.sp,

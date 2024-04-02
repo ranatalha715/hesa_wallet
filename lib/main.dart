@@ -341,6 +341,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               const SetConfirmPinScreen(),
               NftsDetails.routeName: (context) =>
               const NftsDetails(),
+              TransactionSummary.routeName: (context) =>
+              const TransactionSummary(),
             },
           );
         });
