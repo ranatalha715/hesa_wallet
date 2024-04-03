@@ -125,16 +125,16 @@ class TransactionProvider with ChangeNotifier {
   var txCrdNum = '';
   var txCrdBrand = '';
   Map<String, dynamic>? txFeesMap;
-  var assetListingFee ='';
-  var networkFees = '';
-  var paymentProcessingFee = '';
-  var totalFees = '';
+  var assetListingFee;
+  var networkFees;
+  var paymentProcessingFee;
+  var totalFees ;
 
 //label
-  var assetListingLabel = '';
-  var networkLabel = '';
-  var paymentProcessingLabel = '';
-  var totalLabel = '';
+  var assetListingLabel;
+  var networkLabel;
+  var paymentProcessingLabel;
+  var totalLabel;
 
   Future<AuthResult> getTransactionSummary({
     required String accessToken,
@@ -142,54 +142,118 @@ class TransactionProvider with ChangeNotifier {
     required String type,
     required BuildContext context,
   }) async {
-    final url = Uri.parse(
-        BASE_URL + '/user/wallet-activity/$id');
+    try {
+      final url = Uri.parse(BASE_URL + '/user/wallet-activity/$id');
 
-    final response = await http.get(
-      url,
-      headers: {
-        // "Content-type": "application/json",
-        "Accept": "application/json",
-        'Authorization': 'Bearer $accessToken',
-      },
-    );
-    final jsonData = json.decode(response.body);
-    print('activity details' + response.body);
-    if (response.statusCode == 200) {
-      if (jsonData != null) {
-txTimeStamp= jsonData['transactionDetails']['timestamp'] ?? 'N/A';
-txType= jsonData['transactionDetails']['txType'] ?? 'N/A';
-txId= jsonData['transactionDetails']['txId'] ?? 'N/A';
-txStatus= jsonData['transactionDetails']['txStatus'] ?? 'N/A';
-txTokenId= jsonData['transactionDetails']['tokenID'] ?? 'N/A';
-txCreatorId= jsonData['transactionDetails']['creatorID'] ?? 'N/A';
-txCreatorRoyalityPercent= jsonData['transactionDetails']['creatorRoyaltyPercentage'].toString() ?? 'N/A';
-txCrdBrand= jsonData['cardDetails']['type'].toString() ?? 'N/A';
-txCrdNum= jsonData['cardDetails']['maskedNumber'].toString() ?? 'N/A';
+      final response = await http.get(
+        url,
+        headers: {
+          // "Content-type": "application/json",
+          "Accept": "application/json",
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
 
-//fees
-Map<String, dynamic> transactionFee = jsonData['transactionDetails']['transctionFee'];
- assetListingFee = transactionFee['assetListingFee']['value'].toString();
- networkFees = transactionFee['networkFees']['value'].toString();
- paymentProcessingFee = transactionFee['paymentProcessingFee']['value'].toString();
- totalFees = transactionFee['totalFees']['value'].toString();
+      final jsonData = json.decode(response.body);
+      print('activity details' + response.body);
 
-//label
-         assetListingLabel = transactionFee['assetListingFee']['label'];
-         networkLabel = transactionFee['networkFees']['label'];
-         paymentProcessingLabel = transactionFee['paymentProcessingFee']['label'];
-         totalLabel = transactionFee['totalFees']['label'];
-        notifyListeners();
-        return AuthResult.success;
+      if (response.statusCode == 200) {
+        if (jsonData != null) {
+          txTimeStamp = jsonData['transactionDetails']['timestamp'] ?? 'N/A';
+          txType = jsonData['transactionDetails']['txType'] ?? 'N/A';
+          txId = jsonData['transactionDetails']['txId'] ?? 'N/A';
+          txStatus = jsonData['transactionDetails']['txStatus'] ?? 'N/A';
+          txTokenId = jsonData['transactionDetails']['tokenID'] ?? 'N/A';
+          txCreatorId = jsonData['transactionDetails']['creatorID'] ?? 'N/A';
+          txCreatorRoyalityPercent = jsonData['transactionDetails']['creatorRoyaltyPercentage'].toString() ?? 'N/A';
+          txCrdBrand = jsonData['cardDetails']['type'].toString() ?? 'N/A';
+          txCrdNum = jsonData['cardDetails']['maskedNumber'].toString() ?? 'N/A';
+
+          // Fetching fees
+          Map<String, dynamic> transactionFee = jsonData['transactionDetails']['transctionFee'];
+          assetListingFee = transactionFee['assetListingFee']['value'].toString();
+          networkFees = transactionFee['networkFees']['value'].toString();
+          paymentProcessingFee = transactionFee['paymentProcessingFee']['value'].toString();
+          totalFees = transactionFee['totalFees']['value'].toString();
+
+          // Fetching labels
+          assetListingLabel = transactionFee['assetListingFee']['label'];
+          networkLabel = transactionFee['networkFees']['label'];
+          paymentProcessingLabel = transactionFee['paymentProcessingFee']['label'];
+          totalLabel = transactionFee['totalFees']['label'];
+
+          notifyListeners();
+          return AuthResult.success;
+        } else {
+          print("Activity not found in response data");
+          return AuthResult.failure;
+        }
       } else {
-        print("Activity not found in response data");
+        print("Failed to fetch wallet Activities: ${response.statusCode}");
         return AuthResult.failure;
       }
-    } else {
-      print("Failed to fetch wallet Activities: ${response.statusCode}");
+    } catch (error) {
+      // Handle error here
+      print('Error occurred: $error');
       return AuthResult.failure;
     }
   }
+
+
+//   Future<AuthResult> getTransactionSummary({
+//     required String accessToken,
+//     required String id,
+//     required String type,
+//     required BuildContext context,
+//   }) async {
+//     final url = Uri.parse(
+//         BASE_URL + '/user/wallet-activity/$id');
+//
+//     final response = await http.get(
+//       url,
+//       headers: {
+//         // "Content-type": "application/json",
+//         "Accept": "application/json",
+//         'Authorization': 'Bearer $accessToken',
+//       },
+//     );
+//     final jsonData = json.decode(response.body);
+//     print('activity details' + response.body);
+//     if (response.statusCode == 200) {
+//       if (jsonData != null) {
+// txTimeStamp= jsonData['transactionDetails']['timestamp'] ?? 'N/A';
+// txType= jsonData['transactionDetails']['txType'] ?? 'N/A';
+// txId= jsonData['transactionDetails']['txId'] ?? 'N/A';
+// txStatus= jsonData['transactionDetails']['txStatus'] ?? 'N/A';
+// txTokenId= jsonData['transactionDetails']['tokenID'] ?? 'N/A';
+// txCreatorId= jsonData['transactionDetails']['creatorID'] ?? 'N/A';
+// txCreatorRoyalityPercent= jsonData['transactionDetails']['creatorRoyaltyPercentage'].toString() ?? 'N/A';
+// txCrdBrand= jsonData['cardDetails']['type'].toString() ?? 'N/A';
+// txCrdNum= jsonData['cardDetails']['maskedNumber'].toString() ?? 'N/A';
+//
+// //fees
+// Map<String, dynamic> transactionFee = jsonData['transactionDetails']['transctionFee'];
+//  assetListingFee = transactionFee['assetListingFee']['value'].toString();
+//  networkFees = transactionFee['networkFees']['value'].toString();
+//  paymentProcessingFee = transactionFee['paymentProcessingFee']['value'].toString();
+//  totalFees = transactionFee['totalFees']['value'].toString();
+//
+// //label
+//          assetListingLabel = transactionFee['assetListingFee']['label'];
+//          networkLabel = transactionFee['networkFees']['label'];
+//          paymentProcessingLabel = transactionFee['paymentProcessingFee']['label'];
+//          totalLabel = transactionFee['totalFees']['label'];
+//         notifyListeners();
+//         return AuthResult.success;
+//       } else {
+//         print("Activity not found in response data");
+//         return AuthResult.failure;
+//       }
+//     } else {
+//       print("Failed to fetch wallet Activities: ${response.statusCode}");
+//       return AuthResult.failure;
+//     }
+//   }
 
   Future<AuthResult> sendTransactionOTP({
     required String token,

@@ -64,19 +64,32 @@ class _TransactionSummaryState extends State<TransactionSummary> {
       setState(() {
         _isLoading = true;
       });
-      Future.delayed(Duration(milliseconds: 1000), () {});
-     await getAccessToken();
-      await Provider.of<TransactionProvider>(context, listen: false).getTransactionSummary(
-          accessToken: accessToken, id: id, type: type, context: context).then((value) =>
-          setState(() {
-        _isLoading = false;
-      }));
-      setState(() {
-        _isLoading = false;
-      });
+      try {
+        await Future.delayed(Duration(milliseconds: 100), () {});
+        await getAccessToken();
+        await Provider.of<TransactionProvider>(context, listen: false)
+            .getTransactionSummary(
+            accessToken: accessToken,
+            id: id,
+            type: type,
+            context: context)
+            .then((value) => setState(() {
+          _isLoading = false;
+        }));
+        setState(() {
+          _isLoading = false;
+        });
+      } catch (error) {
+        // Handle error here
+        print('Error occurred: $error');
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
     _isInit = false;
   }
+
 
   String replaceMiddleWithDotstxId(String input) {
     if (input.length <= 30) {
@@ -388,6 +401,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                     isDark: themeNotifier.isDark ? true : false,
                                     color: AppColors.textColorToska,
                                   ),
+                                  if(transactionSummary.txCreatorRoyalityPercent!='null')
                                   transactionDetailsWidget(
                                     title: 'Creator royalty:'.tr(),
                                     details: transactionSummary.txCreatorRoyalityPercent + "%",
@@ -507,7 +521,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
               ],
             ),
           ),
-      // if (_isLoading) LoaderBluredScreen(),
+      if (_isLoading) LoaderBluredScreen(),
         ],
       );
     });
