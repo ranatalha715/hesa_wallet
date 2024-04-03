@@ -115,6 +115,15 @@ class TransactionProvider with ChangeNotifier {
     }
   }
 
+  var txTimeStamp = '';
+  var txType = '';
+  var txId = '';
+  var txStatus = '';
+  var txTokenId = '';
+  var txCreatorId = '';
+  var txCreatorRoyalityPercent = '';
+  Map<String, dynamic>? txFeesMap;
+
   Future<AuthResult> getTransactionSummary({
     required String accessToken,
     required String id,
@@ -136,25 +145,14 @@ class TransactionProvider with ChangeNotifier {
     print('activity details' + response.body);
     if (response.statusCode == 200) {
       if (jsonData != null) {
-        final List<dynamic> extractedData = jsonData as List<dynamic>;
-        print("extracted data" + extractedData.toString());
-        final List<ActivityModel> loadedActivities = extractedData.map((prodData) {
-          final metaData = prodData['metaData'];
-          final bool containsCollection = prodData['transactionType'].toString().toLowerCase().contains('collection');
-          return ActivityModel(
-            transactionType: prodData['func'].toString(),
-            transactionAmount:  prodData['amount']['value'].toString(),
-            tokenName: prodData['name'].toString(), // Fetching nameEn
-            image:  prodData['image'].toString(),
-            time: calculateTimeDifference( DateTime.parse(prodData['timestamp'])),
-            siteURL: prodData['siteURL'].toString(),
-            amountType: prodData['amount']['type'].toString(),
-            id: prodData['id'].toString(),
-            type: prodData['type'].toString(),
-          );
-        }).toList();
-
-        _activities = loadedActivities;
+txTimeStamp= jsonData['transactionDetails']['timestamp'] ?? 'N/A';
+txType= jsonData['transactionDetails']['txType'] ?? 'N/A';
+txId= jsonData['transactionDetails']['txId'] ?? 'N/A';
+txStatus= jsonData['transactionDetails']['txStatus'] ?? 'N/A';
+txTokenId= jsonData['transactionDetails']['tokenID'] ?? 'N/A';
+txCreatorId= jsonData['transactionDetails']['creatorID'] ?? 'N/A';
+txCreatorRoyalityPercent= jsonData['transactionDetails']['creatorRoyaltyPercentage'].toString() ?? 'N/A';
+txFeesMap = jsonData['transctionFee'][''];
         notifyListeners();
         return AuthResult.success;
       } else {

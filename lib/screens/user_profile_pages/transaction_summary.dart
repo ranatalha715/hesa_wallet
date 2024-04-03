@@ -87,6 +87,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
       type = args['type'];
       print('Aik bhi' + id + type);
     }
+    final transactionSummary = Provider.of<TransactionProvider>(context,listen: false);
 
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return Scaffold(
@@ -305,44 +306,45 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                               ),
                               transactionDetailsWidget(
                                 title: 'Timestamp'.tr(),
-                                details: 'May 24, 2023 04:19:35'.tr(),
+                                details: DateFormat('MMMM dd, yyyy HH:mm:ss')
+                                    .format(DateTime.parse(transactionSummary.txTimeStamp)),
                                 isDark: themeNotifier.isDark ? true : false,
                               ),
                               transactionDetailsWidget(
                                 title: 'Tx Type:'.tr(),
-                                details: 'Token Offer Fulfillment'.tr(),
+                                details: transactionSummary.txType,
                                 isDark: themeNotifier.isDark ? true : false,
                               ),
                               transactionDetailsWidget(
                                 title: 'Tx ID:'.tr(),
-                                details: 'zvhje...bsxx93'.tr(),
+                                details: transactionSummary.txId,
                                 isDark: themeNotifier.isDark ? true : false,
                                 color: AppColors.textColorToska,
                               ),
                               transactionDetailsWidget(
                                   title: 'Tx Status:'.tr(),
-                                  details: 'Success'.tr(),
+                                  details: transactionSummary.txStatus,
                                   isDark: themeNotifier.isDark ? true : false,
                                   color: AppColors.hexaGreen),
                               transactionDetailsWidget(
                                 title: 'Token ID:'.tr(),
-                                details: 'xyeafa...wrbqwurqw'.tr(),
+                                details: transactionSummary.txTokenId,
                                 isDark: themeNotifier.isDark ? true : false,
                                 color: AppColors.textColorToska,
                               ),
-                              transactionDetailsWidget(
-                                title: 'Offered by:'.tr(),
-                                details: 'x383qrhwq..3u372242f'.tr(),
-                                isDark: themeNotifier.isDark ? true : false,
-                              ),
+                              // transactionDetailsWidget(
+                              //   title: 'Offered by:'.tr(),
+                              //   details: 'x383qrhwq..3u372242f'.tr(),
+                              //   isDark: themeNotifier.isDark ? true : false,
+                              // ),
                               transactionDetailsWidget(
                                 title: 'Creator royalty:'.tr(),
-                                details: '10%'.tr(),
+                                details: transactionSummary.txCreatorRoyalityPercent + "%",
                                 isDark: themeNotifier.isDark ? true : false,
                               ),
                               transactionDetailsWidget(
                                 title: 'Creator ID:'.tr(),
-                                details: '0dhawfba..wqrjqb23'.tr(),
+                                details: transactionSummary.txCreatorId,
                                 isDark: themeNotifier.isDark ? true : false,
                               ),
                               SizedBox(
