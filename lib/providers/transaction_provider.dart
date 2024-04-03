@@ -122,7 +122,19 @@ class TransactionProvider with ChangeNotifier {
   var txTokenId = '';
   var txCreatorId = '';
   var txCreatorRoyalityPercent = '';
+  var txCrdNum = '';
+  var txCrdBrand = '';
   Map<String, dynamic>? txFeesMap;
+  var assetListingFee ='';
+  var networkFees = '';
+  var paymentProcessingFee = '';
+  var totalFees = '';
+
+//label
+  var assetListingLabel = '';
+  var networkLabel = '';
+  var paymentProcessingLabel = '';
+  var totalLabel = '';
 
   Future<AuthResult> getTransactionSummary({
     required String accessToken,
@@ -152,7 +164,21 @@ txStatus= jsonData['transactionDetails']['txStatus'] ?? 'N/A';
 txTokenId= jsonData['transactionDetails']['tokenID'] ?? 'N/A';
 txCreatorId= jsonData['transactionDetails']['creatorID'] ?? 'N/A';
 txCreatorRoyalityPercent= jsonData['transactionDetails']['creatorRoyaltyPercentage'].toString() ?? 'N/A';
-txFeesMap = jsonData['transctionFee'][''];
+txCrdBrand= jsonData['cardDetails']['type'].toString() ?? 'N/A';
+txCrdNum= jsonData['cardDetails']['maskedNumber'].toString() ?? 'N/A';
+
+//fees
+Map<String, dynamic> transactionFee = jsonData['transactionDetails']['transctionFee'];
+ assetListingFee = transactionFee['assetListingFee']['value'].toString();
+ networkFees = transactionFee['networkFees']['value'].toString();
+ paymentProcessingFee = transactionFee['paymentProcessingFee']['value'].toString();
+ totalFees = transactionFee['totalFees']['value'].toString();
+
+//label
+         assetListingLabel = transactionFee['assetListingFee']['label'];
+         networkLabel = transactionFee['networkFees']['label'];
+         paymentProcessingLabel = transactionFee['paymentProcessingFee']['label'];
+         totalLabel = transactionFee['totalFees']['label'];
         notifyListeners();
         return AuthResult.success;
       } else {

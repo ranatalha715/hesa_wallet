@@ -565,17 +565,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                   details: capitalizeFirstLetter(operation),
                                   isDark: themeNotifier.isDark ? true : false,
                                 ),
-                                // transactionDetailsWidget(
-                                //   title: 'Tx ID:'.tr(),
-                                //   details: replaceMiddleWithDots(transactionID),
-                                //   isDark: themeNotifier.isDark ? true : false,
-                                //   color: AppColors.textColorToska,
-                                // ),
-                                // transactionDetailsWidget(
-                                //     title: 'Tx Status:'.tr(),
-                                //     details: 'Success'.tr(),
-                                //     isDark: themeNotifier.isDark ? true : false,
-                                //     color: AppColors.gradientColor1),
                                 transactionDetailsWidget(
                                   title: operation == 'MintCollection' ||
                                           operation == 'listCollection' ||

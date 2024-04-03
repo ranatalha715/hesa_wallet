@@ -91,6 +91,7 @@ class _WalletActivityState extends State<WalletActivity> {
                                             arguments: {
                                              'id': activities[index].id,
                                              'type': activities[index].type,
+                                             'site': activities[index].siteURL,
                                             }
                                         ),
                                       );
