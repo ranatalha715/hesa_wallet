@@ -54,6 +54,9 @@ class _TransactionSummaryState extends State<TransactionSummary> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
       final args =
       ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
       if (args != null) {
@@ -61,27 +64,28 @@ class _TransactionSummaryState extends State<TransactionSummary> {
         type = args['type'];
         print('Aik bhi' + id + type);
       }
-      setState(() {
-        _isLoading = true;
-      });
+
       try {
-        await Future.delayed(Duration(milliseconds: 100), () {});
+
         await getAccessToken();
+
+        await Future.delayed(Duration(milliseconds: 500), () {});
         await Provider.of<TransactionProvider>(context, listen: false)
             .getTransactionSummary(
             accessToken: accessToken,
             id: id,
             type: type,
-            context: context)
-            .then((value) => setState(() {
-          _isLoading = false;
-        }));
+            context: context);
         setState(() {
           _isLoading = false;
         });
       } catch (error) {
         // Handle error here
         print('Error occurred: $error');
+        setState(() {
+          _isLoading = false;
+        });
+      } finally {
         setState(() {
           _isLoading = false;
         });
@@ -148,9 +152,16 @@ class _TransactionSummaryState extends State<TransactionSummary> {
       type = args['type'];
       print('Aik bhi' + id + type);
     }
-    final transactionSummary = Provider.of<TransactionProvider>(context,listen: false);
-
-    return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
+    final txSummary = Provider.of<TransactionProvider>(context,listen: false);
+    DateTime parsedDate;
+    try {
+      parsedDate = DateTime.parse(txSummary.txTimeStamp);
+    } catch (e) {
+      print('Error parsing date: $e');
+      // Provide a fallback mechanism here, for example:
+      parsedDate = DateTime.now(); // Or any other fallback value
+    }  return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
+      return Consumer<TransactionProvider>(builder: (context, transactionSummary, child) {
       return Stack(
         children: [
           Scaffold(
@@ -290,16 +301,16 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                     height: 1.h,
                                   ),
                                   Text(
-                                    transactionSummary.totalFees + ' SAR',
+                                    transactionSummary.txTotalAmount + ' SAR',
                                     style: TextStyle(
                                       fontSize: 26.5.sp,
                                       fontWeight: FontWeight.w700,
                                       color: AppColors.hexaGreen,
                                     ),
                                   ),
-                                  // SizedBox(
-                                  //   height: 1.h,
-                                  // ),
+                                  SizedBox(
+                                    height: 1.h,
+                                  ),
                                   Padding(
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 10.sp, vertical: 5.sp),
@@ -376,7 +387,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                   transactionDetailsWidget(
                                     title: 'Timestamp'.tr(),
                                     details: DateFormat('MMMM dd, yyyy HH:mm:ss')
-                                        .format(DateTime.parse(transactionSummary.txTimeStamp)),
+                                        .format(parsedDate),
                                     isDark: themeNotifier.isDark ? true : false,
                                   ),
                                   transactionDetailsWidget(
@@ -396,7 +407,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                       isDark: themeNotifier.isDark ? true : false,
                                       color: AppColors.hexaGreen),
                                   transactionDetailsWidget(
-                                    title: 'Token ID:'.tr(),
+                                    title: type=='collection'?"Collection ID:":"Token ID:".tr(),
                                     details: replaceMiddleWithDotsTokenId(transactionSummary.txTokenId),
                                     isDark: themeNotifier.isDark ? true : false,
                                     color: AppColors.textColorToska,
@@ -449,57 +460,70 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                           SizedBox(
                                             height: 1.h,
                                           ),
-                                          transactionFeesWidget(
-                                            title: transactionSummary.assetListingLabel,
-                                            details: transactionSummary.assetListingFee + ' SAR',
-                                            isDark:
-                                                themeNotifier.isDark ? true : false,
-                                          ),
-                                          transactionFeesWidget(
-                                            title: transactionSummary.networkLabel,
-                                            details: transactionSummary.networkFees + ' SAR',
-                                            isDark:
-                                            themeNotifier.isDark ? true : false,
-                                          ),
-                                          transactionFeesWidget(
-                                            title: transactionSummary.paymentProcessingLabel,
-                                            details: transactionSummary.paymentProcessingFee
-                                                + ' SAR',
-                                            isDark:
-                                            themeNotifier.isDark ? true : false,
-                                          ),
-                                          // transactionFeesWidget(
-                                          //   title: 'Platform sale commission'.tr(),
-                                          //   details: '-50.00 SAR'.tr(),
-                                          //   isDark:
-                                          //       themeNotifier.isDark ? true : false,
-                                          // ),
-                                          // transactionFeesWidget(
-                                          //   title: 'Network fee'.tr(),
-                                          //   details: '-32.00 SAR'.tr(),
-                                          //   isDark:
-                                          //       themeNotifier.isDark ? true : false,
-                                          // ),
-                                          // transactionFeesWidget(
-                                          //   title: 'Payment processing fee'.tr(),
-                                          //   details: '-22.00 SAR'.tr(),
-                                          //   isDark:
-                                          //       themeNotifier.isDark ? true : false,
-                                          // ),
-                                          Column(
-                                            children: [
-                                              Divider(
-                                                color: AppColors.textColorGrey,
-                                              ),
-                                              transactionFeesWidget(
-                                                title: transactionSummary.totalLabel,
-                                                details: transactionSummary.totalFees + ' SAR',
-                                                isDark:
-                                                themeNotifier.isDark ? true : false,
-                                              ),
-                                            ],
+                                          ListView.builder(
+                                            itemCount: transactionSummary.transactionFeeses.length,
+                                            shrinkWrap: true,
+                                            padding: EdgeInsets.zero,
+                                            itemBuilder: (context, index) {
+                                              final feeItem = transactionSummary.transactionFeeses[index];
+                                              final String secondLabel = feeItem.keys.elementAt(1);
+                                              final String secondValue = feeItem[secondLabel].toString();
+                                              final String label = feeItem.keys.last;
+                                              final String value = feeItem[label].toString();
+                                              bool lastIndex = index== transactionSummary.transactionFeeses.length - 1;
 
-                                          ),
+                                              return Column(
+                                                children: [
+                                                  if(lastIndex)
+                                                      Divider(
+                                                        color: AppColors.textColorGrey,
+                                                      ),
+                                                  transactionFeesWidget(
+                                                    title: secondValue ?? "",
+                                                    details: value + ' SAR',
+                                                    isDark:
+                                                        themeNotifier.isDark ? true : false,
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          )
+
+
+                                          // transactionFeesWidget(
+                                          //   title: transactionSummary.assetListingLabel ?? "",
+                                          //   details: transactionSummary.assetListingFee ?? "" + ' SAR',
+                                          //   isDark:
+                                          //       themeNotifier.isDark ? true : false,
+                                          // ),
+                                          // transactionFeesWidget(
+                                          //   title: transactionSummary.networkLabel ?? "",
+                                          //   details: transactionSummary.networkFees ?? "" + ' SAR',
+                                          //   isDark:
+                                          //   themeNotifier.isDark ? true : false,
+                                          // ),
+                                          // transactionFeesWidget(
+                                          //   title: transactionSummary.paymentProcessingLabel ?? "",
+                                          //   details: transactionSummary.paymentProcessingFee ?? ""
+                                          //       + ' SAR',
+                                          //   isDark:
+                                          //   themeNotifier.isDark ? true : false,
+                                          // ),
+                                          //
+                                          // Column(
+                                          //   children: [
+                                          //     Divider(
+                                          //       color: AppColors.textColorGrey,
+                                          //     ),
+                                          //     transactionFeesWidget(
+                                          //       title: transactionSummary.totalLabel ?? "",
+                                          //       details: transactionSummary.totalFees ?? "" + ' SAR',
+                                          //       isDark:
+                                          //       themeNotifier.isDark ? true : false,
+                                          //     ),
+                                          //   ],
+                                          //
+                                          // ),
                                         ],
                                       ),
                                     ),
@@ -524,6 +548,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
       if (_isLoading) LoaderBluredScreen(),
         ],
       );
+    });
     });
   }
 
