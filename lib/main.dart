@@ -15,6 +15,7 @@ import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:hesa_wallet/widgets/dialog_button.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 // import 'package:deepinking_module/deep_linking.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:flutter/material.dart';
@@ -66,6 +67,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 ////hello to world
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -77,48 +79,50 @@ Future<void> main() async {
     DeviceOrientation.portraitUp, // Disable landscape mode
     DeviceOrientation.portraitDown, // Disable landscape mode
   ]).then((_) {
-    runApp(
-        MultiProvider(
+    runApp(MultiProvider(
             providers: [
-              ChangeNotifierProvider(
-                create: (_) => ThemeProvider(),
-              ),
-              ChangeNotifierProvider(
-                create: (_) => AuthProvider(),
-              ),
-              ChangeNotifierProvider(
-                create: (_) => UserProvider(),
-              ),
-              ChangeNotifierProvider(
-                create: (_) => TransactionProvider(),
-              ),
-              ChangeNotifierProvider(
-                create: (_) => AssetsProvider(),
-              ),
-              ChangeNotifierProvider(
-                create: (_) => BankProvider(),
-              ),
-              ChangeNotifierProvider(
-                create: (_) => NftsProvider(),
-              ),
-              ChangeNotifierProvider(
-                create: (_) => CardProvider(),
-              ),
-              ChangeNotifierProvider(
-                create: (_) => TokenProvider(),),
-    ChangeNotifierProvider(
-    create: (_) => PaymentFees()),
-            ],
-        // DevicePreview(
-        // enabled: !kReleaseMode,
-        // builder: (context) =>
-       child: localized.EasyLocalization(
-            supportedLocales: const [Locale('en', 'US'), Locale('ar', 'AE')],
-            path: 'assets/translations',
-            // path to your language files
-            fallbackLocale: Locale('en', 'US'),
-            saveLocale: true,
-            child: MyApp()))
+          ChangeNotifierProvider(
+            create: (_) => ThemeProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => AuthProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => UserProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => TransactionProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => AssetsProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => BankProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => NftsProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => CardProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => TokenProvider(),
+          ),
+          ChangeNotifierProvider(create: (_) => PaymentFees()),
+        ],
+            // DevicePreview(
+            // enabled: !kReleaseMode,
+            // builder: (context) =>
+            child: localized.EasyLocalization(
+                supportedLocales: const [
+                  Locale('en', 'US'),
+                  Locale('ar', 'AE')
+                ],
+                path: 'assets/translations',
+                // path to your language files
+                fallbackLocale: Locale('en', 'US'),
+                saveLocale: true,
+                child: MyApp()))
         // )
         );
     // Register the MethodChannel with the same unique name as in the NFT app
@@ -136,21 +140,21 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final PageController _pageController = PageController(initialPage: 0);
   var accessToken = '';
+  var refreshToken = '';
 
   late FToast fToast;
   bool isOverlayVisible = false;
   bool isWifiOn = true;
-  bool fromNeoApp=false;
+  bool fromNeoApp = false;
   var user;
-
 
   // late OverlayEntry overlayEntry = OverlayEntry(builder: (context) => Container());
   Future<void> checkWifiStatus() async {
     var connectivityResult = await Connectivity().checkConnectivity();
     setState(() {
       isWifiOn = (connectivityResult == ConnectivityResult.wifi);
-      isWifiOn = connectivityResult == ConnectivityResult.none ? false:true;
-     });
+      isWifiOn = connectivityResult == ConnectivityResult.none ? false : true;
+    });
 
     // if (!isWifiOn) {
     //   noInternetDialog(context);
@@ -158,29 +162,30 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   @override
-   initState()  {
+  initState() {
     super.initState();
     AppDeepLinking().initDeeplink();
     fToast = FToast();
     fToast.init(context);
 
-    getAccessToken();//31 jan
-    // user = await Provider.of<UserProvider>(context, listen: false);
-    // await Provider.of<UserProvider>(context, listen: false)
-    //     .getUserDetails(token: accessToken, context: context);
-    // checkAndDeleteExpiredToken();
+    getAccessToken(); //31 jan
+
     WidgetsBinding.instance.addObserver(this);
 
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       checkWifiStatus();
-
     }); // 31 jan
     initUniLinks();
     print('recieved data' + _receivedData);
-    Timer.periodic(Duration(seconds: 3), (timer) {
-
+    Timer.periodic(Duration(seconds: 3), (timer) async {
       getAccessToken();
+      print("refreshToken");
+      print(refreshToken);
+
     });
+
+    // Timer.periodic(Duration(seconds: 5), (timer) {
+    //    });
   }
 
   @override
@@ -188,12 +193,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
+
   String _receivedData = 'No UniLink data received';
+
   Future<void> initUniLinks() async {
     try {
-      // Initialize UniLinks
-      // await initPlatformState();
-      // Listen for incoming links
       // AppDeepLinking().initDeeplink(); muzamil recommended
       getLinksStream().listen((String? link) {
         if (link != null) {
@@ -207,9 +211,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           if (operation != null && operation == 'connectWallet') {
             // Navigate to page for MintNFT
             setState(() {
-              fromNeoApp=true; //faltu
-              Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet=true;
-              print("check kro" + Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet.toString());
+              fromNeoApp = true; //faltu
+              Provider.of<UserProvider>(context, listen: false)
+                  .navigateToNeoForConnectWallet = true;
+              print("check kro" +
+                  Provider.of<UserProvider>(context, listen: false)
+                      .navigateToNeoForConnectWallet
+                      .toString());
             });
           }
         }
@@ -242,15 +250,17 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
+    refreshToken = prefs.getString('refreshToken')!;
+    Provider.of<AuthProvider>(context, listen: false)
+        .refreshToken(refreshToken: refreshToken, token: accessToken, context: context);
+
     if (isTokenExpired(accessToken)) {
-      // print('Token is expired. calling after 3 seconds');
       prefs.remove('accessToken');
       setState(() {
-        accessToken='';
+        accessToken = '';
       });
       _showToast('Session Expired!');
-    } else {
-    }
+    } else {}
   }
 
   String fcmToken = 'Waiting for FCM token...';
@@ -267,86 +277,80 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    // checkWifiStatus();
-    // generateFcmToken();
     return Sizer(builder: (context, orientation, deviceType) {
-      return
-        Consumer<ThemeProvider>(
-            builder: (context, ThemeProvider themeProvider, _) {
-             return MaterialApp(
-            locale: context.locale,
-            supportedLocales: context.supportedLocales,
-            localizationsDelegates: context.localizationDelegates,
-            theme: themeProvider.isDark
-                ? ThemeData(
-                    brightness: Brightness.dark,
-                    fontFamily: 'Inter',
-                    hintColor: AppColors.backgroundColor,
-              highlightColor: Colors.transparent,
-                  )
-                : ThemeData(
-                    brightness: Brightness.light,
-                    fontFamily: 'Inter',
-                    hintColor: AppColors.backgroundColor,
-                  ),
-            debugShowCheckedModeBanner: false,
-            home:
-            // Provider.of<TokenProvider>(
-            //   context,
-            // ).isTokenEmpty
-                 accessToken == ""
-                    ? Stack(
+      return Consumer<ThemeProvider>(
+          builder: (context, ThemeProvider themeProvider, _) {
+        return MaterialApp(
+          locale: context.locale,
+          supportedLocales: context.supportedLocales,
+          localizationsDelegates: context.localizationDelegates,
+          theme: themeProvider.isDark
+              ? ThemeData(
+                  brightness: Brightness.dark,
+                  fontFamily: 'Inter',
+                  hintColor: AppColors.backgroundColor,
+                  highlightColor: Colors.transparent,
+                )
+              : ThemeData(
+                  brightness: Brightness.light,
+                  fontFamily: 'Inter',
+                  hintColor: AppColors.backgroundColor,
+                ),
+          debugShowCheckedModeBanner: false,
+          home:
+              // Provider.of<TokenProvider>(
+              //   context,
+              // ).isTokenEmpty
+              accessToken == ""
+                  ? Stack(
                       children: [
                         Wallet(),
-                        if(!isWifiOn)
+                        if (!isWifiOn)
                           LoaderBluredScreen(
                             isWifiOn: false,
                           )
                       ],
                     )
-                    :
-                //fromNeoApp will be used later
-                Stack(
-                        children: [
-                          // PinScreen(),
-                          WalletTokensNfts(),
-                         // TransactionRequestAcceptReject(),
-                          // ConnectDapp(),
-                          // if(isOverlayVisible)
-                          //   WelcomeScreen(
-                          //       handler:()=> setState((){
-                          //         isOverlayVisible=false;
-                          //       }),
-                          //   ),
-                          if(!isWifiOn)
-
-                            LoaderBluredScreen(
-                              isWifiOn: false,
-                            )
-
-                        ],
-                      ),
-            routes: {
-              SignUpWithEmail.routeName: (context) => const SignUpWithEmail(),
-              SigninWithEmail.routeName: (context) => const SigninWithEmail(),
-              WalletTokensNfts.routeName: (context) => const WalletTokensNfts(),
-              TransactionRequestAcceptReject.routeName: (context) => const TransactionRequestAcceptReject(),
-              TransactionRequest.routeName: (context) =>
-                  const TransactionRequest(),
-              TermsAndConditions.routeName: (context) =>
-                  const TermsAndConditions(),
-              NftsCollectionDetails.routeName: (context) =>
-                  const NftsCollectionDetails(),
-              SetConfirmPinScreen.routeName: (context) =>
-              const SetConfirmPinScreen(),
-              NftsDetails.routeName: (context) =>
-              const NftsDetails(),
-              TransactionSummary.routeName: (context) =>
-              const TransactionSummary(),
-            },
-          );
-        });
-
+                  :
+                  //fromNeoApp will be used later
+                  Stack(
+                      children: [
+                        // PinScreen(),
+                        WalletTokensNfts(),
+                        // TransactionRequestAcceptReject(),
+                        // ConnectDapp(),
+                        // if(isOverlayVisible)
+                        //   WelcomeScreen(
+                        //       handler:()=> setState((){
+                        //         isOverlayVisible=false;
+                        //       }),
+                        //   ),
+                        if (!isWifiOn)
+                          LoaderBluredScreen(
+                            isWifiOn: false,
+                          )
+                      ],
+                    ),
+          routes: {
+            SignUpWithEmail.routeName: (context) => const SignUpWithEmail(),
+            SigninWithEmail.routeName: (context) => const SigninWithEmail(),
+            WalletTokensNfts.routeName: (context) => const WalletTokensNfts(),
+            TransactionRequestAcceptReject.routeName: (context) =>
+                const TransactionRequestAcceptReject(),
+            TransactionRequest.routeName: (context) =>
+                const TransactionRequest(),
+            TermsAndConditions.routeName: (context) =>
+                const TermsAndConditions(),
+            NftsCollectionDetails.routeName: (context) =>
+                const NftsCollectionDetails(),
+            SetConfirmPinScreen.routeName: (context) =>
+                const SetConfirmPinScreen(),
+            NftsDetails.routeName: (context) => const NftsDetails(),
+            TransactionSummary.routeName: (context) =>
+                const TransactionSummary(),
+          },
+        );
+      });
     });
   }
 
@@ -496,5 +500,3 @@ bool isTokenExpired(String token) {
 
   return true; // If no expiry information is found, consider it expired
 }
-
-

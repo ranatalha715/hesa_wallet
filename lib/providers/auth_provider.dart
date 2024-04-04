@@ -357,10 +357,12 @@ class AuthProvider with ChangeNotifier {
         // Get the wsToken from the response
         // final wsToken = jsonResponse['data']['wsToken'];
         final accessToken = jsonResponse['data']['accessToken'];
+        final refreshToken = jsonResponse['data']['refreshToken'];
 
         // Save the wsToken in SharedPreferences
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('accessToken', accessToken);
+        await prefs.setString('refreshToken', refreshToken);
         await prefs.setString('password', password);
 
         print('true ya false');
@@ -421,6 +423,46 @@ class AuthProvider with ChangeNotifier {
           },
         );
       // }
+      return AuthResult.failure;
+    }
+  }
+
+
+  Future<AuthResult> refreshToken({
+    required String refreshToken,
+    required String token,
+    required BuildContext context,
+  }) async {
+    try {
+      final url = Uri.parse(BASE_URL + '/auth/refresh-token');
+      final body = {
+        "refreshToken" : refreshToken,
+      };
+
+      final response = await http.post(url, body: body,
+      //   headers: {
+      //   'Authorization': 'Bearer $refreshToken',
+      // },
+      ); // Timeout set to 10 seconds
+      // fToast = FToast();
+      // fToast.init(context);
+      print("refresh token response");
+      print(response.body);
+      print('=='+refreshToken);
+      if (response.statusCode == 201) {
+        // _showToast('Token Refreshed Successfully!');
+        // }
+        return AuthResult.success;
+      } else {
+        print(" ${response.body}");
+        // _showToast('Token Refreshed failed');
+        return AuthResult.failure;
+      }
+    } on TimeoutException catch (e) {
+      // _showToast('Token Refreshed failed');
+      return AuthResult.failure;
+    } catch (e) {
+      // _showToast('Token Refreshed failed');
       return AuthResult.failure;
     }
   }
