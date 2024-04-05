@@ -155,7 +155,8 @@ class AuthProvider with ChangeNotifier {
     final jsonResponse = json.decode(response.body);
     final msg = jsonResponse['msg'];
     if (response.statusCode == 201) {
-      // Extract the "msg" field
+      final prefs = await SharedPreferences.getInstance();
+      prefs.clear();
 
       print(msg); // Print the message
       _showToast(msg); // Show the message in _showToast
@@ -353,9 +354,6 @@ class AuthProvider with ChangeNotifier {
 
         // Parse the response JSON
         final jsonResponse = json.decode(response.body);
-
-        // Get the wsToken from the response
-        // final wsToken = jsonResponse['data']['wsToken'];
         final accessToken = jsonResponse['data']['accessToken'];
         final refreshToken = jsonResponse['data']['refreshToken'];
 
@@ -430,7 +428,6 @@ class AuthProvider with ChangeNotifier {
 
   Future<AuthResult> refreshToken({
     required String refreshToken,
-    required String token,
     required BuildContext context,
   }) async {
     try {
@@ -450,6 +447,15 @@ class AuthProvider with ChangeNotifier {
       print(response.body);
       print('=='+refreshToken);
       if (response.statusCode == 201) {
+        final jsonResponse = json.decode(response.body);
+        final accessToken = jsonResponse['data']['accessToken'];
+        final refreshToken = jsonResponse['data']['refreshToken'];
+
+        // Save the wsToken in SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('accessToken', accessToken);
+        await prefs.setString('refreshToken', refreshToken);
+
         // _showToast('Token Refreshed Successfully!');
         // }
         return AuthResult.success;

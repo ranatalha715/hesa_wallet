@@ -177,15 +177,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     }); // 31 jan
     initUniLinks();
     print('recieved data' + _receivedData);
-    Timer.periodic(Duration(seconds: 3), (timer) async {
+    Timer.periodic(Duration(seconds: 3 ), (timer) async {
       getAccessToken();
-      print("refreshToken");
-      print(refreshToken);
-
     });
 
-    // Timer.periodic(Duration(seconds: 5), (timer) {
-    //    });
+    Timer.periodic(Duration(minutes: 25), (timer) {
+      Provider.of<AuthProvider>(context, listen: false)
+          .refreshToken(refreshToken: refreshToken, context: context);
+       });
   }
 
   @override
@@ -251,8 +250,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
     refreshToken = prefs.getString('refreshToken')!;
-    Provider.of<AuthProvider>(context, listen: false)
-        .refreshToken(refreshToken: refreshToken, token: accessToken, context: context);
 
     if (isTokenExpired(accessToken)) {
       prefs.remove('accessToken');
