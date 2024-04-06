@@ -353,7 +353,6 @@ class TransactionProvider with ChangeNotifier {
       "chaincode": "nft",
       "func": "MintNFT",
       "walletAddress": walletAddress,
-      // "tokenId": '8ac7a4a08d117072018d12975ec70f2f',
       "tokenId": tokenId,
       "type": "tokenized",
       "country": "PK",
@@ -2674,7 +2673,6 @@ class TransactionProvider with ChangeNotifier {
     } on TimeoutException catch (error) {
       // Handle timeout error
       print('Process Api Timeout Error: $error');
-
       _showToast('Request Timeout');
       testDialogToCheck(
           context: context,

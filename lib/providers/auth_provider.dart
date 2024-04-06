@@ -428,6 +428,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<AuthResult> refreshToken({
     required String refreshToken,
+    required String token,
     required BuildContext context,
   }) async {
     try {
@@ -437,9 +438,9 @@ class AuthProvider with ChangeNotifier {
       };
 
       final response = await http.post(url, body: body,
-      //   headers: {
-      //   'Authorization': 'Bearer $refreshToken',
-      // },
+        headers: {
+        'Authorization': 'Bearer $token',
+      },
       ); // Timeout set to 10 seconds
       // fToast = FToast();
       // fToast.init(context);

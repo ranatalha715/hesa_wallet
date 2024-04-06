@@ -180,10 +180,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     Timer.periodic(Duration(seconds: 3 ), (timer) async {
       getAccessToken();
     });
-
     Timer.periodic(Duration(minutes: 25), (timer) {
       Provider.of<AuthProvider>(context, listen: false)
-          .refreshToken(refreshToken: refreshToken, context: context);
+          .refreshToken(refreshToken: refreshToken, context: context, token: accessToken);
        });
   }
 
@@ -253,9 +252,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
     if (isTokenExpired(accessToken)) {
       prefs.remove('accessToken');
-      setState(() {
-        accessToken = '';
-      });
+      Provider.of<AuthProvider>(context, listen: false)
+          .refreshToken(refreshToken: refreshToken, context: context, token: accessToken);
+      // setState(() {
+      //   accessToken = '';
+      // });
       _showToast('Session Expired!');
     } else {}
   }
