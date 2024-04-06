@@ -124,12 +124,30 @@ class TransactionProvider with ChangeNotifier {
   var txType = '';
   var txId = '';
   var txTotalAmount = '';
+  var txAmountType = '';
   var txStatus = '';
   var txTokenId = '';
   var txCreatorId = '';
+  var txOfferedBy = '';
   var txCreatorRoyalityPercent = '';
   var txCrdNum = '';
   var txCrdBrand = '';
+
+  clearTxSummaryData(){
+     txTimeStamp = '';
+    txType = '';
+     txId = '';
+    txTotalAmount = '';
+    txAmountType = '';
+     txStatus = '';
+    txTokenId = '';
+    txCreatorId = '';
+    txOfferedBy = '';
+    txCreatorRoyalityPercent = '';
+    txCrdNum = '';
+    txCrdBrand = '';
+     _transactionFeeses=[];
+  }
 
 
   List<Map<String, dynamic>> _transactionFeeses=[];
@@ -146,6 +164,7 @@ class TransactionProvider with ChangeNotifier {
   }) async {
     try {
       final url = Uri.parse(BASE_URL + '/user/wallet-activity/$id');
+      // final url = Uri.parse(BASE_URL + '/user/wallet-activity/$id?type=$type');
 
       final response = await http.get(
         url,
@@ -165,9 +184,11 @@ class TransactionProvider with ChangeNotifier {
           txType = jsonData['transactionDetails']['txType'] ?? 'N/A';
           txId = jsonData['transactionDetails']['txId'] ?? 'N/A';
           txTotalAmount = jsonData['totalAmount']['value'].toString() ?? 'N/A';
+          txAmountType = jsonData['totalAmount']['type'].toString() ?? 'N/A';
           txStatus = jsonData['transactionDetails']['txStatus'] ?? 'N/A';
           txTokenId = jsonData['transactionDetails']['tokenID'] ?? 'N/A';
           txCreatorId = jsonData['transactionDetails']['creatorID'] ?? 'N/A';
+          txOfferedBy = jsonData['transactionDetails']['offeredBy'] ?? 'N/A';
           txCreatorRoyalityPercent = jsonData['transactionDetails']
                       ['creatorRoyaltyPercentage']
                   .toString() ??

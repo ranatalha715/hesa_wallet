@@ -342,7 +342,7 @@ class AuthProvider with ChangeNotifier {
         "password": password,
       };
 
-      final response = await http.post(url, body: body).timeout(Duration(seconds: 10)); // Timeout set to 10 seconds
+      final response = await http.post(url, body: body).timeout(Duration(seconds: 30)); // Timeout set to 10 seconds
       fToast = FToast();
       fToast.init(context);
       print("login with username response");
