@@ -109,6 +109,22 @@ class _TransactionSummaryState extends State<TransactionSummary> {
     return result;
   }
 
+  String replaceMiddleWithDotstxIdCounter(String input) {
+    if (input.length <= 30) {
+      return input;
+    }
+
+    final int middleIndex = input.length ~/ 2; // Find the middle index
+    final int startIndex = middleIndex - 15; // Calculate the start index
+    final int endIndex = middleIndex + 15; // Calculate the end index
+
+    // Split the input string into three parts and join them with '...'
+    final String result =
+        input.substring(0, startIndex) + '....' + input.substring(endIndex);
+
+    return result;
+  }
+
   String replaceMiddleWithDotsTokenId(String input) {
     if (input.length <= 30) {
       return input;
@@ -440,7 +456,8 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                     ),
                                     transactionDetailsWidget(
                                       title: 'Tx ID:'.tr(),
-                                      details: replaceMiddleWithDotstxId(
+                                      details: type == 'counter-offer' ?replaceMiddleWithDotstxIdCounter(
+                                          transactionSummary.txId) : replaceMiddleWithDotstxId(
                                           transactionSummary.txId),
                                       isDark:
                                           themeNotifier.isDark ? true : false,
@@ -456,8 +473,8 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                       title: type == 'collection'
                                           ? "Collection ID:"
                                           : "Token ID:".tr(),
-                                      details: replaceMiddleWithDotsTokenId(
-                                          transactionSummary.txTokenId),
+                                      details: transactionSummary.txTokenId != "" ?replaceMiddleWithDotsTokenId(
+                                          transactionSummary.txTokenId):'N/A',
                                       isDark:
                                           themeNotifier.isDark ? true : false,
                                       color: AppColors.textColorToska,
@@ -492,6 +509,8 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                     SizedBox(
                                       height: 2.h,
                                     ),
+                                  if(  transactionSummary
+                                      .transactionFeeses.length !=0 )
                                     Container(
                                       decoration: BoxDecoration(
                                           color:

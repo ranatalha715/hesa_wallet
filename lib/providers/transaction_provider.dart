@@ -163,8 +163,8 @@ class TransactionProvider with ChangeNotifier {
     required BuildContext context,
   }) async {
     try {
-      final url = Uri.parse(BASE_URL + '/user/wallet-activity/$id');
-      // final url = Uri.parse(BASE_URL + '/user/wallet-activity/$id?type=$type');
+      // final url = Uri.parse(BASE_URL + '/user/wallet-activity/$id');
+      final url = Uri.parse(BASE_URL + '/user/wallet-activity/$id?type=$type');
 
       final response = await http.get(
         url,
