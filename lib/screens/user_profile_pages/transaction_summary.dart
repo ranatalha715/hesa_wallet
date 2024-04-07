@@ -99,8 +99,8 @@ class _TransactionSummaryState extends State<TransactionSummary> {
     }
 
     final int middleIndex = input.length ~/ 2; // Find the middle index
-    final int startIndex = middleIndex - 24; // Calculate the start index
-    final int endIndex = middleIndex + 24; // Calculate the end index
+    final int startIndex = middleIndex - 23; // Calculate the start index
+    final int endIndex = middleIndex + 23; // Calculate the end index
 
     // Split the input string into three parts and join them with '...'
     final String result =
