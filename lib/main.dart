@@ -346,6 +346,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             NftsDetails.routeName: (context) => const NftsDetails(),
             TransactionSummary.routeName: (context) =>
                 const TransactionSummary(),
+            ConnectDapp.routeName: (context) =>
+            const ConnectDapp(),
           },
         );
       });

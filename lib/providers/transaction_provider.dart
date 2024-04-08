@@ -67,7 +67,7 @@ class TransactionProvider with ChangeNotifier {
     required String accessToken,
     required BuildContext context,
   }) async {
-    final url = Uri.parse(BASE_URL + '/user/wallet-activity?limit=5&page=1');
+    final url = Uri.parse(BASE_URL + '/user/wallet-activity?limit=10&page=1');
 
     final response = await http.get(
       url,

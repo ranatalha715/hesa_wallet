@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hesa_wallet/providers/user_provider.dart';
+import 'package:hesa_wallet/screens/connection_requests_pages/connect_dapp.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
@@ -365,61 +366,62 @@ class AuthProvider with ChangeNotifier {
 
         print('true ya false');
         print(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet);
+        await Navigator.of(context).pushNamed(ConnectDapp.routeName, arguments: {
+
+        });
         // if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
-          await Provider.of<UserProvider>(context,listen: false).getUserDetails(context: context,
-              token: accessToken
-          );
-          await AppDeepLinking().openNftApp(
-            {
-              "operation": "connectWallet",
-              "walletAddress": Provider.of<UserProvider>(context,listen: false).walletAddress,
-              "userName": Provider.of<UserProvider>(context,listen: false).userName,
-              "userIcon": Provider.of<UserProvider>(context,listen: false).userAvatar,
-              "loginResponse":response.body.toString()
-            },
-          );
+        //   await Provider.of<UserProvider>(context,listen: false).getUserDetails(context: context,
+        //       token: accessToken
+        //   );
+        //   await AppDeepLinking().openNftApp(
+        //     {
+        //       "operation": "connectWallet",
+        //       "walletAddress": Provider.of<UserProvider>(context,listen: false).walletAddress,
+        //       "userName": Provider.of<UserProvider>(context,listen: false).userName,
+        //       "userIcon": Provider.of<UserProvider>(context,listen: false).userAvatar,
+        //       "loginResponse":response.body.toString()
+        //     },
+        //   );
           print('go to neo');
         // }
         return AuthResult.success;
       } else {
-        // Show an error message or handle the response as needed
         print("Login failed: ${response.body}");
-        _showToast('Login failed');
+        _showToast('Login failed  ${response.body}');
         if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
       }
         return AuthResult.failure;
       }
     } on TimeoutException catch (e) {
-      // Handle timeout exception
       print("TimeoutException during login: $e");
-      // _showToast('Timeout occurred during login');
+      _showToast('Timeout occurred during login $e');
       // if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet) {
-        await AppDeepLinking().openNftApp(
-          {
-            "operation": "connectWallet",
-            "walletAddress": Provider
-                .of<UserProvider>(context, listen: false)
-                .walletAddress,
-            "userName": Provider.of<UserProvider>(context,listen: false).userName,
-            "userIcon": Provider.of<UserProvider>(context,listen: false).userAvatar,
-            "loginResponse": e.toString()
-          },
-        );
+      //   await AppDeepLinking().openNftApp(
+      //     {
+      //       "operation": "connectWallet",
+      //       "walletAddress": Provider
+      //           .of<UserProvider>(context, listen: false)
+      //           .walletAddress,
+      //       "userName": Provider.of<UserProvider>(context,listen: false).userName,
+      //       "userIcon": Provider.of<UserProvider>(context,listen: false).userAvatar,
+      //       "loginResponse": e.toString()
+      //     },
+      //   );
       // }
       return AuthResult.failure;
     } catch (e) {
       // Catching any other exception that might occur during the login process
       print("Exception during login: $e");
-      _showToast('An error occurred during login');
+      _showToast('An error occurred during login $e');
       // if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet) {
-        await AppDeepLinking().openNftApp(
-          {
-            "walletAddress": Provider.of<UserProvider>(context,listen: false).walletAddress,
-            "userName": Provider.of<UserProvider>(context,listen: false).userName,
-            "userIcon": Provider.of<UserProvider>(context,listen: false).userAvatar,
-            "loginResponse": e.toString()
-          },
-        );
+      //   await AppDeepLinking().openNftApp(
+      //     {
+      //       "walletAddress": Provider.of<UserProvider>(context,listen: false).walletAddress,
+      //       "userName": Provider.of<UserProvider>(context,listen: false).userName,
+      //       "userIcon": Provider.of<UserProvider>(context,listen: false).userAvatar,
+      //       "loginResponse": e.toString()
+      //     },
+      //   );
       // }
       return AuthResult.failure;
     }

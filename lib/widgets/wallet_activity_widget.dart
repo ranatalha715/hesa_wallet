@@ -2,9 +2,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hesa_wallet/constants/colors.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../providers/theme_provider.dart';
+import '../providers/transaction_provider.dart';
 
 class WalletActivityWidget extends StatefulWidget {
   final String title, subTitle, image, time, siteURL;
@@ -34,8 +36,25 @@ class WalletActivityWidget extends StatefulWidget {
 }
 
 class _WalletActivityWidgetState extends State<WalletActivityWidget> {
+  var accessToken;
+
+  getAccessToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    accessToken = prefs.getString('accessToken')!;
+  }
+
+  @override
+  Future<void> didChangeDependencies() async {
+    // TODO: implement didChangeDependencies
+    await getAccessToken();
+    await Provider.of<TransactionProvider>(context, listen: false)
+        .getWalletActivities(accessToken: accessToken, context: context);
+    super.didChangeDependencies();
+  }
   @override
   Widget build(BuildContext context) {
+    final activities =
+        Provider.of<TransactionProvider>(context, listen: false).activities;
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
@@ -69,8 +88,6 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                   borderRadius: BorderRadius.circular(5.sp),
                   child: Image.network(
                     'https://images.pexels.com/photos/14354112/pexels-photo-14354112.jpeg?auto=compress&cs=tinysrgb&w=800',
-                    // widget.image,
-                    // Replace with your image assets
                     fit: BoxFit.cover,
                     height: 40.sp,
                     width: 40.sp,
@@ -171,7 +188,7 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          if (widget.isPending)
+                          if (activities[index].transactionType == 'Site Connected')
                             Container(
                               // margin: EdgeInsets.only(top: 6.sp),
                               decoration: BoxDecoration(
