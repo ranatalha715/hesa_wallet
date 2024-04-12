@@ -57,7 +57,9 @@ class _WalletActivityState extends State<WalletActivity> {
   @override
   Widget build(BuildContext context) {
     final activities =
-        Provider.of<TransactionProvider>(context, listen: false).activities;
+        Provider
+            .of<TransactionProvider>(context, listen: false)
+            .activities;
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return Stack(
         children: [
@@ -70,179 +72,188 @@ class _WalletActivityState extends State<WalletActivity> {
                 MainHeader(title: 'Activity'.tr()),
                 Expanded(
                     child: Container(
-                  child: activities.isEmpty
-                      ? Padding(
-                          padding: EdgeInsets.only(top: 20.h),
-                          child: Text(
-                            "No activities found under this wallet ID.",
-                            style: TextStyle(
-                                color: themeNotifier.isDark
-                                    ? AppColors.textColorGreyShade2
-                                    : AppColors.textColorBlack,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12.sp,
-                                fontFamily: 'Blogger Sans'),
-                          ),
-                        )
-                      : ListView.builder(
-                          padding: EdgeInsets.zero,
-                          itemCount: activities.length,
-                          shrinkWrap: true,
-                          itemBuilder: (BuildContext context, int index) {
-                            return WalletActivityWidget(
-                              title: activities[index].tokenName,
-                              subTitle: activities[index].transactionType,
-                              // image: 'assets/images/nft.png',
-                              image: activities[index].image,
-                              time: activities[index].time,
-                              priceDown: activities[index].amountType == 'debit'
-                                  ? activities[index].transactionAmount
-                                  : null,
-                              priceUp: activities[index].amountType == 'credit'
-                                  ? activities[index].transactionAmount
-                                  : null,
-                              siteURL: activities[index].siteURL,
-                              handler: () => Navigator.of(context).pushNamed(
-                                  TransactionSummary.routeName,
-                                  arguments: {
-                                    'id': activities[index].id,
-                                    'type': activities[index].type,
-                                    'site': activities[index].siteURL,
-                                  }),
-                            );
-                          },
+                      child: activities.isEmpty
+                          ? Padding(
+                        padding: EdgeInsets.only(top: 20.h),
+                        child: Text(
+                          "No activities found under this wallet ID.",
+                          style: TextStyle(
+                              color: themeNotifier.isDark
+                                  ? AppColors.textColorGreyShade2
+                                  : AppColors.textColorBlack,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12.sp,
+                              fontFamily: 'Blogger Sans'),
                         ),
-                )
-                    // SingleChildScrollView(
-                    //   child: Column(
-                    //     children: [
-                    //       WalletActivityWidget(
-                    //         title: 'Neo Cube#123',
-                    //         subTitle: 'Item sale'.tr(),
-                    //         image: 'assets/images/nft.png',
-                    //         time: '3h',
-                    //         priceUp: 12000,
-                    //         handler: () => Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //               builder: (context) => TransactionSummary()),
-                    //         ),
-                    //       ),
-                    //       WalletActivityWidget(
-                    //         title: 'Neo Cube#123'.tr(),
-                    //         subTitle: 'Collection purchase'.tr(),
-                    //         image: 'assets/images/nft.png',
-                    //         time: '1d',
-                    //         // priceUp: 12000,
-                    //         priceDown: 8000,
-                    //         handler: () => Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //               builder: (context) => TransactionSummary()),
-                    //         ),
-                    //       ),
-                    //       WalletActivityWidget(
-                    //         title: 'Neo Cube#123'.tr(),
-                    //         subTitle: 'Creation royalty'.tr(),
-                    //         image: 'assets/images/nft.png',
-                    //         time: '1d',
-                    //         priceNormal: 10000,
-                    //         priceUp: 400,
-                    //         handler: () => Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //               builder: (context) => TransactionSummary()),
-                    //         ),
-                    //       ),
-                    //       WalletActivityWidget(
-                    //         title: 'Site Connection'.tr(),
-                    //         subTitle: 'Connect Success'.tr(),
-                    //         image: 'assets/images/nft.png',
-                    //         time: '1d',
-                    //         isPending: true,
-                    //         handler: () => Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(builder: (context) => ConnectDapp()),
-                    //         ),
-                    //       ),
-                    //       WalletActivityWidget(
-                    //         title: 'Listing'.tr(),
-                    //         subTitle: 'Transaction request'.tr(),
-                    //         image: 'assets/images/nft.png',
-                    //         time: '1d',
-                    //         isPending: true,
-                    //         handler: () => Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(builder: (context) => ConnectDapp()),
-                    //         ),
-                    //       ),
-                    //       WalletActivityWidget(
-                    //         title: 'Collection purchase'.tr(),
-                    //         subTitle: 'Item sale'.tr(),
-                    //         image: 'assets/images/nft.png',
-                    //         time: '8h',
-                    //         priceUp: 12000,
-                    //         // priceDown: 4000,
-                    //         handler: () => Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //               builder: (context) => TransactionSummary()),
-                    //         ),
-                    //       ),
-                    //       WalletActivityWidget(
-                    //         title: 'Creation royalty'.tr(),
-                    //         subTitle: 'Item sale'.tr(),
-                    //         image: 'assets/images/nft.png',
-                    //         time: '1d',
-                    //         priceNormal: 8000,
-                    //         priceUp: 4000,
-                    //         handler: () => Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //               builder: (context) => TransactionSummary()),
-                    //         ),
-                    //       ),
-                    //       WalletActivityWidget(
-                    //         title: 'Listing'.tr(),
-                    //         subTitle: 'Transaction request'.tr(),
-                    //         image: 'assets/images/nft.png',
-                    //         time: '1d',
-                    //         isPending: true,
-                    //         handler: () => Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(builder: (context) => ConnectDapp()),
-                    //         ),
-                    //       ),
-                    //       WalletActivityWidget(
-                    //         title: 'Collection purchase'.tr(),
-                    //         subTitle: 'Item sale'.tr(),
-                    //         image: 'assets/images/nft.png',
-                    //         time: '2d',
-                    //         priceNormal: 10000,
-                    //         priceDown: 4000,
-                    //         handler: () => Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //               builder: (context) => TransactionSummary()),
-                    //         ),
-                    //       ),
-                    //       WalletActivityWidget(
-                    //         title: 'Creation royalty'.tr(),
-                    //         subTitle: 'Item sale'.tr(),
-                    //         image: 'assets/images/nft.png',
-                    //         time: '1d',
-                    //         priceNormal: 8000,
-                    //         priceUp: 4000,
-                    //         handler: () => Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //               builder: (context) => TransactionSummary()),
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    ),
+                      )
+                          : ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: activities.length,
+                        shrinkWrap: true,
+                        itemBuilder: (BuildContext context, int index) {
+                          return WalletActivityWidget(
+                            isPending: activities[index].tokenName ==
+                                'Site Connected' ||
+                                activities[index].tokenName ==
+                                    'Site Disconnected' ? true : false,
+                            title: activities[index].tokenName,
+                            subTitle: activities[index].transactionType,
+                            // image: 'assets/images/nft.png',
+                            image: activities[index].image,
+                            time: activities[index].time,
+                            priceDown: activities[index].amountType == 'debit'
+                                ? activities[index].transactionAmount
+                                : null,
+                            priceUp: activities[index].amountType == 'credit'
+                                ? activities[index].transactionAmount
+                                : null,
+                            siteURL: activities[index].siteURL,
+                            handler: () {
+                              if(activities[index].tokenName !=
+                                  'Site Connected' &&
+                                  activities[index].tokenName !=
+                                      'Site Disconnected')
+                              Navigator.of(context).pushNamed(
+                                    TransactionSummary.routeName,
+                                    arguments: {
+                                      'id': activities[index].id,
+                                      'type': activities[index].type,
+                                      'site': activities[index].siteURL,
+                                    });},
+                          );
+                        },
+                      ),
+                    )
+                  // SingleChildScrollView(
+                  //   child: Column(
+                  //     children: [
+                  //       WalletActivityWidget(
+                  //         title: 'Neo Cube#123',
+                  //         subTitle: 'Item sale'.tr(),
+                  //         image: 'assets/images/nft.png',
+                  //         time: '3h',
+                  //         priceUp: 12000,
+                  //         handler: () => Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (context) => TransactionSummary()),
+                  //         ),
+                  //       ),
+                  //       WalletActivityWidget(
+                  //         title: 'Neo Cube#123'.tr(),
+                  //         subTitle: 'Collection purchase'.tr(),
+                  //         image: 'assets/images/nft.png',
+                  //         time: '1d',
+                  //         // priceUp: 12000,
+                  //         priceDown: 8000,
+                  //         handler: () => Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (context) => TransactionSummary()),
+                  //         ),
+                  //       ),
+                  //       WalletActivityWidget(
+                  //         title: 'Neo Cube#123'.tr(),
+                  //         subTitle: 'Creation royalty'.tr(),
+                  //         image: 'assets/images/nft.png',
+                  //         time: '1d',
+                  //         priceNormal: 10000,
+                  //         priceUp: 400,
+                  //         handler: () => Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (context) => TransactionSummary()),
+                  //         ),
+                  //       ),
+                  //       WalletActivityWidget(
+                  //         title: 'Site Connection'.tr(),
+                  //         subTitle: 'Connect Success'.tr(),
+                  //         image: 'assets/images/nft.png',
+                  //         time: '1d',
+                  //         isPending: true,
+                  //         handler: () => Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(builder: (context) => ConnectDapp()),
+                  //         ),
+                  //       ),
+                  //       WalletActivityWidget(
+                  //         title: 'Listing'.tr(),
+                  //         subTitle: 'Transaction request'.tr(),
+                  //         image: 'assets/images/nft.png',
+                  //         time: '1d',
+                  //         isPending: true,
+                  //         handler: () => Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(builder: (context) => ConnectDapp()),
+                  //         ),
+                  //       ),
+                  //       WalletActivityWidget(
+                  //         title: 'Collection purchase'.tr(),
+                  //         subTitle: 'Item sale'.tr(),
+                  //         image: 'assets/images/nft.png',
+                  //         time: '8h',
+                  //         priceUp: 12000,
+                  //         // priceDown: 4000,
+                  //         handler: () => Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (context) => TransactionSummary()),
+                  //         ),
+                  //       ),
+                  //       WalletActivityWidget(
+                  //         title: 'Creation royalty'.tr(),
+                  //         subTitle: 'Item sale'.tr(),
+                  //         image: 'assets/images/nft.png',
+                  //         time: '1d',
+                  //         priceNormal: 8000,
+                  //         priceUp: 4000,
+                  //         handler: () => Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (context) => TransactionSummary()),
+                  //         ),
+                  //       ),
+                  //       WalletActivityWidget(
+                  //         title: 'Listing'.tr(),
+                  //         subTitle: 'Transaction request'.tr(),
+                  //         image: 'assets/images/nft.png',
+                  //         time: '1d',
+                  //         isPending: true,
+                  //         handler: () => Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(builder: (context) => ConnectDapp()),
+                  //         ),
+                  //       ),
+                  //       WalletActivityWidget(
+                  //         title: 'Collection purchase'.tr(),
+                  //         subTitle: 'Item sale'.tr(),
+                  //         image: 'assets/images/nft.png',
+                  //         time: '2d',
+                  //         priceNormal: 10000,
+                  //         priceDown: 4000,
+                  //         handler: () => Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (context) => TransactionSummary()),
+                  //         ),
+                  //       ),
+                  //       WalletActivityWidget(
+                  //         title: 'Creation royalty'.tr(),
+                  //         subTitle: 'Item sale'.tr(),
+                  //         image: 'assets/images/nft.png',
+                  //         time: '1d',
+                  //         priceNormal: 8000,
+                  //         priceUp: 4000,
+                  //         handler: () => Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (context) => TransactionSummary()),
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                ),
               ],
             ),
           ),

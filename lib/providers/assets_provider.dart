@@ -13,22 +13,22 @@ import '../models/assets_model.dart';
 class AssetsProvider with ChangeNotifier {
   late FToast fToast;
 
-  List<AssetsNftsModel> _assets = [];
-  List<AssetsCollectionModel> _assetsCollection = [];
+  List<NftsModel> _assets = [];
+  List<NftsCollectionModel> _assetsCollection = [];
 
-  List<AssetsNftsModel> get assets {
+  List<NftsModel> get assets {
     return [..._assets];
   }
 
-  // List<AssetsCollectionModel> get assetsCollection {
-  //   return [..._assetsCollection];
-  // }
-  //
-  // List<NftsModel> _nfts = [];
-  //
-  // List<NftsModel> get nfts {
-  //   return [..._nfts];
-  // }
+  List<NftsCollectionModel> get assetsCollection {
+    return [..._assetsCollection];
+  }
+
+  List<NftsModel> _nfts = [];
+
+  List<NftsModel> get nfts {
+    return [..._nfts];
+  }
 
   // List<NftsCollectionModel> _nftsCollection = [];
   //
@@ -40,9 +40,11 @@ class AssetsProvider with ChangeNotifier {
     required String token,
     required String walletAddress,
     required BuildContext context,
+    required String ownerType,
+    required String type,
   }) async {
-    final url =
-        Uri.parse(BASE_URL + '/user/getAssets?walletAddress=$walletAddress');
+    final url = Uri.parse(BASE_URL +
+        '/user/assets/?ownerType=$ownerType&limit=2&page=1&type=$type');
     // final body = {
     //   "walletAddress": walletAddress,
     // };
@@ -58,32 +60,40 @@ class AssetsProvider with ChangeNotifier {
     );
     fToast = FToast();
     fToast.init(context);
-    final extractedData =
-        json.decode(response.body)['data']['NFT'] as List<dynamic>?;
+    final extractedData = json.decode(response.body)['nfts'] as List<dynamic>?;
     final extractedCollection =
-        json.decode(response.body)['data']['collection'] as List<dynamic>?;
+        json.decode(response.body)['collections'] as List<dynamic>?;
     if (response.statusCode == 200) {
+      print('Assests Nfts');
       print(extractedData);
+      print('Assests Collection');
+      print(extractedCollection);
 
-      final List<AssetsNftsModel> loadedAssets = [];
+      final List<NftsModel> loadedAssets = [];
       extractedData?.forEach((prodData) {
-        loadedAssets.add(AssetsNftsModel(
-          tokenName: prodData['TokenName'].toString(),
-          tokenId: prodData['tokenId'].toString(),
-          tokenURI: prodData['tokenURI'].toString(),
-          price: prodData['tokenPrice'].toString(),
+        loadedAssets.add(NftsModel(
+          tokenName: prodData['name'].toString(),
+          id: prodData['id'].toString(),
+          tokenURI: prodData['url'].toString(),
+          price: "",
+          tokenId: prodData['id'].toString(),
         ));
       });
       _assets = loadedAssets;
-      final List<AssetsCollectionModel> loadedAssetsCollection = [];
+      final List<NftsCollectionModel> loadedAssetsCollection = [];
       extractedCollection?.forEach((prodData) {
-        loadedAssetsCollection.add(AssetsCollectionModel(
-          collectionName: prodData['collectionName'].toString(),
-          collectionId: prodData['collectionId'].toString(),
+        loadedAssetsCollection.add(NftsCollectionModel(
+          collectionName: prodData['name'].toString(),
+          collectionId: prodData['id'].toString(),
+          id: prodData['id'].toString(),
+          logo: prodData['image'].toString(),
+          ownerId: prodData['ownerId'].toString(),
+          nftIds: [], creatorId: prodData['creatorId'].toString(), creatorRoyalty: '',
+
         ));
       });
       _assetsCollection = loadedAssetsCollection;
-      // _showToast('Getting assets!');
+      _showToast('Getting assets!');
       notifyListeners();
       return AuthResult.success;
     } else {
@@ -93,9 +103,6 @@ class AssetsProvider with ChangeNotifier {
       return AuthResult.failure;
     }
   }
-
-
-
 
   _showToast(String message, {int duration = 1000}) {
     Widget toast = Container(

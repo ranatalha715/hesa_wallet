@@ -44,12 +44,19 @@ class _NftsCollectionDesignState extends State<NftsCollectionDesign> {
         borderRadius: BorderRadius.circular(10),
         child: Stack(
           children: [
-            // Image.network(widget.nftsCollection.logo!, fit: BoxFit.cover,),
-            Image.asset(
-              'assets/images/nft.png',
-              // Replace with your image assets
-              fit: BoxFit.cover,
+            Image.network(widget.nftsCollection.logo!, fit: BoxFit.cover,
+              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                return Image.asset(
+                  'assets/images/nft.png', // Path to your placeholder image
+                  fit: BoxFit.cover,
+                );
+              },
             ),
+            // Image.asset(
+            //   'assets/images/nft.png',
+            //   // Replace with your image assets
+            //   fit: BoxFit.cover,
+            // ),
             Positioned(
                 bottom: 0,
                 left: 0,

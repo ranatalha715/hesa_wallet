@@ -10,8 +10,7 @@ import '../providers/transaction_provider.dart';
 
 class WalletActivityWidget extends StatefulWidget {
   final String title, subTitle, image, time, siteURL;
-  final int?
-  priceNormal;
+  final int? priceNormal;
   final String? priceUp;
   final String? priceDown;
   final bool isPending;
@@ -37,20 +36,48 @@ class WalletActivityWidget extends StatefulWidget {
 
 class _WalletActivityWidgetState extends State<WalletActivityWidget> {
   var accessToken;
+  var index;
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
   }
-
   @override
-  Future<void> didChangeDependencies() async {
-    // TODO: implement didChangeDependencies
-    await getAccessToken();
-    await Provider.of<TransactionProvider>(context, listen: false)
-        .getWalletActivities(accessToken: accessToken, context: context);
+  void didChangeDependencies() {
     super.didChangeDependencies();
+    // Wrap asynchronous code in a try-catch block to handle any potential errors
+    try {
+      // Retrieve the access token
+      getAccessToken().then((accessToken) {
+        // Fetch wallet activities using the access token
+        Provider.of<TransactionProvider>(context, listen: false)
+            .getWalletActivities(
+          accessToken: accessToken,
+          context: context,
+        )
+            .catchError((error) {
+          print("Error fetching wallet activities: $error");
+        });
+      }).catchError((error) {
+
+        print("Error retrieving access token: $error");
+        // You can show a snackbar or any other error handling mechanism here
+      });
+    } catch (error) {
+      print("Error in didChangeDependencies: $error");
+      // You can show a snackbar or any other error handling mechanism here
+    }
   }
+
+  // @override
+  // Future<void> didChangeDependencies() async {
+  //   // TODO: implement didChangeDependencies
+  //   await getAccessToken();
+  //   await Provider.of<TransactionProvider>(context, listen: false)
+  //       .getWalletActivities(accessToken: accessToken, context: context);
+  //   super.didChangeDependencies();
+  // }
+
   @override
   Widget build(BuildContext context) {
     final activities =
@@ -110,7 +137,11 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                             color: Colors.transparent,
                             width: 50.w,
                             child: Text(
-                              widget.subTitle,
+                              widget.subTitle == 'Site Connected'
+                                  ? 'Connect Success'
+                                  : widget.subTitle == 'Site Disconnected'
+                                      ? 'Disconnect Success'
+                                      : widget.subTitle,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
@@ -127,7 +158,7 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                           ),
                         ],
                       ),
-                      SizedBox(height: isEnglish ? 0.3.h:0.02.h),
+                      SizedBox(height: isEnglish ? 0.3.h : 0.02.h),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -172,7 +203,7 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                           //   ),
                         ],
                       ),
-                      SizedBox(height: isEnglish? 0.3.h: 0.0),
+                      SizedBox(height: isEnglish ? 0.3.h : 0.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -188,7 +219,9 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          if (activities[index].transactionType == 'Site Connected')
+                          // if (activities[index].transactionType == 'Site Connected')
+                          // if (activities[index].transactionType != null && activities[index].transactionType == 'Site Connected')
+                          if (widget.isPending)
                             Container(
                               // margin: EdgeInsets.only(top: 6.sp),
                               decoration: BoxDecoration(
@@ -199,12 +232,15 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                               ),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: 13.sp, vertical: isEnglish ?  4.sp : 3.5.sp),
+                                    horizontal: 10.sp,
+                                    vertical: isEnglish ? 4.sp : 3.5.sp),
                                 child: Text(
-                                  'Pending'.tr(),
+                                  widget.title == 'Site Connected'
+                                      ? 'Connected'
+                                      : 'Disconnected',
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 9.sp,
+                                      fontSize: 8.sp,
                                       color: AppColors.textColorWhite),
                                 ),
                               ),
@@ -219,11 +255,10 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                           //             ? AppColors.textColorWhite
                           //             : AppColors.textColorGreyShade2),
                           //   ),
-                          if (!widget.isPending &&
-                              widget.priceUp != null
+                          if (!widget.isPending && widget.priceUp != null
                               // &&
                               // widget.priceNormal == null
-                          )
+                              )
                             Text(
                               "+${widget.priceUp} SAR",
                               style: TextStyle(

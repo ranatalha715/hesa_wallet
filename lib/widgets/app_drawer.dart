@@ -34,16 +34,16 @@ class AppDrawer extends StatefulWidget {
 class _AppDrawerState extends State<AppDrawer> {
   var selectedIndex = -1;
   var isLoading = false;
-  var wstoken = '';
+  var accessToken = '';
 
-  getWsToken() async {
+  getaccessToken() async {
     final prefs = await SharedPreferences.getInstance();
-    wstoken = prefs.getString('wsToken')!;
+    accessToken = prefs.getString('accessToken')!;
   }
 
   deleteToken() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.remove('wsToken');
+    prefs.remove('accessToken');
   }
 
   String replaceMiddleWithDots(String input) {
@@ -64,16 +64,16 @@ class _AppDrawerState extends State<AppDrawer> {
   }
 
   init() async {
-    await getWsToken();
+    await getaccessToken();
     await Provider.of<UserProvider>(context, listen: false)
-        .getUserDetails(token: wstoken, context: context);
+        .getUserDetails(token: accessToken, context: context);
   }
 
   @override
   void initState() {
     // TODO: implement initState
     init();
-    // getWsToken();
+    // getaccessToken();
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor:
@@ -568,7 +568,7 @@ class _AppDrawerState extends State<AppDrawer> {
                               final result = await Provider.of<AuthProvider>(
                                       context,
                                       listen: false)
-                                  .logoutUser(token: wstoken, context: context);
+                                  .logoutUser(token: accessToken, context: context);
 
                               setState(() {
                                 isLoading = false;

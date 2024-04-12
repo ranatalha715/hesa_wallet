@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sizer/sizer.dart';
+import '../../providers/assets_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../widgets/app_drawer.dart';
@@ -110,6 +111,12 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       token: accessToken,
       context: context,
       walletAddress: user.walletAddress!,
+    );
+    await Provider.of<AssetsProvider>(context, listen: false)
+        .getAssets(
+      token: accessToken,
+      context: context,
+      walletAddress: user.walletAddress!, ownerType: 'creator', type: 'all',
     );
     setState(() {
       _isloading = false;
@@ -840,8 +847,12 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
             .nftsCollectionCreated;
     final nftsListed =
         Provider
-            .of<NftsProvider>(context, listen: false)
-            .nftsListed;
+            .of<AssetsProvider>(context, listen: false)
+            .assets;
+    final collectionListed =
+        Provider
+            .of<AssetsProvider>(context, listen: false)
+            .assetsCollection;
     return Consumer<UserProvider>(builder: (context, user, child) {
       return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
         return Stack(
@@ -1211,7 +1222,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                           themeNotifier.isDark,
                                           nftsCollectionCreated,
                                           nftsCreated,
-                                            nftsListed
+                                            nftsListed,
+                                          collectionListed
                                         ))
                                   ],
                                 ),
@@ -1290,6 +1302,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       var nftsCollectionCreated,
       var nftsCreated,
       var nftsListed,
+      var nftsCollectionListed,
 
       ) {
     switch (selectedCategoryIndex) {
@@ -1312,7 +1325,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
         );
       case 3: // Listed
         return NftsCollectionDivision(
-          nftsCollection: nftsCollectionCreated,
+          nftsCollection: nftsCollectionListed,
           nfts: nftsListed,
         ); // Replace ListedNFTList with your widget displaying listed categories
     // return ListedNFTList(); // Replace ListedNFTList with your widget displaying listed categories
