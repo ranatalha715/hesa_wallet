@@ -60,12 +60,6 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
     final DateFormat formatter = DateFormat('MMM dd, yyyy HH:mm:ss');
     return formatter.format(dateTime);
   }
-
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     final args =

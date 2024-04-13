@@ -4,13 +4,30 @@ class NftsModel {
   final String tokenURI;
   final String price;
   final String id;
+  final String? ownerId;
+  final String? standard;
+  final String? status;
+  final String? listingType;
+  final String? createdAt;
+  final String? creatorId;
+  final String? creatorRoyalty;
+  final String? chain;
 
   NftsModel(
       {required this.tokenName,
       required this.tokenId,
       required this.tokenURI,
       required this.price,
-      required this.id});
+      required this.id,
+      this.ownerId,
+        this.standard,
+        this.status,
+        this.listingType,
+        this.createdAt,
+        this.creatorId,
+        this.creatorRoyalty,
+        this.chain,
+      });
 }
 
 class NftsCollectionModel {

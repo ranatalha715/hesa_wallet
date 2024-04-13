@@ -74,9 +74,17 @@ class AssetsProvider with ChangeNotifier {
         loadedAssets.add(NftsModel(
           tokenName: prodData['name'].toString(),
           id: prodData['id'].toString(),
-          tokenURI: prodData['url'].toString(),
+          tokenURI: prodData['image'].toString(),
           price: "",
           tokenId: prodData['id'].toString(),
+          ownerId: prodData['ownerId'].toString(),
+          standard: prodData['standard'].toString(),
+          status: prodData['status'] ?? 'N/A',
+          listingType: prodData['listingType'].toString(),
+          chain: prodData['chain'].toString(),
+          createdAt: prodData['createdAt'].toString(),
+          creatorId: prodData['creatorId'].toString(),
+          creatorRoyalty: prodData['creatorRoyalty'].toString(),
         ));
       });
       _assets = loadedAssets;
@@ -88,8 +96,9 @@ class AssetsProvider with ChangeNotifier {
           id: prodData['id'].toString(),
           logo: prodData['image'].toString(),
           ownerId: prodData['ownerId'].toString(),
-          nftIds: [], creatorId: prodData['creatorId'].toString(), creatorRoyalty: '',
-
+          nftIds: [],
+          creatorId: prodData['creatorId'].toString(),
+          creatorRoyalty: prodData['creatorRoyalty'].toString(),
         ));
       });
       _assetsCollection = loadedAssetsCollection;

@@ -27,16 +27,17 @@ class _NftsDesignState extends State<NftsDesign> {
           Navigator.of(context).pushNamed(NftsDetails.routeName,
               arguments: {
                 'tokenName': widget.nfts.tokenName,
-                'tokenId': widget.nfts.tokenId,
-                'creatorId': widget.nfts.id,
-                // 'creatorRoyalty': widget.nftsCollection.creatorRoyalty,
-                // 'ownerId': widget.nftsCollection.ownerId,
+                'tokenId': widget.nfts.id,
+                'creatorId': widget.nfts.creatorId,
+                'image' : widget.nfts.tokenURI,
+                'creatorRoyalty': widget.nfts.creatorRoyalty,
+                'ownerId': widget.nfts.ownerId,
                 // 'nftIds': widget.nftsCollection.nftIds.length.toString(),
-                // 'standard': widget.nftsCollection.collectionStandard.toString(),
-                // 'chain': widget.nftsCollection.chain.toString(),
-                // 'createdAt': widget.nftsCollection.createdAt.toString(),
-                // 'collectionStatus': widget.nftsCollection.status.toString(),
-
+                'standard': widget.nfts.standard.toString(),
+                'chain': widget.nfts.chain.toString(),
+                'createdAt': widget.nfts.createdAt.toString(),
+                'status': widget.nfts.status.toString(),
+                'listingType': widget.nfts.listingType.toString(),
               }
           ),
       child: ClipRRect(

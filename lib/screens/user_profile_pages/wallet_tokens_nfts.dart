@@ -116,7 +116,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
         .getAssets(
       token: accessToken,
       context: context,
-      walletAddress: user.walletAddress!, ownerType: 'creator', type: 'all',
+      walletAddress: user.walletAddress!, ownerType: 'listed', type: 'all',
     );
     setState(() {
       _isloading = false;
