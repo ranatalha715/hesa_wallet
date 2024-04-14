@@ -82,21 +82,19 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                 // color: Colors.red,
                 height: 47.h,
                 width: 42.h,
-                child: Image.asset(
-                  "assets/images/nfts_placeholder.png",
-                  fit: BoxFit.cover,
-                ),
-              ),
+                child:  Image.asset(args["logoLink"], fit: BoxFit.cover,
+                  errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                    return Image.asset(
+                      'assets/images/nft.png', // Path to your placeholder image
+                      fit: BoxFit.cover,
+                    );
+                  },
+                ),),
               Divider(color: AppColors.transactionSummNeoBorder),
               SizedBox(height:2.h),
               nftsDetailsWidget(
                 title: 'Created:'.tr(),
                 details: formatDate(args["createdAt"]),
-                isDark: themeNotifier.isDark ? true : false,
-              ),
-              nftsDetailsWidget(
-                title: 'Collection Status:'.tr(),
-                details: args["collectionStatus"],
                 isDark: themeNotifier.isDark ? true : false,
               ),
               nftsDetailsWidget(
@@ -124,12 +122,23 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                 isDark: themeNotifier.isDark ? true : false,
                 color: AppColors.textColorToska,
               ),
-              if(args["nftIds"] != "null")
               nftsDetailsWidget(
-                title: 'Collection Items:'.tr(),
-                details: args["nftIds"],
+                title: 'Collection Status:'.tr(),
+                details: args["collectionStatus"],
                 isDark: themeNotifier.isDark ? true : false,
               ),
+              if (args["listingType"] != "null")
+                nftsDetailsWidget(
+                  title: 'Listing Type:'.tr(),
+                  details: args["listingType"],
+                  isDark: themeNotifier.isDark ? true : false,
+                ),
+              if(args["nftIds"] != null)
+                nftsDetailsWidget(
+                  title: 'Collection Items:'.tr(),
+                  details: args["nftIds"],
+                  isDark: themeNotifier.isDark ? true : false,
+                ),
               if(args["standard"] != "null")
               nftsDetailsWidget(
                 title: 'Collection Standard:'.tr(),

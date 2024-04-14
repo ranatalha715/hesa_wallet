@@ -37,7 +37,9 @@ class _NftsCollectionDesignState extends State<NftsCollectionDesign> {
                 'chain': widget.nftsCollection.chain.toString(),
                 'createdAt': widget.nftsCollection.createdAt.toString(),
                 'collectionStatus': widget.nftsCollection.status.toString(),
-
+                'listingType': widget.nftsCollection.listingType.toString(),
+                'image': widget.nftsCollection.image.toString(),
+                'logoLink': widget.nftsCollection.logo.toString(),
               }
           ),
       child: ClipRRect(

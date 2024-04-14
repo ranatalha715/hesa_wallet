@@ -138,7 +138,7 @@ class _NftsDetailsState extends State<NftsDetails> {
               // //   ),
               if (args["status"] != "null")
                 nftsDetailsWidget(
-                  title: 'Status:'.tr(),
+                  title: 'Token Status:'.tr(),
                   details: args["status"],
                   isDark: themeNotifier.isDark ? true : false,
                 ),

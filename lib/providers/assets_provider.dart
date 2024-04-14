@@ -36,7 +36,7 @@ class AssetsProvider with ChangeNotifier {
   //   return [..._nftsCollection];
   // }
 
-  Future<AuthResult> getAssets({
+  Future<AuthResult> getListedAssets({
     required String token,
     required String walletAddress,
     required BuildContext context,
@@ -44,7 +44,7 @@ class AssetsProvider with ChangeNotifier {
     required String type,
   }) async {
     final url = Uri.parse(BASE_URL +
-        '/user/assets/?ownerType=$ownerType&limit=2&page=1&type=$type');
+        '/user/assets/?ownerType=$ownerType&limit=10&page=1&type=$type');
     // final body = {
     //   "walletAddress": walletAddress,
     // };
@@ -94,11 +94,17 @@ class AssetsProvider with ChangeNotifier {
           collectionName: prodData['name'].toString(),
           collectionId: prodData['id'].toString(),
           id: prodData['id'].toString(),
-          logo: prodData['image'].toString(),
           ownerId: prodData['ownerId'].toString(),
           nftIds: [],
           creatorId: prodData['creatorId'].toString(),
           creatorRoyalty: prodData['creatorRoyalty'].toString(),
+          collectionStandard: prodData['standard'].toString(),
+          status: prodData['status'] ?? 'N/A',
+          listingType: prodData['listingType'].toString(),
+          chain: prodData['chain'].toString(),
+          createdAt: prodData['createdAt'].toString(),
+          image: prodData['image'].toString(),
+          logo:  prodData['metaData']['logoLink'].toString(),
         ));
       });
       _assetsCollection = loadedAssetsCollection;
@@ -112,6 +118,91 @@ class AssetsProvider with ChangeNotifier {
       return AuthResult.failure;
     }
   }
+
+  Future<AuthResult> getCreatedAssets({
+    required String token,
+    required String walletAddress,
+    required BuildContext context,
+    required String ownerType,
+    required String type,
+  }) async {
+    final url = Uri.parse(BASE_URL +
+        '/user/assets/?ownerType=$ownerType&limit=10&page=1&type=$type');
+    // final body = {
+    //   "walletAddress": walletAddress,
+    // };
+
+    final response = await http.get(
+      url,
+      // body: body,
+      headers: {
+        "Content-type": "application/json",
+        "Accept": "application/json",
+        'Authorization': 'Bearer $token',
+      },
+    );
+    fToast = FToast();
+    fToast.init(context);
+    final extractedData = json.decode(response.body)['nfts'] as List<dynamic>?;
+    final extractedCollection =
+    json.decode(response.body)['collections'] as List<dynamic>?;
+    if (response.statusCode == 200) {
+      print('Assests Nfts');
+      print(extractedData);
+      print('Assests Collection');
+      print(extractedCollection);
+
+      final List<NftsModel> loadedAssets = [];
+      extractedData?.forEach((prodData) {
+        loadedAssets.add(NftsModel(
+          tokenName: prodData['name'].toString(),
+          id: prodData['id'].toString(),
+          tokenURI: prodData['image'].toString(),
+          price: "",
+          tokenId: prodData['id'].toString(),
+          ownerId: prodData['ownerId'].toString(),
+          standard: prodData['standard'].toString(),
+          status: prodData['status'] ?? 'N/A',
+          listingType: prodData['listingType'].toString(),
+          chain: prodData['chain'].toString(),
+          createdAt: prodData['createdAt'].toString(),
+          creatorId: prodData['creatorId'].toString(),
+          creatorRoyalty: prodData['creatorRoyalty'].toString(),
+        ));
+      });
+      _assets = loadedAssets;
+      final List<NftsCollectionModel> loadedAssetsCollection = [];
+      extractedCollection?.forEach((prodData) {
+        loadedAssetsCollection.add(NftsCollectionModel(
+          collectionName: prodData['name'].toString(),
+          collectionId: prodData['id'].toString(),
+          id: prodData['id'].toString(),
+          ownerId: prodData['ownerId'].toString(),
+          nftIds: [],
+          creatorId: prodData['creatorId'].toString(),
+          creatorRoyalty: prodData['creatorRoyalty'].toString(),
+          collectionStandard: prodData['standard'].toString(),
+          status: prodData['status'] ?? 'N/A',
+          listingType: prodData['listingType'].toString(),
+          chain: prodData['chain'].toString(),
+          createdAt: prodData['createdAt'].toString(),
+          image: prodData['image'].toString(),
+          logo: BASE_URL + prodData['metaData']['logoLink'].toString(),
+        ));
+      });
+      _assetsCollection = loadedAssetsCollection;
+      _showToast('Getting assets!');
+      notifyListeners();
+      return AuthResult.success;
+    } else {
+      // Show an error message or handle the response as needed
+      print("Assets not found: ${response.body}");
+      // _showToast('Assets not found');
+      return AuthResult.failure;
+    }
+  }
+
+
 
   _showToast(String message, {int duration = 1000}) {
     Widget toast = Container(

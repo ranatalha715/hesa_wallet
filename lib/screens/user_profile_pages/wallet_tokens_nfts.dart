@@ -113,7 +113,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       walletAddress: user.walletAddress!,
     );
     await Provider.of<AssetsProvider>(context, listen: false)
-        .getAssets(
+        .getListedAssets(
       token: accessToken,
       context: context,
       walletAddress: user.walletAddress!, ownerType: 'listed', type: 'all',
