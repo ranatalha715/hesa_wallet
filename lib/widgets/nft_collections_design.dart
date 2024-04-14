@@ -40,25 +40,26 @@ class _NftsCollectionDesignState extends State<NftsCollectionDesign> {
                 'listingType': widget.nftsCollection.listingType.toString(),
                 'image': widget.nftsCollection.image.toString(),
                 'logoLink': widget.nftsCollection.logo.toString(),
+                'bannerLink': widget.nftsCollection.banner.toString(),
               }
           ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: Stack(
           children: [
-            Image.network(widget.nftsCollection.logo!, fit: BoxFit.cover,
-              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                return Image.asset(
-                  'assets/images/nft.png', // Path to your placeholder image
-                  fit: BoxFit.cover,
-                );
-              },
+            Container(
+              // color: Colors.red,
+              // decoration: BoxDecoration(color: AppColors.textColorGreyShade2.withOpacity(0.25)),
+              height: 20.h,
+              child: Image.network(widget.nftsCollection.logo!, fit: BoxFit.cover,
+                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                  return Image.asset(
+                    'assets/images/nft.png', // Path to your placeholder image
+                    fit: BoxFit.cover,
+                  );
+                },
+              ),
             ),
-            // Image.asset(
-            //   'assets/images/nft.png',
-            //   // Replace with your image assets
-            //   fit: BoxFit.cover,
-            // ),
             Positioned(
                 bottom: 0,
                 left: 0,
@@ -94,12 +95,12 @@ class _NftsCollectionDesignState extends State<NftsCollectionDesign> {
                         //     ),
                         //   ),
                         // ),
-                        SizedBox(width: 4.sp,),
+                        // SizedBox(width: 3.sp,),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(height: 1.4.h,),
+                            // SizedBox(height: 2.4.h,),
                             Container(
                               // color: Colors.red,
                               width: 35.w,
@@ -120,14 +121,14 @@ class _NftsCollectionDesignState extends State<NftsCollectionDesign> {
                             // Row(
                             //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             //   children: [
-                            //     // Text('6000 SAR',
-                            //     //     style: TextStyle(
-                            //     //       color:
-                            //     //       AppColors.textColorWhite.withOpacity(0.5),
-                            //     //       fontWeight: FontWeight.w500,
-                            //     //       fontSize: 7.sp,
-                            //     //     )),
-                            //     // Spacer(),
+                                // Text('6000 SAR',
+                                //     style: TextStyle(
+                                //       color:
+                                //       AppColors.textColorWhite.withOpacity(0.5),
+                                //       fontWeight: FontWeight.w500,
+                                //       fontSize: 7.sp,
+                                //     )),
+                                // Spacer(),
                             //   ],
                             // ),
                           ],

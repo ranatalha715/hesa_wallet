@@ -82,7 +82,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                 // color: Colors.red,
                 height: 47.h,
                 width: 42.h,
-                child:  Image.asset(args["logoLink"], fit: BoxFit.cover,
+                child:  Image.network(args["bannerLink"], fit: BoxFit.cover,
                   errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
                     return Image.asset(
                       'assets/images/nft.png', // Path to your placeholder image
@@ -133,12 +133,12 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                   details: args["listingType"],
                   isDark: themeNotifier.isDark ? true : false,
                 ),
-              if(args["nftIds"] != null)
-                nftsDetailsWidget(
-                  title: 'Collection Items:'.tr(),
-                  details: args["nftIds"],
-                  isDark: themeNotifier.isDark ? true : false,
-                ),
+              // if(args["nftIds"] != null)
+              //   nftsDetailsWidget(
+              //     title: 'Collection Items:'.tr(),
+              //     details: args["nftIds"].toString(),
+              //     isDark: themeNotifier.isDark ? true : false,
+              //   ),
               if(args["standard"] != "null")
               nftsDetailsWidget(
                 title: 'Collection Standard:'.tr(),

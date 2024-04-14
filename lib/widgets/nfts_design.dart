@@ -44,24 +44,20 @@ class _NftsDesignState extends State<NftsDesign> {
         borderRadius: BorderRadius.circular(10),
         child: Stack(
           children: [
-            Positioned(
-                right: 0,
-                left: 0,
-                bottom: 0,
-                top: 0,
-                child: Container(
-                  decoration: BoxDecoration(color: AppColors.textColorGreyShade2.withOpacity(0.25)),
-                )),
-            Image.network(
-              widget.nfts.tokenURI,
-              fit: BoxFit.cover,
-              width: double.infinity,
-              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                return Image.network(
-                  'https://cdn-icons-png.flaticon.com/512/6298/6298900.png', // Path to your placeholder image
-                  fit: BoxFit.cover,
-                );
-              },
+            Container(
+              // decoration: BoxDecoration(color: AppColors.textColorGreyShade2.withOpacity(0.25)),
+              height: 20.h,
+              child:   Image.network(
+                widget.nfts.tokenURI,
+                fit: BoxFit.cover,
+                width: double.infinity,
+                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                  return Image.network(
+                    'https://cdn-icons-png.flaticon.com/512/6298/6298900.png', // Path to your placeholder image
+                    fit: BoxFit.cover,
+                  );
+                },
+              ),
             ),
 
             Positioned(

@@ -90,11 +90,13 @@ class AssetsProvider with ChangeNotifier {
       _assets = loadedAssets;
       final List<NftsCollectionModel> loadedAssetsCollection = [];
       extractedCollection?.forEach((prodData) {
+        // final List<String>? nftIds = List<String>.from(prodData['nftIds']);
         loadedAssetsCollection.add(NftsCollectionModel(
           collectionName: prodData['name'].toString(),
           collectionId: prodData['id'].toString(),
           id: prodData['id'].toString(),
           ownerId: prodData['ownerId'].toString(),
+          // nftIds: nftIds ?? [],
           nftIds: [],
           creatorId: prodData['creatorId'].toString(),
           creatorRoyalty: prodData['creatorRoyalty'].toString(),
@@ -105,6 +107,7 @@ class AssetsProvider with ChangeNotifier {
           createdAt: prodData['createdAt'].toString(),
           image: prodData['image'].toString(),
           logo:  prodData['metaData']['logoLink'].toString(),
+          banner: prodData['metaData']['bannerLink'].toString(),
         ));
       });
       _assetsCollection = loadedAssetsCollection;
@@ -178,7 +181,7 @@ class AssetsProvider with ChangeNotifier {
           collectionId: prodData['id'].toString(),
           id: prodData['id'].toString(),
           ownerId: prodData['ownerId'].toString(),
-          nftIds: [],
+          nftIds: prodData['nftIds'] as List<String>,
           creatorId: prodData['creatorId'].toString(),
           creatorRoyalty: prodData['creatorRoyalty'].toString(),
           collectionStandard: prodData['standard'].toString(),
@@ -187,7 +190,7 @@ class AssetsProvider with ChangeNotifier {
           chain: prodData['chain'].toString(),
           createdAt: prodData['createdAt'].toString(),
           image: prodData['image'].toString(),
-          logo: BASE_URL + prodData['metaData']['logoLink'].toString(),
+          banner: prodData['metaData']['logoLink'].toString(),
         ));
       });
       _assetsCollection = loadedAssetsCollection;
