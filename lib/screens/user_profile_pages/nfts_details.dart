@@ -148,6 +148,12 @@ class _NftsDetailsState extends State<NftsDetails> {
                   details: args["listingType"],
                   isDark: themeNotifier.isDark ? true : false,
                 ),
+              if (args["isListable"] != "null")
+                nftsDetailsWidget(
+                  title: 'Is Listable:'.tr(),
+                  details: args["isListable"],
+                  isDark: themeNotifier.isDark ? true : false,
+                ),
               nftsDetailsWidget(
                 title: 'Token Standard:'.tr(),
                 details: args["standard"],

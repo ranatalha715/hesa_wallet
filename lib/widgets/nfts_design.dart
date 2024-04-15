@@ -38,6 +38,7 @@ class _NftsDesignState extends State<NftsDesign> {
                 'createdAt': widget.nfts.createdAt.toString(),
                 'status': widget.nfts.status.toString(),
                 'listingType': widget.nfts.listingType.toString(),
+                'isListable': widget.nfts.isListable.toString(),
               }
           ),
       child: ClipRRect(

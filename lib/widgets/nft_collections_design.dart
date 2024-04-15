@@ -51,7 +51,7 @@ class _NftsCollectionDesignState extends State<NftsCollectionDesign> {
               // color: Colors.red,
               // decoration: BoxDecoration(color: AppColors.textColorGreyShade2.withOpacity(0.25)),
               height: 20.h,
-              child: Image.network(widget.nftsCollection.logo!, fit: BoxFit.cover,
+              child: Image.network(widget.nftsCollection.image!, fit: BoxFit.cover,
                 errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
                   return Image.asset(
                     'assets/images/nft.png', // Path to your placeholder image

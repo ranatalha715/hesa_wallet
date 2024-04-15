@@ -12,6 +12,7 @@ class NftsModel {
   final String? creatorId;
   final String? creatorRoyalty;
   final String? chain;
+  final String? isListable;
 
   NftsModel(
       {required this.tokenName,
@@ -27,6 +28,7 @@ class NftsModel {
         this.creatorId,
         this.creatorRoyalty,
         this.chain,
+        this.isListable,
       });
 }
 

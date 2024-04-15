@@ -66,6 +66,8 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
     ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
+    print('checking image');
+    print(args["bannerLink"]);
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child)
     {
       return Scaffold(

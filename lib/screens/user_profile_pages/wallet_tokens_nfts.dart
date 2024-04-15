@@ -76,47 +76,65 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
         .getUserDetails(token: accessToken, context: context);
     var user = await Provider.of<UserProvider>(context, listen: false);
     userWalletAddress = user.walletAddress;
-    await Provider.of<NftsProvider>(context, listen: false)
-        .getAllNftsCollection(
-      token: accessToken,
-      context: context,
-      walletAddress: user.walletAddress!,
-    );
-    await Provider.of<NftsProvider>(context, listen: false).nftsOwnedByUser(
-      token: accessToken,
-      walletAddress: user.walletAddress!,
-      context: context,
-    );
-    await Provider.of<NftsProvider>(context, listen: false)
-        .getNftsCollectionOwnedByUser(
-      token: accessToken,
-      walletAddress: user.walletAddress!,
-      context: context,
-    );
-    await Provider.of<NftsProvider>(context, listen: false).nftsCreatedByUser(
-      token: accessToken,
-      context: context,
-      walletAddress: user.walletAddress!,
-    );
-
-    await Provider.of<NftsProvider>(context, listen: false)
-        .getNftsCollectionCreatedByUser(
-      token: accessToken,
-      context: context,
-      walletAddress: user.walletAddress!,
-    );
-
-    await Provider.of<NftsProvider>(context, listen: false)
-        .getNftsCollectionListed(
-      token: accessToken,
-      context: context,
-      walletAddress: user.walletAddress!,
-    );
+    // await Provider.of<NftsProvider>(context, listen: false)
+    //     .getAllNftsCollection(
+    //   token: accessToken,
+    //   context: context,
+    //   walletAddress: user.walletAddress!,
+    // );
+    // await Provider.of<NftsProvider>(context, listen: false).nftsOwnedByUser(
+    //   token: accessToken,
+    //   walletAddress: user.walletAddress!,
+    //   context: context,
+    // );
+    // await Provider.of<NftsProvider>(context, listen: false)
+    //     .getNftsCollectionOwnedByUser(
+    //   token: accessToken,
+    //   walletAddress: user.walletAddress!,
+    //   context: context,
+    // );
+    // await Provider.of<NftsProvider>(context, listen: false).nftsCreatedByUser(
+    //   token: accessToken,
+    //   context: context,
+    //   walletAddress: user.walletAddress!,
+    // );
+    //
+    // await Provider.of<NftsProvider>(context, listen: false)
+    //     .getNftsCollectionCreatedByUser(
+    //   token: accessToken,
+    //   context: context,
+    //   walletAddress: user.walletAddress!,
+    // );
+    //
+    // await Provider.of<NftsProvider>(context, listen: false)
+    //     .getNftsCollectionListed(
+    //   token: accessToken,
+    //   context: context,
+    //   walletAddress: user.walletAddress!,
+    // );
     await Provider.of<AssetsProvider>(context, listen: false)
         .getListedAssets(
       token: accessToken,
       context: context,
       walletAddress: user.walletAddress!, ownerType: 'listed', type: 'all',
+    );
+    await Provider.of<AssetsProvider>(context, listen: false)
+        .getCreatedAssets(
+      token: accessToken,
+      context: context,
+      walletAddress: user.walletAddress!, ownerType: 'creator', type: 'all',
+    );
+    await Provider.of<AssetsProvider>(context, listen: false)
+        .getOwnedAssets(
+      token: accessToken,
+      context: context,
+      walletAddress: user.walletAddress!, ownerType: 'owner', type: 'all',
+    );
+    await Provider.of<AssetsProvider>(context, listen: false)
+        .getAllAssets(
+      token: accessToken,
+      context: context,
+      walletAddress: user.walletAddress!, ownerType: 'both', type: 'all',
     );
     setState(() {
       _isloading = false;
@@ -821,38 +839,40 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
 
   @override
   Widget build(BuildContext context) {
+    final nftsAll =
+        Provider
+            .of<AssetsProvider>(context, listen: false)
+            .assetsAll;
     final nftsCollectionAll =
         Provider
-            .of<NftsProvider>(context, listen: false)
-            .nftsCollectionAll;
-    final nftsAll = Provider
-        .of<NftsProvider>(context, listen: false)
-        .nftsCreated; //WILL CHANGE THIS
-    final nftsOwned =
-        Provider
-            .of<NftsProvider>(context, listen: false)
-            .nftsOwned;
-    final nftsCollectionOwnedByUser =
-        Provider
-            .of<NftsProvider>(context, listen: false)
-            .nftsCollectionOwnedByUser;
-
-    final nftsCreated =
-        Provider
-            .of<NftsProvider>(context, listen: false)
-            .nftsCreated;
-    final nftsCollectionCreated =
-        Provider
-            .of<NftsProvider>(context, listen: false)
-            .nftsCollectionCreated;
+            .of<AssetsProvider>(context, listen: false)
+            .assetsCollectionAll;
     final nftsListed =
         Provider
             .of<AssetsProvider>(context, listen: false)
-            .assets;
+            .assetsListed;
     final collectionListed =
         Provider
             .of<AssetsProvider>(context, listen: false)
-            .assetsCollection;
+            .assetsCollectionListed;
+
+    final nftsCreated =
+        Provider
+            .of<AssetsProvider>(context, listen: false)
+            .assetsCreated;
+    final nftsCollectionCreated =
+        Provider
+            .of<AssetsProvider>(context, listen: false)
+            .assetsCollectionCreated;
+
+    final nftsOwned =
+        Provider
+            .of<AssetsProvider>(context, listen: false)
+            .assetsOwned;
+    final nftsCollectionOwnedByUser =
+        Provider
+            .of<AssetsProvider>(context, listen: false)
+            .assetsCollectionOwned;
     return Consumer<UserProvider>(builder: (context, user, child) {
       return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
         return Stack(
