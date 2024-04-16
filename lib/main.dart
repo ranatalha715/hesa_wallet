@@ -257,7 +257,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       // setState(() {
       //   accessToken = '';
       // });
-      _showToast('Session Expired!');
+      // _showToast('Session Expired!');
     } else {}
   }
 

@@ -291,60 +291,10 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                   isDark: themeNotifier.isDark
                                                       ? true
                                                       : false,
-                                                  // isLast: isLast,
+                                                  isLast: isLast,
                                                   // isFirst: isFirst,
                                                 );
                                               }),
-                                        // ListView(
-                                        //   controller: _scrollController,
-                                        //   padding: EdgeInsets.zero,
-                                        //   shrinkWrap: true,
-                                        //   children: [
-                                        //     addBankslist(
-                                        //         isFirst: true,
-                                        //         english: isEnglish ? true : false,
-                                        //         isDark: themeNotifier.isDark
-                                        //             ? true
-                                        //             : false,
-                                        //         bankName:
-                                        //             "SNB (Saudi National Bank)"),
-                                        //     addBankslist(
-                                        //         english: isEnglish ? true : false,
-                                        //         isDark: themeNotifier.isDark
-                                        //             ? true
-                                        //             : false,
-                                        //         bankName:
-                                        //             "SNB (Saudi National Bank)"),
-                                        //     addBankslist(
-                                        //         english: isEnglish ? true : false,
-                                        //         isDark: themeNotifier.isDark
-                                        //             ? true
-                                        //             : false,
-                                        //         bankName:
-                                        //             "SNB (Saudi National Bank)"),
-                                        //     addBankslist(
-                                        //         english: isEnglish ? true : false,
-                                        //         isDark: themeNotifier.isDark
-                                        //             ? true
-                                        //             : false,
-                                        //         bankName: "Rayad Bank"),
-                                        //     addBankslist(
-                                        //         english: isEnglish ? true : false,
-                                        //         isDark: themeNotifier.isDark
-                                        //             ? true
-                                        //             : false,
-                                        //         bankName:
-                                        //             "SNB (Saudi National Bank)"),
-                                        //     addBankslist(
-                                        //         isLast: true,
-                                        //         english: isEnglish ? true : false,
-                                        //         isDark: themeNotifier.isDark
-                                        //             ? true
-                                        //             : false,
-                                        //         bankName:
-                                        //             "SNB (Saudi National Bank)"),
-                                        //   ],
-                                        // )
                                       ],
                                     ),
                                   ),
@@ -359,153 +309,6 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                             color: AppColors.errorColor),
                                       ),
                                     ),
-                                  // Container(
-                                  //   height: 5.5.h,
-                                  //   child: TextField(
-                                  //       scrollPadding: EdgeInsets.only(
-                                  //           bottom: MediaQuery.of(context).viewInsets.bottom),
-                                  //       style: TextStyle(
-                                  //           fontSize: 10.2.sp,
-                                  //           color: AppColors.textColorWhite,
-                                  //           fontWeight: FontWeight.w400,
-                                  //           // Off-white color,
-                                  //           fontFamily: 'Inter'),
-                                  //       decoration: InputDecoration(
-                                  //         contentPadding: EdgeInsets.symmetric(
-                                  //             vertical: 10.0, horizontal: 16.0),
-                                  //         hintText: 'Select bank',
-                                  //         hintStyle: TextStyle(
-                                  //             fontSize: 10.2.sp,
-                                  //             color: AppColors.textColorGrey,
-                                  //             fontWeight: FontWeight.w400,
-                                  //             // Off-white color,
-                                  //             fontFamily: 'Inter'),
-                                  //         enabledBorder: OutlineInputBorder(
-                                  //             borderRadius: BorderRadius.circular(8.0),
-                                  //             borderSide: BorderSide(
-                                  //               color: AppColors.textColorGrey,
-                                  //               // Off-white color
-                                  //               width: 2.0,
-                                  //             )),
-                                  //         focusedBorder: OutlineInputBorder(
-                                  //             borderRadius: BorderRadius.circular(8.0),
-                                  //             borderSide: BorderSide(
-                                  //               color: AppColors.textColorGrey,
-                                  //               // Off-white color
-                                  //               width: 2.0,
-                                  //             )),
-                                  //         // labelText: 'Enter your password',
-                                  //         suffixIcon: Padding(
-                                  //           padding: const EdgeInsets.only(right: 10),
-                                  //           child: IconButton(
-                                  //             icon: _isSelected
-                                  //                 ? Icon(
-                                  //                     Icons.keyboard_arrow_down,
-                                  //                     size: 21.sp,
-                                  //                     color: AppColors.textColorGrey,
-                                  //                   )
-                                  //                 : Icon(
-                                  //                     Icons.keyboard_arrow_up,
-                                  //                     size: 21.sp,
-                                  //                     color: AppColors.textColorGrey,
-                                  //                   ),
-                                  //             // Image.asset(
-                                  //             //   "assets/images/dropdown.png",
-                                  //             //   height: 20,
-                                  //             //   width: 20,
-                                  //             // ),
-                                  //             onPressed: () {
-                                  //               setState(() {
-                                  //                 _isSelected = !_isSelected;
-                                  //               });
-                                  //             },
-                                  //           ),
-                                  //         ),
-                                  //       ),
-                                  //       cursorColor: AppColors.textColorGrey),
-                                  // ),
-                                  // Stack(
-                                  //   children: [
-                                  //     Container(
-                                  //       height: 5.5.h,
-                                  //       decoration: BoxDecoration(
-                                  //           borderRadius: BorderRadius.circular(8.0),
-                                  //           border: Border.all(
-                                  //             color: AppColors.textColorGrey,
-                                  //             // Off-white color
-                                  //             width: 1.0,
-                                  //           )),
-                                  //     ),
-                                  //     Positioned(
-                                  //       top: -8,
-                                  //       left: 0,
-                                  //       right: 0,
-                                  //       child: Container(
-                                  //
-                                  //         width: double.infinity,
-                                  //         height: 60.h,
-                                  //
-                                  //         child: PopupMenuButton<String>(
-                                  //
-                                  //           onSelected: (value) {
-                                  //             setState(() {
-                                  //               selectedValue = value;
-                                  //               _isSelected = !_isSelected;
-                                  //             });
-                                  //           },
-                                  //           itemBuilder: (BuildContext context) =>
-                                  //           [
-                                  //             // PopupMenuItem<String>(
-                                  //             //   value: 'Option 1',
-                                  //             //   child: Text('Option 1'),
-                                  //             // ),
-                                  //             // PopupMenuItem<String>(
-                                  //             //   value: 'Option 2',
-                                  //             //   child: Text('Option 2'),
-                                  //             // ),
-                                  //             // PopupMenuItem<String>(
-                                  //             //   value: 'Option 3',
-                                  //             //   child: Text('Option 3'),
-                                  //             // ),
-                                  //           ],
-                                  //           child: ListTile(
-                                  //             title: Text(
-                                  //               selectedValue ?? 'Select bank',
-                                  //               style: TextStyle(
-                                  //                   fontSize: 10.2.sp,
-                                  //                   color: AppColors.textColorGrey,
-                                  //                   fontWeight: FontWeight.w400,
-                                  //                   // Off-white color,
-                                  //                   fontFamily: 'Inter'),
-                                  //             ),
-                                  //             trailing: _isSelected
-                                  //                 ? Icon(
-                                  //               Icons.keyboard_arrow_down,
-                                  //               size: 21.sp,
-                                  //               color: AppColors.textColorGrey,
-                                  //             )
-                                  //                 : Icon(
-                                  //               Icons.keyboard_arrow_up,
-                                  //               size: 21.sp,
-                                  //               color: AppColors.textColorGrey,
-                                  //             ),
-                                  //
-                                  //           ),
-                                  //           onOpened: () {
-                                  //             setState(() {
-                                  //               _isSelected = true;
-                                  //             });
-                                  //           },
-                                  //           onCanceled: () {
-                                  //             setState(() {
-                                  //               _isSelected = false;
-                                  //             });
-                                  //           },
-                                  //         ),
-                                  //       ),
-                                  //     )
-                                  //   ],
-                                  // ),
                                   SizedBox(
                                     height: 2.h,
                                   ),
@@ -673,16 +476,6 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                             color: AppColors.errorColor),
                                       ),
                                     ),
-
-                                  // SizedBox(
-                                  //   height: 2.h,
-                                  // ),
-
-                                  // Spacer(),
-
-                                  // SizedBox(
-                                  //   height: 3.h,
-                                  // ),
                                   SizedBox(
                                     height: 25.h,
                                   )
@@ -691,175 +484,178 @@ class _WalletAddBankState extends State<WalletAddBank> {
                             ),
                           ),
                           Positioned(
-                            left: 20,
-                            right: 20,
-                            bottom: 30,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
                             child: Container(
                               color: themeNotifier.isDark
                                   ? AppColors.backgroundColor
                                   : AppColors.textColorWhite,
-                              child: Column(
-                                children: [
-                                  Container(
-                                    width: double.infinity,
-                                    height: 1.5.h,
-                                    color: AppColors.backgroundColor,
-                                  ),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding:  EdgeInsets.only(left: 4.sp),
-                                        child: GestureDetector(
-                                          onTap: () => setState(() {
-                                            _isChecked = !_isChecked;
-                                          }),
-                                          child:
-                                          Container(
-                                            height: 2.4.h,
-                                            width: 2.4.h,
-                                            decoration: BoxDecoration(
-                                              // gradient: LinearGradient(
-                                              //   colors: [
-                                              //     _isChecked
-                                              //         ? Color(0xff92B928)
-                                              //         : Colors.transparent,
-                                              //     _isChecked
-                                              //         ? Color(0xffC9C317)
-                                              //         : Colors.transparent
-                                              //   ],
-                                              // ),
-                                                border: Border.all(
-                                                    color: AppColors.textColorWhite,
-                                                    width: 1),
-                                                borderRadius:
-                                                BorderRadius.circular(2)),
-                                            child: _isChecked
-                                                ? Align(
-                                              alignment: Alignment.center,
-                                              child: Icon(
-                                                Icons.check_rounded,
-                                                size: 8.2.sp,
-                                                color:
-                                                AppColors.textColorWhite,
-                                              ),
-                                            )
-                                                : SizedBox(),
-                                          ),
-                                        ),
-                                      ),
-                                      // SizedBox(
-                                      //   width: 2.w,
-                                      // ),
-                                      Expanded(
-                                        child: Container(
-                                          margin: EdgeInsets.only(bottom: 3.sp),
-                                          child: Column(
-                                            children: [
-                                              RichText(
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                        text:
-                                                        'I Agree to the Hesa Wallet '
-                                                            .tr(),
-                                                        style: TextStyle(
-                                                            color: AppColors
-                                                                .textColorWhite,
-                                                            fontWeight:
-                                                            FontWeight.w400,
-                                                            fontSize: 10.sp,
-                                                            fontFamily: 'Inter')),
-                                                    TextSpan(
-                                                        recognizer:
-                                                        TapGestureRecognizer()
-                                                          ..onTap = () {
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                      TermsAndConditions()),
-                                                            );
-                                                          },
-                                                        text:
-                                                        'Terms & Conditions'.tr(),
-                                                        style: TextStyle(
-                                                            color: themeNotifier
-                                                                .isDark
-                                                                ? AppColors
-                                                                .textColorToska
-                                                                : AppColors
-                                                                .textColorBlack,
-                                                            decoration: TextDecoration
-                                                                .underline,
-                                                            fontWeight:
-                                                            FontWeight.w600,
-                                                            fontSize: 10.sp,
-                                                            fontFamily: 'Inter')),
-                                                    // TextSpan(
-                                                    //     text: ' of payment receiving.'
-                                                    //         .tr(),
-                                                    //     style: TextStyle(
-                                                    //         color: AppColors
-                                                    //             .textColorGrey,
-                                                    //         fontWeight:
-                                                    //         FontWeight.w400,
-                                                    //         fontSize: 12.sp,
-                                                    //         fontFamily: 'Inter'))
-                                                  ],
+                              child: Padding(
+                                padding:  EdgeInsets.only(bottom: 30.sp, left: 20.sp, right: 20.sp),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: double.infinity,
+                                      height: 1.5.h,
+                                      color: AppColors.backgroundColor,
+                                    ),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding:  EdgeInsets.only(left: 4.sp),
+                                          child: GestureDetector(
+                                            onTap: () => setState(() {
+                                              _isChecked = !_isChecked;
+                                            }),
+                                            child:
+                                            Container(
+                                              height: 2.4.h,
+                                              width: 2.4.h,
+                                              decoration: BoxDecoration(
+                                                // gradient: LinearGradient(
+                                                //   colors: [
+                                                //     _isChecked
+                                                //         ? Color(0xff92B928)
+                                                //         : Colors.transparent,
+                                                //     _isChecked
+                                                //         ? Color(0xffC9C317)
+                                                //         : Colors.transparent
+                                                //   ],
+                                                // ),
+                                                  border: Border.all(
+                                                      color: AppColors.textColorWhite,
+                                                      width: 1),
+                                                  borderRadius:
+                                                  BorderRadius.circular(2)),
+                                              child: _isChecked
+                                                  ? Align(
+                                                alignment: Alignment.center,
+                                                child: Icon(
+                                                  Icons.check_rounded,
+                                                  size: 8.2.sp,
+                                                  color:
+                                                  AppColors.textColorWhite,
                                                 ),
-                                              ),
-                                            ],
+                                              )
+                                                  : SizedBox(),
+                                            ),
                                           ),
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 2.h,
-                                  ),
+                                        // SizedBox(
+                                        //   width: 2.w,
+                                        // ),
+                                        Expanded(
+                                          child: Container(
+                                            margin: EdgeInsets.only(bottom: 3.sp),
+                                            child: Column(
+                                              children: [
+                                                RichText(
+                                                  text: TextSpan(
+                                                    children: [
+                                                      TextSpan(
+                                                          text:
+                                                          'I Agree to the Hesa Wallet '
+                                                              .tr(),
+                                                          style: TextStyle(
+                                                              color: AppColors
+                                                                  .textColorWhite,
+                                                              fontWeight:
+                                                              FontWeight.w400,
+                                                              fontSize: 10.sp,
+                                                              fontFamily: 'Inter')),
+                                                      TextSpan(
+                                                          recognizer:
+                                                          TapGestureRecognizer()
+                                                            ..onTap = () {
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                        TermsAndConditions()),
+                                                              );
+                                                            },
+                                                          text:
+                                                          'Terms & Conditions'.tr(),
+                                                          style: TextStyle(
+                                                              color: themeNotifier
+                                                                  .isDark
+                                                                  ? AppColors
+                                                                  .textColorToska
+                                                                  : AppColors
+                                                                  .textColorBlack,
+                                                              decoration: TextDecoration
+                                                                  .underline,
+                                                              fontWeight:
+                                                              FontWeight.w600,
+                                                              fontSize: 10.sp,
+                                                              fontFamily: 'Inter')),
+                                                      // TextSpan(
+                                                      //     text: ' of payment receiving.'
+                                                      //         .tr(),
+                                                      //     style: TextStyle(
+                                                      //         color: AppColors
+                                                      //             .textColorGrey,
+                                                      //         fontWeight:
+                                                      //         FontWeight.w400,
+                                                      //         fontSize: 12.sp,
+                                                      //         fontFamily: 'Inter'))
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 2.h,
+                                    ),
 
-                                  // SizedBox(height: 3.h,),
-                                  AppButton(
-                                    title: 'Add Bank Account'.tr(),
-                                    isactive: isButtonActive && _isChecked  ? true : false,
-                                    handler: () async {
-                                      setState(() {
-                                        isValidating = true;
-                                      });
-                                      if (_ibannumberController.text.isNotEmpty &&
-                                          _accountholdernamerController
-                                              .text.isNotEmpty &&
-                                          _selectedBank != "") {
+                                    // SizedBox(height: 3.h,),
+                                    AppButton(
+                                      title: 'Add Bank Account'.tr(),
+                                      isactive: isButtonActive && _isChecked  ? true : false,
+                                      handler: () async {
                                         setState(() {
-                                          _isLoading = true;
+                                          isValidating = true;
                                         });
-                                        final result =
-                                            await Provider.of<TransactionProvider>(
-                                                    context,
-                                                    listen: false)
-                                                .sendTransactionOTP(
-                                                    token: accessToken, context: context);
+                                        if (_ibannumberController.text.isNotEmpty &&
+                                            _accountholdernamerController
+                                                .text.isNotEmpty &&
+                                            _selectedBank != "") {
+                                          setState(() {
+                                            _isLoading = true;
+                                          });
+                                          final result =
+                                              await Provider.of<TransactionProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .sendTransactionOTP(
+                                                      token: accessToken, context: context);
 
-                                        setState(() {
-                                          _isLoading = false;
-                                        });
-                                        if (result == AuthResult.success) {
-                                          await showOtpDialogue(
-                                              isDark: themeNotifier.isDark);
+                                          setState(() {
+                                            _isLoading = false;
+                                          });
+                                          if (result == AuthResult.success) {
+                                            await showOtpDialogue(
+                                                isDark: themeNotifier.isDark);
+                                          }
                                         }
-                                      }
-                                    },
-                                    // isLoading: _isLoading,
-                                    isGradient: true,
-                                    color: Colors.transparent,
-                                    // textColor: AppColors.textColorGreyShade2,
-                                  ),
-                                  // SizedBox(
-                                  //   height: 3.h,
-                                  // ),
-                                ],
+                                      },
+                                      // isLoading: _isLoading,
+                                      isGradient: true,
+                                      color: Colors.transparent,
+                                      // textColor: AppColors.textColorGreyShade2,
+                                    ),
+                                    // SizedBox(
+                                    //   height: 3.h,
+                                    // ),
+                                  ],
+                                ),
                               ),
                             ),
                           )
@@ -987,9 +783,9 @@ class _WalletAddBankState extends State<WalletAddBank> {
                 // ),
                 // borderRadius: BorderRadius.circular(8.0),
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(8.0),
+                  bottomLeft: Radius.circular(_isSelected && !isLast? 0.0 :8.0 ),
                   // Radius for top-left corner
-                  bottomRight: Radius.circular(8.0),
+                  bottomRight: Radius.circular(_isSelected && !isLast? 0.0 :8.0),
                   topLeft: Radius.circular(
                       _isSelected ? 0.0 : 8.0),
                   topRight: Radius.circular(_isSelected
@@ -1004,16 +800,22 @@ class _WalletAddBankState extends State<WalletAddBank> {
                       english ? MainAxisAlignment.start : MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      bankName,
-                      // "SNB (Saudi National Bank)".tr(),
-                      style: TextStyle(
-                          fontSize: 10.2.sp,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w500,
-                          color: isDark
-                              ? AppColors.textColorWhite
-                              : AppColors.textColorBlack),
+                    Container(
+                      // color: Colors.red,
+                      width: 70.w,
+                      child: Text(
+                        bankName,
+                        // "SNB (Saudi National Bank)".tr(),
+                        style: TextStyle(
+                            fontSize: 10.2.sp,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w500,
+                            color: isDark
+                                ? AppColors.textColorWhite
+                                : AppColors.textColorBlack,
+                        overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ),
                   ],
                 ),

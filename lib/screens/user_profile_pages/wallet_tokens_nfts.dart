@@ -1207,9 +1207,17 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                   // image:
                                                   //     'assets/images/cat_dig_art.png',
                                                   index: 1,
-                                                  handler: () =>
-                                                      onCategorySelected(
-                                                          1),
+                                                  handler: () {
+                                                    setState(() {
+                                                      _isloading=true;
+                                                    });
+                                                    onCategorySelected(
+                                                        1);
+                                                    setState(() {
+                                                      _isloading=false;
+                                                    });
+                                                  }
+
                                                 ),
                                                 NFTCategoryWidget(
                                                   title: "Created".tr(),

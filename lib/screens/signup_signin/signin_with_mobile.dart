@@ -276,12 +276,12 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                               //         context,
                               //         SlideRightPageRoute(page: SigninWithEmail()),
                               //       );
-                              //       // Navigator.push(
-                              //       //   context,
-                              //       //   MaterialPageRoute(
-                              //       //     builder: (context) => SigninWithEmail(),
-                              //       //   ),
-                              //       // );
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //     builder: (context) => SigninWithEmail(),
+                                    //   ),
+                                    // );
                               //     },
                               //     isGradient: false,
                               //     textColor: themeNotifier.isDark
@@ -304,33 +304,73 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                             ?.unfocus();
                                       }
                                     });
-                                    // final result =
-                                    //     await Provider.of<AuthProvider>(context,
-                                    //             listen: false)
-                                    //         .sendLoginOTP(
-                                    //   mobile: _numberController.text,
-                                    //   context: context,
-                                    // );
+                                    final result =
+                                        await Provider.of<AuthProvider>(context,
+                                                listen: false)
+                                            .sendLoginOTP(
+                                      mobile: _numberController.text,
+                                      context: context,
+                                    );
                                     setState(() {
                                       _isLoading = false;
                                     });
-                                    // if (result == AuthResult.success) {
+                                    if (result == AuthResult.success) {
                                     otpDialog(
-                                      firstBtnHandler: () {
+                                      firstBtnHandler: () async {
                                         setState(() {
                                           _isLoading = true;
                                         });
                                         print('loading popup' +
                                             _isLoading.toString());
                                         Navigator.pop(context);
-                                        Future.delayed(Duration(seconds: 2));
+                                        // Future.delayed(Duration(seconds: 2));
+                                        // final loginResult =
+                                            await Provider.of<AuthProvider>(context,
+                                            listen: false)
+                                            .logInWithMobile(
+                                              mobile: _numberController.text,
+                                              context: context, code:
+                                            otp1Controller.text +
+                                                otp2Controller.text +
+                                                otp3Controller.text +
+                                                otp4Controller.text +
+                                                otp5Controller.text+
+                                                otp6Controller.text,
+                                            );
                                         setState(() {
                                           _isLoading = false;
                                         });
                                         print('loading popup 2' +
                                             _isLoading.toString());
                                       },
-                                      secondBtnHandler: () {},
+                                        secondBtnHandler: () async {
+                                          print('second handler calling');
+                                          try {
+                                            final result = await Provider.of<
+                                                AuthProvider>(
+                                                context,
+                                                listen:
+                                                false)
+                                                .sendLoginOTP(mobile: _numberController.text, context: context);
+                                            // setState(() {
+                                            //   _isLoadingResend = false;
+                                            // });
+                                            startTimer();
+                                            if (result ==
+                                                AuthResult
+                                                    .success) {}
+                                          } catch (error) {
+                                            print(
+                                                "Error: $error");
+                                            // _showToast('An error occurred'); // Show an error message
+                                          } finally {
+                                            setState(() {
+                                              _isLoadingResend =
+                                              false;
+                                            });
+                                          }
+
+                                        },
                                       // firstBtnHandler: () async {
                                       //   print('first handler calling');
                                       //   if (_isLoading) return;
@@ -394,40 +434,10 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                       //     });
                                       //   }
                                       // },
-                                      // secondBtnHandler: () async {
-                                      //   print('second handler calling');
-                                      //   try {
-                                      //     final result = await Provider.of<
-                                      //         AuthProvider>(
-                                      //         context,
-                                      //         listen:
-                                      //         false)
-                                      //         .resendRegisterOTP(
-                                      //       tokenizedUserPL: tokenizedUserPL,
-                                      //       context:
-                                      //       context,
-                                      //     );
-                                      //     // setState(() {
-                                      //     //   _isLoadingResend = false;
-                                      //     // });
-                                      //     startTimer();
-                                      //     if (result ==
-                                      //         AuthResult
-                                      //             .success) {}
-                                      //   } catch (error) {
-                                      //     print(
-                                      //         "Error: $error");
-                                      //     // _showToast('An error occurred'); // Show an error message
-                                      //   } finally {
-                                      //     setState(() {
-                                      //       _isLoadingResend =
-                                      //       false;
-                                      //     });
-                                      //   }
-                                      //
-                                      // },
+
                                       firstTitle: 'Confirm',
-                                      secondTitle: 'Resend code',
+                                      // secondTitle: 'Resend code',
+                                      secondTitle: _timer.toString(),
                                       context: context,
                                       isDark: themeNotifier.isDark,
                                       isFirstButtonActive: isOtpButtonActive,
@@ -455,7 +465,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                           : AppColors.textColorBlack
                                               .withOpacity(0.8),
                                       isLoading: _isLoading,
-                                    );
+                                    );}
                                     // showDialog(
                                     //   context: context,
                                     //   builder: (BuildContext context) {

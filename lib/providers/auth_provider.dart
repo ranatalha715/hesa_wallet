@@ -22,11 +22,12 @@ class AuthProvider with ChangeNotifier {
 
   // var tokenizedUserPayload;
 
-  Future<AuthResult> signInWithMobile({
+  Future<AuthResult> logInWithMobile({
     required String mobile,
     required String code,
     required BuildContext context,
   }) async {
+    try{
     final url = Uri.parse(BASE_URL + '/auth/login/otp');
     final body = {
       "mobileNumber": "+966" + mobile,
@@ -36,43 +37,38 @@ class AuthProvider with ChangeNotifier {
     final response = await http.post(url, body: body);
     fToast = FToast();
     fToast.init(context);
+    print('loginwithmobileresponse');
+    print(response.body);
     if (response.statusCode == 201) {
-      // Successful login, handle navigation or other actions
-      print("Logged in successfully!");
-      print(response.body);
-      _showToast('Logged in successfully!');
+      // Successful login
+      print("User logged in successfully!");
+      _showToast('User logged in successfully!');
       final jsonResponse = json.decode(response.body);
-
-      // Get the wsToken from the response
-      // final wsToken = jsonResponse['data']['wsToken'];
       final accessToken = jsonResponse['data']['accessToken'];
+      final refreshToken = jsonResponse['data']['refreshToken'];
 
-      // Save the wsToken in SharedPreferences
       final prefs = await SharedPreferences.getInstance();
-      // await prefs.setString('wsToken', wsToken);
       await prefs.setString('accessToken', accessToken);
+      await prefs.setString('refreshToken', refreshToken);
+      // await prefs.setString('password', password);
 
-      if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
-        await Provider.of<UserProvider>(context,listen: false).getUserDetails(context: context,
-            token: accessToken
-        );
-        await AppDeepLinking().openNftApp(
-          {
-            "operation": "connectWallet",
-            "Wallet Address": Provider.of<UserProvider>(context,listen: false).walletAddress,
-            "comments":
-            "coming back from hesa wallet app with wallet address",
-          },
-
-        );
-        print('go to neo');
-      }
+      print('true ya false');
+      await Navigator.of(context).pushNamed(ConnectDapp.routeName, arguments: {
+      });
       return AuthResult.success;
     } else {
-      // Show an error message or handle the response as needed
       print("Login failed: ${response.body}");
-      _showToast('Login failed');
+      _showToast('Login failed  ${response.body}');
       return AuthResult.failure;
+    }
+  } on TimeoutException catch (e) {
+  print("TimeoutException during login: $e");
+  _showToast('Timeout occurred during login $e');
+  return AuthResult.failure;
+  } catch (e) {
+  print("Exception during login: $e");
+  _showToast('An error occurred during login $e');
+  return AuthResult.failure;
     }
   }
 
@@ -183,7 +179,7 @@ class AuthProvider with ChangeNotifier {
     fToast.init(context);
     print('send login otp' + response.body);
     if (response.statusCode == 201) {
-      // Successful login, handle navigation or other actions
+     print('login Otp Response');
       print("${response.body}");
       _showToast('OTP sent successfully!');
       return AuthResult.success;
@@ -194,6 +190,47 @@ class AuthProvider with ChangeNotifier {
       return AuthResult.failure;
     }
   }
+
+
+  Future<AuthResult> sendOTP({
+    required BuildContext context,
+    required String token,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/user/otp/send');
+    final body = {};
+
+    try {
+      final response = await http.post(
+        url,
+        body: body,
+        headers: {
+          // "Content-type": "application/json",
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      fToast = FToast();
+      fToast.init(context);
+      print('send otp' + response.body);
+
+      if (response.statusCode == 201) {
+        _showToast('OTP sent successfully!');
+        return AuthResult.success;
+      } else {
+        // Show an error message or handle the response as needed
+        print("Something went wrong: ${response.body}");
+        _showToast('Send OTP Failed');
+        return AuthResult.failure;
+      }
+    } catch (e) {
+      // Handle the exception
+      print("Exception occurred: $e");
+      _showToast('Error sending OTP');
+      return AuthResult.failure;
+    }
+  }
+
 
   Future<AuthResult> resendRegisterOTP({
     required String tokenizedUserPL,
