@@ -351,6 +351,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                           bottom: MediaQuery.of(context)
                                               .viewInsets
                                               .bottom),
+                                      keyboardType: TextInputType.text,
                                       style: TextStyle(
                                           fontSize: 10.2.sp,
                                           color: themeNotifier.isDark

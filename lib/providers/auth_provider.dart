@@ -186,7 +186,7 @@ class AuthProvider with ChangeNotifier {
     } else {
       // Show an error message or handle the response as needed
       print("Something went wrong: ${response.body}");
-      _showToast('Something went wrong');
+      _showToast('OTP Sent Failed!');
       return AuthResult.failure;
     }
   }
@@ -220,7 +220,7 @@ class AuthProvider with ChangeNotifier {
       } else {
         // Show an error message or handle the response as needed
         print("Something went wrong: ${response.body}");
-        _showToast('Send OTP Failed');
+        _showToast('OTP Sent Failed!');
         return AuthResult.failure;
       }
     } catch (e) {

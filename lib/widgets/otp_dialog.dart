@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -17,6 +18,7 @@ import 'otp_input_box.dart';
 
 void otpDialog({
   required BuildContext context,
+  required StreamController<int> events,
   required Function firstBtnHandler,
   required Function secondBtnHandler,
   required String firstTitle,
@@ -45,6 +47,7 @@ void otpDialog({
 }){
   showDialog(
     context: context,
+
     builder: (BuildContext context) {
       final screenWidth = MediaQuery.of(context).size.width;
       final dialogWidth = screenWidth * 0.85;
@@ -52,7 +55,11 @@ void otpDialog({
           builder: (BuildContext context, StateSetter setState) {
             // print("testing" + isFirstButtonActive.toString());
             print('test loading' + isLoading.toString());
-            return Dialog(
+            return StreamBuilder<int>(
+                stream: events.stream,
+                builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                  print(snapshot.data.toString());
+                  return Dialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
@@ -183,7 +190,13 @@ void otpDialog({
                                 EdgeInsets.symmetric(horizontal: 15.sp),
                                 child: DialogButton(
                                   title: firstTitle,
-                                  isactive: otp1Controller.text.isNotEmpty && otp2Controller.text.isNotEmpty,
+                                  isactive:
+                                  otp1Controller.text.isNotEmpty &&
+                                      otp2Controller.text.isNotEmpty &&
+                                      otp3Controller.text.isNotEmpty &&
+                                      otp4Controller.text.isNotEmpty &&
+                                      otp5Controller.text.isNotEmpty &&
+                                      otp6Controller.text.isNotEmpty,
                                   handler: ()=> firstBtnHandler(),
                                   // isLoading: _isLoading,
                                   color: firstBtnBgColor,
@@ -193,7 +206,11 @@ void otpDialog({
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 22.sp),
                               child: AppButton(
-                                  title: secondTitle,
+                                  title: secondTitle +
+                                      // "${snapshot.data.toString()}"
+                                  "${(snapshot.data! ~/ 60).toString().padLeft(2, '0')}:${(snapshot.data! % 60).toString().padLeft(2, '0')}",
+
+                                  // secondTitle,
                                   isactive: isSecondButtonActive,
                                   handler: ()=> secondBtnHandler(),
                                   isGradient: false,
@@ -211,7 +228,7 @@ void otpDialog({
                         )
                     ],
                   )),
-            );
+            );});
           });
     },
   );

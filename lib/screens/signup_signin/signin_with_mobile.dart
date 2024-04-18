@@ -69,8 +69,10 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
   bool isOtpButtonActive = false;
   var _isLoading = false;
   Timer? _timer;
+  int _timeLeft = 300;
   bool _isTimerActive = false;
   var _isLoadingResend = false;
+  late StreamController<int> _events;
 
   var tokenizedUserPL;
 
@@ -83,6 +85,9 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
   void initState() {
     super.initState();
     getTokenizedUserPayLoad();
+    _events = new StreamController<int>();
+    _events.add(300);
+    // startTimer();
     // Listen for changes in the text fields and update the button state
     _numberController.addListener(_updateButtonState);
     otp1Controller.addListener(_updateOtpButtonState);
@@ -125,11 +130,10 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
 
   void startTimer() {
     _isTimerActive = true;
-    _timer = Timer(Duration(seconds: 5), () {
-      setState(() {
-        _isTimerActive = false;
-      });
-      // The timer has finished, allowing the function to be called again
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      (_timeLeft > 0) ? _timeLeft-- : _timer?.cancel();
+      print(_timeLeft);
+      _events.add(_timeLeft);
     });
   }
 
@@ -276,12 +280,12 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                               //         context,
                               //         SlideRightPageRoute(page: SigninWithEmail()),
                               //       );
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) => SigninWithEmail(),
-                                    //   ),
-                                    // );
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => SigninWithEmail(),
+                              //   ),
+                              // );
                               //     },
                               //     isGradient: false,
                               //     textColor: themeNotifier.isDark
@@ -305,167 +309,123 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                       }
                                     });
                                     final result =
-                                        await Provider.of<AuthProvider>(context,
-                                                listen: false)
-                                            .sendLoginOTP(
-                                      mobile: _numberController.text,
-                                      context: context,
+
+
+                                      await Provider.of<AuthProvider>(context,
+                                              listen: false)
+                                          .sendLoginOTP(
+                                    mobile: _numberController.text,
+                                    context: context,
                                     );
                                     setState(() {
                                       _isLoading = false;
                                     });
                                     if (result == AuthResult.success) {
-                                    otpDialog(
-                                      firstBtnHandler: () async {
-                                        setState(() {
-                                          _isLoading = true;
-                                        });
-                                        print('loading popup' +
-                                            _isLoading.toString());
-                                        Navigator.pop(context);
-                                        // Future.delayed(Duration(seconds: 2));
-                                        // final loginResult =
-                                            await Provider.of<AuthProvider>(context,
-                                            listen: false)
-                                            .logInWithMobile(
-                                              mobile: _numberController.text,
-                                              context: context, code:
-                                            otp1Controller.text +
+                                      startTimer();
+                                      otpDialog(
+                                        events: _events,
+                                        firstBtnHandler: () async {
+                                          setState(() {
+                                            _isLoading = true;
+                                          });
+                                          print('loading popup' +
+                                              _isLoading.toString());
+                                          Navigator.pop(context);
+                                          // Future.delayed(Duration(seconds: 2));
+                                          // final loginResult =
+                                          await Provider.of<AuthProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .logInWithMobile(
+                                            mobile: _numberController.text,
+                                            context: context,
+                                            code: otp1Controller.text +
                                                 otp2Controller.text +
                                                 otp3Controller.text +
                                                 otp4Controller.text +
-                                                otp5Controller.text+
+                                                otp5Controller.text +
                                                 otp6Controller.text,
-                                            );
-                                        setState(() {
-                                          _isLoading = false;
-                                        });
-                                        print('loading popup 2' +
-                                            _isLoading.toString());
-                                      },
-                                        secondBtnHandler: () async {
-                                          print('second handler calling');
-                                          try {
-                                            final result = await Provider.of<
-                                                AuthProvider>(
-                                                context,
-                                                listen:
-                                                false)
-                                                .sendLoginOTP(mobile: _numberController.text, context: context);
-                                            // setState(() {
-                                            //   _isLoadingResend = false;
-                                            // });
-                                            startTimer();
-                                            if (result ==
-                                                AuthResult
-                                                    .success) {}
-                                          } catch (error) {
-                                            print(
-                                                "Error: $error");
-                                            // _showToast('An error occurred'); // Show an error message
-                                          } finally {
-                                            setState(() {
-                                              _isLoadingResend =
-                                              false;
-                                            });
-                                          }
-
+                                          );
+                                          setState(() {
+                                            _isLoading = false;
+                                          });
+                                          print('loading popup 2' +
+                                              _isLoading.toString());
                                         },
-                                      // firstBtnHandler: () async {
-                                      //   print('first handler calling');
-                                      //   if (_isLoading) return;
-                                      //   //
-                                      //   setState(() {
-                                      //     _isLoading = true;
-                                      //   });
-                                      //   print('loading first handler calling');
-                                      //   print(_isLoading.toString());
-                                      //
-                                      //   try {
-                                      //     print(_numberController.text);
-                                      //     print(otp6Controller.text);
-                                      //
-                                      //     final result =
-                                      //         await Provider.of<AuthProvider>(
-                                      //                 context,
-                                      //                 listen: false)
-                                      //             .verifyUser(
-                                      //       context: context,
-                                      //       mobile: _numberController.text,
-                                      //       code: otp1Controller.text +
-                                      //           otp2Controller.text +
-                                      //           otp3Controller.text +
-                                      //           otp4Controller.text +
-                                      //           otp5Controller.text +
-                                      //           otp6Controller.text,
-                                      //       // token: tokenizedUserPL,
-                                      //       token: tokenizedUserPL,
-                                      //       // Provider.of<AuthProvider>(
-                                      //       //         context,
-                                      //       //         listen: false)
-                                      //       //     .tokenizedUserPayload,
-                                      //     );
-                                      //     setState(() {
-                                      //       _isLoading = false;
-                                      //     });
-                                      //     if (result == AuthResult.success) {
-                                      //bad mai dekhyngy
-                                      // await Navigator
-                                      //     .push(
-                                      //   context,
-                                      //   MaterialPageRoute(
-                                      //     builder:
-                                      //         (context) =>
-                                      //         TermsAndConditions(),
-                                      //   ),
-                                      // );
-                                      //       Navigator.of(context)
-                                      //           .pushNamedAndRemoveUntil(
-                                      //               'nfts-page',
-                                      //               (Route d) => false,
-                                      //               arguments: {});
-                                      //     }
-                                      //   } catch (error) {
-                                      //     print("Error: $error");
-                                      //     // _showToast('An error occurred'); // Show an error message
-                                      //   } finally {
-                                      //     setState(() {
-                                      //       _isLoading = false;
-                                      //     });
-                                      //   }
-                                      // },
+                                        secondBtnHandler: () async {
+                                          if (_timeLeft == 0) {
+                                            print('resend function calling');
+                                            try {
+                                              setState(() {
+                                                _isLoadingResend = true;
+                                              });
+                                              final result = await Provider.of<
+                                                          AuthProvider>(context,
+                                                      listen: false)
+                                                  .sendLoginOTP(
+                                                      mobile: _numberController
+                                                          .text,
+                                                      context: context);
+                                              setState(() {
+                                                _isLoadingResend = false;
+                                              });
+                                              if (result ==
+                                                  AuthResult.success) {
+                                                startTimer();
+                                              }
+                                            } catch (error) {
+                                              print("Error: $error");
+                                              // _showToast('An error occurred'); // Show an error message
+                                            } finally {
+                                              setState(() {
+                                                _isLoadingResend = false;
+                                              });
+                                            }
+                                          } else {}
+                                        },
+                                        firstTitle: 'Confirm',
+                                        secondTitle: 'Resend code ',
 
-                                      firstTitle: 'Confirm',
-                                      // secondTitle: 'Resend code',
-                                      secondTitle: _timer.toString(),
-                                      context: context,
-                                      isDark: themeNotifier.isDark,
-                                      isFirstButtonActive: isOtpButtonActive,
-                                      isSecondButtonActive: false,
-                                      otp1Controller: otp1Controller,
-                                      otp2Controller: otp2Controller,
-                                      otp3Controller: otp3Controller,
-                                      otp4Controller: otp4Controller,
-                                      otp5Controller: otp5Controller,
-                                      otp6Controller: otp6Controller,
-                                      firstFieldFocusNode: firstFieldFocusNode,
-                                      secondFieldFocusNode:
-                                          secondFieldFocusNode,
-                                      thirdFieldFocusNode: thirdFieldFocusNode,
-                                      forthFieldFocusNode: forthFieldFocusNode,
-                                      fifthFieldFocusNode: fifthFieldFocusNode,
-                                      sixthFieldFocusNode: sixthFieldFocusNode,
-                                      firstBtnBgColor:
-                                          AppColors.activeButtonColor,
-                                      firstBtnTextColor:
-                                          AppColors.textColorBlack,
-                                      secondBtnBgColor: Colors.transparent,
-                                      secondBtnTextColor: themeNotifier.isDark
-                                          ? AppColors.textColorWhite
-                                          : AppColors.textColorBlack
-                                              .withOpacity(0.8),
-                                      isLoading: _isLoading,
-                                    );}
+                                        // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
+
+                                        context: context,
+                                        isDark: themeNotifier.isDark,
+                                        isFirstButtonActive: isOtpButtonActive,
+                                        isSecondButtonActive: false,
+                                        otp1Controller: otp1Controller,
+                                        otp2Controller: otp2Controller,
+                                        otp3Controller: otp3Controller,
+                                        otp4Controller: otp4Controller,
+                                        otp5Controller: otp5Controller,
+                                        otp6Controller: otp6Controller,
+                                        firstFieldFocusNode:
+                                            firstFieldFocusNode,
+                                        secondFieldFocusNode:
+                                            secondFieldFocusNode,
+                                        thirdFieldFocusNode:
+                                            thirdFieldFocusNode,
+                                        forthFieldFocusNode:
+                                            forthFieldFocusNode,
+                                        fifthFieldFocusNode:
+                                            fifthFieldFocusNode,
+                                        sixthFieldFocusNode:
+                                            sixthFieldFocusNode,
+                                        firstBtnBgColor:
+                                            AppColors.activeButtonColor,
+                                        firstBtnTextColor:
+                                            AppColors.textColorBlack,
+                                        secondBtnBgColor: Colors.transparent,
+                                        secondBtnTextColor: _timeLeft != 0
+                                            ? AppColors.textColorBlack
+                                                .withOpacity(0.8)
+                                            : AppColors.textColorWhite,
+                                        // themeNotifier.isDark
+                                        //     ? AppColors.textColorWhite
+                                        //     : AppColors.textColorBlack
+                                        //         .withOpacity(0.8),
+                                        isLoading: _isLoadingResend,
+                                      );
+                                    }
                                     // showDialog(
                                     //   context: context,
                                     //   builder: (BuildContext context) {

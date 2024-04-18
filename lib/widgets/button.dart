@@ -69,7 +69,8 @@ class AppButton extends StatelessWidget {
                       style: TextStyle(
                           color: isactive
                               ? textColor
-                              : themeNotifier.isDark
+                              :
+                          themeNotifier.isDark
                                   ? AppColors.textColorGreyShade2
                                   : AppColors.textColorGreyShade3,
                           fontSize: 11.7.sp,
