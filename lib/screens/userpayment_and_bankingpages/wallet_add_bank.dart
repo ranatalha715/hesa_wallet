@@ -55,6 +55,7 @@ class _WalletAddBankState extends State<WalletAddBank> {
   bool _isChecked = false;
   var accessToken = "";
   var _selectedBank = '';
+  var _selectedBankBic = '';
   var isValidating = false;
   var selectedValue;
   bool isDropdownOpen = false;
@@ -164,7 +165,8 @@ class _WalletAddBankState extends State<WalletAddBank> {
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
     var banks = Provider.of<BankProvider>(context, listen: false).banks;
-    print("testing" + _selectedBank);
+    // print("testing" + _selectedBank);
+    print("testing bic" + _selectedBankBic);
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return GestureDetector(
           onTap: () {
@@ -321,13 +323,14 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                 bool isLast =
                                                     index == banks.length - 1;
 
-                                                return addBankslist(
+                                                return
+                                                  addBankslist(
                                                   bankName: banks[index].bankName,
                                                   english: isEnglish ? true : false,
                                                   isDark: themeNotifier.isDark
                                                       ? true
                                                       : false,
-                                                  isLast: isLast,
+                                                  isLast: isLast, bankBic: banks[index].bic,
                                                   // isFirst: isFirst,
                                                 );
                                               }),
@@ -698,7 +701,7 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                     .addBankAccount(
                                                   context: context,
                                                   token: accessToken,
-                                                  bankName: _selectedBank,
+                                                  // bankName: _selectedBank,
                                                   ibanNumber: _ibannumberController.text,
                                                   code: otp1Controller.text +
                                                       otp2Controller.text +
@@ -706,21 +709,14 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                       otp4Controller.text +
                                                       otp5Controller.text +
                                                       otp6Controller.text,
-                                                  beneficiaryName:
-                                                  _accountholdernamerController.text,
-                                                  // code: '123456'
+                                                  // beneficiaryName:
+                                                  // _accountholdernamerController.text,
+                                                 bankBic: _selectedBankBic,
                                                 );
                                                 setState(() {
                                                   _isLoading = false;
                                                 });
                                                 print("after adding bank");
-                                                print("OTP Values: " +
-                                                    otp1Controller.text +
-                                                    otp2Controller.text +
-                                                    otp3Controller.text +
-                                                    otp4Controller.text +
-                                                    otp5Controller.text +
-                                                    otp6Controller.text);
                                                 if (resultsecond == AuthResult.success) {
                                                   Navigator.pop(context);
                                                   showDialog(
@@ -793,7 +789,7 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                                       style: TextStyle(
                                                                           fontWeight:
                                                                           FontWeight.w600,
-                                                                          fontSize: 17.sp,
+                                                                          fontSize: 15.sp,
                                                                           color: themeNotifier.isDark
                                                                               ? AppColors
                                                                               .textColorWhite
@@ -843,7 +839,7 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                 } else {}
                                               },
                                               firstTitle: 'Verify',
-                                              secondTitle: 'Resend code ',
+                                              secondTitle: 'Resend code: ',
 
                                               // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
 
@@ -882,12 +878,12 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                               //     ? AppColors.textColorWhite
                                               //     : AppColors.textColorBlack
                                               //         .withOpacity(0.8),
-                                              isLoading: _isLoadingResend,
+                                              isLoading: _isLoading,
                                             );
                                           }
                                         }
                                       },
-                                      // isLoading: _isLoading,
+                                      isLoading: _isLoading,
                                       isGradient: true,
                                       color: Colors.transparent,
                                       // textColor: AppColors.textColorGreyShade2,
@@ -993,6 +989,7 @@ class _WalletAddBankState extends State<WalletAddBank> {
 
   Widget addBankslist({
     required String bankName,
+    required String bankBic,
     bool isFirst = false,
     bool isLast = false,
     bool english = false,
@@ -1001,6 +998,7 @@ class _WalletAddBankState extends State<WalletAddBank> {
     return GestureDetector(
       onTap: () => setState(() {
         _selectedBank = bankName;
+        _selectedBankBic = bankBic;
         _isSelected = false;
       }),
       child: Container(
@@ -1076,340 +1074,4 @@ class _WalletAddBankState extends State<WalletAddBank> {
     );
   }
 
-  showOtpDialogue({
-    bool isDark = true,
-  }) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        final screenWidth = MediaQuery.of(context).size.width;
-        final dialogWidth = screenWidth * 0.85;
-        return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            backgroundColor: Colors.transparent,
-            child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
-                child: Container(
-                  height: 55.h,
-                  width: dialogWidth,
-                  decoration: BoxDecoration(
-                    color: isDark
-                        ? AppColors.showDialogClr
-                        : AppColors.textColorWhite,
-                    // border: Border.all(
-                    //     width: 0.1.h,
-                    //     color:
-                    //         AppColors.textColorGrey),
-                    // color: AppColors.backgroundColor,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 3.h,
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Image.asset(
-                          "assets/images/svg_icon.png",
-                          height: 5.9.h,
-                          width: 5.6.h,
-                          color: AppColors.textColorWhite,
-                        ),
-                      ),
-                      SizedBox(height: 2.h),
-                      Text(
-                        'OTP verification'.tr(),
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 17.5.sp,
-                            color: isDark
-                                ? AppColors.textColorWhite
-                                : AppColors.textColorBlack),
-                      ),
-                      SizedBox(
-                        height: 2.h,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          otpContainer(
-                            controller: otp1Controller,
-                            focusNode: firstFieldFocusNode,
-                            previousFocusNode: firstFieldFocusNode,
-                            handler: () => FocusScope.of(context)
-                                .requestFocus(secondFieldFocusNode),
-                          ),
-                          SizedBox(
-                            width: 1.h,
-                          ),
-                          otpContainer(
-                            controller: otp2Controller,
-                            focusNode: secondFieldFocusNode,
-                            previousFocusNode: firstFieldFocusNode,
-                            handler: () => FocusScope.of(context)
-                                .requestFocus(thirdFieldFocusNode),
-                          ),
-                          SizedBox(
-                            width: 1.h,
-                          ),
-                          otpContainer(
-                            controller: otp3Controller,
-                            focusNode: thirdFieldFocusNode,
-                            previousFocusNode: secondFieldFocusNode,
-                            handler: () => FocusScope.of(context)
-                                .requestFocus(forthFieldFocusNode),
-                          ),
-                          SizedBox(
-                            width: 1.h,
-                          ),
-                          otpContainer(
-                            controller: otp4Controller,
-                            focusNode: forthFieldFocusNode,
-                            previousFocusNode: thirdFieldFocusNode,
-                            handler: () => FocusScope.of(context)
-                                .requestFocus(fifthFieldFocusNode),
-                          ),
-                          SizedBox(
-                            width: 1.h,
-                          ),
-                          otpContainer(
-                            controller: otp5Controller,
-                            focusNode: fifthFieldFocusNode,
-                            previousFocusNode: forthFieldFocusNode,
-                            handler: () => FocusScope.of(context)
-                                .requestFocus(sixthFieldFocusNode),
-                          ),
-                          SizedBox(
-                            width: 1.h,
-                          ),
-                          otpContainer(
-                            controller: otp6Controller,
-                            focusNode: sixthFieldFocusNode,
-                            previousFocusNode: fifthFieldFocusNode,
-                            handler: () => null,
-                          ),
-                        ],
-                      ),
-                      // SizedBox(height: 1.h,),
-                      // Text(
-                      //   '*Incorrect verification code ',
-                      //   style: TextStyle(
-                      //       color: AppColors.errorColor,
-                      //       fontSize: 10.2.sp,
-                      //       fontWeight:
-                      //       FontWeight.w400),
-                      // ),
-                      // SizedBox(
-                      //   height: 2.h,
-                      // ),
-                      // Text(
-                      //   '*Incorrect verification code'
-                      //       .tr(),
-                      //   style: TextStyle(
-                      //       color: AppColors
-                      //           .errorColor,
-                      //       fontSize: 10.2.sp,
-                      //       fontWeight:
-                      //       FontWeight
-                      //           .w400),
-                      // ),
-
-
-                      // SizedBox(
-                      //   height: 1.h,
-                      // ),
-                      // Text(
-                      //   'Enter sms verification code'.tr(),
-                      //   textAlign: TextAlign.center,
-                      //   style: TextStyle(
-                      //       height: 1.4,
-                      //       color: AppColors.textColorGrey,
-                      //       fontSize: 10.2.sp,
-                      //       fontWeight: FontWeight.w400),
-                      // ),
-                      // Expanded(child: SizedBox()),
-
-
-
-                      SizedBox(
-                        height: 2.h,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 22),
-                        child: AppButton(
-                          title: 'Verify'.tr(),
-                          handler: () async {
-                            if (otp1Controller.text.isNotEmpty &&
-                                otp2Controller.text.isNotEmpty &&
-                                otp3Controller.text.isNotEmpty &&
-                                otp4Controller.text.isNotEmpty &&
-                                otp5Controller.text.isNotEmpty &&
-                                otp6Controller.text.isNotEmpty) {
-                              setState(() {
-                                _isLoading = true;
-                              });
-                              print("before adding bank");
-
-                              final resultsecond =
-                                  await Provider.of<BankProvider>(context,
-                                          listen: false)
-                                      .addBankAccount(
-                                context: context,
-                                token: accessToken,
-                                bankName: _selectedBank,
-                                ibanNumber: _ibannumberController.text,
-                                code: otp1Controller.text +
-                                    otp2Controller.text +
-                                    otp3Controller.text +
-                                    otp4Controller.text +
-                                    otp5Controller.text +
-                                    otp6Controller.text,
-                                beneficiaryName:
-                                    _accountholdernamerController.text,
-                                // code: '123456'
-                              );
-                              setState(() {
-                                _isLoading = false;
-                              });
-                              print("after adding bank");
-                              print("OTP Values: " +
-                                  otp1Controller.text +
-                                  otp2Controller.text +
-                                  otp3Controller.text +
-                                  otp4Controller.text +
-                                  otp5Controller.text +
-                                  otp6Controller.text);
-                              if (resultsecond == AuthResult.success) {
-                                Navigator.pop(context);
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    final screenWidth =
-                                        MediaQuery.of(context).size.width;
-                                    final dialogWidth = screenWidth * 0.85;
-                                    void closeDialogAndNavigate() {
-                                      Navigator.of(context)
-                                          .pop(); // Close the dialog
-                                      // Navigator.of(context).pop(); // Close the
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                WalletBankingAndPaymentEmpty()),
-                                      );
-                                    }
-
-                                    Future.delayed(Duration(seconds: 3),
-                                        closeDialogAndNavigate);
-                                    return StatefulBuilder(builder:
-                                        (BuildContext context,
-                                            StateSetter setState) {
-                                      return Dialog(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        backgroundColor: Colors.transparent,
-                                        child: BackdropFilter(
-                                            filter: ImageFilter.blur(
-                                                sigmaX: 7, sigmaY: 7),
-                                            child: Container(
-                                              height: 23.h,
-                                              width: dialogWidth,
-                                              decoration: BoxDecoration(
-                                                // border: Border.all(
-                                                //     width:
-                                                //         0.1.h,
-                                                //     color: AppColors.textColorGrey),
-                                                color: isDark
-                                                    ? AppColors.showDialogClr
-                                                    : AppColors.textColorWhite,
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                              ),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  SizedBox(
-                                                    height: 4.h,
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.bottomCenter,
-                                                    child: Image.asset(
-                                                      "assets/images/bank_popup.png",
-                                                      height: 6.h,
-                                                      width: 5.8.h,
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 2.h),
-                                                  Text(
-                                                    'Your Bank account has been added'.tr(),
-                                                    textAlign: TextAlign.center,
-                                                    maxLines: 2,
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize: 17.sp,
-                                                        color: isDark
-                                                            ? AppColors
-                                                                .textColorWhite
-                                                            : AppColors
-                                                                .textColorBlack),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 4.h,
-                                                  ),
-                                                ],
-                                              ),
-                                            )),
-                                      );
-                                    });
-                                  },
-                                );
-                              }
-                            }
-                          },
-                          isLoading: _isLoading,
-                          isGradient: true,
-                          color: Colors.transparent,
-                          textColor: AppColors.textColorBlack,
-                        ),
-                      ),
-                      SizedBox(height: 2.h),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 22),
-                        child:
-                        AppButton(
-                            title: 'Resend code'.tr() +   "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
-
-                            handler: () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => TermsAndConditions(),
-                              //   ),
-                              // );
-                            },
-                            isGradient: false,
-                            textColor: isDark
-                                ? AppColors.textColorWhite
-                                : AppColors.textColorBlack.withOpacity(0.8),
-                            color: AppColors.appSecondButton.withOpacity(0.10)),
-                      ),
-                      Expanded(child: SizedBox()),
-                    ],
-                  ),
-                )),
-          );
-        });
-      },
-    );
-  }
 }

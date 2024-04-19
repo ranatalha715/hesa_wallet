@@ -794,7 +794,7 @@ class _WalletBankingAndPaymentEmptyState
                                                               isDark: themeNotifier
                                                                       .isDark
                                                                   ? true
-                                                                  : false,
+                                                                  : false, selectedBankName: banks[index].bic,
                                                             );
                                                           },
                                                         )
@@ -1071,6 +1071,7 @@ class _WalletBankingAndPaymentEmptyState
     bool isDark = true,
     String accountNumber = "****",
     required String fullAccountNumber,
+    required String selectedBankName,
   }) {
     return Column(
       children: [
@@ -1105,7 +1106,7 @@ class _WalletBankingAndPaymentEmptyState
                 // ),
                 // if (isPrimary) SizedBox(width: 1.h),
                 Text(
-                  "BANQUE SAUDI".tr(),
+                  selectedBankName,
                   style: TextStyle(
                       fontSize: 10.sp,
                       fontFamily: 'Inter',

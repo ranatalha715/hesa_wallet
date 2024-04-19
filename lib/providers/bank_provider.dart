@@ -22,24 +22,25 @@ class BankProvider with ChangeNotifier{
 
   Future<AuthResult> addBankAccount({
   required String token,
-  required String bankName,
+  // required String bankName,
   required String ibanNumber,
-  required String beneficiaryName,
+  required String bankBic,
+  // required String beneficiaryName,
   required String code,
   required BuildContext context,
   }) async {
-  final String url = 'http://134.209.249.241:3001/user/add-bank-account';
+  final String url = BASE_URL + '/user/add-bank-account';
   final Map<String, String> body = {
-  "beneficiaryBank": bankName,
-  "beneficiaryBankAddress": "CBC",
-  "beneficiaryBankClearingCode": "02",
-  "beneficiaryBankCode": "CBC",
-  "beneficiaryAccountNo": "858888888",
-  "beneficiaryName": beneficiaryName,
-  "beneficiaryAddress": "Karachi",
+  // "beneficiaryBank": bankName,
+  // "beneficiaryBankAddress": "CBC",
+  // "beneficiaryBankClearingCode": "02",
+  // "beneficiaryBankCode": "CBC",
+  // "beneficiaryAccountNo": "858888888",
+  // "beneficiaryName": beneficiaryName,
+  // "beneficiaryAddress": "Karachi",
   "isPrimary": "true",
   "accountNumber": ibanNumber,
-  "bic": "1222",
+  "bic": bankBic,
   "code": code,
   };
 
@@ -54,6 +55,8 @@ class BankProvider with ChangeNotifier{
   );
   fToast = FToast();
   fToast.init(context);
+  print('addbankresponse');
+  print(response.body);
   if (response.statusCode == 201) {
   final responseData = json.decode(response.body);
   if (responseData['success']) {
@@ -76,8 +79,6 @@ class BankProvider with ChangeNotifier{
 
   Future<AuthResult> getAllBanks(String token) async {
     final String url = BASE_URL + '/bank-info';
-
-
     try {
       final response = await http.get(Uri.parse(url),
         headers: {
@@ -87,6 +88,7 @@ class BankProvider with ChangeNotifier{
         },
       );
       final jsonResponse = json.decode(response.body);
+      print('Get bank list');
       print(jsonResponse);
       if (response.statusCode == 200) {
         List<dynamic> banksJsonList = jsonResponse;

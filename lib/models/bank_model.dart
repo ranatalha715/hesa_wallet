@@ -16,7 +16,7 @@ class Bank {
 
   factory Bank.fromJson(Map<String, dynamic> json) {
     return Bank(
-      // bankName: json['beneficiaryBank'],
+      // bankName: json['bankName'],
       ibanNumber: json['accountNumber'],
       bic: json['bic'],
       isPrimary: json['isPrimary'].toString(),
