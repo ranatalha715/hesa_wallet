@@ -50,14 +50,14 @@ class _WalletState extends State<Wallet> {
                               ? AppColors.textColorWhite.withOpacity(0.05)
                               : AppColors.backgroundColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(22)),
-                      // child: Align(
-                      //   alignment: Alignment.center,
-                      //   child: Image.asset(
-                      //     "assets/images/hesa_wallet_logo.png",
-                      //     height: 13.8.h,
-                      //     width: 13.8.h,
-                      //   ),
-                      // ),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Image.asset(
+                          "assets/images/hesa_wallet_logo.png",
+                          height: 13.8.h,
+                          width: 13.8.h,
+                        ),
+                      ),
                     ),
                   ),
                 ),

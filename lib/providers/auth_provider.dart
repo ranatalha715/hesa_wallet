@@ -512,6 +512,36 @@ class AuthProvider with ChangeNotifier {
       return AuthResult.failure;
     }
   }
+  var userNameAvailable=true;
+  Future<AuthResult> checkUsername({
+    required String userName,
+    required BuildContext context,
+  }) async {
+    try {
+      final url = Uri.parse(BASE_URL + '/user/check-username/$userName');
+      final response = await http.get(url,
+        headers: {
+        },
+      );
+      print("check username response");
+      print(response.body);
+      if (response.statusCode == 200) {
+        final extractedData=json.decode(response.body);
+        print('success response');
+        print(extractedData['success']);
+        userNameAvailable=extractedData['success'];
+        // extractedData['success']==true ? userNameAvailable=true:userNameAvailable=false;
+        return AuthResult.success;
+      } else {
+        print(" ${response.body}");
+        return AuthResult.failure;
+      }
+    } on TimeoutException catch (e) {
+      return AuthResult.failure;
+    } catch (e) {
+      return AuthResult.failure;
+    }
+  }
 
   Future<AuthResult> changePassword({
     required String token,

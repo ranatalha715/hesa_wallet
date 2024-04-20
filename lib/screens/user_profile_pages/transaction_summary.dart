@@ -710,25 +710,38 @@ class _TransactionSummaryState extends State<TransactionSummary> {
       padding: EdgeInsets.only(bottom: 8.sp),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Text(
-            title,
-            style: TextStyle(
-                color: AppColors.textColorWhite,
-                fontSize: 11.sp,
-                fontWeight: FontWeight.w400),
+          Container(
+            // color: Colors.yellow,
+            width: 30.w,
+            child: Text(
+              title,
+              // maxLines: 1,
+              style: TextStyle(
+                  color: AppColors.textColorWhite,
+                  fontSize: 11.sp,
+                  fontWeight: FontWeight.w400),
+            ),
           ),
           SizedBox(
             width: 5.sp,
           ),
-          Text(
-            details,
-            style: TextStyle(
-                color: isDark
-                    ? AppColors.textColorWhite
-                    : AppColors.textColorBlack,
-                fontSize: 11.sp,
-                fontWeight: FontWeight.w500),
+          Container(
+            width: 40.w,
+            // color: Colors.blue,
+            child: Text(
+              details,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                  color: isDark
+                      ? AppColors.textColorWhite
+                      : AppColors.textColorBlack,
+                  fontSize: 11.sp,
+                  fontWeight: FontWeight.w500),
+            ),
           ),
         ],
       ),

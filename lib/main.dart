@@ -164,6 +164,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   initState() {
     super.initState();
+    generateFcmToken();
     AppDeepLinking().initDeeplink();
     fToast = FToast();
     fToast.init(context);

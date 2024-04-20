@@ -40,6 +40,7 @@ class TransactionProvider with ChangeNotifier {
   List<ActivityModel> get activities {
     return [..._activities];
   }
+  int currentPage = 1;
 
   String calculateTimeDifference(DateTime createdAt) {
     DateTime now = DateTime.now();
@@ -66,8 +67,16 @@ class TransactionProvider with ChangeNotifier {
   Future<AuthResult> getWalletActivities({
     required String accessToken,
     required BuildContext context,
+    bool refresh = false,
   }) async {
-    final url = Uri.parse(BASE_URL + '/user/wallet-activity?limit=10&page=1');
+    if (refresh) {
+      currentPage = 1;
+    }
+    final url = Uri.parse(
+      BASE_URL + '/user/wallet-activity?limit=10&page=1',
+
+      // BASE_URL + '/user/wallet-activity?limit=10&page=1'
+    );
 
     final response = await http.get(
       url,
@@ -106,9 +115,15 @@ class TransactionProvider with ChangeNotifier {
             type: prodData['type'].toString(),
           );
         }).toList();
-
-        _activities = loadedActivities;
+        if (refresh) {
+          _activities = loadedActivities;
+        } else {
+          _activities.addAll(loadedActivities);
+        }
+        // _activities = loadedActivities;
         notifyListeners();
+        currentPage++;
+
         return AuthResult.success;
       } else {
         print("Activity not found in response data");

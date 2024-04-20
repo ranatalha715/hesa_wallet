@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:ui';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -87,6 +86,16 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
   final TextEditingController otp4Controller = TextEditingController();
   final TextEditingController otp5Controller = TextEditingController();
   final TextEditingController otp6Controller = TextEditingController();
+  Timer? _debounce;
+
+  void _onUsernameChanged() {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      // Call your function here
+      Provider.of<AuthProvider>(context, listen: false)
+          .checkUsername(userName: _usernameController.text, context: context);
+    });
+  }
 
   generateFcmToken() async {
     // await Firebase.initializeApp();
@@ -126,7 +135,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
 
   String fcmToken = 'Waiting for FCM token...';
 
-
   getTokenizedUserPayLoad() async {
     final prefs = await SharedPreferences.getInstance();
     tokenizedUserPL = await prefs.getString('tokenizedUserPayload');
@@ -154,8 +162,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
       _isTimerActive = true;
     });
   }
-
-
 
   @override
   void initState() {
@@ -267,8 +273,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final args =
@@ -347,6 +351,9 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                 TextFieldParent(
                                   child: TextField(
                                       controller: _usernameController,
+                                      onChanged: (value) {
+                                        _onUsernameChanged();
+                                      },
                                       scrollPadding: EdgeInsets.only(
                                           bottom: MediaQuery.of(context)
                                               .viewInsets
@@ -408,11 +415,29 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                       // "*This username is registered",
                                       "*Username should not be empty",
                                       style: TextStyle(
-                                        fontWeight: FontWeight.w400,
+                                          fontWeight: FontWeight.w400,
                                           fontSize: 10.sp,
                                           color: AppColors.errorColor),
                                     ),
                                   ),
+      Consumer<AuthProvider>(
+      builder: (context, auth, child) {
+      return
+      Padding(
+                                    padding: EdgeInsets.only(top: 7.sp),
+                                    child: Text(
+                                      auth.userNameAvailable ?
+                                      "*Username available":
+                                      "*Username not available",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 10.sp,
+                                          color: Provider.of<AuthProvider>(context, listen: false).userNameAvailable ?
+                                          AppColors.gradientColor1:
+                                          AppColors.errorColor
+                                      ),
+                                    ),
+                                  ); }),
                                 SizedBox(
                                   height: 2.h,
                                 ),
@@ -453,7 +478,8 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.symmetric(
                                             vertical: 10.0, horizontal: 16.0),
-                                        hintText: 'Enter your mobile number'.tr(),
+                                        hintText:
+                                            'Enter your mobile number'.tr(),
                                         // contentPadding: EdgeInsets.only(left: 10),
                                         hintStyle: TextStyle(
                                             fontSize: 10.2.sp,
@@ -496,14 +522,15 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                       ),
                                       cursorColor: AppColors.textColorGrey),
                                 ),
-                                if (_numberController.text.isEmpty && isValidating)
+                                if (_numberController.text.isEmpty &&
+                                    isValidating)
                                   Padding(
                                     padding: EdgeInsets.only(top: 7.sp),
                                     child: Text(
                                       // "*This mobile number is registered",
                                       "*Mobile number should not be empty",
                                       style: TextStyle(
-                                        fontWeight: FontWeight.w400,
+                                          fontWeight: FontWeight.w400,
                                           fontSize: 10.sp,
                                           color: AppColors.errorColor),
                                     ),
@@ -539,7 +566,8 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                       obscureText: _obscurePassword,
                                       onChanged: (password) {
                                         setState(() {
-                                          _isPasswordValid = _isPasswordCompliant(password);
+                                          _isPasswordValid =
+                                              _isPasswordCompliant(password);
                                         });
                                       },
                                       style: TextStyle(
@@ -561,27 +589,28 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             // Off-white color,
                                             fontFamily: 'Inter'),
                                         enabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(8.0),
-                                            borderSide: BorderSide(
-                                              color:Colors.transparent,
-                                              // Off-white color
-                                              // width: 2.0,
-                                            )
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(8.0),
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
                                               color: Colors.transparent,
                                               // Off-white color
                                               // width: 2.0,
-                                            )
-                                        ),
+                                            )),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            borderSide: BorderSide(
+                                              color: Colors.transparent,
+                                              // Off-white color
+                                              // width: 2.0,
+                                            )),
                                         // labelText: 'Enter your password',
                                         suffixIcon: IconButton(
                                           icon: Icon(
                                               _obscurePassword
                                                   ? Icons.visibility_outlined
-                                                  : Icons.visibility_off_outlined,
+                                                  : Icons
+                                                      .visibility_off_outlined,
                                               size: 17.5.sp,
                                               color: AppColors.textColorGrey),
                                           onPressed: _togglePasswordVisibility,
@@ -596,22 +625,24 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                     child: Text(
                                       "*Password should not be empty",
                                       style: TextStyle(
-                                        fontWeight: FontWeight.w400,
+                                          fontWeight: FontWeight.w400,
                                           fontSize: 10.sp,
                                           color: AppColors.errorColor),
                                     ),
                                   ),
-                                if(!_isPasswordValid && isValidating && _passwordController.text.isNotEmpty)
-                                Padding(
-                                  padding: EdgeInsets.only(top: 7.sp),
-                                  child: Text(
-                                    "*Password must meet requirements",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 10.sp,
-                                        color: AppColors.errorColor),
+                                if (!_isPasswordValid &&
+                                    isValidating &&
+                                    _passwordController.text.isNotEmpty)
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 7.sp),
+                                    child: Text(
+                                      "*Password must meet requirements",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 10.sp,
+                                          color: AppColors.errorColor),
+                                    ),
                                   ),
-                                ),
                                 SizedBox(height: 2.h),
                                 Text(
                                   "Password must contain".tr(),
@@ -629,13 +660,15 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                   padding: EdgeInsets.zero,
                                   shrinkWrap: true,
                                   itemCount: accountDefinitions.length,
-                                  itemBuilder: (BuildContext context, int index) {
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
                                     return Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Padding(
-                                          padding:
-                                              EdgeInsets.only(top: 4.0, right: 8.0),
+                                          padding: EdgeInsets.only(
+                                              top: 4.0, right: 8.0),
                                           child: Icon(
                                             Icons.fiber_manual_record,
                                             size: 7.sp,
@@ -644,12 +677,13 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                         ),
                                         Expanded(
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsets.only(bottom: 3),
+                                            padding: const EdgeInsets.only(
+                                                bottom: 3),
                                             child: Text(
                                               accountDefinitions[index],
                                               style: TextStyle(
-                                                  color: AppColors.textColorWhite,
+                                                  color:
+                                                      AppColors.textColorWhite,
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 10.2.sp,
                                                   fontFamily: 'Inter'),
@@ -669,11 +703,12 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                           left: 0,
                           right: 0,
                           bottom: 0,
-                          child:   Container(
-                          height: 12.h,
-                          width: double.infinity,
-                          color: AppColors.backgroundColor,
-                        ),),
+                          child: Container(
+                            height: 12.h,
+                            width: double.infinity,
+                            color: AppColors.backgroundColor,
+                          ),
+                        ),
                         Positioned(
                           bottom: 0,
                           left: 20,
@@ -682,7 +717,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                             color: Colors.transparent,
                             child: Column(
                               children: [
-
                                 // Expanded(child: SizedBox()),
                                 AppButton(
                                     title: 'Create account'.tr(),
@@ -697,13 +731,15 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                         setState(() {
                                           _isLoading = true;
                                           if (_isLoading) {
-                                            FocusManager.instance.primaryFocus?.unfocus();
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
                                           }
                                         });
                                         final result =
-                                        await Provider.of<AuthProvider>(context,
-                                            listen: false)
-                                            .registerUser(
+                                            await Provider.of<AuthProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .registerUser(
                                           context: context,
                                           firstName: args['firstName'],
                                           lastName: args['lastName'],
@@ -719,37 +755,43 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                         });
                                         if (result == AuthResult.success) {
                                           await getTokenizedUserPayLoad();
-                                          await
-                                          showDialog(
+                                          await showDialog(
                                             context: context,
                                             builder: (BuildContext context) {
                                               final screenWidth =
-                                                  MediaQuery.of(context).size.width;
-                                              final dialogWidth = screenWidth * 0.85;
+                                                  MediaQuery.of(context)
+                                                      .size
+                                                      .width;
+                                              final dialogWidth =
+                                                  screenWidth * 0.85;
                                               return StatefulBuilder(builder:
                                                   (BuildContext context,
-                                                  StateSetter setState) {
+                                                      StateSetter setState) {
                                                 return Dialog(
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                        BorderRadius.circular(
+                                                            8.0),
                                                   ),
-                                                  backgroundColor: Colors.transparent,
+                                                  backgroundColor:
+                                                      Colors.transparent,
                                                   child: BackdropFilter(
                                                       filter: ImageFilter.blur(
                                                           sigmaX: 7, sigmaY: 7),
                                                       child: Container(
                                                         height: 54.h,
                                                         width: dialogWidth,
-                                                        decoration: BoxDecoration(
-                                                          color: themeNotifier.isDark
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: themeNotifier
+                                                                  .isDark
                                                               ? AppColors
-                                                              .showDialogClr
+                                                                  .showDialogClr
                                                               : AppColors
-                                                              .textColorWhite,
+                                                                  .textColorWhite,
                                                           borderRadius:
-                                                          BorderRadius.circular(
-                                                              15),
+                                                              BorderRadius
+                                                                  .circular(15),
                                                         ),
                                                         child: Column(
                                                           children: [
@@ -759,117 +801,124 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                             Align(
                                                               alignment: Alignment
                                                                   .bottomCenter,
-                                                              child: Image.asset(
+                                                              child:
+                                                                  Image.asset(
                                                                 "assets/images/svg_icon.png",
-                                                                color: AppColors.textColorWhite,
+                                                                color: AppColors
+                                                                    .textColorWhite,
                                                                 height: 5.9.h,
                                                                 width: 5.6.h,
                                                               ),
                                                             ),
-                                                            SizedBox(height: 2.h),
+                                                            SizedBox(
+                                                                height: 2.h),
                                                             Text(
-                                                              'OTP verification'.tr(),
+                                                              'OTP verification'
+                                                                  .tr(),
                                                               style: TextStyle(
                                                                   fontWeight:
-                                                                  FontWeight.w600,
-                                                                  fontSize: 17.5.sp,
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  fontSize:
+                                                                      17.5.sp,
                                                                   color: themeNotifier.isDark
                                                                       ? AppColors
-                                                                      .textColorWhite
+                                                                          .textColorWhite
                                                                       : AppColors
-                                                                      .textColorBlack),
+                                                                          .textColorBlack),
                                                             ),
                                                             SizedBox(
                                                               height: 2.h,
                                                             ),
                                                             Row(
                                                               mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
+                                                                  MainAxisAlignment
+                                                                      .center,
                                                               children: [
                                                                 otpContainer(
                                                                   controller:
-                                                                  otp1Controller,
+                                                                      otp1Controller,
                                                                   focusNode:
-                                                                  firstFieldFocusNode,
+                                                                      firstFieldFocusNode,
                                                                   previousFocusNode:
-                                                                  firstFieldFocusNode,
-                                                                  handler: () => FocusScope
-                                                                      .of(context)
+                                                                      firstFieldFocusNode,
+                                                                  handler: () => FocusScope.of(
+                                                                          context)
                                                                       .requestFocus(
-                                                                      secondFieldFocusNode),
+                                                                          secondFieldFocusNode),
                                                                 ),
                                                                 SizedBox(
                                                                   width: 0.8.h,
                                                                 ),
                                                                 otpContainer(
                                                                   controller:
-                                                                  otp2Controller,
+                                                                      otp2Controller,
                                                                   focusNode:
-                                                                  secondFieldFocusNode,
+                                                                      secondFieldFocusNode,
                                                                   previousFocusNode:
-                                                                  firstFieldFocusNode,
-                                                                  handler: () => FocusScope
-                                                                      .of(context)
+                                                                      firstFieldFocusNode,
+                                                                  handler: () => FocusScope.of(
+                                                                          context)
                                                                       .requestFocus(
-                                                                      thirdFieldFocusNode),
+                                                                          thirdFieldFocusNode),
                                                                 ),
                                                                 SizedBox(
                                                                   width: 0.8.h,
                                                                 ),
                                                                 otpContainer(
                                                                   controller:
-                                                                  otp3Controller,
+                                                                      otp3Controller,
                                                                   focusNode:
-                                                                  thirdFieldFocusNode,
+                                                                      thirdFieldFocusNode,
                                                                   previousFocusNode:
-                                                                  secondFieldFocusNode,
-                                                                  handler: () => FocusScope
-                                                                      .of(context)
+                                                                      secondFieldFocusNode,
+                                                                  handler: () => FocusScope.of(
+                                                                          context)
                                                                       .requestFocus(
-                                                                      forthFieldFocusNode),
+                                                                          forthFieldFocusNode),
                                                                 ),
                                                                 SizedBox(
                                                                   width: 0.8.h,
                                                                 ),
                                                                 otpContainer(
                                                                   controller:
-                                                                  otp4Controller,
+                                                                      otp4Controller,
                                                                   focusNode:
-                                                                  forthFieldFocusNode,
+                                                                      forthFieldFocusNode,
                                                                   previousFocusNode:
-                                                                  thirdFieldFocusNode,
-                                                                  handler: () => FocusScope
-                                                                      .of(context)
+                                                                      thirdFieldFocusNode,
+                                                                  handler: () => FocusScope.of(
+                                                                          context)
                                                                       .requestFocus(
-                                                                      fifthFieldFocusNode),
+                                                                          fifthFieldFocusNode),
                                                                 ),
                                                                 SizedBox(
                                                                   width: 0.8.h,
                                                                 ),
                                                                 otpContainer(
                                                                   controller:
-                                                                  otp5Controller,
+                                                                      otp5Controller,
                                                                   focusNode:
-                                                                  fifthFieldFocusNode,
+                                                                      fifthFieldFocusNode,
                                                                   previousFocusNode:
-                                                                  forthFieldFocusNode,
-                                                                  handler: () => FocusScope
-                                                                      .of(context)
+                                                                      forthFieldFocusNode,
+                                                                  handler: () => FocusScope.of(
+                                                                          context)
                                                                       .requestFocus(
-                                                                      sixthFieldFocusNode),
+                                                                          sixthFieldFocusNode),
                                                                 ),
                                                                 SizedBox(
                                                                   width: 0.8.h,
                                                                 ),
                                                                 otpContainer(
                                                                   controller:
-                                                                  otp6Controller,
+                                                                      otp6Controller,
                                                                   focusNode:
-                                                                  sixthFieldFocusNode,
+                                                                      sixthFieldFocusNode,
                                                                   previousFocusNode:
-                                                                  fifthFieldFocusNode,
-                                                                  handler: () => null,
+                                                                      fifthFieldFocusNode,
+                                                                  handler: () =>
+                                                                      null,
                                                                 ),
                                                               ],
                                                             ),
@@ -888,146 +937,168 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                             //           .w400),
                                                             // ),
                                                             //
-                                                            SizedBox(height: 5.h,),
+                                                            SizedBox(
+                                                              height: 5.h,
+                                                            ),
                                                             // Expanded(
                                                             //     child: SizedBox()),
                                                             Padding(
-                                                                padding:
-                                                                EdgeInsets
+                                                                padding: EdgeInsets
                                                                     .symmetric(
-                                                                    horizontal:
-                                                                    22.sp),
-                                                                child: DialogButton(
+                                                                        horizontal: 22
+                                                                            .sp),
+                                                                child:
+                                                                    DialogButton(
                                                                   title:
-                                                                  'Confirm'.tr(),
-                                                                  handler: () async {
+                                                                      'Confirm'
+                                                                          .tr(),
+                                                                  handler:
+                                                                      () async {
                                                                     if (_isLoading)
                                                                       return;
 
-                                                                    setState(() {
+                                                                    setState(
+                                                                        () {
                                                                       _isLoading =
-                                                                      true;
+                                                                          true;
                                                                       if (_isLoading) {
-                                                                        FocusManager.instance.primaryFocus?.unfocus();
+                                                                        FocusManager
+                                                                            .instance
+                                                                            .primaryFocus
+                                                                            ?.unfocus();
                                                                       }
                                                                     });
-                                                                    await Future.delayed(Duration(milliseconds: 1500),
-                                                                            (){});
+                                                                    await Future.delayed(
+                                                                        Duration(
+                                                                            milliseconds:
+                                                                                1500),
+                                                                        () {});
                                                                     try {
-                                                                      final result = await Provider.of<
-                                                                          AuthProvider>(
-                                                                          context,
-                                                                          listen:
-                                                                          false)
-                                                                          .verifyUser(
+                                                                      final result = await Provider.of<AuthProvider>(context, listen: false).verifyUser(
                                                                           context:
-                                                                          context,
-                                                                          mobile:
-                                                                          _numberController
+                                                                              context,
+                                                                          mobile: _numberController
                                                                               .text,
                                                                           code: otp1Controller.text +
-                                                                              otp2Controller
-                                                                                  .text +
-                                                                              otp3Controller
-                                                                                  .text +
-                                                                              otp4Controller
-                                                                                  .text +
-                                                                              otp5Controller
-                                                                                  .text +
-                                                                              otp6Controller
-                                                                                  .text,
+                                                                              otp2Controller.text +
+                                                                              otp3Controller.text +
+                                                                              otp4Controller.text +
+                                                                              otp5Controller.text +
+                                                                              otp6Controller.text,
                                                                           token: tokenizedUserPL
-                                                                        // Provider.of<
-                                                                        //             AuthProvider>(
-                                                                        //         context,
-                                                                        //         listen:
-                                                                        //             false)
-                                                                        //     .tokenizedUserPayload,
-                                                                      );
-                                                                      setState(() {
+                                                                          // Provider.of<
+                                                                          //             AuthProvider>(
+                                                                          //         context,
+                                                                          //         listen:
+                                                                          //             false)
+                                                                          //     .tokenizedUserPayload,
+                                                                          );
+                                                                      setState(
+                                                                          () {
                                                                         _isLoading =
-                                                                        false;
+                                                                            false;
                                                                       });
                                                                       if (result ==
                                                                           AuthResult
                                                                               .success) {
-                                                                        Navigator
-                                                                            .of(
-                                                                            context)
-                                                                            .pushNamedAndRemoveUntil(
-                                                                            '/TermsAndConditions', (
-                                                                            Route d) => false);
+                                                                        Navigator.of(context).pushNamedAndRemoveUntil(
+                                                                            '/TermsAndConditions',
+                                                                            (Route d) =>
+                                                                                false);
                                                                       }
                                                                     } catch (error) {
                                                                       print(
                                                                           "Error: $error");
                                                                       // _showToast('An error occurred'); // Show an error message
                                                                     } finally {
-                                                                      setState(() {
+                                                                      setState(
+                                                                          () {
                                                                         _isLoading =
-                                                                        false;
+                                                                            false;
                                                                       });
                                                                     }
                                                                   },
                                                                   // isGradient: true,
                                                                   isLoading:
-                                                                  _isLoading,
+                                                                      _isLoading,
                                                                   color: AppColors
                                                                       .activeButtonColor,
-                                                                  textColor: AppColors
-                                                                      .textColorBlack,
+                                                                  textColor:
+                                                                      AppColors
+                                                                          .textColorBlack,
                                                                 )),
-                                                            SizedBox(height: 2.h),
+                                                            SizedBox(
+                                                                height: 2.h),
                                                             Padding(
-                                                              padding:
-                                                              EdgeInsets
+                                                              padding: EdgeInsets
                                                                   .symmetric(
-                                                                  horizontal: 22.sp),
-                                                              child:
-                                                              AppButton(
+                                                                      horizontal:
+                                                                          22.sp),
+                                                              child: AppButton(
                                                                 title: _isTimerActive
                                                                     ? 'Resend code ${_remainingTimeSeconds.toString().padLeft(2, '0')}'
-                                                                    : 'Resend code 00:15'.tr(),
-                                                                handler: () async {
-                                                                  if (_isLoadingResend || _isTimerActive) return;
+                                                                    : 'Resend code 00:15'
+                                                                        .tr(),
+                                                                handler:
+                                                                    () async {
+                                                                  if (_isLoadingResend ||
+                                                                      _isTimerActive)
+                                                                    return;
 
                                                                   setState(() {
-                                                                    _isLoadingResend = true;
+                                                                    _isLoadingResend =
+                                                                        true;
                                                                   });
 
                                                                   try {
-                                                                    final result = await Provider.of<AuthProvider>(context, listen: false)
+                                                                    final result = await Provider.of<AuthProvider>(
+                                                                            context,
+                                                                            listen:
+                                                                                false)
                                                                         .resendRegisterOTP(
-                                                                      tokenizedUserPL: tokenizedUserPL,
-                                                                      context: context,
+                                                                      tokenizedUserPL:
+                                                                          tokenizedUserPL,
+                                                                      context:
+                                                                          context,
                                                                     );
 
-                                                                    if (result == AuthResult.success) {
+                                                                    if (result ==
+                                                                        AuthResult
+                                                                            .success) {
                                                                       // Start the timer after a successful API call
                                                                       startTimer();
                                                                     }
                                                                   } catch (error) {
-                                                                    print("Error: $error");
+                                                                    print(
+                                                                        "Error: $error");
                                                                     // Handle error and show an error message if needed
                                                                   } finally {
                                                                     // Reset the loading state
-                                                                    setState(() {
-                                                                      _isLoadingResend = false;
+                                                                    setState(
+                                                                        () {
+                                                                      _isLoadingResend =
+                                                                          false;
                                                                     });
                                                                   }
                                                                 },
-                                                                isLoading: _isLoadingResend,
-                                                                isGradient: false,
+                                                                isLoading:
+                                                                    _isLoadingResend,
+                                                                isGradient:
+                                                                    false,
                                                                 textColor: themeNotifier.isDark
-                                                                    ? AppColors.textColorWhite
-                                                                    : AppColors.textColorBlack.withOpacity(0.8),
-                                                                color: Colors.transparent,
+                                                                    ? AppColors
+                                                                        .textColorWhite
+                                                                    : AppColors
+                                                                        .textColorBlack
+                                                                        .withOpacity(
+                                                                            0.8),
+                                                                color: Colors
+                                                                    .transparent,
                                                               ),
-
                                                             ),
                                                             Expanded(
-                                                                child: SizedBox()),
-
+                                                                child:
+                                                                    SizedBox()),
                                                           ],
                                                         ),
                                                       )),
@@ -1047,7 +1118,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                   width: double.infinity,
                                   color: AppColors.backgroundColor,
                                 ),
-
                               ],
                             ),
                           ),
@@ -1059,11 +1129,9 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
               ],
             ),
           ),
-          if(_isLoading)
-            LoaderBluredScreen()
+          if (_isLoading) LoaderBluredScreen()
         ],
       );
-
     });
   }
 
@@ -1074,11 +1142,10 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
     required Function handler,
   }) {
     return TextFieldParent(
-        width: 9.8.w,
+      width: 9.8.w,
       otpHeight: 8.h,
       color: Colors.white.withOpacity(0.5),
-      child:
-      TextField(
+      child: TextField(
         controller: controller,
         focusNode: focusNode,
         onChanged: (value) {
@@ -1118,16 +1185,14 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
           counterText: '', // Hide the default character counter
           contentPadding: EdgeInsets.only(top: 16, bottom: 16),
           enabledBorder: OutlineInputBorder(
-              borderRadius:
-              BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(8.0),
               borderSide: BorderSide(
                 color: Colors.transparent,
                 // Off-white color
                 // width: 2.0,
               )),
           focusedBorder: OutlineInputBorder(
-              borderRadius:
-              BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(8.0),
               borderSide: BorderSide(
                 color: Colors.transparent,
                 // Off-white color
@@ -1142,6 +1207,5 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
       //   borderRadius: BorderRadius.circular(10),
       // )
     );
-
   }
 }

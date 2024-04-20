@@ -271,13 +271,20 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                               // widget.priceNormal == null &&
                               widget.priceUp == null &&
                               widget.priceDown != null)
-                            Text(
-                              "-${widget.priceDown} SAR",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 10.2.sp,
-                                  // fontSize: 10.5.sp,
-                                  color: AppColors.activityPriceredClr),
+                            Container(
+                              // color: Colors.blue,
+                              width: 23.w,
+                              child: Text(
+                                "-${widget.priceDown} SAR",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 10.2.sp,
+                                    // fontSize: 10.5.sp,
+                                    color: AppColors.activityPriceredClr),
+                              ),
                             ),
                         ],
                       ),
