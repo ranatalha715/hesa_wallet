@@ -302,6 +302,7 @@ class AuthProvider with ChangeNotifier {
       );
       fToast = FToast();
       fToast.init(context);
+      print('Register user response');
       print(response.body);
       print(response.statusCode);
 
