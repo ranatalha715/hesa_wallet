@@ -50,7 +50,7 @@ class DialogButton extends StatelessWidget {
           child: Center(
               child: isLoading
                   ? CircularProgressIndicator(
-                color: AppColors.backgroundColor.withOpacity(0.7),
+                // color: AppColors.backgroundColor.withOpacity(0.7),
               )
                   : Text(
                 title,

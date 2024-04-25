@@ -91,10 +91,15 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
 
   void _onUsernameChanged() {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      // Call your function here
-      Provider.of<AuthProvider>(context, listen: false)
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
+      setState(() {
+        usernameLoading = true;
+      });
+       await Provider.of<AuthProvider>(context, listen: false)
           .checkUsername(userName: _usernameController.text, context: context);
+      setState(() {
+        usernameLoading = false;
+      });
     });
   }
 
@@ -124,9 +129,11 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
   }
 
   var _isLoading = false;
+  var _isLoadingOtpDialoge = false;
   bool isButtonActive = false;
   Timer? _timer;
   bool _isTimerActive = false;
+  bool usernameLoading = false;
   var _isLoadingResend = false;
   bool isValidating = false;
   var tokenizedUserPL;
@@ -361,7 +368,14 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                   child: TextField(
                                       controller: _usernameController,
                                       onChanged: (value) {
+
+                                        setState(() {
+                                        usernameLoading=true;
+                                        });
                                         _onUsernameChanged();
+                                        setState(() {
+                                          usernameLoading=false;
+                                        });
                                       },
                                       scrollPadding: EdgeInsets.only(
                                           bottom: MediaQuery.of(context)
@@ -379,7 +393,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.symmetric(
                                             vertical: 10.0, horizontal: 16.0),
-                                        hintText: 'username.mjra'.tr(),
+                                        hintText: 'username'.tr(),
                                         hintStyle: TextStyle(
                                             fontSize: 10.2.sp,
                                             color: AppColors.textColorGrey,
@@ -429,23 +443,44 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                           color: AppColors.errorColor),
                                     ),
                                   ),
+                                if (_usernameController.text.isNotEmpty)
                                 Consumer<AuthProvider>(
                                     builder: (context, auth, child) {
                                   return Padding(
                                     padding: EdgeInsets.only(top: 7.sp),
-                                    child: Text(
-                                      auth.userNameAvailable
-                                          ? "*Username available"
-                                          : "*Username not available",
+                                    child: usernameLoading ? Text('Checking...',
                                       style: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           fontSize: 10.sp,
-                                          color: Provider.of<AuthProvider>(
-                                                      context,
-                                                      listen: false)
-                                                  .userNameAvailable
-                                              ? AppColors.gradientColor1
-                                              : AppColors.errorColor),
+                                          color: AppColors.textColorGreyShade2),
+
+                                    ) : Row(
+                                      children: [
+                                        auth.userNameAvailable ?
+                                        Icon(Icons.check_circle,
+                                        size: 10.sp,
+                                        color: AppColors.hexaGreen,
+                                        ) :
+                                        Icon(Icons.cancel,
+                                          size: 10.sp,
+                                          color: AppColors.errorColor,
+                                        ),
+                                        SizedBox(width: 2.sp,),
+                                        Text(
+                                          auth.userNameAvailable
+                                              ? "This username is available"
+                                              : "This username is taken. Try another.",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 10.sp,
+                                              color: Provider.of<AuthProvider>(
+                                                          context,
+                                                          listen: false)
+                                                      .userNameAvailable
+                                                  ? AppColors.hexaGreen
+                                                  : AppColors.errorColor),
+                                        ),
+                                      ],
                                     ),
                                   );
                                 }),
@@ -783,11 +818,11 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                       .text.isNotEmpty) {
                                                 try {
                                                   setState(() {
-                                                    _isLoading = true;
+                                                    _isLoadingOtpDialoge = true;
                                                   });
                                                   print('loading popup' +
-                                                      _isLoading.toString());
-                                                  Navigator.pop(context);
+                                                      _isLoadingOtpDialoge.toString());
+                                                  // Navigator.pop(context);
                                                   final result = await Provider
                                                           .of<AuthProvider>(
                                                               context,
@@ -812,10 +847,10 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                           token:
                                                               tokenizedUserPL);
                                                   setState(() {
-                                                    _isLoading = false;
+                                                    _isLoadingOtpDialoge = false;
                                                   });
                                                   print('loading popup 2' +
-                                                      _isLoading.toString());
+                                                      _isLoadingOtpDialoge.toString());
                                                   if (result ==
                                                       AuthResult.success) {
                                                     Navigator.of(context)
@@ -825,10 +860,13 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                   }
                                                 } catch (error) {
                                                   print("Error: $error");
+                                                  setState(() {
+                                                    _isLoadingOtpDialoge = false;
+                                                  });
                                                   // _showToast('An error occurred'); // Show an error message
                                                 } finally {
                                                   setState(() {
-                                                    _isLoading = false;
+                                                    _isLoadingOtpDialoge = false;
                                                   });
                                                 }
                                               }
@@ -867,8 +905,8 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                 }
                                               } else {}
                                             },
-                                            firstTitle: 'Confirm',
-                                            secondTitle: 'Resend code ',
+                                            firstTitle: 'Verify',
+                                            secondTitle: 'Resend code: ',
 
                                             // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
 
@@ -909,7 +947,8 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             //     ? AppColors.textColorWhite
                                             //     : AppColors.textColorBlack
                                             //         .withOpacity(0.8),
-                                            isLoading: _isLoadingResend,
+                                            isLoading: _isLoading,
+                                            // isLoading: _isLoadingResend,
                                           );
                                         }
                                       }
