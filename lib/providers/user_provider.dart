@@ -99,7 +99,7 @@ class UserProvider with ChangeNotifier {
       verifiedEmail = jsonResponse['email'].toString();
 
       print("User details getting successfully!");
-      print(jsonResponse);
+      print(userAvatar);
       // _showToast('User details getting successfully!');
       List<dynamic>? sitesJsonList = jsonResponse['connectedSites'];
       _connectedSites.clear(); // Clear the list before adding new items
