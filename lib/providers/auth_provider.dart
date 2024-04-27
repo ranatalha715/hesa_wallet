@@ -390,8 +390,6 @@ class AuthProvider with ChangeNotifier {
         // Successful login
         print("User logged in successfully!");
         _showToast('User logged in successfully!');
-
-        // Parse the response JSON
         final jsonResponse = json.decode(response.body);
         final accessToken = jsonResponse['data']['accessToken'];
         final refreshToken = jsonResponse['data']['refreshToken'];
@@ -401,7 +399,7 @@ class AuthProvider with ChangeNotifier {
         await prefs.setString('accessToken', accessToken);
         await prefs.setString('refreshToken', refreshToken);
         await prefs.setString('password', password);
-
+        // await updateFCM(FCM: FCM, token: token, context: context)
         print('true ya false');
         print(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet);
         await Navigator.of(context).pushNamed(ConnectDapp.routeName, arguments: {
@@ -513,6 +511,38 @@ class AuthProvider with ChangeNotifier {
       return AuthResult.failure;
     }
   }
+
+  Future<AuthResult> updateFCM({
+    required String FCM,
+    required String token,
+    required BuildContext context,
+  }) async {
+    try {
+      final url = Uri.parse(BASE_URL + '/user/update-device-token');
+      final body = {
+        "deviceToken" : FCM,
+      };
+
+      final response = await http.post(url, body: body,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      print("FCM response");
+      print(response.body);
+      if (response.statusCode == 201) {
+        return AuthResult.success;
+      } else {
+        print(" ${response.body}");
+        return AuthResult.failure;
+      }
+    } on TimeoutException catch (e) {
+      return AuthResult.failure;
+    } catch (e) {
+      return AuthResult.failure;
+    }
+  }
+
   var userNameAvailable=true;
   Future<AuthResult> checkUsername({
     required String userName,

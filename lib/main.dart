@@ -169,7 +169,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     fToast = FToast();
     fToast.init(context);
 
-    getAccessToken(); //31 jan
+    getAccessToken();
+    Future.delayed(Duration(seconds: 2), () {
+      if(accessToken !='')
+      Provider.of<AuthProvider>(context, listen: false)
+          .updateFCM(FCM: fcmToken, token: accessToken, context: context);
+    });
+
 
     WidgetsBinding.instance.addObserver(this);
 
@@ -178,13 +184,17 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     }); // 31 jan
     initUniLinks();
     print('recieved data' + _receivedData);
-    Timer.periodic(Duration(seconds: 3 ), (timer) async {
+    Timer.periodic(Duration(seconds: 3), (timer) async {
       getAccessToken();
     });
-    Timer.periodic(Duration(minutes: 25), (timer) {
-      Provider.of<AuthProvider>(context, listen: false)
-          .refreshToken(refreshToken: refreshToken, context: context, token: accessToken);
-       });
+    Timer.periodic(Duration(seconds: 30 ), (timer) async {
+      await Provider.of<AuthProvider>(context, listen: false)
+          .updateFCM(FCM: fcmToken, token: accessToken, context: context);
+    });
+    Timer.periodic(Duration(minutes: 25), (timer) async {
+      await Provider.of<AuthProvider>(context, listen: false).refreshToken(
+          refreshToken: refreshToken, context: context, token: accessToken);
+    });
   }
 
   @override
@@ -253,8 +263,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
     if (isTokenExpired(accessToken)) {
       prefs.remove('accessToken');
-      Provider.of<AuthProvider>(context, listen: false)
-          .refreshToken(refreshToken: refreshToken, context: context, token: accessToken);
+      Provider.of<AuthProvider>(context, listen: false).refreshToken(
+          refreshToken: refreshToken, context: context, token: accessToken);
       // setState(() {
       //   accessToken = '';
       // });
@@ -347,8 +357,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             NftsDetails.routeName: (context) => const NftsDetails(),
             TransactionSummary.routeName: (context) =>
                 const TransactionSummary(),
-            ConnectDapp.routeName: (context) =>
-            const ConnectDapp(),
+            ConnectDapp.routeName: (context) => const ConnectDapp(),
           },
         );
       });
