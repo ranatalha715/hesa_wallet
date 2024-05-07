@@ -18,6 +18,7 @@ class TransactionProvider with ChangeNotifier {
   var tokenizedCheckoutId;
   var selectedCardTokenId;
   var selectedCardNum;
+  var selectedCardBrand;
 
   // var decodedMetaData;
 
@@ -293,6 +294,7 @@ class TransactionProvider with ChangeNotifier {
     required String mintCollectionId,
     required String ownerId,
     required String operation,
+    required String brand,
     required String tokenId,
     required String country,
   }) async {
@@ -312,6 +314,7 @@ class TransactionProvider with ChangeNotifier {
       "tokenId": tokenId,
       "type": 'tokenization',
       "country": "PK",
+      "brand": brand,
       "billing": {
         "country": "PK",
         "city": "Karachi",
@@ -374,6 +377,7 @@ class TransactionProvider with ChangeNotifier {
     required String walletAddress,
     required String country,
     required String operation,
+    required String brand,
     required BuildContext context,
     required String tokenId,
   }) async {
@@ -392,6 +396,7 @@ class TransactionProvider with ChangeNotifier {
       "tokenId": tokenId,
       "type": "tokenized",
       "country": "PK",
+      "brand" : brand,
       "billing": {
         "country": "PK",
         "city": "Karachi",
@@ -465,6 +470,7 @@ class TransactionProvider with ChangeNotifier {
     required String walletAddress,
     required String country,
     required String operation,
+    required String brand,
     required BuildContext context,
     required String tokenId,
   }) async {
@@ -489,6 +495,7 @@ class TransactionProvider with ChangeNotifier {
       "tokenId": tokenId,
       "type": "tokenized",
       "country": "PK",
+      "brand": brand,
       "billing": {
         "country": "PK",
         "city": "Karachi",
@@ -556,6 +563,7 @@ class TransactionProvider with ChangeNotifier {
     required String token,
     required String walletAddress,
     required String country,
+    required String brand,
     required BuildContext context,
     required String tokenId,
     required String operation,
@@ -578,6 +586,7 @@ class TransactionProvider with ChangeNotifier {
       "tokenId": tokenId,
       "type": "tokenized",
       "country": "PK",
+      "brand": brand,
       "billing": {
         "country": "PK",
         "city": "Karachi",
@@ -639,6 +648,7 @@ class TransactionProvider with ChangeNotifier {
     required String token,
     required String walletAddress,
     required String country,
+    required String brand,
     required BuildContext context,
     required String tokenId,
     required String operation,
@@ -656,6 +666,7 @@ class TransactionProvider with ChangeNotifier {
       "tokenId": tokenId,
       "type": "tokenized",
       "country": "PK",
+      "brand": brand,
       "billing": {
         "country": "PK",
         "city": "Karachi",
@@ -720,6 +731,7 @@ class TransactionProvider with ChangeNotifier {
     required String walletAddress,
     required BuildContext context,
     required String tokenId,
+    required String brand,
     required String operation,
   }) async {
     final url = Uri.parse(BASE_URL + '/v2/payable-transactions/send');
@@ -738,6 +750,7 @@ class TransactionProvider with ChangeNotifier {
       "tokenId": tokenId,
       "type": "tokenized",
       "country": "PK",
+      "brand": brand,
       "billing": {
         "country": "PK",
         "city": "Karachi",
@@ -802,6 +815,7 @@ class TransactionProvider with ChangeNotifier {
     required String token,
     required String walletAddress,
     required String operation,
+    required String brand,
     required BuildContext context,
     required String tokenId,
   }) async {
@@ -820,6 +834,7 @@ class TransactionProvider with ChangeNotifier {
       "tokenId": tokenId,
       "type": "tokenized",
       "country": "PK",
+      "brand": brand,
       "billing": {
         "country": "PK",
         "city": "Karachi",
@@ -884,6 +899,7 @@ class TransactionProvider with ChangeNotifier {
     required String token,
     required String walletAddress,
     required String operation,
+    required String brand,
     required BuildContext context,
     required String tokenId,
   }) async {
@@ -902,6 +918,7 @@ class TransactionProvider with ChangeNotifier {
       "tokenId": tokenId,
       "type": "tokenized",
       "country": "PK",
+      "brand": brand,
       "billing": {
         "country": "PK",
         "city": "Karachi",
@@ -967,6 +984,7 @@ class TransactionProvider with ChangeNotifier {
     required String token,
     required String walletAddress,
     required String operation,
+    required String brand,
     required BuildContext context,
     required String tokenId,
   }) async {
@@ -985,6 +1003,7 @@ class TransactionProvider with ChangeNotifier {
       "tokenId": tokenId,
       "type": "tokenized",
       "country": "PK",
+      "brand": brand,
       "billing": {
         "country": "PK",
         "city": "Karachi",
@@ -1050,6 +1069,7 @@ class TransactionProvider with ChangeNotifier {
     required String token,
     required String walletAddress,
     required String operation,
+    required String brand,
     required BuildContext context,
     required String tokenId,
   }) async {
@@ -1069,6 +1089,7 @@ class TransactionProvider with ChangeNotifier {
       "tokenId": tokenId,
       "type": "tokenized",
       "country": "PK",
+      "brand": brand,
       "billing": {
         "country": "PK",
         "city": "Karachi",
@@ -1134,6 +1155,7 @@ class TransactionProvider with ChangeNotifier {
     required String token,
     required String walletAddress,
     required String operation,
+    required String brand,
     required BuildContext context,
     required String tokenId,
   }) async {
@@ -1152,6 +1174,7 @@ class TransactionProvider with ChangeNotifier {
       "tokenId": tokenId,
       "type": "tokenized",
       "country": "PK",
+      "brand": brand,
       "billing": {
         "country": "PK",
         "city": "Karachi",
@@ -1216,6 +1239,7 @@ class TransactionProvider with ChangeNotifier {
     required String token,
     required String walletAddress,
     required String operation,
+    required String brand,
     required BuildContext context,
     required String tokenId,
   }) async {
@@ -1236,6 +1260,7 @@ class TransactionProvider with ChangeNotifier {
       "tokenId": tokenId,
       "type": "tokenized",
       "country": "PK",
+      "brand": brand,
       "billing": {
         "country": "PK",
         "city": "Karachi",
@@ -1300,6 +1325,7 @@ class TransactionProvider with ChangeNotifier {
     required String token,
     required String walletAddress,
     required String operation,
+    required String brand,
     required BuildContext context,
     required String tokenId,
   }) async {
@@ -1316,6 +1342,7 @@ class TransactionProvider with ChangeNotifier {
       "tokenId": tokenId,
       "type": "tokenized",
       "country": "PK",
+      "brand": brand,
       "billing": {
         "country": "PK",
         "city": "Karachi",
@@ -1380,6 +1407,7 @@ class TransactionProvider with ChangeNotifier {
     required String token,
     required String walletAddress,
     required String operation,
+    required String brand,
     required BuildContext context,
     required String tokenId,
   }) async {
@@ -1396,6 +1424,7 @@ class TransactionProvider with ChangeNotifier {
       "tokenId": tokenId,
       "type": "tokenized",
       "country": "PK",
+      "brand": brand,
       "billing": {
         "country": "PK",
         "city": "Karachi",
@@ -1460,6 +1489,7 @@ class TransactionProvider with ChangeNotifier {
     required String token,
     required String walletAddress,
     required String operation,
+    required String brand,
     required BuildContext context,
     required String tokenId,
   }) async {
@@ -1476,6 +1506,7 @@ class TransactionProvider with ChangeNotifier {
       "tokenId": tokenId,
       "type": "tokenized",
       "country": "PK",
+      "brand": brand,
       "billing": {
         "country": "PK",
         "city": "Karachi",

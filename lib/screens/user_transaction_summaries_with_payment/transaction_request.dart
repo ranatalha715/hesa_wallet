@@ -1446,6 +1446,90 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                               setState(() {
                                                 isValidating = true;
                                               });
+                                              showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  final screenWidth =
+                                                      MediaQuery.of(context).size.width;
+                                                  final dialogWidth = screenWidth * 0.85;
+                                                  void closeDialogAndNavigate() {
+                                                    Navigator.of(context)
+                                                        .pop();
+                                                  }
+
+                                                  Future.delayed(Duration(seconds: 10),
+                                                      closeDialogAndNavigate);
+                                                  return StatefulBuilder(builder:
+                                                      (BuildContext context,
+                                                      StateSetter setState) {
+                                                    return Dialog(
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                        BorderRadius.circular(8.0),
+                                                      ),
+                                                      backgroundColor: Colors.transparent,
+                                                      child: BackdropFilter(
+                                                          filter: ImageFilter.blur(
+                                                              sigmaX: 7, sigmaY: 7),
+                                                          child: Container(
+                                                            height: 23.h,
+                                                            width: dialogWidth,
+                                                            decoration: BoxDecoration(
+                                                              // border: Border.all(
+                                                              //     width:
+                                                              //         0.1.h,
+                                                              //     color: AppColors.textColorGrey),
+                                                              color: themeNotifier.isDark
+                                                                  ? AppColors.showDialogClr
+                                                                  : AppColors.textColorWhite,
+                                                              borderRadius:
+                                                              BorderRadius.circular(15),
+                                                            ),
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                              MainAxisAlignment.start,
+                                                              children: [
+                                                                SizedBox(
+                                                                  height: 4.h,
+                                                                ),
+                                                                Text(
+                                                                  'Please Select Card Brand First?'.tr(),
+                                                                  textAlign: TextAlign.center,
+                                                                  maxLines: 2,
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                      FontWeight.w600,
+                                                                      fontSize: 15.sp,
+                                                                      color: themeNotifier.isDark
+                                                                          ? AppColors
+                                                                          .textColorWhite
+                                                                          : AppColors
+                                                                          .textColorBlack),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 4.h,
+                                                                ),
+                                                                Row(
+                                                                  children: [
+                                                                    AppButton(title: 'VISA', handler: (){
+                                                                      Provider.of<TransactionProvider>(context, listen: false).selectedCardBrand = 'VISA';
+                                                                    }, isGradient: true, color: Colors.transparent),
+                                                                    AppButton(title: 'MADA', handler: (){
+                                                                      Provider.of<TransactionProvider>(context, listen: false).selectedCardBrand = 'MADA';
+                                                                    }, isGradient: true, color: Colors.transparent),
+                                                                    AppButton(title: 'MASTER', handler: (){
+                                                                      Provider.of<TransactionProvider>(context, listen: false).selectedCardBrand = 'MASTER';
+                                                                    }, isGradient: true, color: Colors.transparent),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(height: 2.h,),
+                                                              ],
+                                                            ),
+                                                          )),
+                                                    );
+                                                  });
+                                                },
+                                              );
                                               setState(() {
                                                 isLoading = true;
                                               });
@@ -1461,589 +1545,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   context,
                                                   listen: false);
 
-                                              if (operation ==
-                                                  'MintCollection') {
-                                                print(
-                                                    'running mint collection');
-                                                print(itemCollectionID);
-                                                final collectionResult =
-                                                await transactionProvider
-                                                    .mintCollectionpayableTransactionSend(
-                                                  token: accessToken,
-                                                  context: context,
-                                                  walletAddress: userProvider
-                                                      .walletAddress!,
-                                                  tokenId: paymentCards.isEmpty
-                                                      ? ""
-                                                      : trPro
-                                                      .selectedCardTokenId,
-                                                  country: country,
-                                                  mintCollectionId:
-                                                  itemCollectionID,
-                                                  ownerId: userProvider
-                                                      .walletAddress!,
-                                                  params: params,
-                                                  operation: operation,
-                                                )
-                                                    .then((value) {
-                                                  print(
-                                                      "transactionProvider.checkoutId.collection");
-                                                  print(transactionProvider
-                                                      .checkoutId);
-                                                  payRequestNowReadyUI(
-                                                      operation: operation,
-                                                      brandsName: [
-                                                        "VISA",
-                                                        "MASTER",
-                                                        "MADA",
-                                                        // "PAYPAL",
-                                                        // "STC_PAY",
-                                                        // "APPLEPAY"
-                                                      ],
-                                                      checkoutId: Provider
-                                                          .of<
-                                                          TransactionProvider>(
-                                                          context,
-                                                          listen: false)
-                                                          .checkoutId);
-                                                });
-                                              } else if (operation ==
-                                                  'MintNFT') {
-                                                // Uncomment this block if needed, adjust parameters accordingly
-                                                print('running mint nft');
-                                                final nftResult = await transactionProvider
-                                                    .mintNftpayableTransactionSend(
-                                                    params: params,
-                                                    token: accessToken,
-                                                    context: context,
-                                                    walletAddress:
-                                                    userProvider
-                                                        .walletAddress!,
-                                                    tokenId: paymentCards
-                                                        .isEmpty
-                                                        ? ""
-                                                        : trPro
-                                                        .selectedCardTokenId,
-                                                    country: country,
-                                                    operation: operation)
-                                                    .then((value) {
-                                                  print(
-                                                      "transactionProvider.checkoutId");
-                                                  print(transactionProvider
-                                                      .checkoutId);
-                                                  payRequestNowReadyUI(
-                                                      operation: operation,
-                                                      brandsName: [
-                                                        "VISA",
-                                                        "MASTER",
-                                                        "MADA",
-                                                      ],
-                                                      checkoutId: Provider
-                                                          .of<
-                                                          TransactionProvider>(
-                                                          context,
-                                                          listen: false)
-                                                          .checkoutId);
-                                                  // });
-                                                  // }
-                                                });
-                                              } else if (operation ==
-                                                  'MintNFTWithEditions') {
-                                                final nftResult =
-                                                await transactionProvider
-                                                    .mintNFTWithEditions(
-                                                    params: params,
-                                                    token: accessToken,
-                                                    context: context,
-                                                    walletAddress:
-                                                    userProvider
-                                                        .walletAddress!,
-                                                    tokenId: paymentCards
-                                                        .isEmpty
-                                                        ? ""
-                                                        : trPro
-                                                        .selectedCardTokenId,
-                                                    country: country,
-                                                    operation:
-                                                    operation)
-                                                    .then((value) {
-                                                  print(
-                                                      "transactionProvider.checkoutId");
-                                                  print(transactionProvider
-                                                      .checkoutId);
-                                                  payRequestNowReadyUI(
-                                                      operation: operation,
-                                                      brandsName: [
-                                                        "VISA",
-                                                        "MASTER",
-                                                        "MADA",
-                                                      ],
-                                                      checkoutId: Provider
-                                                          .of<
-                                                          TransactionProvider>(
-                                                          context,
-                                                          listen: false)
-                                                          .checkoutId);
-                                                  // });
-                                                  // }
-                                                });
-                                              } else if (operation ==
-                                                  'purchaseNFT') {
-                                                final purchasenftResult =
-                                                await transactionProvider
-                                                    .purchaseNft(
-                                                    params: params,
-                                                    token: accessToken,
-                                                    context: context,
-                                                    walletAddress:
-                                                    userProvider
-                                                        .walletAddress!,
-                                                    tokenId: paymentCards
-                                                        .isEmpty
-                                                        ? ""
-                                                        : trPro
-                                                        .selectedCardTokenId,
-                                                    country: country,
-                                                    operation:
-                                                    operation)
-                                                    .then((value) {
-                                                  print(
-                                                      "transactionProvider.checkoutId");
-                                                  print(transactionProvider
-                                                      .checkoutId);
-                                                  payRequestNowReadyUI(
-                                                      operation: operation,
-                                                      brandsName: [
-                                                        "VISA",
-                                                        "MASTER",
-                                                        "MADA",
-                                                      ],
-                                                      checkoutId: Provider
-                                                          .of<
-                                                          TransactionProvider>(
-                                                          context,
-                                                          listen: false)
-                                                          .checkoutId);
-                                                  // });
-                                                  // }
-                                                });
-                                              } else if (operation ==
-                                                  'purchaseCollection') {
-                                                final purchaseCollectionResult =
-                                                await transactionProvider
-                                                    .purchaseCollection(
-                                                    params: params,
-                                                    token: accessToken,
-                                                    context: context,
-                                                    walletAddress:
-                                                    userProvider
-                                                        .walletAddress!,
-                                                    tokenId: paymentCards
-                                                        .isEmpty
-                                                        ? ""
-                                                        : trPro
-                                                        .selectedCardTokenId,
-                                                    country: country,
-                                                    operation:
-                                                    operation)
-                                                    .then((value) {
-                                                  print(
-                                                      "transactionProvider.checkoutId");
-                                                  print(transactionProvider
-                                                      .checkoutId);
-                                                  payRequestNowReadyUI(
-                                                      operation: operation,
-                                                      brandsName: [
-                                                        "VISA",
-                                                        "MASTER",
-                                                        "MADA",
-                                                      ],
-                                                      checkoutId: Provider
-                                                          .of<
-                                                          TransactionProvider>(
-                                                          context,
-                                                          listen: false)
-                                                          .checkoutId);
-                                                  // });
-                                                  // }
-                                                });
-                                              } else if (operation ==
-                                                  'listNFT') {
-                                                // Uncomment this block if needed, adjust parameters accordingly
-                                                final listNftFixedPrice =
-                                                await transactionProvider
-                                                    .listNftFixedPrice(
-                                                  params: params,
-                                                  token: accessToken,
-                                                  context: context,
-                                                  walletAddress: userProvider
-                                                      .walletAddress!,
-                                                  tokenId: paymentCards.isEmpty
-                                                      ? ""
-                                                      : trPro
-                                                      .selectedCardTokenId,
-                                                  operation: operation,
-                                                )
-                                                    .then((value) {
-                                                  print(
-                                                      "transactionProvider.checkoutId");
-                                                  print(transactionProvider
-                                                      .checkoutId);
-                                                  payRequestNowReadyUI(
-                                                      operation: operation,
-                                                      brandsName: [
-                                                        "VISA",
-                                                        "MASTER",
-                                                        "MADA",
-                                                      ],
-                                                      checkoutId: Provider
-                                                          .of<
-                                                          TransactionProvider>(
-                                                          context,
-                                                          listen: false)
-                                                          .checkoutId);
-                                                  // });
-                                                  // }
-                                                });
-                                              } else if (operation ==
-                                                  'listCollection') {
-                                                // Uncomment this block if needed, adjust parameters accordingly
-                                                final listCollectionFixedPrice =
-                                                await transactionProvider
-                                                    .listCollectionFixedPrice(
-                                                  params: params,
-                                                  token: accessToken,
-                                                  context: context,
-                                                  walletAddress: userProvider
-                                                      .walletAddress!,
-                                                  tokenId: paymentCards.isEmpty
-                                                      ? ""
-                                                      : trPro
-                                                      .selectedCardTokenId,
-                                                  operation: operation,
-                                                )
-                                                    .then((value) {
-                                                  print(
-                                                      "transactionProvider.checkoutId");
-                                                  print(transactionProvider
-                                                      .checkoutId);
-                                                  payRequestNowReadyUI(
-                                                      operation: operation,
-                                                      brandsName: [
-                                                        "VISA",
-                                                        "MASTER",
-                                                        "MADA",
-                                                      ],
-                                                      checkoutId: Provider
-                                                          .of<
-                                                          TransactionProvider>(
-                                                          context,
-                                                          listen: false)
-                                                          .checkoutId);
-                                                  // });
-                                                  // }
-                                                });
-                                              } else if (operation ==
-                                                  'listAuctionNFT') {
-                                                // Uncomment this block if needed, adjust parameters accordingly
-                                                final listNftForAuction =
-                                                await transactionProvider
-                                                    .listNftForAuction(
-                                                  params: params,
-                                                  token: accessToken,
-                                                  context: context,
-                                                  walletAddress: userProvider
-                                                      .walletAddress!,
-                                                  tokenId: paymentCards.isEmpty
-                                                      ? ""
-                                                      : trPro
-                                                      .selectedCardTokenId,
-                                                  operation: operation,
-                                                )
-                                                    .then((value) {
-                                                  print(
-                                                      "transactionProvider.checkoutId");
-                                                  print(transactionProvider
-                                                      .checkoutId);
-                                                  payRequestNowReadyUI(
-                                                      operation: operation,
-                                                      brandsName: [
-                                                        "VISA",
-                                                        "MASTER",
-                                                        "MADA",
-                                                      ],
-                                                      checkoutId: Provider
-                                                          .of<
-                                                          TransactionProvider>(
-                                                          context,
-                                                          listen: false)
-                                                          .checkoutId);
-                                                  // });
-                                                  // }
-                                                });
-                                              } else if (operation ==
-                                                  'listAuctionCollection') {
-                                                // Uncomment this block if needed, adjust parameters accordingly
-                                                final listCollectionForAuction =
-                                                await transactionProvider
-                                                    .listCollectionForAuction(
-                                                  params: params,
-                                                  token: accessToken,
-                                                  context: context,
-                                                  walletAddress: userProvider
-                                                      .walletAddress!,
-                                                  tokenId: paymentCards.isEmpty
-                                                      ? ""
-                                                      : trPro
-                                                      .selectedCardTokenId,
-                                                  operation: operation,
-                                                )
-                                                    .then((value) {
-                                                  print(
-                                                      "transactionProvider.checkoutId");
-                                                  print(transactionProvider
-                                                      .checkoutId);
-                                                  payRequestNowReadyUI(
-                                                      operation: operation,
-                                                      brandsName: [
-                                                        "VISA",
-                                                        "MASTER",
-                                                        "MADA",
-                                                      ],
-                                                      checkoutId: Provider
-                                                          .of<
-                                                          TransactionProvider>(
-                                                          context,
-                                                          listen: false)
-                                                          .checkoutId);
-                                                  // });
-                                                  // }
-                                                });
-                                              } else if (operation ==
-                                                  'burnNFT') {
-                                                // Uncomment this block if needed, adjust parameters accordingly
-                                                final burnNFT =
-                                                await transactionProvider
-                                                    .burnNFT(
-                                                  params: params,
-                                                  token: accessToken,
-                                                  context: context,
-                                                  walletAddress: userProvider
-                                                      .walletAddress!,
-                                                  tokenId: paymentCards.isEmpty
-                                                      ? ""
-                                                      : trPro
-                                                      .selectedCardTokenId,
-                                                  operation: operation,
-                                                )
-                                                    .then((value) {
-                                                  print(
-                                                      "transactionProvider.checkoutId");
-                                                  print(transactionProvider
-                                                      .checkoutId);
-                                                  payRequestNowReadyUI(
-                                                      operation: operation,
-                                                      brandsName: [
-                                                        "VISA",
-                                                        "MASTER",
-                                                        "MADA",
-                                                      ],
-                                                      checkoutId: Provider
-                                                          .of<
-                                                          TransactionProvider>(
-                                                          context,
-                                                          listen: false)
-                                                          .checkoutId);
-                                                  // });
-                                                  // }
-                                                });
-                                              } else if (operation ==
-                                                  'burnCollection') {
-                                                // Uncomment this block if needed, adjust parameters accordingly
-                                                final burnCollection =
-                                                await transactionProvider
-                                                    .burnCollection(
-                                                  params: params,
-                                                  token: accessToken,
-                                                  context: context,
-                                                  walletAddress: userProvider
-                                                      .walletAddress!,
-                                                  tokenId: paymentCards.isEmpty
-                                                      ? ""
-                                                      : trPro
-                                                      .selectedCardTokenId,
-                                                  operation: operation,
-                                                )
-                                                    .then((value) {
-                                                  print(
-                                                      "transactionProvider.checkoutId");
-                                                  print(transactionProvider
-                                                      .checkoutId);
-                                                  payRequestNowReadyUI(
-                                                      operation: operation,
-                                                      brandsName: [
-                                                        "VISA",
-                                                        "MASTER",
-                                                        "MADA",
-                                                      ],
-                                                      checkoutId: Provider
-                                                          .of<
-                                                          TransactionProvider>(
-                                                          context,
-                                                          listen: false)
-                                                          .checkoutId);
-                                                  // });
-                                                  // }
-                                                });
-                                              } else if (operation ==
-                                                  'makeOfferNFT') {
-                                                final makeOffer =
-                                                await transactionProvider
-                                                    .makeOffer(
-                                                  params: params,
-                                                  token: accessToken,
-                                                  context: context,
-                                                  walletAddress: userProvider
-                                                      .walletAddress!,
-                                                  tokenId: paymentCards.isEmpty
-                                                      ? ""
-                                                      : trPro
-                                                      .selectedCardTokenId,
-                                                  operation: operation,
-                                                )
-                                                    .then((value) {
-                                                  print(
-                                                      "transactionProvider.checkoutId");
-                                                  print(transactionProvider
-                                                      .checkoutId);
-                                                  payRequestNowReadyUI(
-                                                      operation: operation,
-                                                      brandsName: [
-                                                        "VISA",
-                                                        "MASTER",
-                                                        "MADA",
-                                                      ],
-                                                      checkoutId: Provider
-                                                          .of<
-                                                          TransactionProvider>(
-                                                          context,
-                                                          listen: false)
-                                                          .checkoutId);
-                                                  // });
-                                                  // }
-                                                });
-                                              } else if (operation ==
-                                                  'makeOfferCollection') {
-                                                final makeOfferCollection =
-                                                await transactionProvider
-                                                    .makeOfferCollection(
-                                                  params: params,
-                                                  token: accessToken,
-                                                  context: context,
-                                                  walletAddress: userProvider
-                                                      .walletAddress!,
-                                                  tokenId: paymentCards.isEmpty
-                                                      ? ""
-                                                      : trPro
-                                                      .selectedCardTokenId,
-                                                  operation: operation,
-                                                )
-                                                    .then((value) {
-                                                  print(
-                                                      "transactionProvider.checkoutId");
-                                                  print(transactionProvider
-                                                      .checkoutId);
-                                                  payRequestNowReadyUI(
-                                                      operation: operation,
-                                                      brandsName: [
-                                                        "VISA",
-                                                        "MASTER",
-                                                        "MADA",
-                                                      ],
-                                                      checkoutId: Provider
-                                                          .of<
-                                                          TransactionProvider>(
-                                                          context,
-                                                          listen: false)
-                                                          .checkoutId);
-                                                  // });
-                                                  // }
-                                                });
-                                              } else if (operation ==
-                                                  'acceptNFTCounterOffer') {
-                                                final acceptNFTCounterOffer =
-                                                await transactionProvider
-                                                    .acceptCounterOffer(
-                                                  params: params,
-                                                  token: accessToken,
-                                                  context: context,
-                                                  walletAddress: userProvider
-                                                      .walletAddress!,
-                                                  tokenId: paymentCards.isEmpty
-                                                      ? ""
-                                                      : trPro
-                                                      .selectedCardTokenId,
-                                                  operation: operation,
-                                                )
-                                                    .then((value) {
-                                                  print(
-                                                      "transactionProvider.checkoutId");
-                                                  print(transactionProvider
-                                                      .checkoutId);
-                                                  payRequestNowReadyUI(
-                                                      operation: operation,
-                                                      brandsName: [
-                                                        "VISA",
-                                                        "MASTER",
-                                                        "MADA",
-                                                      ],
-                                                      checkoutId: Provider
-                                                          .of<
-                                                          TransactionProvider>(
-                                                          context,
-                                                          listen: false)
-                                                          .checkoutId);
-                                                  // });
-                                                  // }
-                                                });
-                                              } else if (operation ==
-                                                  'acceptCollectionCounterOffer') {
-                                                final acceptCollectionCounterOffer =
-                                                await transactionProvider
-                                                    .acceptCollectionCounterOffer(
-                                                  params: params,
-                                                  token: accessToken,
-                                                  context: context,
-                                                  walletAddress: userProvider
-                                                      .walletAddress!,
-                                                  tokenId: paymentCards.isEmpty
-                                                      ? ""
-                                                      : trPro
-                                                      .selectedCardTokenId,
-                                                  operation: operation,
-                                                )
-                                                    .then((value) {
-                                                  print(
-                                                      "transactionProvider.checkoutId");
-                                                  print(transactionProvider
-                                                      .checkoutId);
-                                                  payRequestNowReadyUI(
-                                                      operation: operation,
-                                                      brandsName: [
-                                                        "VISA",
-                                                        "MASTER",
-                                                        "MADA",
-                                                      ],
-                                                      checkoutId: Provider
-                                                          .of<
-                                                          TransactionProvider>(
-                                                          context,
-                                                          listen: false)
-                                                          .checkoutId);
-                                                  // });
-                                                  // }
-                                                });
-                                              } else {}
+
                                               setState(() {
                                                 isLoading = false;
                                               });
