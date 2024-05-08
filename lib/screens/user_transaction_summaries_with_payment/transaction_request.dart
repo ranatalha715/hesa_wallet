@@ -378,12 +378,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
     });
   }
 
-  void confirmBrandDialogue(Function onCloseHandler) {
-    if (
-    Provider.of<UserProvider>(context, listen: false)
-        .paymentCards
-        .isNotEmpty
-    )
+  void confirmBrandDialogue(Function onCloseHandler, {required bool showPopup}) {
+    if
+    (showPopup)
     {
       showDialog(
         context: context,
@@ -431,22 +428,28 @@ class _TransactionRequestState extends State<TransactionRequest> {
                         Row(
                           children: [
                             TextButton(
-                                onPressed: () =>
-                                    Provider.of<TransactionProvider>(context,
-                                            listen: false)
-                                        .selectedCardBrand = 'VISA',
+                                onPressed: () {
+                                  Provider.of<TransactionProvider>(context,
+                                          listen: false)
+                                      .selectedCardBrand = 'VISA';
+                                  Navigator.pop(context);
+                                },
                                 child: Text('VISA')),
                             TextButton(
-                                onPressed: () =>
-                                    Provider.of<TransactionProvider>(context,
-                                            listen: false)
-                                        .selectedCardBrand = 'MASTER',
+                                onPressed: () {
+                                  Provider.of<TransactionProvider>(context,
+                                          listen: false)
+                                      .selectedCardBrand = 'MASTER';
+                                  Navigator.pop(context);
+                                },
                                 child: Text('MASTER')),
                             TextButton(
-                                onPressed: () =>
-                                    Provider.of<TransactionProvider>(context,
-                                            listen: false)
-                                        .selectedCardBrand = 'MADA',
+                                onPressed: () {
+                                  Provider.of<TransactionProvider>(context,
+                                          listen: false)
+                                      .selectedCardBrand = 'MADA';
+                                  Navigator.pop(context);
+                                },
                                 child: Text('MADA')),
                           ],
                         ),
@@ -504,6 +507,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
     if (trPro.selectedCardNum == null || trPro.selectedCardNum == "") {
       if (paymentCards.isNotEmpty) {
         trPro.selectedCardNum = paymentCards[0].bin;
+        trPro.selectedCardBrand = paymentCards[0].cardBrand;
       }
     }
     if (trPro.selectedCardTokenId == null || trPro.selectedCardTokenId == "") {
@@ -880,6 +884,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     listen: false)
                                                 .tokenizeCardRequest(
                                                     token: accessToken,
+                                                    brand: Provider.of<
+                                                                TransactionProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .selectedCardBrand,
                                                     context: context);
                                             if (result == AuthResult.success) {
                                               Navigator.pushReplacement(
@@ -938,29 +947,38 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                             //     isCardLoading = false;
                                             //   });
                                             // },
-                                            var result = await Provider.of<
-                                                        TransactionProvider>(
-                                                    context,
-                                                    listen: false)
-                                                .tokenizeCardRequest(
-                                                    token: accessToken,
-                                                    context: context);
-                                            if (result == AuthResult.success) {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      WalletAddCard(
-                                                    fromTransactionReq: true,
-                                                    tokenizedCheckoutId: Provider
-                                                            .of<TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                        .tokenizedCheckoutId,
-                                                  ),
-                                                ),
-                                              );
-                                            }
+                                           confirmBrandDialogue(() async {
+                                             var result = await Provider.of<
+                                                 TransactionProvider>(
+                                                 context,
+                                                 listen: false)
+                                                 .tokenizeCardRequest(
+                                                 token: accessToken,
+                                                 brand: Provider.of<
+                                                     TransactionProvider>(
+                                                     context,
+                                                     listen: false)
+                                                     .selectedCardBrand,
+                                                 context: context);
+                                             if (result == AuthResult.success) {
+                                               Navigator.push(
+                                                 context,
+                                                 MaterialPageRoute(
+                                                   builder: (context) =>
+                                                       WalletAddCard(
+                                                         fromTransactionReq: true,
+                                                         tokenizedCheckoutId: Provider
+                                                             .of<TransactionProvider>(
+                                                             context,
+                                                             listen: false)
+                                                             .tokenizedCheckoutId,
+                                                       ),
+                                                 ),
+                                               );
+                                             }
+                                           },
+                                           showPopup : true,
+                                           );
 
                                             // return showDialog(
                                             //   context: context,
@@ -1344,6 +1362,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                   paymentCards[
                                                                           index]
                                                                       .bin;
+                                                              trPro.selectedCardBrand =
+                                                                  paymentCards[
+                                                                          index]
+                                                                      .cardBrand;
                                                               _isSelected =
                                                                   false;
                                                               trPro.selectedCardTokenId =
@@ -1560,8 +1582,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                           .mintCollectionpayableTransactionSend(
                                                     token: accessToken,
                                                     context: context,
-                                                    brand: Provider.of<TransactionProvider>(context, listen: false)
-                    .selectedCardBrand,
+                                                    brand: Provider.of<
+                                                                TransactionProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .selectedCardBrand,
                                                     walletAddress: userProvider
                                                         .walletAddress!,
                                                     tokenId: paymentCards
@@ -1607,8 +1632,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                           params: params,
                                                           token: accessToken,
                                                           context: context,
-                                                          brand: Provider.of<TransactionProvider>(context, listen: false)
-                    .selectedCardBrand,
+                                                          brand: Provider.of<
+                                                                      TransactionProvider>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .selectedCardBrand,
                                                           walletAddress:
                                                               userProvider
                                                                   .walletAddress!,
@@ -1641,27 +1669,27 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   });
                                                 } else if (operation ==
                                                     'MintNFTWithEditions') {
-                                                  final nftResult =
-                                                      await transactionProvider
-                                                          .mintNFTWithEditions(
-                                                              params: params,
-                                                              token:
-                                                                  accessToken,
-                                                              context: context,
-                                                              brand: Provider.of<TransactionProvider>(context, listen: false)
-                    .selectedCardBrand,
-                                                              walletAddress:
-                                                                  userProvider
-                                                                      .walletAddress!,
-                                                              tokenId: paymentCards
-                                                                      .isEmpty
-                                                                  ? ""
-                                                                  : trPro
-                                                                      .selectedCardTokenId,
-                                                              country: country,
-                                                              operation:
-                                                                  operation)
-                                                          .then((value) {
+                                                  final nftResult = await transactionProvider
+                                                      .mintNFTWithEditions(
+                                                          params: params,
+                                                          token: accessToken,
+                                                          context: context,
+                                                          brand: Provider.of<
+                                                                      TransactionProvider>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .selectedCardBrand,
+                                                          walletAddress:
+                                                              userProvider
+                                                                  .walletAddress!,
+                                                          tokenId: paymentCards
+                                                                  .isEmpty
+                                                              ? ""
+                                                              : trPro
+                                                                  .selectedCardTokenId,
+                                                          country: country,
+                                                          operation: operation)
+                                                      .then((value) {
                                                     print(
                                                         "transactionProvider.checkoutId");
                                                     print(transactionProvider
@@ -1690,8 +1718,12 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                               token:
                                                                   accessToken,
                                                               context: context,
-                                                              brand: Provider.of<TransactionProvider>(context, listen: false)
-                    .selectedCardBrand,
+                                                              brand: Provider.of<
+                                                                          TransactionProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .selectedCardBrand,
                                                               walletAddress:
                                                                   userProvider
                                                                       .walletAddress!,
@@ -1732,8 +1764,12 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                               token:
                                                                   accessToken,
                                                               context: context,
-                                                              brand: Provider.of<TransactionProvider>(context, listen: false)
-                    .selectedCardBrand,
+                                                              brand: Provider.of<
+                                                                          TransactionProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .selectedCardBrand,
                                                               walletAddress:
                                                                   userProvider
                                                                       .walletAddress!,
@@ -1774,8 +1810,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     params: params,
                                                     token: accessToken,
                                                     context: context,
-                                                    brand: Provider.of<TransactionProvider>(context, listen: false)
-                    .selectedCardBrand,
+                                                    brand: Provider.of<
+                                                                TransactionProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .selectedCardBrand,
                                                     walletAddress: userProvider
                                                         .walletAddress!,
                                                     tokenId: paymentCards
@@ -1814,8 +1853,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     params: params,
                                                     token: accessToken,
                                                     context: context,
-                                                    brand: Provider.of<TransactionProvider>(context, listen: false)
-                    .selectedCardBrand,
+                                                    brand: Provider.of<
+                                                                TransactionProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .selectedCardBrand,
                                                     walletAddress: userProvider
                                                         .walletAddress!,
                                                     tokenId: paymentCards
@@ -1854,8 +1896,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     params: params,
                                                     token: accessToken,
                                                     context: context,
-                                                    brand: Provider.of<TransactionProvider>(context, listen: false)
-                    .selectedCardBrand,
+                                                    brand: Provider.of<
+                                                                TransactionProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .selectedCardBrand,
                                                     walletAddress: userProvider
                                                         .walletAddress!,
                                                     tokenId: paymentCards
@@ -1894,8 +1939,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     params: params,
                                                     token: accessToken,
                                                     context: context,
-                                                    brand: Provider.of<TransactionProvider>(context, listen: false)
-                    .selectedCardBrand,
+                                                    brand: Provider.of<
+                                                                TransactionProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .selectedCardBrand,
                                                     walletAddress: userProvider
                                                         .walletAddress!,
                                                     tokenId: paymentCards
@@ -1934,8 +1982,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     params: params,
                                                     token: accessToken,
                                                     context: context,
-                                                    brand: Provider.of<TransactionProvider>(context, listen: false)
-                    .selectedCardBrand,
+                                                    brand: Provider.of<
+                                                                TransactionProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .selectedCardBrand,
                                                     walletAddress: userProvider
                                                         .walletAddress!,
                                                     tokenId: paymentCards
@@ -1974,8 +2025,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     params: params,
                                                     token: accessToken,
                                                     context: context,
-                                                    brand: Provider.of<TransactionProvider>(context, listen: false)
-                    .selectedCardBrand,
+                                                    brand: Provider.of<
+                                                                TransactionProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .selectedCardBrand,
                                                     walletAddress: userProvider
                                                         .walletAddress!,
                                                     tokenId: paymentCards
@@ -2013,8 +2067,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     params: params,
                                                     token: accessToken,
                                                     context: context,
-                                                    brand: Provider.of<TransactionProvider>(context, listen: false)
-                    .selectedCardBrand,
+                                                    brand: Provider.of<
+                                                                TransactionProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .selectedCardBrand,
                                                     walletAddress: userProvider
                                                         .walletAddress!,
                                                     tokenId: paymentCards
@@ -2052,8 +2109,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     params: params,
                                                     token: accessToken,
                                                     context: context,
-                                                    brand: Provider.of<TransactionProvider>(context, listen: false)
-                    .selectedCardBrand,
+                                                    brand: Provider.of<
+                                                                TransactionProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .selectedCardBrand,
                                                     walletAddress: userProvider
                                                         .walletAddress!,
                                                     tokenId: paymentCards
@@ -2091,8 +2151,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     params: params,
                                                     token: accessToken,
                                                     context: context,
-                                                    brand: Provider.of<TransactionProvider>(context, listen: false)
-                    .selectedCardBrand,
+                                                    brand: Provider.of<
+                                                                TransactionProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .selectedCardBrand,
                                                     walletAddress: userProvider
                                                         .walletAddress!,
                                                     tokenId: paymentCards
@@ -2130,8 +2193,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     params: params,
                                                     token: accessToken,
                                                     context: context,
-                                                    brand: Provider.of<TransactionProvider>(context, listen: false)
-                    .selectedCardBrand,
+                                                    brand: Provider.of<
+                                                                TransactionProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .selectedCardBrand,
                                                     walletAddress: userProvider
                                                         .walletAddress!,
                                                     tokenId: paymentCards
@@ -2162,7 +2228,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     // }
                                                   });
                                                 } else {}
-                                              });
+                                              },
+                                                  showPopup : Provider.of<UserProvider>(context, listen: false)
+                                                  .paymentCards
+                                                  .isEmpty
+                                              );
                                               setState(() {
                                                 isLoading = false;
                                               });

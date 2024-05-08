@@ -225,6 +225,7 @@ class _WalletBankingAndPaymentEmptyState
                                                     listen: false)
                                                 .tokenizeCardRequest(
                                                     token: accessToken,
+                                                    brand: 'VISA',
                                                     context: context);
                                             if (result == AuthResult.success) {
                                               Navigator.pushReplacement(
@@ -272,6 +273,7 @@ class _WalletBankingAndPaymentEmptyState
                                                     listen: false)
                                                 .tokenizeCardRequest(
                                                     token: accessToken,
+                                                    brand: 'VISA',
                                                     context: context);
                                             if (result == AuthResult.success) {
                                               Navigator.pushReplacement(

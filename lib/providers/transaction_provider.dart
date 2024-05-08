@@ -2645,12 +2645,12 @@ class TransactionProvider with ChangeNotifier {
 
   Future<AuthResult> tokenizeCardRequest({
     required String token,
-    // required String bin,
+    required String brand,
     required BuildContext context,
   }) async {
     final url = Uri.parse(BASE_URL + '/user/tokenize-card-request');
     final Map<String, dynamic> requestBody = {
-      // "bin": bin,
+      "brand": brand,
     };
 
     try {
