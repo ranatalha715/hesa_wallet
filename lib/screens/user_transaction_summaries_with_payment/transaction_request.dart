@@ -384,6 +384,12 @@ class _TransactionRequestState extends State<TransactionRequest> {
     {
       showDialog(
         context: context,
+        barrierDismissible:
+        Provider.of<TransactionProvider>(context, listen: false)
+            .selectedCardBrand ==
+            null
+            ? false
+            : true,
         builder: (BuildContext context) {
           final screenWidth = MediaQuery.of(context).size.width;
           final dialogWidth = screenWidth * 0.85;
@@ -878,107 +884,38 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                         Spacer(),
                                         GestureDetector(
                                           onTap: () async {
-                                            var result = await Provider.of<
-                                                        TransactionProvider>(
-                                                    context,
-                                                    listen: false)
-                                                .tokenizeCardRequest(
-                                                    token: accessToken,
-                                                    brand: Provider.of<
-                                                                TransactionProvider>(
-                                                            context,
-                                                            listen: false)
-                                                        .selectedCardBrand,
-                                                    context: context);
-                                            if (result == AuthResult.success) {
-                                              Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      WalletAddCard(
-                                                    fromTransactionReq: true,
-                                                    tokenizedCheckoutId: Provider
-                                                            .of<TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                        .tokenizedCheckoutId,
+                                            confirmBrandDialogue(() async {
+                                              var result = await Provider.of<
+                                                  TransactionProvider>(
+                                                  context,
+                                                  listen: false)
+                                                  .tokenizeCardRequest(
+                                                  token: accessToken,
+                                                  brand: Provider.of<
+                                                      TransactionProvider>(
+                                                      context,
+                                                      listen: false)
+                                                      .selectedCardBrand,
+                                                  context: context);
+                                              if (result == AuthResult.success) {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        WalletAddCard(
+                                                          fromTransactionReq: true,
+                                                          tokenizedCheckoutId: Provider
+                                                              .of<TransactionProvider>(
+                                                              context,
+                                                              listen: false)
+                                                              .tokenizedCheckoutId,
+                                                        ),
                                                   ),
-                                                ),
-                                              );
-                                            }
-                                          },
-                                          child: Container(
-                                            width: 10.sp,
-                                            height: 10.sp,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Colors.transparent,
-                                              border: Border.all(
-                                                  color: AppColors
-                                                      .textColorGreyShade2),
-                                            ),
-                                            child: Icon(
-                                              Icons.add,
-                                              size: 10,
-                                              color: themeNotifier.isDark
-                                                  ? AppColors
-                                                      .textColorGreyShade2
-                                                  : AppColors.textColorBlack,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 1.w,
-                                        ),
-                                        GestureDetector(
-                                          onTap: () async {
-                                            //   setState(() {
-                                            //     isCardLoading = true;
-                                            //   });
-                                            //   final result = await Provider.of<
-                                            //               TransactionProvider>(
-                                            //           context,
-                                            //           listen: false)
-                                            //       .addUserCard(
-                                            //           token: accessToken,
-                                            //           // bin: '412340',
-                                            //           context: context);
-                                            //   setState(() {
-                                            //     isCardLoading = false;
-                                            //   });
-                                            // },
-                                           confirmBrandDialogue(() async {
-                                             var result = await Provider.of<
-                                                 TransactionProvider>(
-                                                 context,
-                                                 listen: false)
-                                                 .tokenizeCardRequest(
-                                                 token: accessToken,
-                                                 brand: Provider.of<
-                                                     TransactionProvider>(
-                                                     context,
-                                                     listen: false)
-                                                     .selectedCardBrand,
-                                                 context: context);
-                                             if (result == AuthResult.success) {
-                                               Navigator.push(
-                                                 context,
-                                                 MaterialPageRoute(
-                                                   builder: (context) =>
-                                                       WalletAddCard(
-                                                         fromTransactionReq: true,
-                                                         tokenizedCheckoutId: Provider
-                                                             .of<TransactionProvider>(
-                                                             context,
-                                                             listen: false)
-                                                             .tokenizedCheckoutId,
-                                                       ),
-                                                 ),
-                                               );
-                                             }
-                                           },
-                                           showPopup : true,
-                                           );
+                                                );
+                                              }
+                                            },
+                                              showPopup : true,
+                                            );
 
                                             // return showDialog(
                                             //   context: context,
@@ -1186,16 +1123,43 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                             //   },
                                             // );
                                           },
-                                          child: Text(
-                                            'Add new'.tr(),
-                                            style: TextStyle(
-                                                fontSize: 10.sp,
-                                                fontFamily: 'Inter',
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors
-                                                    .textColorGreyShade2),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width: 10.sp,
+                                                height: 10.sp,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.transparent,
+                                                  border: Border.all(
+                                                      color: AppColors
+                                                          .textColorGreyShade2),
+                                                ),
+                                                child: Icon(
+                                                  Icons.add,
+                                                  size: 10,
+                                                  color: themeNotifier.isDark
+                                                      ? AppColors
+                                                          .textColorGreyShade2
+                                                      : AppColors.textColorBlack,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 1.w,
+                                              ),
+                                              Text(
+                                                'Add new'.tr(),
+                                                style: TextStyle(
+                                                    fontSize: 10.sp,
+                                                    fontFamily: 'Inter',
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColors
+                                                        .textColorGreyShade2),
+                                              ),
+                                            ],
                                           ),
                                         ),
+
                                       ],
                                     ),
                                   ),
