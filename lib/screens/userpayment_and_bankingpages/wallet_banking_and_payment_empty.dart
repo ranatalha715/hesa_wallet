@@ -200,43 +200,60 @@ class _WalletBankingAndPaymentEmptyState
                           height: 4.h,
                         ),
                         Text(
-                          'Please Select Card Brand First?'.tr(),
+                          'Please select your card type'.tr(),
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              fontSize: 15.sp,
+                              fontSize: 14.sp,
                               color: AppColors.textColorWhite),
                         ),
                         SizedBox(
                           height: 4.h,
                         ),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            TextButton(
-                                onPressed: () {
-                                  Provider.of<TransactionProvider>(context,
-                                          listen: false)
-                                      .selectedCardBrand = 'VISA';
-                                  Navigator.pop(context);
-                                },
-                                child: Text('VISA')),
-                            TextButton(
-                                onPressed: () {
-                                  Provider.of<TransactionProvider>(context,
-                                          listen: false)
-                                      .selectedCardBrand = 'MASTER';
-                                  Navigator.pop(context);
-                                },
-                                child: Text('MASTER')),
-                            TextButton(
-                                onPressed: () {
-                                  Provider.of<TransactionProvider>(context,
-                                          listen: false)
-                                      .selectedCardBrand = 'MADA';
-                                  Navigator.pop(context);
-                                },
-                                child: Text('MADA')),
+                            GestureDetector(
+                              onTap: () {
+                                Provider.of<TransactionProvider>(context,
+                                        listen: false)
+                                    .selectedCardBrand = 'VISA';
+                                Navigator.pop(context);
+                              },
+                              child: Image.asset(
+                                "assets/images/VisaPopup.png",
+                                height: 40.sp,
+                                width: 40.sp,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Provider.of<TransactionProvider>(context,
+                                    listen: false)
+                                    .selectedCardBrand = 'MASTER';
+                                Navigator.pop(context);
+                              },
+                              child: Image.asset(
+                                "assets/images/MastercardPopup.png",
+                                height: 40.sp,
+                                width: 40.sp,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Provider.of<TransactionProvider>(context,
+                                    listen: false)
+                                    .selectedCardBrand = 'MADA';
+                                Navigator.pop(context);
+                              },
+                              child: Image.asset(
+                                "assets/images/MadaPayPopup.png",
+                                height: 45.sp,
+                                width: 44.sp,
+                              ),
+                            ),
+
                           ],
                         ),
                         SizedBox(
