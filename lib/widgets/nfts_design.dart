@@ -48,6 +48,7 @@ class _NftsDesignState extends State<NftsDesign> {
             Container(
               // decoration: BoxDecoration(color: AppColors.textColorGreyShade2.withOpacity(0.25)),
               height: 20.h,
+              width: double.infinity,
               child:   Image.network(
                 widget.nfts.tokenURI,
                 fit: BoxFit.cover,

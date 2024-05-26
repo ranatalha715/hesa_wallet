@@ -56,6 +56,7 @@ class _NftsCollectionDesignState extends State<NftsCollectionDesign> {
                   return Image.asset(
                     'assets/images/nft.png', // Path to your placeholder image
                     fit: BoxFit.cover,
+                    width: double.infinity,
                   );
                 },
               ),

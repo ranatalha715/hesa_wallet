@@ -614,7 +614,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                       scrollPadding: EdgeInsets.only(
                                           bottom: MediaQuery.of(context)
                                               .viewInsets
-                                              .bottom),
+                                              .bottom*30),
                                       style: TextStyle(
                                           fontSize: 10.2.sp,
                                           color: themeNotifier.isDark
@@ -669,146 +669,146 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                   ),
                                 // Container(color: AppColors.gradientColor1, height: 200,)
                                 SizedBox(
-                                  height: 18.h,
+                                  height: 22.h,
+                                ),
+
+                                Container(
+                                  // color: AppColors.errorColor,
+                                  color: themeNotifier.isDark
+                                      ? AppColors.backgroundColor
+                                      : AppColors.textColorWhite,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 1.5.h,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 5, top: 2),
+                                            child: GestureDetector(
+                                              onTap: () => setState(() {
+                                                _isChecked = !_isChecked;
+                                              }),
+                                              child: Container(
+                                                height: 2.4.h,
+                                                width: 2.4.h,
+                                                decoration: BoxDecoration(
+                                                  // gradient: LinearGradient(
+                                                  //   colors: [
+                                                  //     _isChecked
+                                                  //         ? Color(0xff92B928)
+                                                  //         : Colors.transparent,
+                                                  //     _isChecked
+                                                  //         ? Color(0xffC9C317)
+                                                  //         : Colors.transparent
+                                                  //   ],
+                                                  // ),
+                                                    border: Border.all(
+                                                        color: AppColors.textColorWhite,
+                                                        width: 1),
+                                                    borderRadius: BorderRadius.circular(2)),
+                                                child: _isChecked
+                                                    ? Align(
+                                                  alignment: Alignment.center,
+                                                  child: Icon(
+                                                    Icons.check_rounded,
+                                                    size: 8.2.sp,
+                                                    color: AppColors.textColorWhite,
+                                                  ),
+                                                )
+                                                    : SizedBox(),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 3.w,
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              child: Text(
+                                                'I adhere that all the information provided is true and legally proven.'
+                                                    .tr(),
+                                                style: TextStyle(
+                                                    color: AppColors.textColorWhite,
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 9.sp,
+                                                    fontFamily: 'Inter'),
+                                                maxLines: 2,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 2.h,
+                                      ),
+                                      // Expanded(child: SizedBox()),
+                                      AppButton(
+                                          title: 'Continue'.tr(),
+                                          isactive: isButtonActive
+                                              // _firstnameController.text.isNotEmpty &&
+                                              //         _lastnameController.text.isNotEmpty &&
+                                              //         _identificationnumberController
+                                              //             .text.isNotEmpty
+                                              &&
+                                              _isChecked
+                                              ? true
+                                              : false,
+                                          handler: () async {
+                                            setState(() {
+                                              isValidating = true;
+                                            });
+                                            if (_firstnameController.text.isNotEmpty &&
+                                                _lastnameController.text.isNotEmpty &&
+                                                _identificationnumberController.text.isNotEmpty
+                                            // &&
+                                            // _identificationtypeController.text.isNotEmpty
+                                            ) {
+                                              setState(() {
+                                                _isLoading = true;
+                                                if (_isLoading) {
+                                                  FocusManager.instance.primaryFocus?.unfocus();
+                                                }
+                                              });
+                                              await Future.delayed(Duration(milliseconds: 1500),
+                                                      (){});
+                                              setState(() {
+                                                _isLoading = false;
+                                              });
+                                              Navigator.of(context).pushNamed(
+                                                  SignUpWithEmail.routeName,
+                                                  arguments: {
+                                                    'firstName': _firstnameController.text,
+                                                    'lastName': _lastnameController.text,
+                                                    'id': _identificationnumberController.text,
+                                                    'idType': _selectedIDType,
+                                                  });
+                                              // Navigator.push(
+                                              //   context,
+                                              //   MaterialPageRoute(
+                                              //     builder: (context) => SignUpWithEmail(),
+                                              //   ),
+                                              // );
+                                            }
+                                          },
+                                          isGradient: true,
+                                          color: Colors.transparent),
+                                      // SizedBox(
+                                      //   height: 1.h,
+                                      // )
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 3.h,
                                 ),
                               ],
                             ),
                           ),
                         ),
-                        Positioned(
-                          left: 20,
-                          right: 20,
-                          bottom: 30,
-                          child: Container(
-                            // color: AppColors.errorColor,
-                            color: themeNotifier.isDark
-                                ? AppColors.backgroundColor
-                                : AppColors.textColorWhite,
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 1.5.h,
-                                ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 5, top: 2),
-                                      child: GestureDetector(
-                                        onTap: () => setState(() {
-                                          _isChecked = !_isChecked;
-                                        }),
-                                        child: Container(
-                                          height: 2.4.h,
-                                          width: 2.4.h,
-                                          decoration: BoxDecoration(
-                                            // gradient: LinearGradient(
-                                            //   colors: [
-                                            //     _isChecked
-                                            //         ? Color(0xff92B928)
-                                            //         : Colors.transparent,
-                                            //     _isChecked
-                                            //         ? Color(0xffC9C317)
-                                            //         : Colors.transparent
-                                            //   ],
-                                            // ),
-                                              border: Border.all(
-                                                  color: AppColors.textColorWhite,
-                                                  width: 1),
-                                              borderRadius: BorderRadius.circular(2)),
-                                          child: _isChecked
-                                              ? Align(
-                                            alignment: Alignment.center,
-                                            child: Icon(
-                                              Icons.check_rounded,
-                                              size: 8.2.sp,
-                                              color: AppColors.textColorWhite,
-                                            ),
-                                          )
-                                              : SizedBox(),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 3.w,
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        child: Text(
-                                          'I adhere that all the information provided is true and legally proven.'
-                                              .tr(),
-                                          style: TextStyle(
-                                              color: AppColors.textColorWhite,
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 9.sp,
-                                              fontFamily: 'Inter'),
-                                          maxLines: 2,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 2.h,
-                                ),
-                                // Expanded(child: SizedBox()),
-                                AppButton(
-                                    title: 'Continue'.tr(),
-                                    isactive: isButtonActive
-                                        // _firstnameController.text.isNotEmpty &&
-                                        //         _lastnameController.text.isNotEmpty &&
-                                        //         _identificationnumberController
-                                        //             .text.isNotEmpty
-                                        &&
-                                        _isChecked
-                                        ? true
-                                        : false,
-                                    handler: () async {
-                                      setState(() {
-                                        isValidating = true;
-                                      });
-                                      if (_firstnameController.text.isNotEmpty &&
-                                          _lastnameController.text.isNotEmpty &&
-                                          _identificationnumberController.text.isNotEmpty
-                                      // &&
-                                      // _identificationtypeController.text.isNotEmpty
-                                      ) {
-                                        setState(() {
-                                          _isLoading = true;
-                                          if (_isLoading) {
-                                            FocusManager.instance.primaryFocus?.unfocus();
-                                          }
-                                        });
-                                        await Future.delayed(Duration(milliseconds: 1500),
-                                                (){});
-                                        setState(() {
-                                          _isLoading = false;
-                                        });
-                                        Navigator.of(context).pushNamed(
-                                            SignUpWithEmail.routeName,
-                                            arguments: {
-                                              'firstName': _firstnameController.text,
-                                              'lastName': _lastnameController.text,
-                                              'id': _identificationnumberController.text,
-                                              'idType': _selectedIDType,
-                                            });
-                                        // Navigator.push(
-                                        //   context,
-                                        //   MaterialPageRoute(
-                                        //     builder: (context) => SignUpWithEmail(),
-                                        //   ),
-                                        // );
-                                      }
-                                    },
-                                    isGradient: true,
-                                    color: Colors.transparent),
-                                // SizedBox(
-                                //   height: 1.h,
-                                // )
-                              ],
-                            ),
-                          ),
-                        )
+
                       ],
                     ),
                   ),
