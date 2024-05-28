@@ -146,6 +146,10 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
 
   String fcmToken = 'Waiting for FCM token...';
 
+  FocusNode userNameFocusNode = FocusNode();
+  FocusNode mobileNumFocusNode = FocusNode();
+  FocusNode passwordFocusNode = FocusNode();
+
   getTokenizedUserPayLoad() async {
     final prefs = await SharedPreferences.getInstance();
     tokenizedUserPL = await prefs.getString('tokenizedUserPayload');
@@ -366,6 +370,11 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                 ),
                                 TextFieldParent(
                                   child: TextField(
+                                      focusNode: userNameFocusNode,
+                                      textInputAction: TextInputAction.next,
+                                      onEditingComplete: () {
+                                        mobileNumFocusNode.requestFocus();
+                                      },
                                       controller: _usernameController,
                                       onChanged: (value) {
 
@@ -507,6 +516,11 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                 ),
                                 TextFieldParent(
                                   child: TextField(
+                                      focusNode: mobileNumFocusNode,
+                                      textInputAction: TextInputAction.next,
+                                      onEditingComplete: () {
+                                        passwordFocusNode.requestFocus();
+                                      },
                                       controller: _numberController,
                                       scrollPadding: EdgeInsets.only(
                                           bottom: MediaQuery.of(context)
@@ -521,6 +535,10 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                           fontWeight: FontWeight.w400,
                                           // Off-white color,
                                           fontFamily: 'Inter'),
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(9),
+                                        FilteringTextInputFormatter.digitsOnly,
+                                      ],
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.symmetric(
                                             vertical: 10.0, horizontal: 16.0),
@@ -604,10 +622,17 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                 ),
                                 TextFieldParent(
                                   child: TextField(
+                                      focusNode: passwordFocusNode,
+                                      textInputAction: TextInputAction.done,
+                                      onEditingComplete: () {
+                                        FocusManager
+                                            .instance.primaryFocus
+                                            ?.unfocus();
+                                      },
                                       scrollPadding: EdgeInsets.only(
                                           bottom: MediaQuery.of(context)
                                               .viewInsets
-                                              .bottom),
+                                              .bottom*25),
                                       controller: _passwordController,
                                       obscureText: _obscurePassword,
                                       onChanged: (password) {
@@ -740,236 +765,234 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                     );
                                   },
                                 ),
-                                SizedBox(height: 20.h)
-                              ],
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          child: Container(
-                            height: 12.h,
-                            width: double.infinity,
-                            color: AppColors.backgroundColor,
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          left: 20,
-                          right: 20,
-                          child: Container(
-                            color: Colors.transparent,
-                            child: Column(
-                              children: [
-                                // Expanded(child: SizedBox()),
-                                AppButton(
-                                    title: 'Create account'.tr(),
-                                    isactive: isButtonActive ? true : false,
-                                    handler: () async {
-                                      setState(() {
-                                        isValidating = true;
-                                      });
-                                      if (_usernameController.text.isNotEmpty &&
-                                          _numberController.text.isNotEmpty &&
-                                          _passwordController.text.isNotEmpty) {
-                                        setState(() {
-                                          _isLoading = true;
-                                          if (_isLoading) {
-                                            FocusManager.instance.primaryFocus
-                                                ?.unfocus();
-                                          }
-                                        });
-                                        final result =
-                                            await Provider.of<AuthProvider>(
-                                                    context,
-                                                    listen: false)
-                                                .registerUser(
-                                          context: context,
-                                          firstName: args['firstName'],
-                                          lastName: args['lastName'],
-                                          idNumber: args['id'],
-                                          idType: args['idType'],
-                                          userName: _usernameController.text,
-                                          mobileNumber: _numberController.text,
-                                          password: _passwordController.text,
-                                          deviceToken: fcmToken,
-                                        );
-                                        setState(() {
-                                          _isLoading = false;
-                                        });
-                                        if (result == AuthResult.success) {
-                                          await getTokenizedUserPayLoad();
-                                          startTimer();
-                                          otpDialog(
-                                            events: _events,
-                                            firstBtnHandler: () async {
-                                              if (otp1Controller.text.isNotEmpty &&
-                                                  otp2Controller
-                                                      .text.isNotEmpty &&
-                                                  otp3Controller
-                                                      .text.isNotEmpty &&
-                                                  otp4Controller
-                                                      .text.isNotEmpty &&
-                                                  otp5Controller
-                                                      .text.isNotEmpty &&
-                                                  otp6Controller
-                                                      .text.isNotEmpty) {
-                                                try {
-                                                  setState(() {
-                                                    _isLoadingOtpDialoge = true;
-                                                  });
-                                                  print('loading popup' +
-                                                      _isLoadingOtpDialoge.toString());
-                                                  // Navigator.pop(context);
-                                                  final result = await Provider
-                                                          .of<AuthProvider>(
-                                                              context,
-                                                              listen: false)
-                                                      .verifyUser(
-                                                          context: context,
-                                                          mobile:
-                                                              _numberController
-                                                                  .text,
-                                                          code: otp1Controller
-                                                                  .text +
-                                                              otp2Controller
-                                                                  .text +
-                                                              otp3Controller
-                                                                  .text +
-                                                              otp4Controller
-                                                                  .text +
-                                                              otp5Controller
-                                                                  .text +
-                                                              otp6Controller
-                                                                  .text,
-                                                          token:
-                                                              tokenizedUserPL);
-                                                  setState(() {
-                                                    _isLoadingOtpDialoge = false;
-                                                  });
-                                                  print('loading popup 2' +
-                                                      _isLoadingOtpDialoge.toString());
-                                                  if (result ==
-                                                      AuthResult.success) {
-                                                    Navigator.of(context)
-                                                        .pushNamedAndRemoveUntil(
-                                                            '/TermsAndConditions',
-                                                            (Route d) => false);
-                                                  }
-                                                } catch (error) {
-                                                  print("Error: $error");
-                                                  setState(() {
-                                                    _isLoadingOtpDialoge = false;
-                                                  });
-                                                  // _showToast('An error occurred'); // Show an error message
-                                                } finally {
-                                                  setState(() {
-                                                    _isLoadingOtpDialoge = false;
-                                                  });
-                                                }
-                                              }
-                                            },
-                                            secondBtnHandler: () async {
-                                              if (_timeLeft == 0) {
-                                                print(
-                                                    'resend function calling');
-                                                try {
-                                                  setState(() {
-                                                    _isLoadingResend = true;
-                                                  });
-                                                  final result = await Provider
-                                                          .of<AuthProvider>(
-                                                              context,
-                                                              listen: false)
-                                                      .sendLoginOTP(
-                                                          mobile:
-                                                              _numberController
-                                                                  .text,
-                                                          context: context);
-                                                  setState(() {
-                                                    _isLoadingResend = false;
-                                                  });
-                                                  if (result ==
-                                                      AuthResult.success) {
-                                                    startTimer();
-                                                  }
-                                                } catch (error) {
-                                                  print("Error: $error");
-                                                  // _showToast('An error occurred'); // Show an error message
-                                                } finally {
-                                                  setState(() {
-                                                    _isLoadingResend = false;
-                                                  });
-                                                }
-                                              } else {}
-                                            },
-                                            firstTitle: 'Verify',
-                                            secondTitle: 'Resend code: ',
-
-                                            // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
-
-                                            context: context,
-                                            isDark: themeNotifier.isDark,
-                                            isFirstButtonActive:
-                                                isOtpButtonActive,
-                                            isSecondButtonActive: false,
-                                            otp1Controller: otp1Controller,
-                                            otp2Controller: otp2Controller,
-                                            otp3Controller: otp3Controller,
-                                            otp4Controller: otp4Controller,
-                                            otp5Controller: otp5Controller,
-                                            otp6Controller: otp6Controller,
-                                            firstFieldFocusNode:
-                                                firstFieldFocusNode,
-                                            secondFieldFocusNode:
-                                                secondFieldFocusNode,
-                                            thirdFieldFocusNode:
-                                                thirdFieldFocusNode,
-                                            forthFieldFocusNode:
-                                                forthFieldFocusNode,
-                                            fifthFieldFocusNode:
-                                                fifthFieldFocusNode,
-                                            sixthFieldFocusNode:
-                                                sixthFieldFocusNode,
-                                            firstBtnBgColor:
-                                                AppColors.activeButtonColor,
-                                            firstBtnTextColor:
-                                                AppColors.textColorBlack,
-                                            secondBtnBgColor:
-                                                Colors.transparent,
-                                            secondBtnTextColor: _timeLeft != 0
-                                                ? AppColors.textColorBlack
-                                                    .withOpacity(0.8)
-                                                : AppColors.textColorWhite,
-                                            // themeNotifier.isDark
-                                            //     ? AppColors.textColorWhite
-                                            //     : AppColors.textColorBlack
-                                            //         .withOpacity(0.8),
-                                            isLoading: _isLoading,
-                                            // isLoading: _isLoadingResend,
-                                          );
-                                        }
-                                      }
-                                    },
-                                    // isLoading: _isLoading,
-                                    isGradient: true,
-                                    color: Colors.transparent,
-                                    textColor: AppColors.textColorBlack),
+                                SizedBox(height: 27.h),
                                 Container(
-                                  height: 4.h,
-                                  width: double.infinity,
-                                  color: AppColors.backgroundColor,
+                                  margin: EdgeInsets.symmetric(horizontal: 4.sp ),
+                                  color: Colors.transparent,
+                                  child: Column(
+                                    children: [
+                                      // Expanded(child: SizedBox()),
+                                      AppButton(
+                                          title: 'Create account'.tr(),
+                                          isactive: isButtonActive ? true : false,
+                                          handler: () async {
+                                            setState(() {
+                                              isValidating = true;
+                                            });
+                                            if (_usernameController.text.isNotEmpty &&
+                                                _numberController.text.isNotEmpty &&
+                                                _passwordController.text.isNotEmpty) {
+                                              setState(() {
+                                                _isLoading = true;
+                                                if (_isLoading) {
+                                                  FocusManager.instance.primaryFocus
+                                                      ?.unfocus();
+                                                }
+                                              });
+                                              final result =
+                                              await Provider.of<AuthProvider>(
+                                                  context,
+                                                  listen: false)
+                                                  .registerUser(
+                                                context: context,
+                                                firstName: args['firstName'],
+                                                lastName: args['lastName'],
+                                                idNumber: args['id'],
+                                                idType: args['idType'],
+                                                userName: _usernameController.text,
+                                                mobileNumber: _numberController.text,
+                                                password: _passwordController.text,
+                                                deviceToken: fcmToken,
+                                              );
+                                              setState(() {
+                                                _isLoading = false;
+                                              });
+                                              if (result == AuthResult.success) {
+                                                await getTokenizedUserPayLoad();
+                                                startTimer();
+                                                otpDialog(
+                                                  events: _events,
+                                                  firstBtnHandler: () async {
+                                                    if (otp1Controller.text.isNotEmpty &&
+                                                        otp2Controller
+                                                            .text.isNotEmpty &&
+                                                        otp3Controller
+                                                            .text.isNotEmpty &&
+                                                        otp4Controller
+                                                            .text.isNotEmpty &&
+                                                        otp5Controller
+                                                            .text.isNotEmpty &&
+                                                        otp6Controller
+                                                            .text.isNotEmpty) {
+                                                      try {
+                                                        setState(() {
+                                                          _isLoadingOtpDialoge = true;
+                                                        });
+                                                        print('loading popup' +
+                                                            _isLoadingOtpDialoge.toString());
+                                                        // Navigator.pop(context);
+                                                        final result = await Provider
+                                                            .of<AuthProvider>(
+                                                            context,
+                                                            listen: false)
+                                                            .verifyUser(
+                                                            context: context,
+                                                            mobile:
+                                                            _numberController
+                                                                .text,
+                                                            code: otp1Controller
+                                                                .text +
+                                                                otp2Controller
+                                                                    .text +
+                                                                otp3Controller
+                                                                    .text +
+                                                                otp4Controller
+                                                                    .text +
+                                                                otp5Controller
+                                                                    .text +
+                                                                otp6Controller
+                                                                    .text,
+                                                            token:
+                                                            tokenizedUserPL);
+                                                        setState(() {
+                                                          _isLoadingOtpDialoge = false;
+                                                        });
+                                                        print('loading popup 2' +
+                                                            _isLoadingOtpDialoge.toString());
+                                                        if (result ==
+                                                            AuthResult.success) {
+                                                          Navigator.of(context)
+                                                              .pushNamedAndRemoveUntil(
+                                                              '/TermsAndConditions',
+                                                                  (Route d) => false);
+                                                        }
+                                                      } catch (error) {
+                                                        print("Error: $error");
+                                                        setState(() {
+                                                          _isLoadingOtpDialoge = false;
+                                                        });
+                                                        // _showToast('An error occurred'); // Show an error message
+                                                      } finally {
+                                                        setState(() {
+                                                          _isLoadingOtpDialoge = false;
+                                                        });
+                                                      }
+                                                    }
+                                                  },
+                                                  secondBtnHandler: () async {
+                                                    if (_timeLeft == 0) {
+                                                      print(
+                                                          'resend function calling');
+                                                      try {
+                                                        setState(() {
+                                                          _isLoadingResend = true;
+                                                        });
+                                                        final result = await Provider
+                                                            .of<AuthProvider>(
+                                                            context,
+                                                            listen: false)
+                                                            .sendLoginOTP(
+                                                            mobile:
+                                                            _numberController
+                                                                .text,
+                                                            context: context);
+                                                        setState(() {
+                                                          _isLoadingResend = false;
+                                                        });
+                                                        if (result ==
+                                                            AuthResult.success) {
+                                                          startTimer();
+                                                        }
+                                                      } catch (error) {
+                                                        print("Error: $error");
+                                                        // _showToast('An error occurred'); // Show an error message
+                                                      } finally {
+                                                        setState(() {
+                                                          _isLoadingResend = false;
+                                                        });
+                                                      }
+                                                    } else {}
+                                                  },
+                                                  firstTitle: 'Verify',
+                                                  secondTitle: 'Resend code: ',
+
+                                                  // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
+
+                                                  context: context,
+                                                  isDark: themeNotifier.isDark,
+                                                  isFirstButtonActive:
+                                                  isOtpButtonActive,
+                                                  isSecondButtonActive: false,
+                                                  otp1Controller: otp1Controller,
+                                                  otp2Controller: otp2Controller,
+                                                  otp3Controller: otp3Controller,
+                                                  otp4Controller: otp4Controller,
+                                                  otp5Controller: otp5Controller,
+                                                  otp6Controller: otp6Controller,
+                                                  firstFieldFocusNode:
+                                                  firstFieldFocusNode,
+                                                  secondFieldFocusNode:
+                                                  secondFieldFocusNode,
+                                                  thirdFieldFocusNode:
+                                                  thirdFieldFocusNode,
+                                                  forthFieldFocusNode:
+                                                  forthFieldFocusNode,
+                                                  fifthFieldFocusNode:
+                                                  fifthFieldFocusNode,
+                                                  sixthFieldFocusNode:
+                                                  sixthFieldFocusNode,
+                                                  firstBtnBgColor:
+                                                  AppColors.activeButtonColor,
+                                                  firstBtnTextColor:
+                                                  AppColors.textColorBlack,
+                                                  secondBtnBgColor:
+                                                  Colors.transparent,
+                                                  secondBtnTextColor: _timeLeft != 0
+                                                      ? AppColors.textColorBlack
+                                                      .withOpacity(0.8)
+                                                      : AppColors.textColorWhite,
+                                                  // themeNotifier.isDark
+                                                  //     ? AppColors.textColorWhite
+                                                  //     : AppColors.textColorBlack
+                                                  //         .withOpacity(0.8),
+                                                  isLoading: _isLoading,
+                                                  // isLoading: _isLoadingResend,
+                                                );
+                                              }
+                                            }
+                                          },
+                                          // isLoading: _isLoading,
+                                          isGradient: true,
+                                          color: Colors.transparent,
+                                          textColor: AppColors.textColorBlack),
+                                      Container(
+                                        height: 4.h,
+                                        width: double.infinity,
+                                        color: AppColors.backgroundColor,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                        )
+                        ),
+                        // Positioned(
+                        //   left: 0,
+                        //   right: 0,
+                        //   bottom: 0,
+                        //   child: Container(
+                        //     height: 2.h,
+                        //     width: double.infinity,
+                        //     color: AppColors.backgroundColor,
+                        //   ),
+                        // ),
+
                       ],
                     ),
                   ),
                 ),
+
               ],
             ),
           ),

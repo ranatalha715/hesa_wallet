@@ -63,6 +63,7 @@ dependencies:
   app_settings: ^5.0.0
   fluttertoast: ^8.2.2
   jwt_decoder: ^2.0.1
+  flutter_keyboard_visibility: ^5.4.0
   connectivity_plus: ^5.0.2
   page_transition: ^2.0.9
   deep_linking:

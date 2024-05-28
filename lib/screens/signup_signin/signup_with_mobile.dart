@@ -9,6 +9,8 @@ import 'package:hesa_wallet/widgets/main_header.dart';
 import 'package:hesa_wallet/widgets/text_field_parent.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'dart:io' as OS;
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import '../../providers/theme_provider.dart';
 
@@ -42,6 +44,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
   var _selectedIDType = '';
   var _selectedNationalityType = '';
   bool isButtonActive = false;
+  bool isKeyboardVisible = false;
   var _isLoading = false;
 
   @override
@@ -52,6 +55,11 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
     _firstnameController.addListener(_updateButtonState);
     _lastnameController.addListener(_updateButtonState);
     _identificationnumberController.addListener(_updateButtonState);
+    KeyboardVisibilityController().onChange.listen((bool visible) {
+      setState(() {
+        isKeyboardVisible = visible;
+      });
+    });
   }
 
   void _updateButtonState() {
@@ -816,6 +824,39 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
               ],
             ),
           ),
+          // if (OS.Platform.isIOS)
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: KeyboardVisibilityBuilder(builder: (context, child) {
+                return Visibility(
+                    visible: isKeyboardVisible,
+                    child: GestureDetector(
+                      onTap: () => FocusManager
+                          .instance.primaryFocus
+                          ?.unfocus(),
+                      child: Container(
+                          color: AppColors.errorColor,
+                          height: 4.h,
+                          child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20),
+                                child: Text(
+                                  'Done',
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      fontSize: 11.5.sp,
+                                      fontWeight:
+                                      FontWeight.bold)
+                                      .apply(fontWeightDelta: -1),
+                                ),
+                              ))),
+                    ));
+              }),
+            ),
           if(_isLoading)
             LoaderBluredScreen()
         ],
