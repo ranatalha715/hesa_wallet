@@ -89,7 +89,8 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                     : exit(0);
                 return false;
               },
-              child: Scaffold(
+              child:
+              Scaffold(
                 backgroundColor: themeNotifier.isDark
                     ? AppColors.backgroundColor
                     : AppColors.textColorWhite,
@@ -279,6 +280,9 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                             size: 17.5.sp,
                                             color: AppColors.textColorGrey),
                                         onPressed: _togglePasswordVisibility,
+                                        splashColor: Colors.transparent,
+                                        highlightColor: Colors.transparent,
+                                        hoverColor: Colors.transparent,
                                       ),
                                     ),
                                     cursorColor: AppColors.textColorGrey),
@@ -321,23 +325,8 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                         color: AppColors.errorColor),
                                   ),
                                 ),
+                              SizedBox(height: 5.h,),
                               Expanded(child: SizedBox()),
-                              // AppButton(
-                              //     title: 'Sign in with mobile number'.tr(),
-                              //     handler: () {
-                              //       Navigator.push(
-                              //         context,
-                              //         MaterialPageRoute(
-                              //           builder: (context) => SigninWithMobile(),
-                              //         ),
-                              //       );
-                              //     },
-                              //     isGradient: false,
-                              //     textColor: themeNotifier.isDark
-                              //         ? AppColors.textColorWhite
-                              //         : AppColors.textColorBlack,
-                              //     color: Colors.transparent),
-                              // SizedBox(height: 2.h),
                               AppButton(
                                 title: 'Log in'.tr(),
                                 isactive: isButtonActive,

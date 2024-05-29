@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:hesa_wallet/screens/unlock/set_confirm_pin_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -305,7 +304,11 @@ class _PinScreenState extends State<PinScreen> {
                     fontFamily: 'ArialASDCF',
                   ),
                 )
-              : Image.asset(
+              :
+          // Icon(Icons.delete,
+          // size: 13.sp,
+          // )
+          Image.asset(
                   imagePath,
                   height: 13.sp,
                   width: 13.sp,

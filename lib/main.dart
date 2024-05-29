@@ -68,7 +68,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-////hello to world
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await localized.EasyLocalization.ensureInitialized();
@@ -79,7 +79,11 @@ Future<void> main() async {
     DeviceOrientation.portraitUp, // Disable landscape mode
     DeviceOrientation.portraitDown, // Disable landscape mode
   ]).then((_) {
-    runApp(MultiProvider(
+    runApp(
+      DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) =>
+        MultiProvider(
             providers: [
           ChangeNotifierProvider(
             create: (_) => ThemeProvider(),
@@ -123,7 +127,7 @@ Future<void> main() async {
                 fallbackLocale: Locale('en', 'US'),
                 saveLocale: true,
                 child: MyApp()))
-        // )
+        )
         );
     // Register the MethodChannel with the same unique name as in the NFT app
     const channel = MethodChannel('com.example.hesa_wallet');
@@ -309,6 +313,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           home:
               // Provider.of<TokenProvider>(
               //   context,
+              //   context,devic
               // ).isTokenEmpty
               accessToken == ""
                   ? Stack(

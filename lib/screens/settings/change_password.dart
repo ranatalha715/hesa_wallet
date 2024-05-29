@@ -39,6 +39,23 @@ class _ChangePasswordState extends State<ChangePassword> {
     'Special characters (\$-#-@)'.tr(),
     'At least 8 characters in total'.tr(),
   ];
+
+  bool _hasUppercase = false;
+  bool _hasLowercase = false;
+  bool _hasDigits = false;
+  bool _hasSpecialCharacters = false;
+  bool _hasMinLength = false;
+
+  void _validatePassword(String password) {
+    setState(() {
+      _hasUppercase = password.contains(RegExp(r'[A-Z]'));
+      _hasLowercase = password.contains(RegExp(r'[a-z]'));
+      _hasDigits = password.contains(RegExp(r'[0-9]'));
+      _hasSpecialCharacters = password.contains(RegExp(r'[\$#@]'));
+      _hasMinLength = password.length >= 8;
+    });
+  }
+
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _oldPasswordController = TextEditingController();
   ScrollController _scrollController = ScrollController();
@@ -242,6 +259,9 @@ class _ChangePasswordState extends State<ChangePassword> {
                                               size: 17.5.sp,
                                               color: AppColors.textColorGrey),
                                           onPressed: _togglePasswordVisibility,
+                                          splashColor: Colors.transparent,
+                                          highlightColor: Colors.transparent,
+                                          hoverColor: Colors.transparent,
                                         ),
                                       ),
                                       cursorColor: AppColors.textColorGrey),
@@ -301,6 +321,9 @@ class _ChangePasswordState extends State<ChangePassword> {
                                       keyboardType:
                                           TextInputType.visiblePassword,
                                       obscureText: _obscurePasswordNew,
+                                      onChanged: (password) {
+                                        _validatePassword(password);
+                                      },
                                       style: TextStyle(
                                           fontSize: 10.2.sp,
                                           color: themeNotifier.isDark
@@ -336,15 +359,22 @@ class _ChangePasswordState extends State<ChangePassword> {
                                               // width: 2.0,
                                             )),
                                         // labelText: 'Enter your password',
-                                        suffixIcon: IconButton(
-                                          icon: Icon(
-                                              _obscurePasswordNew
-                                                  ? Icons.visibility_outlined
-                                                  : Icons
-                                                      .visibility_off_outlined,
-                                              size: 17.5.sp,
-                                              color: AppColors.textColorGrey),
-                                          onPressed: _togglePasswordVisibilityNew,
+                                        suffixIcon: Material(
+                                          color: Colors.transparent,
+                                          elevation: 0.0,
+                                          child: IconButton(
+                                            icon: Icon(
+                                                _obscurePasswordNew
+                                                    ? Icons.visibility_outlined
+                                                    : Icons
+                                                        .visibility_off_outlined,
+                                                size: 17.5.sp,
+                                                color: AppColors.textColorGrey),
+                                            onPressed: _togglePasswordVisibilityNew,
+                                            splashColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
+                                            hoverColor: Colors.transparent,
+                                          ),
                                         ),
                                       ),
                                       cursorColor: AppColors.textColorGrey),
@@ -387,37 +417,51 @@ class _ChangePasswordState extends State<ChangePassword> {
                                   height: 0.3.h,
                                 ),
                                 ListView.builder(
+                                  controller: _scrollController,
                                   padding: EdgeInsets.zero,
                                   shrinkWrap: true,
-                                  controller: _scrollController,
                                   itemCount: accountDefinitions.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
+                                  itemBuilder: (BuildContext context, int index) {
+                                    bool conditionMet;
+                                    switch (index) {
+                                      case 0:
+                                        conditionMet = _hasUppercase && _hasLowercase;
+                                        break;
+                                      case 1:
+                                        conditionMet = _hasDigits;
+                                        break;
+                                      case 2:
+                                        conditionMet = _hasSpecialCharacters;
+                                        break;
+                                      case 3:
+                                        conditionMet = _hasMinLength;
+                                        break;
+                                      default:
+                                        conditionMet = false;
+                                    }
+
                                     return Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Padding(
-                                          padding: EdgeInsets.only(
-                                              top: 4.0, right: 8.0),
+                                          padding: EdgeInsets.only(top: 4.0, right: 8.0),
                                           child: Icon(
                                             Icons.fiber_manual_record,
                                             size: 7.sp,
-                                            color: AppColors.textColorWhite,
+                                            color: _newPasswordController.text.isEmpty ? AppColors.textColorGrey:conditionMet ? AppColors.hexaGreen : AppColors.errorColor,
                                           ),
                                         ),
                                         Expanded(
                                           child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 3),
+                                            padding: const EdgeInsets.only(bottom: 3),
                                             child: Text(
                                               accountDefinitions[index],
                                               style: TextStyle(
-                                                  color:
-                                                      AppColors.textColorWhite,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 10.2.sp,
-                                                  fontFamily: 'Inter'),
+                                                color: _newPasswordController.text.isEmpty ? AppColors.textColorGrey:conditionMet ? AppColors.hexaGreen : AppColors.errorColor,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 10.2.sp,
+                                                fontFamily: 'Inter',
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -499,7 +543,10 @@ class _ChangePasswordState extends State<ChangePassword> {
                                                       .visibility_off_outlined,
                                               size: 17.5.sp,
                                               color: AppColors.textColorGrey),
-                                          onPressed: _togglePasswordVisibilityConfirm
+                                          onPressed: _togglePasswordVisibilityConfirm,
+                                          splashColor: Colors.transparent,
+                                          highlightColor: Colors.transparent,
+                                          hoverColor: Colors.transparent,
                                         ),
                                       ),
                                       cursorColor: AppColors.textColorGrey),

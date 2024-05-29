@@ -200,6 +200,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                       size: 17.5.sp,
                                     ),
                                     onPressed: _togglePasswordVisibility,
+                                    splashColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
                                   ),
                                 ),
                                 cursorColor: AppColors.textColorGrey),
@@ -210,7 +213,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  "*Enter your pin",
+                                  "*Enter your password",
                                   /* textAlign :TextAlign.left,*/
                                   style: TextStyle(
                                       fontSize: 10.sp,

@@ -39,35 +39,24 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
     'At least 8 characters in total'.tr(),
   ];
 
-  bool _isPasswordCompliant(String password) {
-    // Password should contain at least 8 characters
-    if (password.length < 8) {
-      return false;
-    }
+  bool _hasUppercase = false;
+  bool _hasLowercase = false;
+  bool _hasDigits = false;
+  bool _hasSpecialCharacters = false;
+  bool _hasMinLength = false;
 
-    // Password should contain at least one uppercase letter
-    if (!RegExp(r'[A-Z]').hasMatch(password)) {
-      return false;
-    }
-
-    // Password should contain at least one lowercase letter
-    if (!RegExp(r'[a-z]').hasMatch(password)) {
-      return false;
-    }
-
-    // Password should contain at least one numerical character
-    if (!RegExp(r'\d').hasMatch(password)) {
-      return false;
-    }
-
-    // Password should contain at least one special character
-    if (!RegExp(r'[\$#@]').hasMatch(password)) {
-      return false;
-    }
-
-    // If all conditions are met, the password is considered valid
-    return true;
+  void _validatePassword(String password) {
+    setState(() {
+      _hasUppercase = password.contains(RegExp(r'[A-Z]'));
+      _hasLowercase = password.contains(RegExp(r'[a-z]'));
+      _hasDigits = password.contains(RegExp(r'[0-9]'));
+      _hasSpecialCharacters = password.contains(RegExp(r'[\$#@]'));
+      _hasMinLength = password.length >= 8;
+    });
   }
+
+
+
 
   FocusNode firstFieldFocusNode = FocusNode();
   FocusNode secondFieldFocusNode = FocusNode();
@@ -629,6 +618,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             .instance.primaryFocus
                                             ?.unfocus();
                                       },
+
                                       scrollPadding: EdgeInsets.only(
                                           bottom: MediaQuery.of(context)
                                               .viewInsets
@@ -636,10 +626,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                       controller: _passwordController,
                                       obscureText: _obscurePassword,
                                       onChanged: (password) {
-                                        setState(() {
-                                          _isPasswordValid =
-                                              _isPasswordCompliant(password);
-                                        });
+                                        _validatePassword(password);
                                       },
                                       style: TextStyle(
                                           fontSize: 10.2.sp,
@@ -685,6 +672,9 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                               size: 17.5.sp,
                                               color: AppColors.textColorGrey),
                                           onPressed: _togglePasswordVisibility,
+                                          splashColor: Colors.transparent,
+                                          highlightColor: Colors.transparent,
+                                          hoverColor: Colors.transparent,
                                         ),
                                       ),
                                       cursorColor: AppColors.textColorGrey),
@@ -731,33 +721,47 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                   padding: EdgeInsets.zero,
                                   shrinkWrap: true,
                                   itemCount: accountDefinitions.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
+                                  itemBuilder: (BuildContext context, int index) {
+                                    bool conditionMet;
+                                    switch (index) {
+                                      case 0:
+                                        conditionMet = _hasUppercase && _hasLowercase;
+                                        break;
+                                      case 1:
+                                        conditionMet = _hasDigits;
+                                        break;
+                                      case 2:
+                                        conditionMet = _hasSpecialCharacters;
+                                        break;
+                                      case 3:
+                                        conditionMet = _hasMinLength;
+                                        break;
+                                      default:
+                                        conditionMet = false;
+                                    }
+
                                     return Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Padding(
-                                          padding: EdgeInsets.only(
-                                              top: 4.0, right: 8.0),
+                                          padding: EdgeInsets.only(top: 4.0, right: 8.0),
                                           child: Icon(
                                             Icons.fiber_manual_record,
                                             size: 7.sp,
-                                            color: AppColors.textColorWhite,
+                                            color: _passwordController.text.isEmpty ? AppColors.textColorGrey:conditionMet ? AppColors.hexaGreen : AppColors.errorColor,
                                           ),
                                         ),
                                         Expanded(
                                           child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 3),
+                                            padding: const EdgeInsets.only(bottom: 3),
                                             child: Text(
                                               accountDefinitions[index],
                                               style: TextStyle(
-                                                  color:
-                                                      AppColors.textColorWhite,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 10.2.sp,
-                                                  fontFamily: 'Inter'),
+                                                color: _passwordController.text.isEmpty ? AppColors.textColorGrey:conditionMet ? AppColors.hexaGreen : AppColors.errorColor,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 10.2.sp,
+                                                fontFamily: 'Inter',
+                                              ),
                                             ),
                                           ),
                                         ),
