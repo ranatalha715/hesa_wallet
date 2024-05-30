@@ -412,7 +412,7 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                             isLast: true,
                                             imageUrl:
                                                 "assets/images/passcode.png",
-                                            title: 'Passcode'.tr(),
+                                            title: 'PIN code'.tr(),
                                             subTitle:
                                                 _isPasscodeSet
                                                     ? "Have been set up".tr()

@@ -305,14 +305,14 @@ class _PinScreenState extends State<PinScreen> {
                   ),
                 )
               :
-          // Icon(Icons.delete,
-          // size: 13.sp,
-          // )
-          Image.asset(
-                  imagePath,
-                  height: 13.sp,
-                  width: 13.sp,
-                ),
+          Icon(Icons.delete,
+          size: 20.sp,
+          )
+          // Image.asset(
+          //         imagePath,
+          //         height: 13.sp,
+          //         width: 13.sp,
+          //       ),
         ),
       ),
     );

@@ -261,7 +261,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                 );
                               }),
                           drawerWidget(
-                              title: 'Connected Sites'.tr(),
+                              title: 'Connected Apps'.tr(),
                               imagePath: "assets/images/draweroption3.png",
                               imageHeight: 2.8.h,
                               imageWidth: 2.8.h,

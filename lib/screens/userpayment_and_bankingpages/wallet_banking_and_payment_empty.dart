@@ -1259,7 +1259,10 @@ class _WalletBankingAndPaymentEmptyState
                         color: isDark
                             ? AppColors.textColorWhite
                             : AppColors.textColorBlack,
-                      )),
+                      ),
+
+                  ),
+
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
                         20), // Add your preferred radius here
@@ -1407,7 +1410,7 @@ class _WalletBankingAndPaymentEmptyState
                           height: 4.h,
                         ),
                         Text(
-                          'Are you sure you want to delete this Bank Account?',
+                          'Are you sure you want to delete this bank account?',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontWeight: FontWeight.w600,

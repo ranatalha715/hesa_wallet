@@ -799,6 +799,7 @@ class _AccountInformationState extends State<AccountInformation> {
                             ),
                           ),
                         ),
+                        if(isEditAble)
                         Positioned(
                           left: 20,
                           right: 20,

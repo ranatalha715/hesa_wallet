@@ -61,7 +61,7 @@ class _MainHeaderState extends State<MainHeader> {
                   widget.title,
                   style: TextStyle(
                       color: AppColors.textColorWhite,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w700,
                       fontSize: widget.showSubTitle ? 11.sp: 13.4.sp,
                       fontFamily: widget.showSubTitle ? 'Clash Display' :'Inter')
                 ),

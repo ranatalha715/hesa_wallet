@@ -100,6 +100,8 @@ class _NftsCollectionDivisionState extends State<NftsCollectionDivision> {
                     }),
                 isOpened: isOpenNfts,
               ),
+              if(!isOpenNfts)
+              SizedBox(height: 3.h,),
 
               if(isOpenNfts)
                 widget.nfts.length==0 ?

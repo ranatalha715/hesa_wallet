@@ -80,9 +80,9 @@ Future<void> main() async {
     DeviceOrientation.portraitDown, // Disable landscape mode
   ]).then((_) {
     runApp(
-      DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) =>
+      // DevicePreview(
+      // enabled: !kReleaseMode,
+      // builder: (context) =>
         MultiProvider(
             providers: [
           ChangeNotifierProvider(
@@ -127,7 +127,7 @@ Future<void> main() async {
                 fallbackLocale: Locale('en', 'US'),
                 saveLocale: true,
                 child: MyApp()))
-        )
+        // )
         );
     // Register the MethodChannel with the same unique name as in the NFT app
     const channel = MethodChannel('com.example.hesa_wallet');

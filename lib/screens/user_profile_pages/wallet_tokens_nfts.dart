@@ -1156,21 +1156,19 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                               children: [
                                 Padding(
                                   padding: EdgeInsets.symmetric(
-                                    vertical: 18.h,
+                                    vertical: 15.h,
                                   ),
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      "You have no Tokens",
-                                      style: TextStyle(
-                                          color: themeNotifier.isDark
-                                              ? AppColors
-                                              .textColorGreyShade2
-                                              : AppColors.textColorBlack,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 12.sp,
-                                          fontFamily: 'Blogger Sans'),
-                                    ),
+                                  child: Text(
+                                    "You have no Tokens",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: themeNotifier.isDark
+                                            ? AppColors
+                                            .textColorGreyShade2
+                                            : AppColors.textColorBlack,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12.sp,
+                                        fontFamily: 'Blogger Sans'),
                                   ),
                                 ),
                                 //show this when data is empty
@@ -1300,10 +1298,11 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       child: Container(
         margin: EdgeInsets.only(right: 10.sp),
         decoration: BoxDecoration(
+            color: _isSelected == index ? Colors.transparent : AppColors.profileHeaderDark,
             border: Border.all(
                 color: _isSelected == index
-                    ? AppColors.activeButtonColor
-                    : AppColors.textColorWhite,
+                    ? AppColors.hexaGreen
+                    : Colors.transparent,
                 width: 1),
             borderRadius: BorderRadius.circular(8)),
         child: Padding(
@@ -1319,7 +1318,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                 style: TextStyle(
                     fontSize: 10.sp,
                     fontWeight: FontWeight.w400,
-                    color: AppColors.textColorGrey),
+                    color: _isSelected == index ? AppColors.hexaGreen : AppColors.textColorGreyShade2),
               ),
             ],
           ),
