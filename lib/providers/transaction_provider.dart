@@ -1960,6 +1960,7 @@ class TransactionProvider with ChangeNotifier {
     required String params,
     required String token,
     required String operation,
+    required String code,
     required String walletAddress,
     // required String country,
     required BuildContext context,
@@ -1974,7 +1975,7 @@ class TransactionProvider with ChangeNotifier {
       "func": "CancelAuctionListing",
       "walletAddress": walletAddress,
       "country": "PK",
-      "code": "0001",
+      "code": code,
       "params": paramsMap,
     };
 

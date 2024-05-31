@@ -528,7 +528,7 @@ class AuthProvider with ChangeNotifier {
           'Authorization': 'Bearer $token',
         },
       );
-      print("FCM response");
+      print("Fse");
       print(response.body);
       if (response.statusCode == 201) {
         return AuthResult.success;
