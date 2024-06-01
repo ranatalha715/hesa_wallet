@@ -134,10 +134,13 @@ class AuthProvider with ChangeNotifier {
 
   Future<AuthResult> logoutUser({
     required String token,
+    required String refreshToken,
     required BuildContext context,
   }) async {
     final url = Uri.parse(BASE_URL + '/auth/logout');
-    final body = {};
+    final body = {
+      'refreshToken' : refreshToken
+    };
 
     final response = await http.post(
       url,
@@ -148,7 +151,7 @@ class AuthProvider with ChangeNotifier {
     );
     fToast = FToast();
     fToast.init(context);
-
+print('logout response' +response.body);
     final jsonResponse = json.decode(response.body);
     final msg = jsonResponse['msg'];
     if (response.statusCode == 201) {

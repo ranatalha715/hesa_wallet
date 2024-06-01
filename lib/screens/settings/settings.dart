@@ -33,12 +33,15 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   var isLoading = false;
   var accessToken = '';
+  var refreshToken = '';
   var _isLoading = false;
   var _isinit= true;
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
+    refreshToken = prefs.getString('refreshToken')!;
+
   }
 
   deleteToken() async {
@@ -116,7 +119,7 @@ class _SettingsState extends State<Settings> {
                               final result = await Provider.of<AuthProvider>(
                                       context,
                                       listen: false)
-                                  .logoutUser(token: accessToken, context: context);
+                                  .logoutUser(token: accessToken, refreshToken: refreshToken,  context: context);
 
                               setState(() {
                                 isLoading = false;
@@ -143,8 +146,8 @@ class _SettingsState extends State<Settings> {
                           },
                           isLoading: isLoading,
                           // isGradient: true,
-                          color: AppColors.errorColor,
-                          textColor: AppColors.textColorBlack,
+                          color: AppColors.appSecondButton.withOpacity(0.10),
+                          textColor: AppColors.errorColor,
                         ),
                       ),
                       SizedBox(height: 2.h),
@@ -176,15 +179,15 @@ class _SettingsState extends State<Settings> {
   Future<void> didChangeDependencies() async {
     // TODO: implement didChangeDependencies
     if(_isinit){
-      setState(() {
-        _isLoading=true;
-      });
-      await Future.delayed(Duration(milliseconds: 900), () {
-        print('This code will be executed after 2 seconds');
-      });
-      setState(() {
-        _isLoading=false;
-      });
+      // setState(() {
+      //   _isLoading=true;
+      // });
+      // await Future.delayed(Duration(milliseconds: 900), () {
+      //   print('This code will be executed after 2 seconds');
+      // });
+      // setState(() {
+      //   _isLoading=false;
+      // });
     }
     _isinit=false;
     super.didChangeDependencies();

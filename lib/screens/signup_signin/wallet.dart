@@ -98,14 +98,14 @@ class _WalletState extends State<Wallet> {
                           AppButton(
                               title: 'Create a Wallet'.tr(),
                               handler: () async {
-                                setState(() {
-                                  _isLoading = true;
-                                });
-                                await Future.delayed(Duration(milliseconds: 1500),
-                                        (){});
-                                setState(() {
-                                  _isLoading = false;
-                                });
+                                // setState(() {
+                                //   _isLoading = true;
+                                // });
+                                // await Future.delayed(Duration(milliseconds: 1500),
+                                //         (){});
+                                // setState(() {
+                                //   _isLoading = false;
+                                // });
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -119,14 +119,14 @@ class _WalletState extends State<Wallet> {
                           AppButton(
                             title: 'I already have an account'.tr(),
                             handler: () async {
-                              setState(() {
-                                _isLoading = true;
-                              });
-                              await Future.delayed(Duration(milliseconds: 1500),
-                                      (){});
-                              setState(() {
-                                _isLoading = false;
-                              });
+                              // setState(() {
+                              //   _isLoading = true;
+                              // });
+                              // await Future.delayed(Duration(milliseconds: 1500),
+                              //         (){});
+                              // setState(() {
+                              //   _isLoading = false;
+                              // });
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

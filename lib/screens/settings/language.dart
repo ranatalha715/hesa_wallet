@@ -27,15 +27,15 @@ class _LanguageState extends State<Language> {
   Future<void> didChangeDependencies() async {
     // TODO: implement didChangeDependencies
     if(_isinit){
-      setState(() {
-        _isLoading=true;
-      });
-      await Future.delayed(Duration(milliseconds: 900), () {
-        print('This code will be executed after 2 seconds');
-      });
-      setState(() {
-        _isLoading=false;
-      });
+      // setState(() {
+      //   _isLoading=true;
+      // });
+      // await Future.delayed(Duration(milliseconds: 900), () {
+      //   print('This code will be executed after 2 seconds');
+      // });
+      // setState(() {
+      //   _isLoading=false;
+      // });
     }
     _isinit=false;
     super.didChangeDependencies();

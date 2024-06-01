@@ -1017,26 +1017,25 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                 child: Padding(
                                   padding: EdgeInsets.all(1.sp),
                                   child:
-                                  // ClipRRect(
-                                  //   borderRadius: BorderRadius.circular(100),
-                                  //   child: Image.network(
-                                  //     user.userAvatar!,
-                                  //     height: 55.sp,
-                                  //       width: 55.sp,
-                                  //     fit: BoxFit.cover,
-                                  //     // semanticsLabel: 'A shark?!',
-                                  //     // placeholderBuilder: (BuildContext context) => Container(
-                                  //     //     padding: const EdgeInsets.all(30.0),
-                                  //     //     child: const CircularProgressIndicator()),
-                                  //   ),
-                                  // ),
-                                  Image.asset(
-                                    // user.userAvatar!,
-                                    //     Provider.of<UserProvider>(context, listen: false).userAvatar ?? "",
-                                    "assets/images/profile.png",
-                                    height: 55.sp,
-                                    width: 55.sp,
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: user.userAvatar != null ? Image.network(
+                                      user.userAvatar!,
+                                      height: 55.sp,
+                                        width: 55.sp,
+                                      fit: BoxFit.cover,
+                                      // semanticsLabel: 'A shark?!',
+                                      // placeholderBuilder: (BuildContext context) => Container(
+                                      //     padding: const EdgeInsets.all(30.0),
+                                      //     child: const CircularProgressIndicator()),
+                                    ):
+                                    Image.asset(
+                                      "assets/images/profile.png",
+                                      height: 55.sp,
+                                      width: 55.sp,
+                                    ),
                                   ),
+
                                 ),
                               ),
                             ),

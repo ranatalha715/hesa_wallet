@@ -154,7 +154,9 @@ class AssetsProvider with ChangeNotifier {
     required String type,
   }) async {
     final url = Uri.parse(BASE_URL +
-        '/user/assets/?ownerType=$ownerType&limit=10&page=1&type=$type');
+        '/user/assets/?ownerType=$ownerType&limit=10&page=1&type=$type&walletAddress=$walletAddress'
+        // '/user/assets/?ownerType=$ownerType&limit=10&page=1&type=$type'
+    );
     // final body = {
     //   "walletAddress": walletAddress,
     // };
@@ -170,6 +172,7 @@ class AssetsProvider with ChangeNotifier {
     );
     fToast = FToast();
     fToast.init(context);
+    print('created data' + response.body);
     final extractedData = json.decode(response.body)['nfts'] as List<dynamic>?;
     final extractedCollection =
     json.decode(response.body)['collections'] as List<dynamic>?;
@@ -229,7 +232,7 @@ class AssetsProvider with ChangeNotifier {
     required String type,
   }) async {
     final url = Uri.parse(BASE_URL +
-        '/user/assets/?ownerType=$ownerType&limit=10&page=1&type=$type');
+        '/user/assets/?ownerType=$ownerType&limit=10&page=1&type=$type&walletAddress=$walletAddress');
     // final body = {
     //   "walletAddress": walletAddress,
     // };
@@ -305,7 +308,7 @@ class AssetsProvider with ChangeNotifier {
     required String type,
   }) async {
     final url = Uri.parse(BASE_URL +
-        '/user/assets/?ownerType=$ownerType&limit=10&page=1&type=$type');
+        '/user/assets/?ownerType=$ownerType&limit=10&page=1&type=$type&walletAddress=$walletAddress');
     // final body = {
     //   "walletAddress": walletAddress,
     // };

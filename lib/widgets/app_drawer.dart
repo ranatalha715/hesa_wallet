@@ -35,10 +35,12 @@ class _AppDrawerState extends State<AppDrawer> {
   var selectedIndex = -1;
   var isLoading = false;
   var accessToken = '';
+  var refreshToken = '';
 
   getaccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
+    refreshToken = prefs.getString('refreshToken')!;
   }
 
   deleteToken() async {
@@ -568,7 +570,7 @@ class _AppDrawerState extends State<AppDrawer> {
                               final result = await Provider.of<AuthProvider>(
                                       context,
                                       listen: false)
-                                  .logoutUser(token: accessToken, context: context);
+                                  .logoutUser(token: accessToken, refreshToken: refreshToken, context: context);
 
                               setState(() {
                                 isLoading = false;

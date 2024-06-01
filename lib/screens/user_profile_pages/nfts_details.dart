@@ -79,13 +79,16 @@ class _NftsDetailsState extends State<NftsDetails> {
                 height: 47.h,
                 width: 42.h,
                 child:
-                Image.network(args["image"], fit: BoxFit.cover,
-                  errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                    return Image.asset(
-                      'assets/images/nft.png', // Path to your placeholder image
-                      fit: BoxFit.cover,
-                    );
-                  },
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12.sp),
+                  child: Image.network(args["image"], fit: BoxFit.cover,
+                    errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                      return Image.asset(
+                        'assets/images/nft.png', // Path to your placeholder image
+                        fit: BoxFit.cover,
+                      );
+                    },
+                  ),
                 ),
                 // Image.asset(
                 //   "assets/images/nfts_placeholder.png",
