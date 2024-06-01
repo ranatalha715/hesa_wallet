@@ -42,6 +42,7 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
   }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -59,7 +60,6 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
           print("Error fetching wallet activities: $error");
         });
       }).catchError((error) {
-
         print("Error retrieving access token: $error");
         // You can show a snackbar or any other error handling mechanism here
       });
@@ -114,7 +114,11 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(5.sp),
                   child: Image.network(
-                    'https://images.pexels.com/photos/14354112/pexels-photo-14354112.jpeg?auto=compress&cs=tinysrgb&w=800',
+                    widget.title == "Site Connected" ||
+                            widget.title == "Site Disconnected"
+                        ? 'https://images.pexels.com/photos/14354112/pexels-photo-14354112.jpeg?auto=compress&cs=tinysrgb&w=800'
+                        : widget.image,
+                    // 'https://images.pexels.com/photos/14354112/pexels-photo-14354112.jpeg?auto=compress&cs=tinysrgb&w=800',
                     fit: BoxFit.cover,
                     height: 40.sp,
                     width: 40.sp,
@@ -283,7 +287,7 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                                     fontWeight: FontWeight.w500,
                                     fontSize: 10.2.sp,
                                     // fontSize: 10.5.sp,
-                                    color: AppColors.activityPriceredClr),
+                                    color: AppColors.textColorGreyShade2),
                               ),
                             ),
                         ],

@@ -179,6 +179,7 @@ class BankProvider with ChangeNotifier{
     print('delete bank api response' + response.body);
     fToast = FToast();
     fToast.init(context);
+    print('Delete bank response'+response.body);
     if (response.statusCode == 201) {
       // Successful login, handle navigation or other actions
       print("Bank Deleted successfully!");
