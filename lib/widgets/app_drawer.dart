@@ -154,10 +154,19 @@ class _AppDrawerState extends State<AppDrawer> {
                                     borderRadius: BorderRadius.circular(100)),
                                 child: Padding(
                                   padding: EdgeInsets.all(1.sp),
-                                  child: Image.asset(
-                                    "assets/images/profile.png",
-                                    height: 61.sp,
-                                    width: 61.sp,
+                                  child:ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: user.userAvatar != null ? Image.network(
+                                      user.userAvatar!,
+                                      height: 55.sp,
+                                      width: 55.sp,
+                                      fit: BoxFit.cover,
+                                    ):
+                                    Image.asset(
+                                      "assets/images/profile.png",
+                                      height: 55.sp,
+                                      width: 55.sp,
+                                    ),
                                   ),
                                 ),
                               ),

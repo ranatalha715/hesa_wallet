@@ -63,4 +63,5 @@ class AppColors {
   static const languageDivider = Color(0xff343535);
   static const transactionReqBorderWhole= Color(0xff2D2D2D);
   static const headerSubTitle= Color(0xff93979B);
+  static const nftsSubtitle= Color(0xff93979B);
 }

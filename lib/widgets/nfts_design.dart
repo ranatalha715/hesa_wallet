@@ -81,21 +81,37 @@ class _NftsDesignState extends State<NftsDesign> {
                     color: AppColors.textColorBlack.withOpacity(0.7),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.only(left: 5.sp, right: 5.sp),
+                    padding: EdgeInsets.only(left: 10.sp, right: 10.sp),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           widget.nfts.tokenName,
+                          overflow: TextOverflow.ellipsis,
+                          // widget.nfts.tokenName,
                           // 'Neo Cube#812'.tr(),
                           style: TextStyle(
                               color: AppColors.textColorWhite,
                               fontWeight: FontWeight.w700,
-                              fontSize: 8.8.sp),
+                              fontSize: 10.sp,
+                          fontFamily: 'Clash Display',
+                          ),
                         ),
                         SizedBox(
-                          height: 0.7.h,
+                          height: 0.2.h,
+                        ),
+                        Text(
+                          widget.nfts.status!,
+                          // widget.nfts.tokenName,
+                          // 'Neo Cube#812'.tr(),
+                          style: TextStyle(
+                              color: AppColors.nftsSubtitle,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 9.sp),
+                        ),
+                        SizedBox(
+                          height: 0.1.h,
                         ),
                         // Row(
                         //   mainAxisAlignment: MainAxisAlignment.spaceBetween,

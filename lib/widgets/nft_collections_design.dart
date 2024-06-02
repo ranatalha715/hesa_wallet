@@ -75,7 +75,7 @@ class _NftsCollectionDesignState extends State<NftsCollectionDesign> {
                   ),
                   child:
                   Padding(
-                    padding: EdgeInsets.only(left: 5.sp, right: 5.sp),
+                    padding: EdgeInsets.only(left: 10.sp, right: 10.sp),
                     child: Row(
                       // mainAxisAlignment: MainAxisAlignment.start,
                       // crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,7 +113,8 @@ class _NftsCollectionDesignState extends State<NftsCollectionDesign> {
                                 style: TextStyle(
                                     color: AppColors.textColorWhite,
                                     fontWeight: FontWeight.w700,
-                                    fontSize: 8.8.sp),
+                                  fontSize: 10.sp,
+                                  fontFamily: 'Clash Display'),
                               ),
                             ),
                             SizedBox(

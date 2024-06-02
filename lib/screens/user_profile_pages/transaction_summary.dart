@@ -329,12 +329,12 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                       height: 1.h,
                                     ),
                                     Text(
-                                      transactionSummary.txAmountType ==
-                                              'credit'
-                                          ? '+' +
-                                              transactionSummary.txTotalAmount +
-                                              ' SAR'
-                                          : '-' +
+                                      // transactionSummary.txAmountType ==
+                                      //         'credit'
+                                      //     ? '+' +
+                                      //         transactionSummary.txTotalAmount +
+                                      //         ' SAR'
+                                      //     : '-' +
                                               transactionSummary.txTotalAmount +
                                               ' SAR',
                                       style: TextStyle(
@@ -568,7 +568,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                                 final String label =
                                                     feeItem.keys.last;
                                                 final String value =
-                                                    transactionSummary.txAmountType ==
+                                                    transactionSummary.txAmountType !=
                                                         'credit' ?  feeItem[label].toString() : '- ' + feeItem[label].toString();
                                                 bool lastIndex = index ==
                                                     transactionSummary

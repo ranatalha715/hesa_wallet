@@ -462,11 +462,11 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Padding(
-                                        padding: EdgeInsets.all(9.sp),
+                                        padding: EdgeInsets.all(8.sp),
                                         child: Image.asset(
                                           "assets/images/passwordlock.png",
-                                          height: 4.h,
-                                          width: 4.h,
+                                          height: 7.h,
+                                          width: 7.h,
                                           color: themeNotifier.isDark
                                               ? AppColors.textColorWhite
                                               : AppColors.textColorBlack,
