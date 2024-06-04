@@ -17,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../constants/configs.dart';
+import '../../constants/styles.dart';
 import '../../providers/theme_provider.dart';
 import '../../widgets/app_header.dart';
 import '../../widgets/button.dart';
@@ -72,6 +73,8 @@ class _WalletAddBankState extends State<WalletAddBank> {
   final ScrollController scrollController = ScrollController();
   FocusNode _ibanfocusNode = FocusNode();
   FocusNode _beneficaryNamefocusNode = FocusNode();
+  TextEditingController _searchController = TextEditingController();
+  String _searchQuery = "";
 
   void startTimer() {
     _isTimerActive = true;
@@ -221,6 +224,7 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                   ),
                                   Container(
                                     decoration: BoxDecoration(
+                                      // color: AppColors.errorColor,
                                       // border: Border.all(
                                       //   color: _isSelected
                                       //       ? AppColors.textColorGrey
@@ -312,28 +316,109 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                           ),
                                         ),
                                         if (_isSelected)
-                                          ListView.builder(
-                                              controller: scrollController,
-                                              itemCount: banks.length,
-                                              shrinkWrap: true,
-                                              padding: EdgeInsets.zero,
-                                              itemBuilder: (context, index) {
-                                                bool isFirst = index == 0;
+                                          Stack(
+                                            children: [
+                                              Container(
+                                                // color:Colors.red,
+                                                height: 27.h,
 
-                                                bool isLast =
-                                                    index == banks.length - 1;
+                                                decoration: BoxDecoration(
+                                                    // color: AppColors.errorColor,
+                                                    color: AppColors.textFieldParentDark,
+                                                  borderRadius: BorderRadius.circular(8)
+                                                ),
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(bottom: 2.h),
+                                                  child:
+                                                  _searchQuery == "" ||
+                                                      _searchQuery.isEmpty
+                                                      ? ListView.builder(
+                                                      controller: scrollController,
+                                                      itemCount: banks.length,
+                                                      // shrinkWrap: true,
+                                                      padding: EdgeInsets.zero,
+                                                      itemBuilder: (context, index) {
+                                                        bool isFirst = index == 0;
 
-                                                return
-                                                  addBankslist(
-                                                  bankName: banks[index].bankName,
-                                                  english: isEnglish ? true : false,
-                                                  isDark: themeNotifier.isDark
-                                                      ? true
-                                                      : false,
-                                                  isLast: isLast, bankBic: banks[index].bic,
-                                                  // isFirst: isFirst,
-                                                );
-                                              }),
+                                                        bool isLast =
+                                                            index == banks.length - 1;
+
+                                                        return
+                                                          addBankslist(
+                                                          bankName: banks[index].bankName,
+                                                          english: isEnglish ? true : false,
+                                                          isDark: themeNotifier.isDark
+                                                              ? true
+                                                              : false,
+                                                          isLast: isLast, bankBic: banks[index].bic,
+                                                          // isFirst: isFirst,
+                                                        );
+                                                      }):
+                                                  ListView.builder(
+                                                      controller: scrollController,
+                                                      itemCount: banks.length,
+                                                      // shrinkWrap: true,
+                                                      padding: EdgeInsets.zero,
+                                                      itemBuilder: (context, index) {
+                                                        bool isFirst = index == 0;
+
+                                                        bool isLast =
+                                                            index == banks.length - 1;
+                                                        if (banks[index].bankName
+                                                            .toLowerCase()
+                                                            .contains(
+                                                            _searchQuery)){
+                                                          return Container();}
+                                                        else
+                                                        {return
+                                                          addBankslist(
+                                                            bankName: banks[index].bankName,
+                                                            english: isEnglish ? true : false,
+                                                            isDark: themeNotifier.isDark
+                                                                ? true
+                                                                : false,
+                                                            isLast: isLast, bankBic: banks[index].bic,
+                                                            // isFirst: isFirst,
+                                                          );}
+                                                      }),
+                                                ),
+                                              ),
+      Positioned(
+        top: 0,
+        left: 0,
+        right: 0,
+        child: Container(
+        height: 6.5.h,
+        child: TextField(
+      // autofocus: true,
+      controller: _searchController,
+      cursorColor: AppColors.textColorGreyShade2,
+      onChanged: (value) => setState(() {
+      _searchQuery = value;
+      }),
+      ),
+        decoration: BoxDecoration(
+        color: AppColors.transactionFeeBorder,
+        // border: Border.all(
+        //   color: _isSelected
+        //       ? Colors.transparent
+        //       : AppColors.textColorGrey,
+        //   width: 1.0,
+        // ),
+        // borderRadius:
+        //     BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(8.0),
+        // Radius for top-left corner
+        topRight: Radius.circular(8.0),
+        bottomLeft: Radius.circular(
+        8.0),
+        bottomRight: Radius.circular(8.0), // Radius for top-right corner
+        ),
+        ),),
+      )
+                                            ],
+                                          ),
                                       ],
                                     ),
                                   ),
