@@ -98,14 +98,15 @@ class _WalletAddBankState extends State<WalletAddBank> {
 
   void _onFocusChange() {
     setState(() {
-      _isTextFieldFocused = _ibanfocusNode.hasFocus || _beneficaryNamefocusNode.hasFocus;
-      if(_isTextFieldFocused){
+      _isTextFieldFocused =
+          _ibanfocusNode.hasFocus || _beneficaryNamefocusNode.hasFocus;
+      if (_isTextFieldFocused) {
         setState(() {
-          _isSelected=false;
+          _isSelected = false;
         });
       }
     });
- }
+  }
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -172,11 +173,11 @@ class _WalletAddBankState extends State<WalletAddBank> {
     print("testing bic" + _selectedBankBic);
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return GestureDetector(
-          onTap: () {
-            setState(() {
-              _isSelected = false;
-            });
-          },
+        onTap: () {
+          setState(() {
+            _isSelected = false;
+          });
+        },
         child: Stack(
           children: [
             Scaffold(
@@ -239,33 +240,27 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                           onTap: () => setState(() {
                                             _isSelected = !_isSelected;
                                           }),
-                                          child:
-                                          Container(
+                                          child: Container(
                                             height: 6.5.h,
                                             decoration: BoxDecoration(
-                                              color: AppColors.textFieldParentDark,
-                                              // border: Border.all(
-                                              //   color: _isSelected
-                                              //       ? Colors.transparent
-                                              //       : AppColors.textColorGrey,
-                                              //   width: 1.0,
-                                              // ),
-                                              // borderRadius:
-                                              //     BorderRadius.circular(8.0),
+                                              color:
+                                                  AppColors.textFieldParentDark,
                                               borderRadius: BorderRadius.only(
                                                 topLeft: Radius.circular(8.0),
                                                 // Radius for top-left corner
                                                 topRight: Radius.circular(8.0),
                                                 bottomLeft: Radius.circular(
                                                     _isSelected ? 0.0 : 8.0),
-                                                bottomRight: Radius.circular(_isSelected
-                                                    ? 0.0
-                                                    : 8.0), // Radius for top-right corner
+                                                bottomRight: Radius.circular(
+                                                    _isSelected
+                                                        ? 0.0
+                                                        : 8.0), // Radius for top-right corner
                                               ),
                                             ),
                                             child: Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                  horizontal: 5),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 5),
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.start,
@@ -276,18 +271,21 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                   //   width: 0.5.h,
                                                   // ),
                                                   Padding(
-                                                    padding:
-                                                        const EdgeInsets.symmetric(
-                                                            horizontal: 8.0),
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 8.0),
                                                     child: Text(
                                                       _selectedBank == ""
                                                           ? 'Select Bank'.tr()
                                                           : _selectedBank,
                                                       style: TextStyle(
-                                                          fontWeight: FontWeight.w500,
+                                                          fontWeight:
+                                                              FontWeight.w500,
                                                           fontSize: 10.2.sp,
-                                                          color: themeNotifier.isDark
-                                                              ? _selectedBank == ""
+                                                          color: themeNotifier
+                                                                  .isDark
+                                                              ? _selectedBank ==
+                                                                      ""
                                                                   ? AppColors
                                                                       .textColorGrey
                                                                   : AppColors
@@ -298,16 +296,22 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                   ),
                                                   Spacer(),
                                                   Padding(
-                                                    padding: const EdgeInsets.only(
-                                                        right: 10),
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            right: 10),
                                                     child: Icon(
                                                       _isSelected
-                                                          ? Icons.keyboard_arrow_up
-                                                          : Icons.keyboard_arrow_down,
+                                                          ? Icons
+                                                              .keyboard_arrow_up
+                                                          : Icons
+                                                              .keyboard_arrow_down,
                                                       size: 22.sp,
-                                                      color: themeNotifier.isDark
-                                                          ? AppColors.textColorGrey
-                                                          : AppColors.textColorBlack,
+                                                      color: themeNotifier
+                                                              .isDark
+                                                          ? AppColors
+                                                              .textColorGrey
+                                                          : AppColors
+                                                              .textColorBlack,
                                                     ),
                                                   )
                                                 ],
@@ -324,105 +328,180 @@ class _WalletAddBankState extends State<WalletAddBank> {
 
                                                 decoration: BoxDecoration(
                                                     // color: AppColors.errorColor,
-                                                    color: AppColors.textFieldParentDark,
-                                                  borderRadius: BorderRadius.circular(8)
-                                                ),
+                                                    color: AppColors
+                                                        .textFieldParentDark,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
                                                 child: Padding(
-                                                  padding: EdgeInsets.only(bottom: 2.h),
-                                                  child:
-                                                  _searchQuery == "" ||
-                                                      _searchQuery.isEmpty
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 2.h),
+                                                  child: _searchQuery == "" ||
+                                                          _searchQuery.isEmpty
                                                       ? ListView.builder(
-                                                      controller: scrollController,
-                                                      itemCount: banks.length,
-                                                      // shrinkWrap: true,
-                                                      padding: EdgeInsets.zero,
-                                                      itemBuilder: (context, index) {
-                                                        bool isFirst = index == 0;
+                                                          controller:
+                                                              scrollController,
+                                                          itemCount:
+                                                              banks.length,
+                                                          // shrinkWrap: true,
+                                                          padding:
+                                                              EdgeInsets.zero,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            bool isFirst =
+                                                                index == 0;
 
-                                                        bool isLast =
-                                                            index == banks.length - 1;
+                                                            bool isLast = index ==
+                                                                banks.length -
+                                                                    1;
 
-                                                        return
-                                                          addBankslist(
-                                                          bankName: banks[index].bankName,
-                                                          english: isEnglish ? true : false,
-                                                          isDark: themeNotifier.isDark
-                                                              ? true
-                                                              : false,
-                                                          isLast: isLast, bankBic: banks[index].bic,
-                                                          // isFirst: isFirst,
-                                                        );
-                                                      }):
-                                                  ListView.builder(
-                                                      controller: scrollController,
-                                                      itemCount: banks.length,
-                                                      // shrinkWrap: true,
-                                                      padding: EdgeInsets.zero,
-                                                      itemBuilder: (context, index) {
-                                                        bool isFirst = index == 0;
+                                                            return addBankslist(
+                                                              bankName:
+                                                                  banks[index]
+                                                                      .bankName,
+                                                              english: isEnglish
+                                                                  ? true
+                                                                  : false,
+                                                              isDark:
+                                                                  themeNotifier
+                                                                          .isDark
+                                                                      ? true
+                                                                      : false,
+                                                              isLast: isLast,
+                                                              bankBic:
+                                                                  banks[index]
+                                                                      .bic,
+                                                              // isFirst: isFirst,
+                                                            );
+                                                          })
+                                                      : ListView.builder(
+                                                          controller:
+                                                              scrollController,
+                                                          itemCount:
+                                                              banks.length,
+                                                          // shrinkWrap: true,
+                                                          padding:
+                                                              EdgeInsets.zero,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            bool isFirst =
+                                                                index == 0;
 
-                                                        bool isLast =
-                                                            index == banks.length - 1;
-                                                        if (banks[index].bankName
-                                                            .toLowerCase()
-                                                            .contains(
-                                                            _searchQuery)){
-                                                          return Container();}
-                                                        else
-                                                        {return
-                                                          addBankslist(
-                                                            bankName: banks[index].bankName,
-                                                            english: isEnglish ? true : false,
-                                                            isDark: themeNotifier.isDark
-                                                                ? true
-                                                                : false,
-                                                            isLast: isLast, bankBic: banks[index].bic,
-                                                            // isFirst: isFirst,
-                                                          );}
-                                                      }),
+                                                            bool isLast = index ==
+                                                                banks.length -
+                                                                    1;
+                                                            if (!banks[index]
+                                                                .bankName
+                                                                .toLowerCase()
+                                                                .contains(
+                                                                    _searchQuery)) {
+                                                              return Container();
+                                                            } else {
+                                                              return addBankslist(
+                                                                bankName: banks[
+                                                                        index]
+                                                                    .bankName,
+                                                                english:
+                                                                    isEnglish
+                                                                        ? true
+                                                                        : false,
+                                                                isDark:
+                                                                    themeNotifier
+                                                                            .isDark
+                                                                        ? true
+                                                                        : false,
+                                                                isLast: isLast,
+                                                                bankBic:
+                                                                    banks[index]
+                                                                        .bic,
+                                                                // isFirst: isFirst,
+                                                              );
+                                                            }
+                                                          }),
                                                 ),
                                               ),
-      Positioned(
-        top: 0,
-        left: 0,
-        right: 0,
-        child: Container(
-        height: 6.5.h,
-        child: TextField(
-      // autofocus: true,
-      controller: _searchController,
-      cursorColor: AppColors.textColorGreyShade2,
-      onChanged: (value) => setState(() {
-      _searchQuery = value;
-      }),
-      ),
-        decoration: BoxDecoration(
-        color: AppColors.transactionFeeBorder,
-        // border: Border.all(
-        //   color: _isSelected
-        //       ? Colors.transparent
-        //       : AppColors.textColorGrey,
-        //   width: 1.0,
-        // ),
-        // borderRadius:
-        //     BorderRadius.circular(8.0),
-        borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(8.0),
-        // Radius for top-left corner
-        topRight: Radius.circular(8.0),
-        bottomLeft: Radius.circular(
-        8.0),
-        bottomRight: Radius.circular(8.0), // Radius for top-right corner
-        ),
-        ),),
-      )
+                                              Positioned(
+                                                top: 0,
+                                                left: 0,
+                                                right: 0,
+                                                child: Container(
+                                                  height: 6.5.h,
+                                                  child: TextField(
+                                                    // autofocus: true,
+                                                    controller:
+                                                        _searchController,
+                                                    cursorColor: AppColors
+                                                        .textColorGreyShade2,
+                                                    onChanged: (value) =>
+                                                        setState(() {
+                                                      _searchQuery = value;
+                                                    }),
+                                                      style: TextStyle(
+                                                          fontSize: 10.2.sp,
+                                                          color: themeNotifier.isDark
+                                                              ? AppColors.textColorWhite
+                                                              : AppColors.textColorBlack,
+                                                          fontWeight: FontWeight.w400,
+                                                          // Off-white color,
+                                                          fontFamily: 'Inter'),
+                                                      decoration: InputDecoration(
+                                                        contentPadding: EdgeInsets.symmetric(
+                                                            vertical: 10.0, horizontal: 16.0),
+                                                        hintText:
+                                                        'Search'.tr(),
+                                                        hintStyle: TextStyle(
+                                                            fontSize: 10.2.sp,
+                                                            color: AppColors.textColorGrey,
+                                                            fontWeight: FontWeight.w400,
+                                                            // Off-white color,
+                                                            fontFamily: 'Inter'),
+                                                        suffixIcon: Icon(
+                                                          Icons.search,
+                                                          color: AppColors.textColorGrey,
+                                                        ),
+                                                        enabledBorder: OutlineInputBorder(
+                                                            borderRadius:
+                                                            BorderRadius.circular(8.0),
+                                                            borderSide: BorderSide(
+                                                              color: Colors.transparent,
+                                                              // Off-white color
+                                                              // width: 2.0,
+                                                            )),
+                                                        focusedBorder: OutlineInputBorder(
+                                                            borderRadius:
+                                                            BorderRadius.circular(8.0),
+                                                            borderSide: BorderSide(
+                                                              color: Colors.transparent,
+                                                              // Off-white color
+                                                              // width: 2.0,
+                                                            )),
+                                                        // labelText: 'Enter your password',
+                                                      ),
+                                                    ),
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors
+                                                        .transactionFeeBorder,
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                      topLeft:
+                                                          Radius.circular(8.0),
+                                                      // Radius for top-left corner
+                                                      topRight:
+                                                          Radius.circular(8.0),
+                                                      bottomLeft:
+                                                          Radius.circular(8.0),
+                                                      bottomRight: Radius.circular(
+                                                          8.0), // Radius for top-right corner
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
                                             ],
                                           ),
                                       ],
                                     ),
                                   ),
-                                  if(_selectedBank == '' && isValidating)
+                                  if (_selectedBank == '' && isValidating)
                                     Padding(
                                       padding: EdgeInsets.only(top: 7.sp),
                                       child: Text(
@@ -461,12 +540,13 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                         keyboardType: TextInputType.number,
                                         scrollPadding: EdgeInsets.only(
                                             bottom: MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom+200),
-                                        onChanged: (v)=>
-                                            setState(() {
+                                                    .viewInsets
+                                                    .bottom +
+                                                200),
+                                        onChanged: (v) => setState(() {
                                               _isSelected = false;
-                                              print("is is " + _isSelected.toString());
+                                              print("is is " +
+                                                  _isSelected.toString());
                                             }),
                                         style: TextStyle(
                                             fontSize: 10.2.sp,
@@ -479,7 +559,8 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.symmetric(
                                               vertical: 10.0, horizontal: 16.0),
-                                          hintText: 'Enter account IBAN number'.tr(),
+                                          hintText:
+                                              'Enter account IBAN number'.tr(),
                                           hintStyle: TextStyle(
                                               fontSize: 10.2.sp,
                                               color: AppColors.textColorGrey,
@@ -506,7 +587,8 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                         ),
                                         cursorColor: AppColors.textColorGrey),
                                   ),
-                                  if (_ibannumberController.text.isEmpty && isValidating)
+                                  if (_ibannumberController.text.isEmpty &&
+                                      isValidating)
                                     Padding(
                                       padding: EdgeInsets.only(top: 7.sp),
                                       child: Text(
@@ -526,7 +608,9 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                         ? Alignment.centerLeft
                                         : Alignment.centerRight,
                                     child: Text(
-                                      _accountholdernamerController.text.length >= 3
+                                      _accountholdernamerController
+                                                  .text.length >=
+                                              3
                                           ? 'Account holder name'
                                           : 'Account Beneficiary Name'.tr(),
                                       style: TextStyle(
@@ -543,7 +627,8 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                   ),
                                   TextFieldParent(
                                     child: TextField(
-                                        controller: _accountholdernamerController,
+                                        controller:
+                                            _accountholdernamerController,
                                         focusNode: _beneficaryNamefocusNode,
                                         scrollPadding: EdgeInsets.only(
                                             bottom: MediaQuery.of(context)
@@ -588,7 +673,9 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                         ),
                                         cursorColor: AppColors.textColorGrey),
                                   ),
-                                  if (_accountholdernamerController.text.isEmpty && isValidating)
+                                  if (_accountholdernamerController
+                                          .text.isEmpty &&
+                                      isValidating)
                                     Padding(
                                       padding: EdgeInsets.only(top: 7.sp),
                                       child: Text(
@@ -616,7 +703,8 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                   ? AppColors.backgroundColor
                                   : AppColors.textColorWhite,
                               child: Padding(
-                                padding:  EdgeInsets.only(bottom: 30.sp, left: 20.sp, right: 20.sp),
+                                padding: EdgeInsets.only(
+                                    bottom: 30.sp, left: 20.sp, right: 20.sp),
                                 child: Column(
                                   children: [
                                     Container(
@@ -625,44 +713,46 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                       color: AppColors.backgroundColor,
                                     ),
                                     Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Padding(
-                                          padding:  EdgeInsets.only(left: 4.sp),
+                                          padding: EdgeInsets.only(left: 4.sp),
                                           child: GestureDetector(
                                             onTap: () => setState(() {
                                               _isChecked = !_isChecked;
                                             }),
-                                            child:
-                                            Container(
+                                            child: Container(
                                               height: 2.4.h,
                                               width: 2.4.h,
                                               decoration: BoxDecoration(
-                                                // gradient: LinearGradient(
-                                                //   colors: [
-                                                //     _isChecked
-                                                //         ? Color(0xff92B928)
-                                                //         : Colors.transparent,
-                                                //     _isChecked
-                                                //         ? Color(0xffC9C317)
-                                                //         : Colors.transparent
-                                                //   ],
-                                                // ),
+                                                  // gradient: LinearGradient(
+                                                  //   colors: [
+                                                  //     _isChecked
+                                                  //         ? Color(0xff92B928)
+                                                  //         : Colors.transparent,
+                                                  //     _isChecked
+                                                  //         ? Color(0xffC9C317)
+                                                  //         : Colors.transparent
+                                                  //   ],
+                                                  // ),
                                                   border: Border.all(
-                                                      color: AppColors.textColorWhite,
+                                                      color: AppColors
+                                                          .textColorWhite,
                                                       width: 1),
                                                   borderRadius:
-                                                  BorderRadius.circular(2)),
+                                                      BorderRadius.circular(2)),
                                               child: _isChecked
                                                   ? Align(
-                                                alignment: Alignment.center,
-                                                child: Icon(
-                                                  Icons.check_rounded,
-                                                  size: 8.2.sp,
-                                                  color:
-                                                  AppColors.textColorWhite,
-                                                ),
-                                              )
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Icon(
+                                                        Icons.check_rounded,
+                                                        size: 8.2.sp,
+                                                        color: AppColors
+                                                            .textColorWhite,
+                                                      ),
+                                                    )
                                                   : SizedBox(),
                                             ),
                                           ),
@@ -672,7 +762,8 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                         // ),
                                         Expanded(
                                           child: Container(
-                                            margin: EdgeInsets.only(bottom: 3.sp),
+                                            margin:
+                                                EdgeInsets.only(bottom: 3.sp),
                                             child: Column(
                                               children: [
                                                 RichText(
@@ -680,42 +771,48 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                     children: [
                                                       TextSpan(
                                                           text:
-                                                          'I Agree to the Hesa Wallet '
-                                                              .tr(),
+                                                              'I Agree to the Hesa Wallet '
+                                                                  .tr(),
                                                           style: TextStyle(
                                                               color: AppColors
                                                                   .textColorWhite,
                                                               fontWeight:
-                                                              FontWeight.w400,
+                                                                  FontWeight
+                                                                      .w400,
                                                               fontSize: 10.sp,
-                                                              fontFamily: 'Inter')),
+                                                              fontFamily:
+                                                                  'Inter')),
                                                       TextSpan(
                                                           recognizer:
-                                                          TapGestureRecognizer()
-                                                            ..onTap = () {
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                        TermsAndConditions()),
-                                                              );
-                                                            },
+                                                              TapGestureRecognizer()
+                                                                ..onTap = () {
+                                                                  Navigator
+                                                                      .push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                TermsAndConditions()),
+                                                                  );
+                                                                },
                                                           text:
-                                                          'Terms & Conditions'.tr(),
+                                                              'Terms & Conditions'
+                                                                  .tr(),
                                                           style: TextStyle(
-                                                              color: themeNotifier
-                                                                  .isDark
+                                                              color: themeNotifier.isDark
                                                                   ? AppColors
-                                                                  .textColorToska
+                                                                      .textColorToska
                                                                   : AppColors
-                                                                  .textColorBlack,
-                                                              decoration: TextDecoration
-                                                                  .underline,
+                                                                      .textColorBlack,
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .underline,
                                                               fontWeight:
-                                                              FontWeight.w600,
+                                                                  FontWeight
+                                                                      .w600,
                                                               fontSize: 10.sp,
-                                                              fontFamily: 'Inter')),
+                                                              fontFamily:
+                                                                  'Inter')),
                                                       // TextSpan(
                                                       //     text: ' of payment receiving.'
                                                       //         .tr(),
@@ -742,12 +839,15 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                     // SizedBox(height: 3.h,),
                                     AppButton(
                                       title: 'Add Bank Account'.tr(),
-                                      isactive: isButtonActive && _isChecked  ? true : false,
+                                      isactive: isButtonActive && _isChecked
+                                          ? true
+                                          : false,
                                       handler: () async {
                                         setState(() {
                                           isValidating = true;
                                         });
-                                        if (_ibannumberController.text.isNotEmpty &&
+                                        if (_ibannumberController
+                                                .text.isNotEmpty &&
                                             _accountholdernamerController
                                                 .text.isNotEmpty &&
                                             _selectedBank != "") {
@@ -759,7 +859,8 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                       context,
                                                       listen: false)
                                                   .sendOTP(
-                                                      token: accessToken, context: context);
+                                                      token: accessToken,
+                                                      context: context);
 
                                           setState(() {
                                             _isLoading = false;
@@ -768,144 +869,183 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                             startTimer();
                                             otpDialog(
                                               events: _events,
-                                              firstBtnHandler:() async {
-                                              if (otp1Controller.text.isNotEmpty &&
-                                                  otp2Controller.text.isNotEmpty &&
-                                                  otp3Controller.text.isNotEmpty &&
-                                                  otp4Controller.text.isNotEmpty &&
-                                                  otp5Controller.text.isNotEmpty &&
-                                                  otp6Controller.text.isNotEmpty) {
-                                                setState(() {
-                                                  _isLoading = true;
-                                                });
-                                                print("before adding bank");
+                                              firstBtnHandler: () async {
+                                                if (otp1Controller.text.isNotEmpty &&
+                                                    otp2Controller
+                                                        .text.isNotEmpty &&
+                                                    otp3Controller
+                                                        .text.isNotEmpty &&
+                                                    otp4Controller
+                                                        .text.isNotEmpty &&
+                                                    otp5Controller
+                                                        .text.isNotEmpty &&
+                                                    otp6Controller
+                                                        .text.isNotEmpty) {
+                                                  setState(() {
+                                                    _isLoading = true;
+                                                  });
+                                                  print("before adding bank");
 
-                                                final resultsecond =
-                                                await Provider.of<BankProvider>(context,
-                                                    listen: false)
-                                                    .addBankAccount(
-                                                  context: context,
-                                                  token: accessToken,
-                                                  // bankName: _selectedBank,
-                                                  ibanNumber: _ibannumberController.text,
-                                                  code: otp1Controller.text +
-                                                      otp2Controller.text +
-                                                      otp3Controller.text +
-                                                      otp4Controller.text +
-                                                      otp5Controller.text +
-                                                      otp6Controller.text,
-                                                  // beneficiaryName:
-                                                  // _accountholdernamerController.text,
-                                                 bankBic: _selectedBankBic,
-                                                );
-                                                setState(() {
-                                                  _isLoading = false;
-                                                });
-                                                print("after adding bank");
-                                                if (resultsecond == AuthResult.success) {
-                                                  Navigator.pop(context);
-                                                  showDialog(
+                                                  final resultsecond =
+                                                      await Provider.of<
+                                                                  BankProvider>(
+                                                              context,
+                                                              listen: false)
+                                                          .addBankAccount(
                                                     context: context,
-                                                    builder: (BuildContext context) {
-                                                      final screenWidth =
-                                                          MediaQuery.of(context).size.width;
-                                                      final dialogWidth = screenWidth * 0.85;
-                                                      void closeDialogAndNavigate() {
-                                                        Navigator.of(context)
-                                                            .pop(); // Close the dialog
-                                                        // Navigator.of(context).pop(); // Close the
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  WalletBankingAndPaymentEmpty()),
-                                                        );
-                                                      }
-
-                                                      Future.delayed(Duration(seconds: 3),
-                                                          closeDialogAndNavigate);
-                                                      return StatefulBuilder(builder:
-                                                          (BuildContext context,
-                                                          StateSetter setState) {
-                                                        return Dialog(
-                                                          shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                            BorderRadius.circular(8.0),
-                                                          ),
-                                                          backgroundColor: Colors.transparent,
-                                                          child: BackdropFilter(
-                                                              filter: ImageFilter.blur(
-                                                                  sigmaX: 7, sigmaY: 7),
-                                                              child: Container(
-                                                                height: 23.h,
-                                                                width: dialogWidth,
-                                                                decoration: BoxDecoration(
-                                                                  // border: Border.all(
-                                                                  //     width:
-                                                                  //         0.1.h,
-                                                                  //     color: AppColors.textColorGrey),
-                                                                  color: themeNotifier.isDark
-                                                                      ? AppColors.showDialogClr
-                                                                      : AppColors.textColorWhite,
-                                                                  borderRadius:
-                                                                  BorderRadius.circular(15),
-                                                                ),
-                                                                child: Column(
-                                                                  mainAxisAlignment:
-                                                                  MainAxisAlignment.start,
-                                                                  children: [
-                                                                    SizedBox(
-                                                                      height: 4.h,
-                                                                    ),
-                                                                    Align(
-                                                                      alignment:
-                                                                      Alignment.bottomCenter,
-                                                                      child: Image.asset(
-                                                                        "assets/images/bank_popup.png",
-                                                                        height: 6.h,
-                                                                        width: 5.8.h,
-                                                                      ),
-                                                                    ),
-                                                                    SizedBox(height: 2.h),
-                                                                    Text(
-                                                                      'Your Bank account has been added'.tr(),
-                                                                      textAlign: TextAlign.center,
-                                                                      maxLines: 2,
-                                                                      style: TextStyle(
-                                                                          fontWeight:
-                                                                          FontWeight.w600,
-                                                                          fontSize: 15.sp,
-                                                                          color: themeNotifier.isDark
-                                                                              ? AppColors
-                                                                              .textColorWhite
-                                                                              : AppColors
-                                                                              .textColorBlack),
-                                                                    ),
-                                                                    SizedBox(
-                                                                      height: 4.h,
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              )),
-                                                        );
-                                                      });
-                                                    },
+                                                    token: accessToken,
+                                                    // bankName: _selectedBank,
+                                                    ibanNumber:
+                                                        _ibannumberController
+                                                            .text,
+                                                    code: otp1Controller.text +
+                                                        otp2Controller.text +
+                                                        otp3Controller.text +
+                                                        otp4Controller.text +
+                                                        otp5Controller.text +
+                                                        otp6Controller.text,
+                                                    // beneficiaryName:
+                                                    // _accountholdernamerController.text,
+                                                    bankBic: _selectedBankBic,
                                                   );
+                                                  setState(() {
+                                                    _isLoading = false;
+                                                  });
+                                                  print("after adding bank");
+                                                  if (resultsecond ==
+                                                      AuthResult.success) {
+                                                    Navigator.pop(context);
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        final screenWidth =
+                                                            MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width;
+                                                        final dialogWidth =
+                                                            screenWidth * 0.85;
+                                                        void
+                                                            closeDialogAndNavigate() {
+                                                          Navigator.of(context)
+                                                              .pop(); // Close the dialog
+                                                          // Navigator.of(context).pop(); // Close the
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        WalletBankingAndPaymentEmpty()),
+                                                          );
+                                                        }
+
+                                                        Future.delayed(
+                                                            Duration(
+                                                                seconds: 3),
+                                                            closeDialogAndNavigate);
+                                                        return StatefulBuilder(
+                                                            builder: (BuildContext
+                                                                    context,
+                                                                StateSetter
+                                                                    setState) {
+                                                          return Dialog(
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8.0),
+                                                            ),
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            child:
+                                                                BackdropFilter(
+                                                                    filter: ImageFilter.blur(
+                                                                        sigmaX:
+                                                                            7,
+                                                                        sigmaY:
+                                                                            7),
+                                                                    child:
+                                                                        Container(
+                                                                      height:
+                                                                          23.h,
+                                                                      width:
+                                                                          dialogWidth,
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        // border: Border.all(
+                                                                        //     width:
+                                                                        //         0.1.h,
+                                                                        //     color: AppColors.textColorGrey),
+                                                                        color: themeNotifier.isDark
+                                                                            ? AppColors.showDialogClr
+                                                                            : AppColors.textColorWhite,
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(15),
+                                                                      ),
+                                                                      child:
+                                                                          Column(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.start,
+                                                                        children: [
+                                                                          SizedBox(
+                                                                            height:
+                                                                                4.h,
+                                                                          ),
+                                                                          Align(
+                                                                            alignment:
+                                                                                Alignment.bottomCenter,
+                                                                            child:
+                                                                                Image.asset(
+                                                                              "assets/images/bank_popup.png",
+                                                                              height: 6.h,
+                                                                              width: 5.8.h,
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                              height: 2.h),
+                                                                          Text(
+                                                                            'Your Bank account has been added'.tr(),
+                                                                            textAlign:
+                                                                                TextAlign.center,
+                                                                            maxLines:
+                                                                                2,
+                                                                            style: TextStyle(
+                                                                                fontWeight: FontWeight.w600,
+                                                                                fontSize: 15.sp,
+                                                                                color: themeNotifier.isDark ? AppColors.textColorWhite : AppColors.textColorBlack),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            height:
+                                                                                4.h,
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    )),
+                                                          );
+                                                        });
+                                                      },
+                                                    );
+                                                  }
                                                 }
-                                              }
-                                            },
+                                              },
                                               secondBtnHandler: () async {
                                                 if (_timeLeft == 0) {
-                                                  print('resend function calling');
+                                                  print(
+                                                      'resend function calling');
                                                   try {
                                                     setState(() {
                                                       _isLoadingResend = true;
                                                     });
-                                                    final result = await Provider.of<
-                                                        AuthProvider>(context,
-                                                        listen: false)
+                                                    final result = await Provider
+                                                            .of<AuthProvider>(
+                                                                context,
+                                                                listen: false)
                                                         .sendOTP(
-                                                        context: context, token: accessToken);
+                                                            context: context,
+                                                            token: accessToken);
                                                     setState(() {
                                                       _isLoadingResend = false;
                                                     });
@@ -930,7 +1070,8 @@ class _WalletAddBankState extends State<WalletAddBank> {
 
                                               context: context,
                                               isDark: themeNotifier.isDark,
-                                              isFirstButtonActive: isOtpButtonActive,
+                                              isFirstButtonActive:
+                                                  isOtpButtonActive,
                                               isSecondButtonActive: false,
                                               otp1Controller: otp1Controller,
                                               otp2Controller: otp2Controller,
@@ -939,25 +1080,26 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                               otp5Controller: otp5Controller,
                                               otp6Controller: otp6Controller,
                                               firstFieldFocusNode:
-                                              firstFieldFocusNode,
+                                                  firstFieldFocusNode,
                                               secondFieldFocusNode:
-                                              secondFieldFocusNode,
+                                                  secondFieldFocusNode,
                                               thirdFieldFocusNode:
-                                              thirdFieldFocusNode,
+                                                  thirdFieldFocusNode,
                                               forthFieldFocusNode:
-                                              forthFieldFocusNode,
+                                                  forthFieldFocusNode,
                                               fifthFieldFocusNode:
-                                              fifthFieldFocusNode,
+                                                  fifthFieldFocusNode,
                                               sixthFieldFocusNode:
-                                              sixthFieldFocusNode,
+                                                  sixthFieldFocusNode,
                                               firstBtnBgColor:
-                                              AppColors.activeButtonColor,
+                                                  AppColors.activeButtonColor,
                                               firstBtnTextColor:
-                                              AppColors.textColorBlack,
-                                              secondBtnBgColor: Colors.transparent,
+                                                  AppColors.textColorBlack,
+                                              secondBtnBgColor:
+                                                  Colors.transparent,
                                               secondBtnTextColor: _timeLeft != 0
                                                   ? AppColors.textColorBlack
-                                                  .withOpacity(0.8)
+                                                      .withOpacity(0.8)
                                                   : AppColors.textColorWhite,
                                               // themeNotifier.isDark
                                               //     ? AppColors.textColorWhite
@@ -986,8 +1128,7 @@ class _WalletAddBankState extends State<WalletAddBank> {
                     ),
                   )
                 ])),
-            if(_isLoading)
-              LoaderBluredScreen()
+            if (_isLoading) LoaderBluredScreen()
           ],
         ),
       );
@@ -1004,8 +1145,7 @@ class _WalletAddBankState extends State<WalletAddBank> {
       width: 9.8.w,
       otpHeight: 8.h,
       color: Colors.white.withOpacity(0.15),
-      child:
-      TextField(
+      child: TextField(
         controller: controller,
         focusNode: focusNode,
         onChanged: (value) {
@@ -1045,16 +1185,14 @@ class _WalletAddBankState extends State<WalletAddBank> {
           counterText: '', // Hide the default character counter
           contentPadding: EdgeInsets.only(top: 16, bottom: 16),
           enabledBorder: OutlineInputBorder(
-              borderRadius:
-              BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(8.0),
               borderSide: BorderSide(
                 color: Colors.transparent,
                 // Off-white color
                 // width: 2.0,
               )),
           focusedBorder: OutlineInputBorder(
-              borderRadius:
-              BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(8.0),
               borderSide: BorderSide(
                 color: Colors.transparent,
                 // Off-white color
@@ -1069,7 +1207,6 @@ class _WalletAddBankState extends State<WalletAddBank> {
       //   borderRadius: BorderRadius.circular(10),
       // )
     );
-
   }
 
   Widget addBankslist({
@@ -1107,14 +1244,14 @@ class _WalletAddBankState extends State<WalletAddBank> {
                 // ),
                 // borderRadius: BorderRadius.circular(8.0),
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(_isSelected && !isLast? 0.0 :8.0 ),
+                  bottomLeft:
+                      Radius.circular(_isSelected && !isLast ? 0.0 : 8.0),
                   // Radius for top-left corner
-                  bottomRight: Radius.circular(_isSelected && !isLast? 0.0 :8.0),
-                  topLeft: Radius.circular(
-                      _isSelected ? 0.0 : 8.0),
-                  topRight: Radius.circular(_isSelected
-                      ? 0.0
-                      : 8.0), // Radius for top-right corner
+                  bottomRight:
+                      Radius.circular(_isSelected && !isLast ? 0.0 : 8.0),
+                  topLeft: Radius.circular(_isSelected ? 0.0 : 8.0),
+                  topRight: Radius.circular(
+                      _isSelected ? 0.0 : 8.0), // Radius for top-right corner
                 ),
               ),
               child: Padding(
@@ -1131,13 +1268,13 @@ class _WalletAddBankState extends State<WalletAddBank> {
                         bankName,
                         // "SNB (Saudi National Bank)".tr(),
                         style: TextStyle(
-                            fontSize: 10.2.sp,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w500,
-                            color: isDark
-                                ? AppColors.textColorWhite
-                                : AppColors.textColorBlack,
-                        overflow: TextOverflow.ellipsis,
+                          fontSize: 10.2.sp,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w500,
+                          color: isDark
+                              ? AppColors.textColorWhite
+                              : AppColors.textColorBlack,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ),
@@ -1158,5 +1295,4 @@ class _WalletAddBankState extends State<WalletAddBank> {
       ),
     );
   }
-
 }
