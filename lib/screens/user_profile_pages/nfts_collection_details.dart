@@ -78,6 +78,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                 title: args["collectionName"],
                 subTitle:  replaceMiddleWithDotsCollectionId(args["collectionId"]),
                 showSubTitle: true,
+                showLogo: true,
               ),
               SizedBox(height: 3.h),
               Container(

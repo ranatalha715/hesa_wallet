@@ -10,9 +10,10 @@ class MainHeader extends StatefulWidget {
   double? height;
   bool? IsScrolled ;
   bool showSubTitle;
+  bool showLogo;
 
   MainHeader({Key? key, required this.title, this.handler , this.height, this.IsScrolled = false,  this.subTitle,
-    this.showSubTitle=false
+    this.showSubTitle=false, this.showLogo=false
 
   })
       : super(key: key);
@@ -53,27 +54,57 @@ class _MainHeaderState extends State<MainHeader> {
           SizedBox(width: isEnglish ? 6.w : 0,),
           Padding(
             padding:  EdgeInsets.only( bottom: isEnglish ?  9.sp : 6.sp),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  widget.title,
-                  style: TextStyle(
-                      color: AppColors.textColorWhite,
-                      fontWeight: FontWeight.w700,
-                      fontSize: widget.showSubTitle ? 11.sp: 13.4.sp,
-                      fontFamily: widget.showSubTitle ? 'Clash Display' :'Inter')
+                if(widget.showLogo)
+                Align(
+                  alignment: Alignment.center,
+                  child:
+                  Container(
+                    margin: EdgeInsets.only(top: 36.sp, right: 8.sp),
+                    height: 5.h,
+                    width: 5.h,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                          5.sp),
+                      child: Image.network(
+                        // widget.nftsCollection.banner!,
+                        'https://images.pexels.com/photos/11881429/pexels-photo-11881429.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
+                        // Path to your placeholder image
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    decoration: BoxDecoration(
+                      // color: Colors.red,
+                      borderRadius: BorderRadius.circular(
+                          5.sp), // Adjust the radius as needed
+                    ),
+                  ),
                 ),
-                SizedBox(height: !widget.showSubTitle ? 0.8.h: 0.5.h,),
-                if(widget.showSubTitle)
-                  Text(
-                  widget.subTitle!,
-                  style: TextStyle(
-                      color: AppColors.headerSubTitle,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 11.3.sp,
-                      fontFamily: 'Inter'),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.title,
+                      style: TextStyle(
+                          color: AppColors.textColorWhite,
+                          fontWeight: FontWeight.w700,
+                          fontSize: widget.showSubTitle ? 11.sp: 13.4.sp,
+                          fontFamily: widget.showSubTitle ? 'Clash Display' :'Inter')
+                    ),
+                    SizedBox(height: !widget.showSubTitle ? 0.8.h: 0.5.h,),
+                    if(widget.showSubTitle)
+                      Text(
+                      widget.subTitle!,
+                      style: TextStyle(
+                          color: AppColors.headerSubTitle,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 11.3.sp,
+                          fontFamily: 'Inter'),
+                    ),
+                  ],
                 ),
               ],
             ),

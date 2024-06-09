@@ -380,6 +380,9 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                               .viewInsets
                                               .bottom),
                                       keyboardType: TextInputType.text,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]')),
+                                      ],
                                       style: TextStyle(
                                           fontSize: 10.2.sp,
                                           color: themeNotifier.isDark
