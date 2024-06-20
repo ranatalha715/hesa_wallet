@@ -325,55 +325,64 @@ Navigator.of(context)
                             ),
                           ),
                         ),
-                        child: Container(
-                          // margin: EdgeInsets.only(bottom: 15.sp),
-                          height: 10.6.h,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: AppColors.connectedSitesPopupsClr,
-                            borderRadius: BorderRadius.circular(10),
-                            // border:
-                            //     Border.all(color: AppColors.textColorGrey, width: 1)
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            child: Row(
-                              mainAxisAlignment: isEnglish
-                                  ? MainAxisAlignment.start
-                                  : MainAxisAlignment.end,
-                              children: [
-                                if (currentLocale.languageCode == 'en')
-                                  Image.asset(
-                                    "assets/images/neo.png",
-                                    height: 5.5.h,
-                                    // width: 104,
-                                  ),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                Text(
-                                  connectedSites[index].urls,
-                                  // 'NEO NFT Market',
-                                  style: TextStyle(
-                                      color: themeNotifier.isDark
-                                          ? AppColors.textColorWhite
-                                          : AppColors.textColorBlack,
-                                      fontSize: 10.5.sp,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                if (currentLocale.languageCode == 'ar')
-                                  SizedBox(
-                                    width: 15,
-                                  ),
-                                if (currentLocale.languageCode == 'ar')
-                                  Image.asset(
-                                    "assets/images/neo.png",
-                                    height: 5.5.h,
-                                    // width: 104,
-                                  ),
-                              ],
+                        child: Stack(
+                          children: [
+                            Container(
+                              height: 10.6.h,
+                              width: double.infinity,
+                               color: AppColors.tagFillClrDark
                             ),
-                          ),
+                            Container(
+                              // margin: EdgeInsets.only(bottom: 15.sp),
+                              height: 10.6.h,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: AppColors.connectedSitesPopupsClr,
+                                borderRadius: BorderRadius.circular(10),
+                                // border:
+                                //     Border.all(color: AppColors.textColorGrey, width: 1)
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                child: Row(
+                                  mainAxisAlignment: isEnglish
+                                      ? MainAxisAlignment.start
+                                      : MainAxisAlignment.end,
+                                  children: [
+                                    if (currentLocale.languageCode == 'en')
+                                      Image.asset(
+                                        "assets/images/neo.png",
+                                        height: 5.5.h,
+                                        // width: 104,
+                                      ),
+                                    SizedBox(
+                                      width: 15,
+                                    ),
+                                    Text(
+                                      connectedSites[index].urls,
+                                      // 'NEO NFT Market',
+                                      style: TextStyle(
+                                          color: themeNotifier.isDark
+                                              ? AppColors.textColorWhite
+                                              : AppColors.textColorBlack,
+                                          fontSize: 10.5.sp,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    if (currentLocale.languageCode == 'ar')
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                    if (currentLocale.languageCode == 'ar')
+                                      Image.asset(
+                                        "assets/images/neo.png",
+                                        height: 5.5.h,
+                                        // width: 104,
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     );
