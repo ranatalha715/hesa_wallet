@@ -116,24 +116,27 @@ class _SettingsState extends State<Settings> {
                               setState(() {
                                 isLoading = true;
                               });
-                              final result = await Provider.of<AuthProvider>(
-                                      context,
-                                      listen: false)
-                                  .logoutUser(token: accessToken, refreshToken: refreshToken,  context: context);
+                              final resultLogout = await Provider.of<AuthProvider>(
+                                  context,
+                                  listen: false)
+                                  .logoutUser(token: accessToken, refreshToken: refreshToken, context: context);
 
                               setState(() {
                                 isLoading = false;
                               });
-                              if (result == AuthResult.success) {
+                              if (resultLogout == AuthResult.success) {
+                                print('printing navigator');
                                 deleteToken();
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => Wallet(),
                                   ),
-                                  (route) =>
-                                      false, // This predicate ensures that all previous routes are removed.
+                                      (route) =>
+                                  false, // This predicate ensures that all previous routes are removed.
                                 );
+                              } else{
+                                print('Logout Failed');
                               }
                             } catch (error) {
                               print("Error: $error");
@@ -179,6 +182,7 @@ class _SettingsState extends State<Settings> {
   Future<void> didChangeDependencies() async {
     // TODO: implement didChangeDependencies
     if(_isinit){
+      getAccessToken();
       // setState(() {
       //   _isLoading=true;
       // });

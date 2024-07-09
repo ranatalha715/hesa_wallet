@@ -1291,7 +1291,7 @@ class _TransactionRequestAcceptRejectState
                         SizedBox(height: 1.5.h),
                         AppButton(
                             title:
-                            "Acce".tr(),
+                            "Accept".tr(),
                             handler: () async {
                               setState(() {
                                 isValidating =
@@ -1344,6 +1344,12 @@ class _TransactionRequestAcceptRejectState
                                         context,
                                         operation:
                                         operation,
+                                        code:  otp1Controller.text +
+                                            otp2Controller.text +
+                                            otp3Controller.text +
+                                            otp4Controller.text +
+                                            otp5Controller.text +
+                                            otp6Controller.text,
                                       );
                                     } else if (operation ==
                                         'rejectNFTOfferReceived') {
@@ -1361,7 +1367,14 @@ class _TransactionRequestAcceptRejectState
                                           context:
                                           context,
                                           operation:
-                                          operation);
+                                          operation,
+                                        code:  otp1Controller.text +
+                                            otp2Controller.text +
+                                            otp3Controller.text +
+                                            otp4Controller.text +
+                                            otp5Controller.text +
+                                            otp6Controller.text,
+                                      );
                                     } else if (operation ==
                                         'AcceptCollectionOffer') {
                                       await Provider.of<
@@ -1380,6 +1393,12 @@ class _TransactionRequestAcceptRejectState
                                         context,
                                         operation:
                                         operation,
+                                        code:  otp1Controller.text +
+                                            otp2Controller.text +
+                                            otp3Controller.text +
+                                            otp4Controller.text +
+                                            otp5Controller.text +
+                                            otp6Controller.text,
                                       );
                                     } else if (operation ==
                                         'rejectCollectionOfferReceived') {
@@ -1397,7 +1416,14 @@ class _TransactionRequestAcceptRejectState
                                           context:
                                           context,
                                           operation:
-                                          operation);
+                                          operation,
+                                        code:  otp1Controller.text +
+                                            otp2Controller.text +
+                                            otp3Controller.text +
+                                            otp4Controller.text +
+                                            otp5Controller.text +
+                                            otp6Controller.text,
+                                      );
                                     } else if (operation ==
                                         'makeNFTCounterOffer') {
                                       await Provider.of<
@@ -1420,6 +1446,12 @@ class _TransactionRequestAcceptRejectState
                                         counterOffererId,
                                         offerAmount:
                                         counterOffererAmount,
+                                        code:  otp1Controller.text +
+                                            otp2Controller.text +
+                                            otp3Controller.text +
+                                            otp4Controller.text +
+                                            otp5Controller.text +
+                                            otp6Controller.text,
                                       );
                                     }
                                     if (operation ==
@@ -1441,6 +1473,12 @@ class _TransactionRequestAcceptRejectState
                                         operation,
                                         params:
                                         params,
+                                        code:  otp1Controller.text +
+                                            otp2Controller.text +
+                                            otp3Controller.text +
+                                            otp4Controller.text +
+                                            otp5Controller.text +
+                                            otp6Controller.text,
                                       );
                                     } else if (operation ==
                                         'rejectNFTCounterOffer') {
@@ -1464,6 +1502,12 @@ class _TransactionRequestAcceptRejectState
                                         counterOffererId,
                                         offerAmount:
                                         counterOffererAmount,
+                                        code:  otp1Controller.text +
+                                            otp2Controller.text +
+                                            otp3Controller.text +
+                                            otp4Controller.text +
+                                            otp5Controller.text +
+                                            otp6Controller.text,
                                       );
                                     } else if (operation ==
                                         'makeCollectionCounterOffer') {
@@ -1487,6 +1531,12 @@ class _TransactionRequestAcceptRejectState
                                         counterOffererId,
                                         offerAmount:
                                         counterOffererAmount,
+                                        code:  otp1Controller.text +
+                                            otp2Controller.text +
+                                            otp3Controller.text +
+                                            otp4Controller.text +
+                                            otp5Controller.text +
+                                            otp6Controller.text,
                                       );
                                     } else if (operation ==
                                         'rejectCollectionCounterOffer') {
@@ -1510,6 +1560,12 @@ class _TransactionRequestAcceptRejectState
                                         counterOffererId,
                                         offerAmount:
                                         counterOffererAmount,
+                                        code:  otp1Controller.text +
+                                            otp2Controller.text +
+                                            otp3Controller.text +
+                                            otp4Controller.text +
+                                            otp5Controller.text +
+                                            otp6Controller.text,
                                       );
                                     } else if (operation ==
                                         'CancelCollectionOfferMade') {
@@ -1530,6 +1586,12 @@ class _TransactionRequestAcceptRejectState
                                         operation,
                                         params:
                                         params,
+                                        code:  otp1Controller.text +
+                                            otp2Controller.text +
+                                            otp3Controller.text +
+                                            otp4Controller.text +
+                                            otp5Controller.text +
+                                            otp6Controller.text,
                                       );
                                     }
                                     if (operation ==
@@ -1575,6 +1637,12 @@ class _TransactionRequestAcceptRejectState
                                         operation,
                                         params:
                                         params,
+                                        code:  otp1Controller.text +
+                                            otp2Controller.text +
+                                            otp3Controller.text +
+                                            otp4Controller.text +
+                                            otp5Controller.text +
+                                            otp6Controller.text,
                                       );
                                     } else if (operation ==
                                         'CancelListing') {
@@ -1594,6 +1662,12 @@ class _TransactionRequestAcceptRejectState
                                         operation,
                                         params:
                                         params,
+                                        code:  otp1Controller.text +
+                                            otp2Controller.text +
+                                            otp3Controller.text +
+                                            otp4Controller.text +
+                                            otp5Controller.text +
+                                            otp6Controller.text,
                                       );
                                     } else if (operation ==
                                         'CancelCollectionListing') {
@@ -1613,6 +1687,12 @@ class _TransactionRequestAcceptRejectState
                                         operation,
                                         params:
                                         params,
+                                        code:  otp1Controller.text +
+                                            otp2Controller.text +
+                                            otp3Controller.text +
+                                            otp4Controller.text +
+                                            otp5Controller.text +
+                                            otp6Controller.text,
                                       );
                                     }
 
@@ -1635,16 +1715,17 @@ class _TransactionRequestAcceptRejectState
                                       setState(() {
                                         _isLoadingResend = true;
                                       });
-                                      final result = await Provider.of<
-                                          TransactionProvider>(context,
+                                      final otpResult =
+                                      await Provider.of<AuthProvider>(context,
                                           listen: false)
-                                          .sendTransactionOTP(
-                                          token: accessToken,
-                                          context: context);
+                                          .sendOTP(
+                                        token: accessToken,
+                                        context: context,
+                                      );
                                       setState(() {
                                         _isLoadingResend = false;
                                       });
-                                      if (result ==
+                                      if (otpResult ==
                                           AuthResult.success) {
                                         startTimer();
                                       }

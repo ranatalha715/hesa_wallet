@@ -70,15 +70,15 @@ class _WalletBankingAndPaymentEmptyState
   }
 
   Future<void> refreshPage() async {
-    setState(() {
-      isLoading = true;
-    });
-    await getAccessToken();
-    await Provider.of<UserProvider>(context, listen: false)
-        .getUserDetails(token: accessToken, context: context);
-    setState(() {
-      isLoading = false;
-    });
+    // setState(() {
+    //   isLoading = true;
+    // });
+    // await getAccessToken();
+    // await Provider.of<UserProvider>(context, listen: false)
+    //     .getUserDetails(token: accessToken, context: context);
+    // setState(() {
+    //   isLoading = false;
+    // });
   }
 
   Future<void> updateBankAccountAndRefreshDetails(int index, String accessToken,
@@ -764,12 +764,15 @@ class _WalletBankingAndPaymentEmptyState
                                     ),
                                   ),
                                   _isSelectedBank
-                                      ? isLoading
-                                          ? CircularProgressIndicator(
-                                              color:
-                                                  AppColors.activeButtonColor,
-                                            )
-                                          : ListView.builder(
+                                      ?
+                                  //     isLoading
+                                  //         ?
+                                  // CircularProgressIndicator(
+                                  //             color:
+                                  //                 AppColors.activeButtonColor,
+                                  //           )
+                                  //         :
+                                  ListView.builder(
                                               controller: scrollController,
                                               itemCount: banks.length,
                                               shrinkWrap: true,
@@ -807,6 +810,10 @@ class _WalletBankingAndPaymentEmptyState
                                                   isLast: isLast,
                                                   isFirst: isFirst,
                                                   handler: () async {
+                                                    setState(() {
+                                                      isLoading=true;
+                                                    });
+                                                    // Navigator.pop(context);
                                                     await updateBankAccountAndRefreshDetails(
                                                       index,
                                                       accessToken,
@@ -814,6 +821,9 @@ class _WalletBankingAndPaymentEmptyState
                                                       banks[index].bic,
                                                       context,
                                                     );
+                                                    setState(() {
+                                                      isLoading=false;
+                                                    });
                                                   },
 
                                                   // handler: () async {
@@ -1289,6 +1299,7 @@ class _WalletBankingAndPaymentEmptyState
                               //   _isSelectedBank = !_isSelectedBank;
                               // });
                               print('before han');
+
                               handler();
 
                               print('after han');
@@ -1329,6 +1340,7 @@ class _WalletBankingAndPaymentEmptyState
                       //     enabled: false,
                       //   ),
                       // PopupMenuDivider(),
+                      if(!isPrimary)
                       PopupMenuItem<String>(
                         value: 'Delete Account'.tr(),
                         child: GestureDetector(
@@ -1666,10 +1678,33 @@ class _WalletBankingAndPaymentEmptyState
                               });
                               if (result == AuthResult.success) {
                                 Navigator.pop(context);
-                                refreshPage();
+                                // refreshPage();
                               }
                             },
                             isLoading: isDialogLoading,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                             isGradient: true,
                             // color: Colors.transparent,
                             color: AppColors.appSecondButton.withOpacity(0.10),
@@ -1693,6 +1728,9 @@ class _WalletBankingAndPaymentEmptyState
                         ),
                         Expanded(child: SizedBox())
                       ],
+
+
+
                     ),
                   )));
         });

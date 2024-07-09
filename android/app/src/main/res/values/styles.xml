@@ -17,9 +17,9 @@
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>
     <!--    DEFAULT COLORS YOU CAN OVERRIDE IN YOUR APP-->
-    <color name="headerBackground">#92B928</color>
+    <color name="headerBackground">#2B2B2B</color>
     <color name="cancelButtonTintColor">#FFFFFF</color>
-    <color name="listMarkTintColor">#92B928</color>
-    <color name="cameraTintColor">#92B928</color>
-    <color name="checkboxButtonTintColor">#92B928</color>
+    <color name="listMarkTintColor">#2B2B2B</color>
+    <color name="cameraTintColor">#2B2B2B</color>
+    <color name="checkboxButtonTintColor">#2B2B2B</color>
 </resources>

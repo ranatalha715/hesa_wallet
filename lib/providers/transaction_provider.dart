@@ -5,10 +5,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:hyperpay_plugin/flutter_hyperpay.dart';
+import 'package:hyperpay_plugin/model/ready_ui.dart';
 import 'package:sizer/sizer.dart';
 import '../constants/app_deep_linking.dart';
 import '../constants/colors.dart';
 import '../constants/configs.dart';
+import '../constants/inapp_settings.dart';
 import '../models/activity.dart';
 
 class TransactionProvider with ChangeNotifier {
@@ -19,6 +22,8 @@ class TransactionProvider with ChangeNotifier {
   var selectedCardTokenId;
   var selectedCardNum;
   var selectedCardBrand;
+  var selectedPaymentMethod='cards';
+  bool showRedDot=false;
 
   // var decodedMetaData;
 
@@ -107,9 +112,7 @@ class TransactionProvider with ChangeNotifier {
             transactionAmount: prodData['amount']['value'].toString(),
             tokenName: prodData['name'].toString(),
             // Fetching nameEn
-            image:
-
-            prodData['image'].toString(),
+            image: prodData['image'].toString(),
             time:
                 calculateTimeDifference(DateTime.parse(prodData['timestamp'])),
             siteURL: prodData['siteURL'].toString(),
@@ -172,8 +175,101 @@ class TransactionProvider with ChangeNotifier {
   List<Map<String, dynamic>> get transactionFeeses {
     return [..._transactionFeeses];
   }
+  late FlutterHyperPay flutterHyperPay;
+  Future<void> getCheckOut(BuildContext context, String token) async {
+    final url = Uri.parse('https://eu-test.oppwa.com/v1/checkouts');
+    final headers = {
+      'Authorization':
+      'Bearer OGFjN2E0Yzk4YWE1MzM5ZjAxOGFhNzYxOTIwMTAyNWZ8MnpoY2ozY2tXcg==', // unique
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    final body = {
+      'entityId': '8ac7a4c78ea8442e018ea86ab2da00c5', // unique
+      'amount': '1192.00',
+      'currency': 'SAR',
+      'paymentType': 'DB',
+    };
 
+    final response = await http.post(
+      url,
+      headers: headers,
+      body: body,
+    );
 
+    if (response.statusCode == 200) {
+      flutterHyperPay = FlutterHyperPay(
+        shopperResultUrl: InAppPaymentSetting.shopperResultUrl,
+        paymentMode: PaymentMode.test,
+        lang: 'en_US',
+      );
+      print('doing payment using checkout id');
+      print(json.decode(response.body)['id']);
+      payRequestNowReadyUI(
+        brandsName: [
+          "APPLEPAY",
+        ],
+        checkoutId: json.decode(response.body)['id'],
+        authToken: token,
+        context: context,
+      );
+    } else {
+      // dev.log(response.body.toString(), name: "STATUS CODE ERROR");
+      print('printing checkout error');
+    }
+  }
+
+  Future<AuthResult> payRequestNowReadyUI({
+    required List<String> brandsName,
+    required String checkoutId,
+    required String authToken,
+    required BuildContext context,
+  }) async {
+    PaymentResultData paymentResultData;
+    paymentResultData = await flutterHyperPay.readyUICards(
+      readyUI: ReadyUI(
+        brandsName: brandsName,
+        checkoutId: checkoutId,
+        merchantIdApplePayIOS: InAppPaymentSetting.merchantId,
+        countryCodeApplePayIOS: InAppPaymentSetting.countryCode,
+        companyNameApplePayIOS: "Hesa Wallet",
+        themColorHexIOS: "#000000",
+
+        // FOR IOS ONLY
+        // setStorePaymentDetailsMode:
+        //     true // store payment details for future use
+        // brandName: 'VISA',
+        // checkoutId: checkoutId,
+        // cardNumber: "4440000009900010",
+        // holderName: "test name",
+        // month: '01',
+        // year: '2039',
+        // cvv: '100',
+        // enabledTokenization: false,
+      ),
+    );
+    fToast = FToast();
+    fToast.init(context);
+
+    if (paymentResultData.paymentResult == PaymentResult.success ||
+        paymentResultData.paymentResult == PaymentResult.sync) {
+      // print('payment success');
+      _showToast('You have paid with card successfully!', duration: 3000);
+      print("Payment Result ");
+      print(paymentResultData.toString());
+      // getpaymentstatus(checkoutId);
+      // print("checkoutId");
+      // print(checkoutId);
+      return AuthResult.success;
+
+      // do something
+    } else {
+      _showToast('Payment Failed!', duration: 3000);
+      // print('payment failed');
+      print("Payment Result ");
+      print(paymentResultData.errorString);
+      return AuthResult.failure;
+    }
+  }
   Future<AuthResult> getTransactionSummary({
     required String accessToken,
     required String id,
@@ -1573,6 +1669,7 @@ class TransactionProvider with ChangeNotifier {
     required String params,
     required String token,
     required String operation,
+    required String code,
     required String walletAddress,
     // required String country,
     required BuildContext context,
@@ -1588,7 +1685,7 @@ class TransactionProvider with ChangeNotifier {
       "func": "AcceptOffer",
       "walletAddress": walletAddress,
       "country": "PK",
-      "code": "0001",
+      "code": code,
       "params": paramsMap,
     };
 
@@ -1618,7 +1715,7 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'AcceptOfferNFT',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation,
+        functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         return AuthResult.success;
       } else {
@@ -1628,7 +1725,7 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'AcceptOfferNFT',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation,
+        functionToNavigateAfterNonPayable(response.body.toString(), operation,context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
@@ -1640,6 +1737,7 @@ class TransactionProvider with ChangeNotifier {
       functionToNavigateAfterNonPayable(
         e.toString(),
         operation,
+        context,
       );
       return AuthResult.failure;
     }
@@ -1649,6 +1747,7 @@ class TransactionProvider with ChangeNotifier {
     required String params,
     required String token,
     required String operation,
+    required String code,
     required String walletAddress,
     // required String country,
     required BuildContext context,
@@ -1665,7 +1764,7 @@ class TransactionProvider with ChangeNotifier {
       "func": "AcceptCollectionOffer",
       "walletAddress": walletAddress,
       "country": "PK",
-      "code": "0001",
+      "code": code,
       "params": paramsMap,
     };
 
@@ -1695,7 +1794,7 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'AcceptCollectionOffer',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation,
+        functionToNavigateAfterNonPayable(response.body.toString(), operation,context,
             statusCode: response.statusCode.toString());
         return AuthResult.success;
       } else {
@@ -1705,7 +1804,7 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'AcceptCollectionOffer',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation,
+        functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
@@ -1718,7 +1817,7 @@ class TransactionProvider with ChangeNotifier {
           description: e.toString());
       functionToNavigateAfterNonPayable(
         e.toString(),
-        operation,
+        operation,context,
       );
       return AuthResult.failure;
     }
@@ -1728,6 +1827,7 @@ class TransactionProvider with ChangeNotifier {
     required String params,
     required String token,
     required String walletAddress,
+    required String code,
     required String operation,
     // required String country,
     required BuildContext context,
@@ -1744,7 +1844,7 @@ class TransactionProvider with ChangeNotifier {
       "func": "RejectOffer",
       "walletAddress": walletAddress,
       "country": "PK",
-      "code": "0001",
+      "code": code,
       "params": paramsMap,
     };
 
@@ -1773,7 +1873,7 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'rejectNFTOfferReceived',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation,
+        functionToNavigateAfterNonPayable(response.body.toString(), operation,context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
 
@@ -1785,7 +1885,7 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'rejectNFTOfferReceived',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation,
+        functionToNavigateAfterNonPayable(response.body.toString(), operation,context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
@@ -1798,7 +1898,7 @@ class TransactionProvider with ChangeNotifier {
           description: e.toString());
       functionToNavigateAfterNonPayable(
         e.toString(),
-        operation,
+        operation, context,
       );
       return AuthResult.failure;
     }
@@ -1809,6 +1909,7 @@ class TransactionProvider with ChangeNotifier {
     required String token,
     required String walletAddress,
     required String operation,
+    required String code,
     // required String country,
     required BuildContext context,
   }) async {
@@ -1824,7 +1925,7 @@ class TransactionProvider with ChangeNotifier {
       "func": "RejectCollectionOffer",
       "walletAddress": walletAddress,
       "country": "PK",
-      "code": "0001",
+      "code": code,
       "params": paramsMap,
     };
 
@@ -1853,7 +1954,7 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'RejectCollectionOffer',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation,
+        functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
 
@@ -1865,7 +1966,7 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'RejectCollectionOffer',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation,
+        functionToNavigateAfterNonPayable(response.body.toString(), operation,context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
@@ -1878,7 +1979,7 @@ class TransactionProvider with ChangeNotifier {
           description: e.toString());
       functionToNavigateAfterNonPayable(
         e.toString(),
-        operation,
+        operation,context,
       );
       return AuthResult.failure;
     }
@@ -1888,6 +1989,7 @@ class TransactionProvider with ChangeNotifier {
     required String params,
     required String token,
     required String operation,
+    required String code,
     required String walletAddress,
     // required String country,
     required BuildContext context,
@@ -1902,7 +2004,7 @@ class TransactionProvider with ChangeNotifier {
       "func": "CancelOffer",
       "walletAddress": walletAddress,
       "country": "PK",
-      "code": "0001",
+      "code": code,
       "params": paramsMap,
     };
 
@@ -1931,7 +2033,8 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'CancelNFTOfferMade',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation,
+        
+        functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
         return AuthResult.success;
@@ -1942,7 +2045,7 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'CancelNFTOfferMade',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation,
+        functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
@@ -1953,7 +2056,7 @@ class TransactionProvider with ChangeNotifier {
           context: context,
           title: 'CancelNFTOfferMade',
           description: e.toString());
-      functionToNavigateAfterNonPayable(e.toString(), operation);
+      functionToNavigateAfterNonPayable(e.toString(), operation, context,);
       return AuthResult.failure;
     }
   }
@@ -2006,7 +2109,7 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'CancelAuctionListing',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation,
+        functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
         return AuthResult.success;
@@ -2017,7 +2120,7 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'CancelAuctionListing',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation,
+        functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
@@ -2028,7 +2131,7 @@ class TransactionProvider with ChangeNotifier {
           context: context,
           title: 'CancelAuctionListing',
           description: e.toString());
-      functionToNavigateAfterNonPayable(e.toString(), operation);
+      functionToNavigateAfterNonPayable(e.toString(), operation, context,);
       return AuthResult.failure;
     }
   }
@@ -2037,6 +2140,7 @@ class TransactionProvider with ChangeNotifier {
     required String params,
     required String token,
     required String operation,
+    required String code,
     required String walletAddress,
     // required String country,
     required BuildContext context,
@@ -2051,7 +2155,7 @@ class TransactionProvider with ChangeNotifier {
       "func": "CancelCollectionAuctionListing",
       "walletAddress": walletAddress,
       "country": "PK",
-      "code": "0001",
+      "code": code,
       "params": paramsMap,
     };
 
@@ -2080,7 +2184,7 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'CancelCollectionAuctionListing',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation,
+        functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
         return AuthResult.success;
@@ -2091,7 +2195,7 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'CancelCollectionAuctionListing',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation,
+        functionToNavigateAfterNonPayable(response.body.toString(), operation,context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
@@ -2102,7 +2206,7 @@ class TransactionProvider with ChangeNotifier {
           context: context,
           title: 'CancelCollectionAuctionListing',
           description: e.toString());
-      functionToNavigateAfterNonPayable(e.toString(), operation);
+      functionToNavigateAfterNonPayable(e.toString(), operation, context,);
       return AuthResult.failure;
     }
   }
@@ -2111,6 +2215,7 @@ class TransactionProvider with ChangeNotifier {
     required String params,
     required String token,
     required String operation,
+    required String code,
     required String walletAddress,
     // required String country,
     required BuildContext context,
@@ -2125,7 +2230,7 @@ class TransactionProvider with ChangeNotifier {
       "func": "CancelListing",
       "walletAddress": walletAddress,
       "country": "PK",
-      "code": "0001",
+      "code": code,
       "params": paramsMap,
     };
 
@@ -2154,7 +2259,7 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'CancelListing',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation,
+        functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
         return AuthResult.success;
@@ -2165,7 +2270,7 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'CancelListing',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation,
+        functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
@@ -2174,7 +2279,7 @@ class TransactionProvider with ChangeNotifier {
       _showToast('Error');
       testDialogToCheck(
           context: context, title: 'CancelListing', description: e.toString());
-      functionToNavigateAfterNonPayable(e.toString(), operation);
+      functionToNavigateAfterNonPayable(e.toString(), operation,context,);
       return AuthResult.failure;
     }
   }
@@ -2183,6 +2288,7 @@ class TransactionProvider with ChangeNotifier {
     required String params,
     required String token,
     required String operation,
+    required String code,
     required String walletAddress,
     // required String country,
     required BuildContext context,
@@ -2197,7 +2303,7 @@ class TransactionProvider with ChangeNotifier {
       "func": "CancelCollectionListing",
       "walletAddress": walletAddress,
       "country": "PK",
-      "code": "0001",
+      "code": code,
       "params": paramsMap,
     };
 
@@ -2226,7 +2332,7 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'CancelCollectionListing',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation,
+        functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
         return AuthResult.success;
@@ -2237,7 +2343,7 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'CancelCollectionListing',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation,
+        functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
@@ -2248,7 +2354,7 @@ class TransactionProvider with ChangeNotifier {
           context: context,
           title: 'CancelCollectionListing',
           description: e.toString());
-      functionToNavigateAfterNonPayable(e.toString(), operation);
+      functionToNavigateAfterNonPayable(e.toString(), operation, context,);
       return AuthResult.failure;
     }
   }
@@ -2258,6 +2364,7 @@ class TransactionProvider with ChangeNotifier {
     required String token,
     required String operation,
     required String walletAddress,
+    required String code,
     required BuildContext context,
   }) async {
     final url = Uri.parse(BASE_URL + '/non-payable-transactions/send');
@@ -2270,7 +2377,7 @@ class TransactionProvider with ChangeNotifier {
       "func": "CancelCollectionOffer",
       "walletAddress": walletAddress,
       "country": "PK",
-      "code": "0001",
+      "code": code,
       "params": paramsMap,
     };
 
@@ -2304,7 +2411,7 @@ class TransactionProvider with ChangeNotifier {
             context: context,
             title: 'CancelCollectionOfferMade not working',
             description: response.body.toString());
-        functionToNavigateAfterNonPayable(response.body.toString(), operation,
+        functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
@@ -2315,14 +2422,14 @@ class TransactionProvider with ChangeNotifier {
           context: context,
           title: 'CancelCollectionOfferMade not working',
           description: e.toString());
-      functionToNavigateAfterNonPayable(e.toString(), operation);
+      functionToNavigateAfterNonPayable(e.toString(), operation, context,);
       return AuthResult.failure;
     }
   }
 
-  functionToNavigateAfterNonPayable(String response, String operation,
+  functionToNavigateAfterNonPayable(String response, String operation, BuildContext context,
       {String statusCode = ''}) {
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () async {
       AppDeepLinking().openNftApp(
         {
           "operation": operation,
@@ -2331,13 +2438,17 @@ class TransactionProvider with ChangeNotifier {
           "comments": "Non payable transactions response",
         },
       );
+      await Navigator.of(context)
+          .pushNamedAndRemoveUntil(
+          'nfts-page', (Route d) => false,
+          arguments: {});
     });
   }
 
   functionToNavigateAfterPayable(
       String response, String operation, BuildContext context,
       {String statusCode = ''}) {
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(Duration(seconds: 1), () async {
       //reme later
       print('statusCode' + statusCode.toString());
       AppDeepLinking().openNftApp(
@@ -2348,6 +2459,10 @@ class TransactionProvider with ChangeNotifier {
           "comments": "payable transactions response",
         },
       );
+      await Navigator.of(context)
+          .pushNamedAndRemoveUntil(
+          'nfts-page', (Route d) => false,
+          arguments: {});
     });
   }
 
@@ -2374,6 +2489,7 @@ class TransactionProvider with ChangeNotifier {
     required String id,
     required String offererId,
     required String offerAmount,
+    required String code,
     required String walletAddress,
   }) async {
     final url = Uri.parse(BASE_URL + '/counter-offer');
@@ -2383,6 +2499,7 @@ class TransactionProvider with ChangeNotifier {
       "offererId": offererId,
       // "offererId": offererId,
       "offerAmount": int.parse(offerAmount),
+      "code": code,
     };
 
     try {
@@ -2446,6 +2563,7 @@ class TransactionProvider with ChangeNotifier {
     required String offererId,
     required String offerAmount,
     required String walletAddress,
+    required String code,
   }) async {
     final url = Uri.parse(BASE_URL + '/counter-offer/collection');
 
@@ -2453,6 +2571,7 @@ class TransactionProvider with ChangeNotifier {
       "id": id,
       "offererId": offererId,
       "offerAmount": int.parse(offerAmount),
+      "code": code,
     };
     fToast = FToast();
     fToast.init(context);
@@ -2515,6 +2634,7 @@ class TransactionProvider with ChangeNotifier {
     required String offererId,
     required String offerAmount,
     required String walletAddress,
+    required String code,
   }) async {
     final url = Uri.parse(BASE_URL + '/counter-offer/reject');
 
@@ -2522,6 +2642,7 @@ class TransactionProvider with ChangeNotifier {
       "id": id,
       "offererId": offererId,
       "offerAmount": int.parse(offerAmount),
+      "code": code,
     };
 
     try {
@@ -2582,6 +2703,7 @@ class TransactionProvider with ChangeNotifier {
     required String operation,
     required BuildContext context,
     required String id,
+    required String code,
     required String offererId,
     required String offerAmount,
     required String walletAddress,
@@ -2591,6 +2713,7 @@ class TransactionProvider with ChangeNotifier {
     var requestBody = {
       "id": id,
       "offererId": offererId,
+      "code": code,
       "offerAmount": int.parse(offerAmount),
     };
 

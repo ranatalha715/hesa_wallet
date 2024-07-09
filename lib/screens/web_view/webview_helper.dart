@@ -49,6 +49,11 @@ class _WebviewHelperState extends State<WebviewHelper> {
     ).toString();
   }
 
+  // void _updateCheckoutId(WebViewController controller, String newCheckoutId) async {
+  //   await controller.runJavaScript("updateCheckoutId('$newCheckoutId');");
+  // }
+
+
   void _updateCheckoutId(
       WebViewController controller, String newCheckoutId) async {
     await controller.evaluateJavascript("updateCheckoutId('$newCheckoutId');");
@@ -101,16 +106,16 @@ class _WebviewHelperState extends State<WebviewHelper> {
                     child: Container(
                       child: Padding(
                         padding:  EdgeInsets.symmetric(horizontal: 10.sp, vertical: 8.sp),
-                        child: WebView(
-                          onWebViewCreated: (WebViewController webViewController) {
-                            _controller = webViewController;
-                          },
-                          onPageFinished: (String url) async {
-                            _updateCheckoutId(_controller, widget.checkoutId);
-                          },
-                          initialUrl: snapshot.data!,
-                          javascriptMode: JavascriptMode.unrestricted,
-                        ),
+                        // child: WebView(
+                        //   onWebViewCreated: (WebViewController webViewController) {
+                        //     _controller = webViewController;
+                        //   },
+                        //   onPageFinished: (String url) async {
+                        //     _updateCheckoutId(_controller, widget.checkoutId);
+                        //   },
+                        //   initialUrl: snapshot.data!,
+                        //   javascriptMode: JavascriptMode.unrestricted,
+                        // ),
                       ),
                     ),
                   ),

@@ -153,7 +153,7 @@ class AuthProvider with ChangeNotifier {
     fToast.init(context);
 print('logout response' +response.body);
     final jsonResponse = json.decode(response.body);
-    final msg = jsonResponse['msg'];
+    final msg = jsonResponse['message'];
     if (response.statusCode == 201) {
       final prefs = await SharedPreferences.getInstance();
       prefs.clear();
@@ -321,15 +321,17 @@ print('logout response' +response.body);
         _showToast('User registered successfully!');
         return AuthResult.success;
       } else {
+        final errorResponse = json.decode(response.body);
         // Registration failed
         print("Registration failed: ${response.body}");
-        _showToast('Registration failed');
+        _showToast(errorResponse['message']);
+        // _showToast('Registration failed');
         return AuthResult.failure;
       }
     } catch (e) {
       // Handle network or other errors
       print("Error during registration: $e");
-      _showToast('Registration failed');
+      _showToast('Registration failed: $e');
       return AuthResult.failure;
     }
   }
@@ -403,30 +405,41 @@ print('logout response' +response.body);
         await prefs.setString('refreshToken', refreshToken);
         await prefs.setString('password', password);
         // await updateFCM(FCM: FCM, token: token, context: context)
-        print('true ya false');
+        print('true ya false h');
         print(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet);
-        await Navigator.of(context).pushNamed(ConnectDapp.routeName, arguments: {
+               if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
 
-        });
-        // if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
-        //   await Provider.of<UserProvider>(context,listen: false).getUserDetails(context: context,
-        //       token: accessToken
-        //   );
-        //   await AppDeepLinking().openNftApp(
-        //     {
-        //       "operation": "connectWallet",
-        //       "walletAddress": Provider.of<UserProvider>(context,listen: false).walletAddress,
-        //       "userName": Provider.of<UserProvider>(context,listen: false).userName,
-        //       "userIcon": Provider.of<UserProvider>(context,listen: false).userAvatar,
-        //       "loginResponse":response.body.toString()
-        //     },
-        //   );
+                 await Navigator.of(context).pushNamed(ConnectDapp.routeName, arguments: {
+
+                 });
+
+                 // await Provider.of<UserProvider>(context,listen: false).getUserDetails(context: context,
+          //     token: accessToken
+          // );
+          // await AppDeepLinking().openNftApp(
+          //   {
+          //     "operation": "connectWallet",
+          //     "walletAddress": Provider.of<UserProvider>(context,listen: false).walletAddress,
+          //     "userName": Provider.of<UserProvider>(context,listen: false).userName,
+          //     "userIcon": Provider.of<UserProvider>(context,listen: false).userAvatar,
+          //     "loginResponse":response.body.toString()
+          //   },
+          // );
           print('go to neo');
-        // }
+        } else {
+                 await Navigator.of(context)
+                     .pushNamedAndRemoveUntil(
+                     'nfts-page', (Route d) => false,
+                     arguments: {});
+
+               }
         return AuthResult.success;
       } else {
+        final errorResponse = json.decode(response.body);
         print("Login failed: ${response.body}");
-        _showToast('Login failed  ${response.body}');
+        _showToast(errorResponse['message'],
+        height: 70,
+        );
         if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
       }
         return AuthResult.failure;
@@ -614,9 +627,9 @@ print('logout response' +response.body);
     }
   }
 
-  _showToast(String message, {int duration = 1000}) {
+  _showToast(String message, {int duration = 1000, double height=60}) {
     Widget toast = Container(
-      height: 60,
+      height: height,
       // width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       decoration: BoxDecoration(
@@ -638,7 +651,7 @@ print('logout response' +response.body);
                 overflow: TextOverflow.ellipsis,
                 // .toUpperCase(),
                 style: TextStyle(
-                    color: AppColors.backgroundColor,
+                    color: AppColors.hexaGreen,
                     fontSize: 13.sp,
                     fontWeight: FontWeight.bold)
                     .apply(fontWeightDelta: -2),

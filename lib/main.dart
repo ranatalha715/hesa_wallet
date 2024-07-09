@@ -68,7 +68,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await localized.EasyLocalization.ensureInitialized();
@@ -80,9 +79,9 @@ Future<void> main() async {
     DeviceOrientation.portraitDown, // Disable landscape mode
   ]).then((_) {
     runApp(
-      // DevicePreview(
-      // enabled: !kReleaseMode,
-      // builder: (context) =>
+        // DevicePreview(
+        // enabled: !kReleaseMode,
+        // builder: (context) =>
         MultiProvider(
             providers: [
           ChangeNotifierProvider(
@@ -165,6 +164,33 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     // }
   }
 
+  callRedDotLogic() async {
+    final prefs = await SharedPreferences.getInstance();
+    var numActivity = prefs.getInt('numOfActivities') ?? 0;
+    await Provider.of<TransactionProvider>(context, listen: false)
+        .getWalletActivities(
+            accessToken: accessToken, context: context, refresh: true);
+
+    Provider.of<TransactionProvider>(context, listen: false).showRedDot =
+        numActivity !=
+                Provider.of<TransactionProvider>(context, listen: false)
+                    .activities
+                    .length
+            ? true
+            : false;
+    print('testing red dot');
+print(numActivity);
+print( Provider.of<TransactionProvider>(context, listen: false)
+    .activities
+    .length);
+print(Provider.of<TransactionProvider>(context, listen: false).showRedDot);
+    await prefs.setInt(
+        'numOfActivities',
+        Provider.of<TransactionProvider>(context, listen: false)
+            .activities
+            .length);
+  }
+
   @override
   initState() {
     super.initState();
@@ -174,12 +200,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     fToast.init(context);
 
     getAccessToken();
-    Future.delayed(Duration(seconds: 2), () {
-      if(accessToken !='')
-      Provider.of<AuthProvider>(context, listen: false)
-          .updateFCM(FCM: fcmToken, token: accessToken, context: context);
-    });
-
+    // Future.delayed(Duration(seconds: 2), () {
+    //   if(accessToken !='') {
+    //     Provider.of<AuthProvider>(context, listen: false)
+    //       .updateFCM(FCM: fcmToken, token: accessToken, context: context);
+    //
+    //   }
+    // });
 
     WidgetsBinding.instance.addObserver(this);
 
@@ -190,8 +217,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     print('recieved data' + _receivedData);
     Timer.periodic(Duration(seconds: 3), (timer) async {
       getAccessToken();
+      callRedDotLogic();
     });
-    Timer.periodic(Duration(seconds: 30 ), (timer) async {
+    Timer.periodic(Duration(seconds: 30), (timer) async {
       await Provider.of<AuthProvider>(context, listen: false)
           .updateFCM(FCM: fcmToken, token: accessToken, context: context);
     });
@@ -220,7 +248,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
           Uri uri = Uri.parse(link);
           String? operation = uri.queryParameters['operation'];
-          print('operation ' + operation.toString());
+          print('operation this' + operation.toString());
           if (operation != null && operation == 'connectWallet') {
             // Navigate to page for MintNFT
             setState(() {
@@ -232,6 +260,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                       .navigateToNeoForConnectWallet
                       .toString());
             });
+          } else {
+            Provider.of<UserProvider>(context, listen: false)
+                .navigateToNeoForConnectWallet = false;
           }
         }
       });

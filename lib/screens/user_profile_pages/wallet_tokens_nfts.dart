@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hesa_wallet/providers/transaction_provider.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -116,7 +117,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
         .getListedAssets(
       token: accessToken,
       context: context,
-      walletAddress: user.walletAddress!, ownerType: 'listed', type: 'all',
+      walletAddress: user.walletAddress!, ownerType: 'owner', type: 'all',
     );
     await Provider.of<AssetsProvider>(context, listen: false)
         .getCreatedAssets(
@@ -920,20 +921,23 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                               : AppColors.textColorBlack,
                                           size: 25.sp,
                                         ),
-
-                                        Positioned(
-                                          right: 1,
-                                          // bottom: 2.sp,
-                                          child: Container(
-                                            height: 4.3.sp,
-                                            width: 4.3.sp,
-                                            decoration: BoxDecoration(
-                                              color: AppColors.errorColor,
-                                              borderRadius:
-                                              BorderRadius.circular(10.sp),
-                                            ),
-                                          ),
-                                        )
+        Consumer<TransactionProvider>(
+        builder: (context, TransactionProvider trP, _) {
+          return
+            Positioned(
+              right: 1,
+              // bottom: 2.sp,
+              child: Container(
+                height: 4.3.sp,
+                width: 4.3.sp,
+                decoration: BoxDecoration(
+                  color: trP.showRedDot ? AppColors.errorColor:Colors.transparent,
+                  borderRadius:
+                  BorderRadius.circular(10.sp),
+                ),
+              ),
+            );
+        }),
                                       ],
                                     ),
                                   ),
@@ -1045,7 +1049,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                           ),
                           Text(
                             user.userName != null
-                                ? user.userName! + ".mjra"
+                                ? user.userName!
                                 : 'username.mjra'.tr(),
                             style: TextStyle(
                                 fontSize: 11.7.sp,

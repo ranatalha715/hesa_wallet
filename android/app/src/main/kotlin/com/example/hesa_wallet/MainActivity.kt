@@ -1,4 +1,4 @@
-package com.example.hesa_wallet
+package com.hesa.hesawallet
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 

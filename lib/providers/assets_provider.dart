@@ -77,7 +77,8 @@ class AssetsProvider with ChangeNotifier {
     required String type,
   }) async {
     final url = Uri.parse(BASE_URL +
-        '/user/assets/?ownerType=$ownerType&limit=10&page=1&type=$type');
+        '/user/assets/?ownerType=$ownerType&limit=10&page=1&type=$type&walletAddress=$walletAddress&filter=FOR_SALE'
+    );
     // final body = {
     //   "walletAddress": walletAddress,
     // };
@@ -94,6 +95,8 @@ class AssetsProvider with ChangeNotifier {
     fToast = FToast();
     fToast.init(context);
     final extractedData = json.decode(response.body)['nfts'] as List<dynamic>?;
+    print("extractedData");
+    print(json.decode(response.body));
     final extractedCollection =
         json.decode(response.body)['collections'] as List<dynamic>?;
     if (response.statusCode == 200) {

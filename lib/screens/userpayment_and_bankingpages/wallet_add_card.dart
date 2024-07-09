@@ -16,7 +16,7 @@ import 'package:hyperpay_plugin/model/ready_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+// import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../constants/inapp_settings.dart';
 import '../../providers/card_provider.dart';

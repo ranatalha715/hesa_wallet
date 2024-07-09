@@ -376,7 +376,7 @@ class _AppDrawerState extends State<AppDrawer> {
                             index: 6,
                             isLast: true,
                             handler: () {
-                              Navigator.pop(context);
+                              // Navigator.pop(context);
                               logOutFunction(themeNotifier.isDark);
                             },
                           )
@@ -576,7 +576,7 @@ class _AppDrawerState extends State<AppDrawer> {
                               setState(() {
                                 isLoading = true;
                               });
-                              final result = await Provider.of<AuthProvider>(
+                              final resultLogout = await Provider.of<AuthProvider>(
                                       context,
                                       listen: false)
                                   .logoutUser(token: accessToken, refreshToken: refreshToken, context: context);
@@ -584,7 +584,8 @@ class _AppDrawerState extends State<AppDrawer> {
                               setState(() {
                                 isLoading = false;
                               });
-                              if (result == AuthResult.success) {
+                              if (resultLogout == AuthResult.success) {
+                                print('printing navigator');
                                 deleteToken();
                                 Navigator.pushAndRemoveUntil(
                                   context,
@@ -594,6 +595,8 @@ class _AppDrawerState extends State<AppDrawer> {
                                   (route) =>
                                       false, // This predicate ensures that all previous routes are removed.
                                 );
+                              } else{
+                                print('Logout Failed');
                               }
                             } catch (error) {
                               print("Error: $error");

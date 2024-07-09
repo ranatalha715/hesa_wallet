@@ -49,23 +49,25 @@ dependencies:
   url_launcher:
 #  url_launcher: ^6.1.12
   shared_preferences: ^2.2.0
-  http: ^0.13.5
+  http: ^1.2.1
   sms_autofill: ^2.3.0
   dio: ^5.3.3
   cached_network_image: ^3.3.0
+#  webview_flutter: ^4.8.0
   webview_flutter: ^2.0.13
-  flutter_inappwebview: ^5.7.1
+#  flutter_inappwebview: ^5.7.1
 #  hyperpay:
-  hyperpay_plugin: ^2.0.5
-  firebase_messaging: ^14.7.3
+  hyperpay_plugin: ^2.0.8
+  firebase_messaging: ^15.0.1
   local_auth: ^2.0.1
   flutter_svg: ^2.0.9
   app_settings: ^5.0.0
   fluttertoast: ^8.2.2
   jwt_decoder: ^2.0.1
-  flutter_keyboard_visibility: ^5.4.0
+  flutter_keyboard_visibility: ^6.0.0
   connectivity_plus: ^5.0.2
   page_transition: ^2.0.9
+  uni_links: ^0.5.1
   deep_linking:
 #   path: C:\Users\Talha's PC\AndroidStudioProjects\deepinking_module
    path: ../deepinking_module
@@ -81,7 +83,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^1.0.0
+  flutter_lints: ^4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

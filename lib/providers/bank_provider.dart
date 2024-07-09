@@ -182,14 +182,16 @@ class BankProvider with ChangeNotifier{
     print('Delete bank response'+response.body);
     if (response.statusCode == 201) {
       // Successful login, handle navigation or other actions
+      final successResponse = json.decode(response.body);
       print("Bank Deleted successfully!");
-      _showToast('Bank Deleted successfully!');
+      _showToast(successResponse['message']);
       // Perform any additional actions upon successful bank addition
       return AuthResult.success;
     } else {
       // Show an error message or handle the response as needed
+      final errorResponse = json.decode(response.body);
       print("Bank is not Deleted yet: ${response.body}");
-      _showToast('Bank is not Deleted yet');
+      _showToast(errorResponse['message']);
       return AuthResult.failure;
     }
   }
@@ -218,7 +220,7 @@ class BankProvider with ChangeNotifier{
                 overflow: TextOverflow.ellipsis,
                 // .toUpperCase(),
                 style: TextStyle(
-                    color: AppColors.backgroundColor,
+                    color: AppColors.hexaGreen,
                     fontSize: 13.sp,
                     fontWeight: FontWeight.bold)
                     .apply(fontWeightDelta: -2),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hesa_wallet/constants/footer_text.dart';
@@ -25,6 +27,7 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   bool _obscurePassword = true;
+  late Timer _timer;
   var _isLoading = false;
   var _savedPassCode;
   bool isButtonActive = false;
@@ -42,8 +45,29 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   @override
+  void initState()  {
+    getSavedPassCode();
+    _passwordController.addListener(_updateButtonState);
+    _passwordController.addListener(_limitInputLength);
+    // TODO: implement initState
+    super.initState();
+    _timer = Timer.periodic(Duration(milliseconds: 500), (timer) {
+      setState(() {
+        // Convert entered digits to asterisks
+        for (int i = 0; i < numbers.length; i++) {
+          if (numbers[i].isNotEmpty) {
+            numbers[i] = '*';
+          }
+        }
+        isFirstFieldFilled = numbers[0].isNotEmpty;
+      });
+    });
+  }
+
+  @override
   void dispose() {
     _passwordController.dispose();
+    _timer.cancel();
     super.dispose();
   }
 
@@ -53,15 +77,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     _savedPassCode = prefs.getString('passcode') ?? "";
   }
 
-  @override
-   void initState()  {
-    getSavedPassCode();
-    _passwordController.addListener(_updateButtonState);
-    _passwordController.addListener(_limitInputLength);
-    // TODO: implement initState
-    super.initState();
 
-  }
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -473,12 +489,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             setState(() {
               isMatched=true;
             });
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => WalletTokensNfts(),
-              ),
-            );
+
+
+            Future.delayed(
+                Duration(milliseconds: 700),
+                    () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WalletTokensNfts(),
+                    ),
+                  );
+                });
             // savePasscode(resultToSave);
             // Navigator.of(context).pushReplacementNamed(
             //     SetConfirmPinScreen.routeName,

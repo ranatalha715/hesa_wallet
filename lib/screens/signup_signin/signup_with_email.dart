@@ -694,19 +694,19 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                           color: AppColors.errorColor),
                                     ),
                                   ),
-                                if (!_isPasswordValid &&
-                                    isValidating &&
-                                    _passwordController.text.isNotEmpty)
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 7.sp),
-                                    child: Text(
-                                      "*Password must meet requirements",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 10.sp,
-                                          color: AppColors.errorColor),
-                                    ),
-                                  ),
+                                // if (!_isPasswordValid &&
+                                //     isValidating &&
+                                //     _passwordController.text.isNotEmpty)
+                                //   Padding(
+                                //     padding: EdgeInsets.only(top: 7.sp),
+                                //     child: Text(
+                                //       "*Password must meet requirements",
+                                //       style: TextStyle(
+                                //           fontWeight: FontWeight.w400,
+                                //           fontSize: 10.sp,
+                                //           color: AppColors.errorColor),
+                                //     ),
+                                //   ),
                                 SizedBox(height: 2.h),
                                 Text(
                                   "Password must contain".tr(),
