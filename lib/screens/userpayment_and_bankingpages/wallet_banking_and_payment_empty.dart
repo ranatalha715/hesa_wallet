@@ -1340,7 +1340,7 @@ class _WalletBankingAndPaymentEmptyState
                       //     enabled: false,
                       //   ),
                       // PopupMenuDivider(),
-                      if(!isPrimary)
+                      // if(!isPrimary)
                       PopupMenuItem<String>(
                         value: 'Delete Account'.tr(),
                         child: GestureDetector(
@@ -1682,29 +1682,6 @@ class _WalletBankingAndPaymentEmptyState
                               }
                             },
                             isLoading: isDialogLoading,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                             isGradient: true,
                             // color: Colors.transparent,
                             color: AppColors.appSecondButton.withOpacity(0.10),

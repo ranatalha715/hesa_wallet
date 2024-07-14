@@ -53,7 +53,7 @@ class _MainHeaderState extends State<MainHeader> {
           ),
           SizedBox(width: isEnglish ? 6.w : 0,),
           Padding(
-            padding:  EdgeInsets.only( bottom: isEnglish ?  9.sp : 6.sp),
+            padding:  EdgeInsets.only( bottom: isEnglish ?  9.sp : 6.sp, left:    widget.showLogo? 0.0:10.sp),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -91,17 +91,17 @@ class _MainHeaderState extends State<MainHeader> {
                       style: TextStyle(
                           color: AppColors.textColorWhite,
                           fontWeight: FontWeight.w700,
-                          fontSize: widget.showSubTitle ? 11.sp: 13.4.sp,
+                          fontSize: widget.showSubTitle ? 10.5.sp: 13.4.sp,
                           fontFamily: widget.showSubTitle ? 'Clash Display' :'Inter')
                     ),
-                    SizedBox(height: !widget.showSubTitle ? 0.8.h: 0.5.h,),
+                    SizedBox(height: !widget.showSubTitle ? 0.8.h: widget.showLogo ? 0.3.h: 0.2.h,),
                     if(widget.showSubTitle)
                       Text(
                       widget.subTitle!,
                       style: TextStyle(
                           color: AppColors.headerSubTitle,
                           fontWeight: FontWeight.w600,
-                          fontSize: 11.3.sp,
+                          fontSize: 10.sp,
                           fontFamily: 'Inter'),
                     ),
                   ],

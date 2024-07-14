@@ -762,9 +762,7 @@ class _TransactionRequestAcceptRejectState
                                                             BorderRadius
                                                                 .circular(
                                                                     10.sp),
-                                                        border: Border.all(
-                                                            color: AppColors
-                                                                .transactionFeeBorder)),
+                                                    ),
                                                     child: Padding(
                                                       padding: EdgeInsets.only(
                                                           top: 13.sp,

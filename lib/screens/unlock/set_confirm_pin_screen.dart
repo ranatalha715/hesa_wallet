@@ -310,9 +310,14 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
               fontFamily: 'ArialASDCF',
             ),
           )
-              : Icon(Icons.delete,
-            size: 20.sp,
-          )
+              :
+          Image.asset(
+            "assets/images/delete_button.png",
+            height: 21.sp,
+            width: 21.sp,
+            color:
+            AppColors.textColorWhite,
+          ),
           // Image.asset(
           //   imagePath,
           //   height: 13.sp,

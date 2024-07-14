@@ -17,6 +17,8 @@ import 'package:hyperpay_plugin/model/ready_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+
+import 'dart:io' as OS;
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hyperpay_plugin/flutter_hyperpay.dart';
@@ -757,9 +759,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                       color: AppColors.transactionFeeContainer,
                                       borderRadius:
                                           BorderRadius.circular(10.sp),
-                                      border: Border.all(
-                                          color:
-                                              AppColors.transactionFeeBorder)),
+                                  ),
                                   child: Padding(
                                     padding: EdgeInsets.only(
                                         top: 13.sp,
@@ -1420,7 +1420,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 2.h),
+                                SizedBox(height: OS.Platform.isIOS ? 0.0.h : 2.h),
+                                if (OS.Platform.isIOS)
                                 GestureDetector(
                                   onTap: () {
                                     setState(() {

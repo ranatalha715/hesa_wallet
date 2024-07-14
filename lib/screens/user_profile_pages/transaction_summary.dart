@@ -344,7 +344,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                             transactionSummary.txAmountType ==
                                                     'credit'
                                                 ? AppColors.hexaGreen
-                                                : AppColors.errorColor,
+                                                : AppColors.hexaGreen,
                                       ),
                                     ),
                                     SizedBox(
@@ -517,9 +517,8 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                               AppColors.transactionFeeContainer,
                                           borderRadius:
                                               BorderRadius.circular(10.sp),
-                                          border: Border.all(
-                                              color: AppColors
-                                                  .transactionFeeBorder)),
+
+                                      ),
                                       child: Padding(
                                         padding: EdgeInsets.only(
                                             top: 13.sp,
@@ -714,7 +713,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
         children: [
           Container(
             // color: Colors.yellow,
-            width: 30.w,
+            width: 40.w,
             child: Text(
               title,
               // maxLines: 1,
@@ -728,7 +727,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
             width: 5.sp,
           ),
           Container(
-            width: 40.w,
+            width: 30.w,
             // color: Colors.blue,
             child: Text(
               details,
