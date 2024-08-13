@@ -23,6 +23,12 @@ class _NftsDesignState extends State<NftsDesign> {
   bool _isFavourite = false;
 
   @override
+
+  String _capitalize(String text) {
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1).toLowerCase();
+  }
+
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () =>
@@ -95,7 +101,7 @@ class _NftsDesignState extends State<NftsDesign> {
                                 // 'Neo Cube#812'.tr(),
                                 style: TextStyle(
                                   color: AppColors.textColorWhite,
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: FontWeight.w800,
                                   fontSize: 10.sp,
                                   fontFamily: 'Clash Display',
                                 ),
@@ -104,9 +110,7 @@ class _NftsDesignState extends State<NftsDesign> {
                                 height: 0.2.h,
                               ),
                               Text(
-                                widget.nfts.status!,
-                                // widget.nfts.tokenName,
-                                // 'Neo Cube#812'.tr(),
+                                _capitalize(widget.nfts.status!),
                                 style: TextStyle(
                                     color: AppColors.nftsSubtitle,
                                     fontWeight: FontWeight.w600,

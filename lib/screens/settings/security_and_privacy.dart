@@ -25,7 +25,7 @@ class SecurityAndPrivacy extends StatefulWidget {
 }
 
 class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
-  bool _isSelected = false;
+  bool _isSelected = true;
   final ScrollController _scrollController = ScrollController();
   final _localAuthentication = LocalAuthentication();
   bool _isUserAuthorized = false;
@@ -412,7 +412,7 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                             isLast: true,
                                             imageUrl:
                                                 "assets/images/passcode.png",
-                                            title: 'PIN code'.tr(),
+                                            title: 'Pin'.tr(),
                                             subTitle:
                                                 _isPasscodeSet
                                                     ? "Have been set up".tr()

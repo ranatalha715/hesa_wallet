@@ -73,6 +73,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
     final args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final auth=Provider.of<AuthProvider>(context, listen: false);
     return GestureDetector(
       onHorizontalDragUpdate: (details) {
         if (details.delta.dx > 0) {
@@ -206,6 +207,18 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                         color: AppColors.errorColor),
                                   ),
                                 ),
+                              if (auth.loginErrorResponse != null && _emailController.text.isNotEmpty && isValidating)
+                                Padding(
+                                  padding: EdgeInsets.only(top: 7.sp),
+                                  child: Text(
+
+                                    "*${auth.loginErrorResponse}",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 10.sp,
+                                        color: AppColors.errorColor),
+                                  ),
+                                ),
                               SizedBox(
                                 height: 2.h,
                               ),
@@ -325,6 +338,18 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                         color: AppColors.errorColor),
                                   ),
                                 ),
+                              if (auth.loginErrorResponse != null && _passwordController.text.isNotEmpty && isValidating)
+                                Padding(
+                                  padding: EdgeInsets.only(top: 7.sp),
+                                  child: Text(
+
+                                    "*${auth.loginErrorResponse}",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 10.sp,
+                                        color: AppColors.errorColor),
+                                  ),
+                                ),
                               SizedBox(height: 5.h,),
                               Expanded(child: SizedBox()),
                               AppButton(
@@ -338,6 +363,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                   setState(() {
                                     isValidating = true;
                                   });
+
                                   if (_emailController.text.isNotEmpty &&
                                       _passwordController.text.isNotEmpty) {
                                     setState(() {
@@ -345,6 +371,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                       if (_isLoading) {
                                         FocusManager.instance.primaryFocus?.unfocus();
                                       }
+                                      auth.loginErrorResponse=null;
                                     });
                                     final result =
                                         await Provider.of<AuthProvider>(

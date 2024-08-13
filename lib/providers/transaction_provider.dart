@@ -47,10 +47,18 @@ class TransactionProvider with ChangeNotifier {
     return [..._activities];
   }
   int currentPage = 1;
-
-  String calculateTimeDifference(DateTime createdAt) {
-    DateTime now = DateTime.now();
+  String calculateTimeDifference(String createdAtStr) {
+    // Parse the createdAt timestamp and ensure it's in UTC
+    DateTime createdAt = DateTime.parse(createdAtStr).toUtc();
+    // Get the current time in UTC
+    DateTime now = DateTime.now().toUtc();
+    // Calculate the difference
     Duration difference = now.difference(createdAt);
+
+    // Debug prints
+    print('Created at: $createdAt');
+    print('Now: $now');
+    print('Difference: $difference');
 
     if (difference.inSeconds < 60) {
       return '${difference.inSeconds}s';
@@ -61,47 +69,63 @@ class TransactionProvider with ChangeNotifier {
     } else if (difference.inDays < 30) {
       return '${difference.inDays}d';
     } else if (difference.inDays < 365) {
-      int months =
-          now.month - createdAt.month + (12 * (now.year - createdAt.year));
+      int months = (difference.inDays / 30).floor();
       return '$months m';
     } else {
-      int years = now.year - createdAt.year;
+      int years = (difference.inDays / 365).floor();
       return '$years y';
     }
   }
 
+
+
+  // String calculateTimeDifference(DateTime createdAt) {
+  //   DateTime now = DateTime.now();
+  //   Duration difference = now.difference(createdAt);
+  //
+  //   if (difference.inSeconds < 60) {
+  //     return '${difference.inSeconds}s';
+  //   } else if (difference.inMinutes < 60) {
+  //     return '${difference.inMinutes}m';
+  //   } else if (difference.inHours < 24) {
+  //     return '${difference.inHours}h';
+  //   } else if (difference.inDays < 30) {
+  //     return '${difference.inDays}d';
+  //   } else if (difference.inDays < 365) {
+  //     int months =
+  //         now.month - createdAt.month + (12 * (now.year - createdAt.year));
+  //     return '$months m';
+  //   } else {
+  //     int years = now.year - createdAt.year;
+  //     return '$years y';
+  //   }
+  // }
   Future<AuthResult> getWalletActivities({
     required String accessToken,
     required BuildContext context,
     bool refresh = false,
   }) async {
-    if (refresh) {
-      currentPage = 1;
-    }
     final url = Uri.parse(
       BASE_URL + '/user/wallet-activity?limit=10&page=1',
-
-      // BASE_URL + '/user/wallet-activity?limit=10&page=1'
     );
 
     final response = await http.get(
       url,
       headers: {
-        // "Content-type": "application/json",
         "Accept": "application/json",
         'Authorization': 'Bearer $accessToken',
       },
     );
-    // final dynamic responseBody = json.decode(response.body);
-    // final jsonData = json.decode(response.body)['data'];
+
     final jsonData = json.decode(response.body);
     print('jsonData' + response.body);
+
     if (response.statusCode == 200) {
       if (jsonData != null) {
         final List<dynamic> extractedData = jsonData as List<dynamic>;
         print("extracted data" + extractedData.toString());
         final List<ActivityModel> loadedActivities =
-            extractedData.map((prodData) {
+        extractedData.map((prodData) {
           final metaData = prodData['metaData'];
           final bool containsCollection = prodData['transactionType']
               .toString()
@@ -111,24 +135,18 @@ class TransactionProvider with ChangeNotifier {
             transactionType: prodData['func'].toString(),
             transactionAmount: prodData['amount']['value'].toString(),
             tokenName: prodData['name'].toString(),
-            // Fetching nameEn
             image: prodData['image'].toString(),
-            time:
-                calculateTimeDifference(DateTime.parse(prodData['timestamp'])),
+            time: calculateTimeDifference(prodData['timestamp'].toString()),
+            // time: calculateTimeDifference(DateTime.parse(prodData['timestamp'].toString())),
             siteURL: prodData['siteURL'].toString(),
             amountType: prodData['amount']['type'].toString(),
             id: prodData['id'].toString(),
             type: prodData['type'].toString(),
           );
         }).toList();
-        if (refresh) {
-          _activities = loadedActivities;
-        } else {
-          _activities.addAll(loadedActivities);
-        }
-        // _activities = loadedActivities;
+
+        _activities = loadedActivities;
         notifyListeners();
-        currentPage++;
 
         return AuthResult.success;
       } else {
@@ -140,6 +158,77 @@ class TransactionProvider with ChangeNotifier {
       return AuthResult.failure;
     }
   }
+
+  // Future<AuthResult> getWalletActivities({
+  //   required String accessToken,
+  //   required BuildContext context,
+  //   bool refresh = false,
+  // }) async {
+  //   if (refresh) {
+  //     currentPage = 1;
+  //   }
+  //   final url = Uri.parse(
+  //     BASE_URL + '/user/wallet-activity?limit=10&page=1',
+  //
+  //     // BASE_URL + '/user/wallet-activity?limit=10&page=1'
+  //   );
+  //
+  //   final response = await http.get(
+  //     url,
+  //     headers: {
+  //       // "Content-type": "application/json",
+  //       "Accept": "application/json",
+  //       'Authorization': 'Bearer $accessToken',
+  //     },
+  //   );
+  //   // final dynamic responseBody = json.decode(response.body);
+  //   // final jsonData = json.decode(response.body)['data'];
+  //   final jsonData = json.decode(response.body);
+  //   print('jsonData' + response.body);
+  //   if (response.statusCode == 200) {
+  //     if (jsonData != null) {
+  //       final List<dynamic> extractedData = jsonData as List<dynamic>;
+  //       print("extracted data" + extractedData.toString());
+  //       final List<ActivityModel> loadedActivities =
+  //           extractedData.map((prodData) {
+  //         final metaData = prodData['metaData'];
+  //         final bool containsCollection = prodData['transactionType']
+  //             .toString()
+  //             .toLowerCase()
+  //             .contains('collection');
+  //         return ActivityModel(
+  //           transactionType: prodData['func'].toString(),
+  //           transactionAmount: prodData['amount']['value'].toString(),
+  //           tokenName: prodData['name'].toString(),
+  //           // Fetching nameEn
+  //           image: prodData['image'].toString(),
+  //           time:
+  //               calculateTimeDifference(DateTime.parse(prodData['timestamp'])),
+  //           siteURL: prodData['siteURL'].toString(),
+  //           amountType: prodData['amount']['type'].toString(),
+  //           id: prodData['id'].toString(),
+  //           type: prodData['type'].toString(),
+  //         );
+  //       }).toList();
+  //       if (refresh) {
+  //         _activities = loadedActivities;
+  //       } else {
+  //         _activities.addAll(loadedActivities);
+  //       }
+  //       // _activities = loadedActivities;
+  //       notifyListeners();
+  //       currentPage++;
+  //
+  //       return AuthResult.success;
+  //     } else {
+  //       print("Activity not found in response data");
+  //       return AuthResult.failure;
+  //     }
+  //   } else {
+  //     print("Failed to fetch wallet Activities: ${response.statusCode}");
+  //     return AuthResult.failure;
+  //   }
+  // }
 
   var txTimeStamp = '';
   var txType = '';
@@ -337,6 +426,7 @@ class TransactionProvider with ChangeNotifier {
           });
 
           _transactionFeeses = feesList;
+
           notifyListeners();
           return AuthResult.success;
         } else {

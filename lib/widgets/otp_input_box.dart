@@ -10,12 +10,15 @@ class OtpInputBox extends StatefulWidget {
   final FocusNode previousFocusNode;
   final TextEditingController controller;
   final Function handler;
+  final bool incorrect;
 
   const OtpInputBox(
       {required this.focusNode,
       required this.previousFocusNode,
       required this.controller,
-      required this.handler});
+      required this.handler,
+      this.incorrect=false
+      });
 
   @override
   State<OtpInputBox> createState() => _OtpInputBoxState();
@@ -60,8 +63,9 @@ class _OtpInputBoxState extends State<OtpInputBox> {
         textAlignVertical: TextAlignVertical.bottom,
         style: TextStyle(
           color: AppColors.textColorWhite,
-          fontSize: 17.5.sp,
-          // fontWeight: FontWeight.bold,
+          fontSize: 18.sp,
+          fontWeight: FontWeight.w700,
+          fontFamily: 'Blogger Sans'
           // letterSpacing: 16,
         ),
         decoration: InputDecoration(
@@ -70,14 +74,14 @@ class _OtpInputBoxState extends State<OtpInputBox> {
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.0),
               borderSide: BorderSide(
-                color: Colors.transparent,
+                color: widget.incorrect ? AppColors.errorColor :Colors.transparent,
                 // Off-white color
                 // width: 2.0,
               )),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.0),
               borderSide: BorderSide(
-                color: Colors.transparent,
+                color: widget.incorrect ? AppColors.errorColor :Colors.transparent,
                 // Off-white color
                 // width: 2.0,
               )),

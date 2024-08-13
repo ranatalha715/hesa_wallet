@@ -22,6 +22,7 @@ class AppColors {
   static const textColorGreyShade3 = Color(0xff585B5F);
   static const activeButtonColor = Color(0xff66D71B);
   static const hexaGreen = Color(0xff66D71B);
+  static const passwordGreen = Color(0xff06F678);
   static const selectedLanguageBorder = Color(0xff66D71B);
   static const selectedCardAndBankBorder = Color(0xff66D71B);
   static const textColorToska = Color(0xff00FFF6);

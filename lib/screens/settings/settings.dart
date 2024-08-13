@@ -90,7 +90,7 @@ class _SettingsState extends State<Settings> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20.sp),
                         child: Text(
-                          'Are you sure, do you want to logout?'.tr(),
+                          'Are you sure you want to log out?'.tr(),
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           style: TextStyle(
@@ -106,9 +106,25 @@ class _SettingsState extends State<Settings> {
                       ),
                       Expanded(child: SizedBox()),
                       Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 22),
+                          child: AppButton(
+                            title: 'Cancel'.tr(),
+                            handler: () {
+                              Navigator.pop(context);
+                            },
+                            isGradient: false,
+                            color: AppColors.appSecondButton.withOpacity(0.10),
+                            textColor: isDark
+                                ? AppColors.textColorWhite
+                                : AppColors.textColorBlack.withOpacity(0.8),)
+                        // color: Colors.transparent),
+                      ),
+
+                      SizedBox(height: 2.h),
+                      Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 22),
                         child: DialogButton(
-                          title: 'Confirm'.tr(),
+                          title: 'Log out'.tr(),
                           handler: () async {
                             // if (isLoading) return;
 
@@ -152,21 +168,6 @@ class _SettingsState extends State<Settings> {
                           color: AppColors.appSecondButton.withOpacity(0.10),
                           textColor: AppColors.errorColor,
                         ),
-                      ),
-                      SizedBox(height: 2.h),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 22),
-                        child: AppButton(
-                            title: 'Cancel'.tr(),
-                            handler: () {
-                              Navigator.pop(context);
-                            },
-                            isGradient: false,
-                            color: AppColors.appSecondButton.withOpacity(0.10),
-                            textColor: isDark
-                                ? AppColors.textColorWhite
-                                : AppColors.textColorBlack.withOpacity(0.8),)
-                            // color: Colors.transparent),
                       ),
                       Expanded(child: SizedBox()),
                     ],

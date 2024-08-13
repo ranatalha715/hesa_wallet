@@ -76,7 +76,7 @@ class _WalletState extends State<Wallet> {
                             height: 3.h,
                           ),
                           Text(
-                            'Hello Web3 KSA'.tr(),
+                            'Hello Web3'.tr(),
                             style: TextStyle(
                                 color: themeNotifier.isDark
                                     ? AppColors.textColorWhite
@@ -87,7 +87,7 @@ class _WalletState extends State<Wallet> {
                           ),
                           SizedBox(height: 1.h),
                           Text(
-                            'Your Digital World Secured'.tr(),
+                            'The New Digital World'.tr(),
                             style: TextStyle(
                                 fontSize: 11.7.sp,
                                 color: AppColors.textColorGrey,

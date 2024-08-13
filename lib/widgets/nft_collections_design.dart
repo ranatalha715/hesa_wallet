@@ -122,7 +122,13 @@ class _NftsCollectionDesignState extends State<NftsCollectionDesign> {
                                         child: ClipRRect(
                                           borderRadius: BorderRadius.circular(
                                               5.sp),
-                                          child: Image.network(
+                                          child:  widget.nftsCollection.image != null ?
+                                          Image.network(
+                                            widget.nftsCollection.image!,
+                                              fit: BoxFit.cover,
+                                          ):
+                                          Image.network(
+
                                             // widget.nftsCollection.banner!,
                                             'https://images.pexels.com/photos/11881429/pexels-photo-11881429.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
                                             // Path to your placeholder image

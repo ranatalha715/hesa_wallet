@@ -38,9 +38,9 @@ class _WalletActivityState extends State<WalletActivity> {
       setState(() {
         _isLoading = true;
       });
-      await Future.delayed(Duration(milliseconds: 2), () {
-        print('Delayed action');
-      });
+      // await Future.delayed(Duration(milliseconds: 2), () {
+      //   print('Delayed action');
+      // });
       await getAccessToken();
       await Provider.of<UserProvider>(context, listen: false)
           .getUserDetails(token: accessToken, context: context);

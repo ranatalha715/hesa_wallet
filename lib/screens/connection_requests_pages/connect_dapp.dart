@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hesa_wallet/constants/configs.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/connected_sites.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/wallet_tokens_nfts.dart';
@@ -62,9 +63,16 @@ class _ConnectDappState extends State<ConnectDapp> {
 
   @override
   void initState() {
+    setState(() {
+      _isLoading=true;
+    });
     init();
+    setState(() {
+      _isLoading=false;
+    });
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +95,7 @@ class _ConnectDappState extends State<ConnectDapp> {
                         MaterialPageRoute(
                             builder: (context) => WalletTokensNfts()),
                       ),
+                      showBackBtn: false,
                     ),
                     Container(
                       height: 85.h,
@@ -238,6 +247,7 @@ class _ConnectDappState extends State<ConnectDapp> {
                             ListView.builder(
                               padding: EdgeInsets.only(left: 20.sp),
                               shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
                               itemCount: accountDefinitions.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return Row(
@@ -288,6 +298,7 @@ class _ConnectDappState extends State<ConnectDapp> {
                             ListView.builder(
                               padding: EdgeInsets.only(left: 20.sp),
                               shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
                               itemCount: accountDefinitions2.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return Row(
@@ -352,22 +363,26 @@ class _ConnectDappState extends State<ConnectDapp> {
                                 });
                                 if (result == AuthResult.success) {
                                   showDialog(
+                                    barrierDismissible: false,
                                     context: context,
                                     builder: (BuildContext context) {
                                       final screenWidth =
                                           MediaQuery.of(context).size.width;
                                       final dialogWidth = screenWidth * 0.85;
-                                      Future<void>
-                                          closeDialogAndNavigate() async {
-                                        Navigator.of(context)
-                                            .pop();
-                                        Navigator.of(context)
-                                            .pop();
-                                        // Navigator.pushReplacement(
-                                        //   context,
-                                        //   MaterialPageRoute(
-                                        //       builder: (context) => WalletTokensNfts()),
-                                        // );
+                                      Future<void> closeDialogAndNavigate() async {
+                                        // Pop the dialog
+                                        // Navigator.of(context).pop();
+                                        // Add a short delay before the next pop
+                                        await Future.delayed(Duration(milliseconds: 100));
+                                        // Pop the previous screen
+                                        Navigator.of(context).pop();
+                                        // Add another short delay before pushing the new route
+                                        await Future.delayed(Duration(milliseconds: 100));
+                                        // Push the new route
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => WalletTokensNfts()),
+                                        );
                                         await AppDeepLinking().openNftApp(
                                           {
                                             "operation": "connectWallet",
@@ -587,10 +602,13 @@ class _ConnectDappState extends State<ConnectDapp> {
                                     _isLoading = true;
                                   });
 
-                                  await Future.delayed(Duration(seconds: 1));
+                                  Provider.of<UserProvider>(context, listen: false)
+                                      .navigateToNeoForConnectWallet=false;
+                                  await Future.delayed(const Duration(seconds: 1));
                                   setState(() {
                                     _isLoading = false;
                                   });
+
                                   await AppDeepLinking().openNftApp(
                                     {
                                       "operation": "connectWallet",
@@ -609,6 +627,15 @@ class _ConnectDappState extends State<ConnectDapp> {
                                       "response": 'Connection request rejected.'
                                     },
                                   );
+                                  SystemNavigator.pop();
+                                  // Navigator.pop(context);
+                                  // await Navigator.pushReplacement(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) =>
+                                  //         WalletTokensNfts(),
+                                  //   ),
+                                  // );
                                 },
                                 isGradient: false,
                                 textColor: themeNotifier.isDark

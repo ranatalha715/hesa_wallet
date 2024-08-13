@@ -15,6 +15,7 @@ class AppButton extends StatelessWidget {
   final double width;
   final bool isactive;
   final bool isLoading;
+  final bool isGradientWithBorder;
 
   const AppButton({
     Key? key,
@@ -26,6 +27,7 @@ class AppButton extends StatelessWidget {
     this.textColor = AppColors.textColorBlack,
     this.isactive = true,
     this.isLoading = false,
+    this.isGradientWithBorder = false,
   }) : super(key: key);
 
   @override
@@ -57,6 +59,9 @@ class AppButton extends StatelessWidget {
             color: themeNotifier.isDark
                 ? color == null ? AppColors.transparentBtnBorderColorDark.withOpacity(0.10) : color
                 : AppColors.disabaledBtnColor, // LIGHT
+            border:  Border.all(
+                color: isGradientWithBorder ? AppColors.hexaGreen: Colors.transparent
+            ),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Center(
@@ -67,12 +72,14 @@ class AppButton extends StatelessWidget {
                   : Text(
                       title,
                       style: TextStyle(
-                          color: isactive
+                          color: isGradient ? isactive
                               ? textColor
                               :
                           themeNotifier.isDark
                                   ? AppColors.textColorGreyShade2
-                                  : AppColors.textColorGreyShade3,
+                                  : AppColors.textColorGreyShade3:
+                          isGradientWithBorder ?
+                          AppColors.textColorGreyShade3:  AppColors.textColorGreyShade3,
                           fontSize: 11.7.sp,
                           fontWeight: FontWeight.w600),
                     )),

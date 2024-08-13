@@ -1,7 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hesa_wallet/constants/configs.dart';
+import 'package:hesa_wallet/providers/assets_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../constants/colors.dart';
@@ -18,11 +21,13 @@ class NftsDetails extends StatefulWidget {
 }
 
 class _NftsDetailsState extends State<NftsDetails> {
+  var accessToken;
   String replaceMiddleWithDots(String input) {
     if (input.length <= 20) {
       // If the input string is 30 characters or less, return it as is.
       return input;
     }
+
 
     final int middleIndex = input.length ~/ 2; // Find the middle index
     final int startIndex = middleIndex - 15; // Calculate the start index
@@ -57,116 +62,178 @@ class _NftsDetailsState extends State<NftsDetails> {
     return formatter.format(dateTime);
   }
 
+
+
+
+  getAccessToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    accessToken = prefs.getString('accessToken')!;
+  }
+
+  var isLoading=false;
+  final scrollController=ScrollController();
+
+  @override
+  void initState() {
+    getAccessToken();
+    // TODO: implement initState
+    super.initState();
+  }
+  @override
+  Future<void> didChangeDependencies() async {
+    final args =
+    ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    await getAccessToken();
+    setState(() {
+      isLoading=true;
+    });
+
+
+
+    await Provider.of<AssetsProvider>(context, listen: false).getNftCollectionDetails(
+      token: accessToken,
+      type: 'nft',
+      id: args["tokenId"],);
+
+    setState(() {
+      isLoading=false;
+    });
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
+    final assetsDetails=Provider.of<AssetsProvider>(context, listen: false);
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return Scaffold(
           backgroundColor: AppColors.backgroundColor,
-          body: Column(
+          body: isLoading ? Center(child: CircularProgressIndicator()): Column(
             children: [
               MainHeader(
-                title: args["tokenName"],
-                subTitle: replaceMiddleWithDotsCollectionId(args["tokenId"]),
+                title: assetsDetails.tokenName,
+                subTitle: replaceMiddleWithDotsCollectionId(assetsDetails.tokenId),
                 showSubTitle: true,
               ),
               SizedBox(height: 3.h),
-              Container(
-                // color: Colors.red,
-                height: 47.h,
-                width: 42.h,
-                child:
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12.sp),
-                  child: Image.network(args["image"], fit: BoxFit.cover,
-                    errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                      return Image.asset(
-                        'assets/images/nft.png', // Path to your placeholder image
-                        fit: BoxFit.cover,
-                      );
-                    },
-                  ),
+              Expanded(
+                child: Container(
+                  // color: Colors.red,
+                  child: ListView(
+                    controller: scrollController,
+                    padding: EdgeInsets.zero,
+                    children: [
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 10.sp),
+                      // color: Colors.red,
+                      height: 47.h,
+                      width: 45.h,
+                      child:
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12.sp),
+                        child: Image.network(assetsDetails.image, fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                            return Image.asset(
+                              'assets/images/nft.png', // Path to your placeholder image
+                              fit: BoxFit.cover,
+                            );
+                          },
+                        ),
+                      ),
+                      // Image.asset(
+                      //   "assets/images/nfts_placeholder.png",
+                      //   fit: BoxFit.cover,
+                      // ),
+                    ),
+                    Divider(color: AppColors.transactionSummNeoBorder),
+                    SizedBox(height: 2.h),
+                   nftsDetailsWidget(
+                     title: 'Created:'.tr(),
+                     details: formatDate(assetsDetails.createdAt),
+                     isDark: themeNotifier.isDark ? true : false,
+                   ),
+                   // // nftsDetailsWidget(
+                   // //   title: 'Status:'.tr(),
+                   // //   details: args["status"] ?? 'N/A',
+                   // //   isDark: themeNotifier.isDark ? true : false,
+                   // // ),
+                   nftsDetailsWidget(
+                       title: 'Token ID:'.tr(),
+                       details:
+                       replaceMiddleWithDotsCollectionId(assetsDetails.tokenId),
+                       // replaceMiddleWithDotsCollectionId(args["tokenId"]),
+                       isDark: themeNotifier.isDark ? true : false,
+                       color:  AppColors.textColorToska
+                   ),
+                   if (assetsDetails.creatorName != null)
+                     nftsDetailsWidget(
+                       title: 'Creator:'.tr(),
+                       details: replaceMiddleWithDots(assetsDetails.creatorName) ?? "N/A",
+                       isDark: themeNotifier.isDark ? true : false,
+                       color: AppColors.textColorToska,
+                     ),
+                   if (assetsDetails.creatorRoyalty!= "null")
+                     nftsDetailsWidget(
+                       title: 'Creator royalty:'.tr(),
+                       details: assetsDetails.creatorRoyalty + '%',
+                       isDark: themeNotifier.isDark ? true : false,
+                     ),
+                   if (assetsDetails.ownerName!= "null")
+                     nftsDetailsWidget(
+                       title: 'Owned by:'.tr(),
+                       details: assetsDetails.ownerName,
+                       // replaceMiddleWithDots(args["ownerId"]) ?? "N/A",
+                       isDark: themeNotifier.isDark ? true : false,
+                       color: AppColors.textColorToska,
+                     ),
+                   // // if (args["nftIds"] != "null")
+                   // //   nftsDetailsWidget(
+                   // //     title: 'Collection Items:'.tr(),
+                   // //     details: args["nftIds"],
+                   // //     isDark: themeNotifier.isDark ? true : false,
+                   // //   ),
+                   if (assetsDetails.status!= "null")
+                     nftsDetailsWidget(
+                       title: 'Token Status:'.tr(),
+                       details: assetsDetails.status,
+                       isDark: themeNotifier.isDark ? true : false,
+                     ),
+                   if (assetsDetails.listingType != "null")
+                     nftsDetailsWidget(
+                       title: 'Listing Type:'.tr(),
+                       details: assetsDetails.listingType,
+                       isDark: themeNotifier.isDark ? true : false,
+                     ),
+                   if (assetsDetails.isListable != "null")
+                     nftsDetailsWidget(
+                       title: 'Is Listable:'.tr(),
+                       details: assetsDetails.isListable,
+                       isDark: themeNotifier.isDark ? true : false,
+                     ),
+                   nftsDetailsWidget(
+                     title: 'Token Standard:'.tr(),
+                     details:assetsDetails.standard,
+                     isDark: themeNotifier.isDark ? true : false,
+                   ),
+                   nftsDetailsWidget(
+                     title: 'Chain:'.tr(),
+                     details: assetsDetails.chain,
+                     isDark: themeNotifier.isDark ? true : false,
+                   ),
+                   if (assetsDetails.burnable != "null")
+                     nftsDetailsWidget(
+                       title: 'Burn Control:'.tr(),
+                       details: assetsDetails.burnable=="true" ? "On" : "Off",
+                       isDark: themeNotifier.isDark ? true : false,
+                     )
+                  ],),
                 ),
-                // Image.asset(
-                //   "assets/images/nfts_placeholder.png",
-                //   fit: BoxFit.cover,
-                // ),
               ),
-              Divider(color: AppColors.transactionSummNeoBorder),
               SizedBox(height: 2.h),
-              nftsDetailsWidget(
-                title: 'Created:'.tr(),
-                details: formatDate(args["createdAt"]),
-                isDark: themeNotifier.isDark ? true : false,
-              ),
-              // // nftsDetailsWidget(
-              // //   title: 'Status:'.tr(),
-              // //   details: args["status"] ?? 'N/A',
-              // //   isDark: themeNotifier.isDark ? true : false,
-              // // ),
-              nftsDetailsWidget(
-                title: 'Token ID:'.tr(),
-                details:
-                    replaceMiddleWithDotsCollectionId(args["tokenId"]),
-                isDark: themeNotifier.isDark ? true : false,
-              ),
-              if (args["creatorId"] != null)
-                nftsDetailsWidget(
-                  title: 'Creator ID:'.tr(),
-                  details: replaceMiddleWithDots(args["creatorId"]) ?? "N/A",
-                  isDark: themeNotifier.isDark ? true : false,
-                  color: AppColors.textColorToska,
-                ),
-              if (args["creatorRoyalty"] != "null")
-                nftsDetailsWidget(
-                  title: 'Creator royalty:'.tr(),
-                  details: args["creatorRoyalty"] + '%',
-                  isDark: themeNotifier.isDark ? true : false,
-                ),
-              if (args["ownerId"] != "null")
-                nftsDetailsWidget(
-                  title: 'Owned by:'.tr(),
-                  details: replaceMiddleWithDots(args["ownerId"]) ?? "N/A",
-                  isDark: themeNotifier.isDark ? true : false,
-                  color: AppColors.textColorToska,
-                ),
-              // // if (args["nftIds"] != "null")
-              // //   nftsDetailsWidget(
-              // //     title: 'Collection Items:'.tr(),
-              // //     details: args["nftIds"],
-              // //     isDark: themeNotifier.isDark ? true : false,
-              // //   ),
-              if (args["status"] != "null")
-                nftsDetailsWidget(
-                  title: 'Token Status:'.tr(),
-                  details: args["status"],
-                  isDark: themeNotifier.isDark ? true : false,
-                ),
-              if (args["listingType"] != "null")
-                nftsDetailsWidget(
-                  title: 'Listing Type:'.tr(),
-                  details: args["listingType"],
-                  isDark: themeNotifier.isDark ? true : false,
-                ),
-              if (args["isListable"] != "null")
-                nftsDetailsWidget(
-                  title: 'Is Listable:'.tr(),
-                  details: args["isListable"],
-                  isDark: themeNotifier.isDark ? true : false,
-                ),
-              nftsDetailsWidget(
-                title: 'Token Standard:'.tr(),
-                details: args["standard"],
-                isDark: themeNotifier.isDark ? true : false,
-              ),
-              nftsDetailsWidget(
-                title: 'Chain:'.tr(),
-                details: args["chain"],
-                isDark: themeNotifier.isDark ? true : false,
-              ),
             ],
           ));
     });

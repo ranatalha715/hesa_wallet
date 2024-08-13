@@ -44,6 +44,43 @@ class _WalletBankingAndPaymentEmptyState
 
   final ScrollController scrollController = ScrollController();
 
+  navigateToAddCard() async {
+    print('card brand');
+    print(
+        Provider.of<
+            TransactionProvider>(
+            context,
+            listen: false)
+            .selectedCardBrand
+    );
+    var result = await Provider.of<
+        TransactionProvider>(
+        context,
+        listen: false)
+        .tokenizeCardRequest(
+        token: accessToken,
+        brand: Provider.of<
+            TransactionProvider>(
+            context,
+            listen: false)
+            .selectedCardBrand,
+        context: context);
+    if (result == AuthResult.success) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              WalletAddCard(
+                tokenizedCheckoutId: Provider
+                    .of<TransactionProvider>(
+                    context,
+                    listen: false)
+                    .tokenizedCheckoutId,
+              ),
+        ),
+      );
+  }}
+
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
@@ -164,12 +201,12 @@ class _WalletBankingAndPaymentEmptyState
     if (showPopup) {
       showDialog(
         context: context,
-        barrierDismissible:
-            Provider.of<TransactionProvider>(context, listen: false)
-                        .selectedCardBrand ==
-                    null
-                ? false
-                : true,
+        // barrierDismissible:
+        //     Provider.of<TransactionProvider>(context, listen: false)
+        //                 .selectedCardBrand ==
+        //             null
+        //         ? false
+        //         : true,
         builder: (BuildContext context) {
           final screenWidth = MediaQuery.of(context).size.width;
           final dialogWidth = screenWidth * 0.85;
@@ -215,11 +252,14 @@ class _WalletBankingAndPaymentEmptyState
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             GestureDetector(
-                              onTap: () {
+                              onTap: () async {
                                 Provider.of<TransactionProvider>(context,
                                         listen: false)
                                     .selectedCardBrand = 'VISA';
-                                Navigator.pop(context);
+                                // Navigator.pop(context);
+                                navigateToAddCard();
+
+
                               },
                               child: Image.asset(
                                 "assets/images/VisaPopup.png",
@@ -232,7 +272,8 @@ class _WalletBankingAndPaymentEmptyState
                                 Provider.of<TransactionProvider>(context,
                                     listen: false)
                                     .selectedCardBrand = 'MASTER';
-                                Navigator.pop(context);
+                                // Navigator.pop(context);
+                                navigateToAddCard();
                               },
                               child: Image.asset(
                                 "assets/images/MastercardPopup.png",
@@ -245,7 +286,8 @@ class _WalletBankingAndPaymentEmptyState
                                 Provider.of<TransactionProvider>(context,
                                     listen: false)
                                     .selectedCardBrand = 'MADA';
-                                Navigator.pop(context);
+                                // Navigator.pop(context);
+                                navigateToAddCard();
                               },
                               child: Image.asset(
                                 "assets/images/MadaPayPopup.png",
@@ -285,6 +327,9 @@ class _WalletBankingAndPaymentEmptyState
       if (trPro.selectedCardNum == null || trPro.selectedCardNum == "") {
         if (paymentCards.isNotEmpty) {
           trPro.selectedCardNum = paymentCards[0].bin;
+          print('testabc');
+          print(trPro.selectedCardNum.toString());
+          print(paymentCards[0].bin);
         }
       }
       return Stack(
@@ -322,7 +367,7 @@ class _WalletBankingAndPaymentEmptyState
                                   Text(
                                     'Payment cards'.tr(),
                                     style: TextStyle(
-                                        fontSize: 13.3.sp,
+                                        fontSize: 12.sp,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w600,
                                         color: themeNotifier.isDark
@@ -334,33 +379,33 @@ class _WalletBankingAndPaymentEmptyState
                                     onTap: () async {
                                       confirmBrandDialogue(
                                         () async {
-                                          var result = await Provider.of<
-                                                      TransactionProvider>(
-                                                  context,
-                                                  listen: false)
-                                              .tokenizeCardRequest(
-                                                  token: accessToken,
-                                                  brand: Provider.of<
-                                                              TransactionProvider>(
-                                                          context,
-                                                          listen: false)
-                                                      .selectedCardBrand,
-                                                  context: context);
-                                          if (result == AuthResult.success) {
-                                            Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    WalletAddCard(
-                                                  tokenizedCheckoutId: Provider
-                                                          .of<TransactionProvider>(
-                                                              context,
-                                                              listen: false)
-                                                      .tokenizedCheckoutId,
-                                                ),
-                                              ),
-                                            );
-                                          }
+                                          // var result = await Provider.of<
+                                          //             TransactionProvider>(
+                                          //         context,
+                                          //         listen: false)
+                                          //     .tokenizeCardRequest(
+                                          //         token: accessToken,
+                                          //         brand: Provider.of<
+                                          //                     TransactionProvider>(
+                                          //                 context,
+                                          //                 listen: false)
+                                          //             .selectedCardBrand,
+                                          //         context: context);
+                                          // if (result == AuthResult.success) {
+                                          //   Navigator.pushReplacement(
+                                          //     context,
+                                          //     MaterialPageRoute(
+                                          //       builder: (context) =>
+                                          //           WalletAddCard(
+                                          //         tokenizedCheckoutId: Provider
+                                          //                 .of<TransactionProvider>(
+                                          //                     context,
+                                          //                     listen: false)
+                                          //             .tokenizedCheckoutId,
+                                          //       ),
+                                          //     ),
+                                          //   );
+                                          // }
                                         },
                                         showPopup: true,
                                       );
@@ -391,7 +436,7 @@ class _WalletBankingAndPaymentEmptyState
                                         Text(
                                           'Add new'.tr(),
                                           style: TextStyle(
-                                              fontSize: 13.3.sp,
+                                              fontSize: 12.sp,
                                               fontFamily: 'Inter',
                                               fontWeight: FontWeight.w400,
                                               color: AppColors
@@ -420,9 +465,9 @@ class _WalletBankingAndPaymentEmptyState
                               child: Column(
                                 children: [
                                   GestureDetector(
-                                    onTap: () => setState(() {
+                                    onTap: () => paymentCards.isNotEmpty ? setState(() {
                                       _isSelected = !_isSelected;
-                                    }),
+                                    }):{},
                                     child: Container(
                                       height: 6.5.h,
                                       decoration: BoxDecoration(
@@ -459,7 +504,7 @@ class _WalletBankingAndPaymentEmptyState
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w500,
-                                                          fontSize: 11.7.sp,
+                                                          fontSize: 11.sp,
                                                           color: themeNotifier
                                                                   .isDark
                                                               ? AppColors
@@ -604,7 +649,7 @@ class _WalletBankingAndPaymentEmptyState
                                   Text(
                                     'Banking details'.tr(),
                                     style: TextStyle(
-                                        fontSize: 13.3.sp,
+                                        fontSize: 12.sp,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w600,
                                         color: themeNotifier.isDark
@@ -649,7 +694,7 @@ class _WalletBankingAndPaymentEmptyState
                                     child: Text(
                                       'Add new'.tr(),
                                       style: TextStyle(
-                                          fontSize: 13.3.sp,
+                                          fontSize: 12.sp,
                                           fontFamily: 'Inter',
                                           fontWeight: FontWeight.w400,
                                           color: AppColors.textColorGreyShade2),
@@ -721,7 +766,7 @@ class _WalletBankingAndPaymentEmptyState
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.w500,
-                                                            fontSize: 11.7.sp,
+                                                            fontSize: 11.sp,
                                                             color: themeNotifier.isDark
                                                                 ? AppColors
                                                                     .textColorWhite
@@ -1062,16 +1107,16 @@ class _WalletBankingAndPaymentEmptyState
                           ),
                           child: Padding(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 5.2.sp, vertical: 1.5.sp),
+                                horizontal: 3.2.sp, vertical: 1.sp),
                             child: Image.asset(
                               cardBrand == 'MASTER'
                                   ? "assets/images/master_card.png"
                                   : "assets/images/mada_pay.png",
-                              height: 16.sp,
+                              height: 18.sp,
                               // color: isDark
                               //     ? AppColors.textColorWhite
                               //     : AppColors.textColorBlack,
-                              // width: 20.sp,
+                              width: 18.sp,
                             ),
                           ),
                         ),
@@ -1677,7 +1722,13 @@ class _WalletBankingAndPaymentEmptyState
                                 isDialogLoading = false;
                               });
                               if (result == AuthResult.success) {
-                                Navigator.pop(context);
+                                await Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          WalletBankingAndPaymentEmpty()),
+                                );
+                                // Navigator.pop(context);
                                 // refreshPage();
                               }
                             },

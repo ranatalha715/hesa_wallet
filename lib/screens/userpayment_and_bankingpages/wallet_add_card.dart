@@ -16,7 +16,7 @@ import 'package:hyperpay_plugin/model/ready_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-// import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../constants/inapp_settings.dart';
 import '../../providers/card_provider.dart';
@@ -257,7 +257,11 @@ class _WalletAddCardState extends State<WalletAddCard> {
 
     print('Now you should run the add card function');
     Provider.of<CardProvider>(context, listen:false).tokenizeCardVerify(token: accessToken, context: context,
-        checkoutId: checkoutID);
+        checkoutId: checkoutID,  brand: Provider.of<
+          TransactionProvider>(
+          context,
+          listen: false)
+          .selectedCardBrand,);
     //bilal ka function call hoga (3rd api)
 
 

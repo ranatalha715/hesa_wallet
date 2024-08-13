@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:deep_linking/deep_linking.dart';
-import 'package:device_preview/device_preview.dart';
+
+// import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -10,6 +11,7 @@ import 'package:hesa_wallet/providers/payment_fees.dart';
 import 'package:hesa_wallet/providers/token_provider.dart';
 import 'package:hesa_wallet/screens/unlock/set_confirm_pin_screen.dart';
 import 'package:hesa_wallet/screens/unlock/set_pin_screen.dart';
+import 'package:hesa_wallet/screens/unlock/unlock.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/nfts_details.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:hesa_wallet/widgets/dialog_button.dart';
@@ -179,16 +181,25 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             ? true
             : false;
     print('testing red dot');
-print(numActivity);
-print( Provider.of<TransactionProvider>(context, listen: false)
-    .activities
-    .length);
-print(Provider.of<TransactionProvider>(context, listen: false).showRedDot);
+    print(numActivity);
+    print(Provider.of<TransactionProvider>(context, listen: false)
+        .activities
+        .length);
+    print(Provider.of<TransactionProvider>(context, listen: false).showRedDot);
     await prefs.setInt(
         'numOfActivities',
         Provider.of<TransactionProvider>(context, listen: false)
             .activities
             .length);
+  }
+
+  Timer? _timer;
+  StreamSubscription<String?>? _linkSubscription;
+  void clearLinkStream() {
+    // Cancel or reset the link stream if possible
+    getLinksStream().drain();  // This will stop the stream from emitting more items
+
+    print('Link stream has been cleared.');
   }
 
   @override
@@ -198,7 +209,7 @@ print(Provider.of<TransactionProvider>(context, listen: false).showRedDot);
     AppDeepLinking().initDeeplink();
     fToast = FToast();
     fToast.init(context);
-
+    this.initUniLinks();
     getAccessToken();
     // Future.delayed(Duration(seconds: 2), () {
     //   if(accessToken !='') {
@@ -213,11 +224,16 @@ print(Provider.of<TransactionProvider>(context, listen: false).showRedDot);
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       checkWifiStatus();
     }); // 31 jan
-    initUniLinks();
+    // initUniLinks();
+    // startPeriodicChecking();
     print('recieved data' + _receivedData);
     Timer.periodic(Duration(seconds: 3), (timer) async {
       getAccessToken();
       callRedDotLogic();
+      // initUniLinks();
+      // print('isEmailVerified');
+      // print(Provider.of<UserProvider>(context, listen: false)
+      //     .isEmailVerified);
     });
     Timer.periodic(Duration(seconds: 30), (timer) async {
       await Provider.of<AuthProvider>(context, listen: false)
@@ -232,63 +248,215 @@ print(Provider.of<TransactionProvider>(context, listen: false).showRedDot);
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _linkSubscription?.cancel();
+    _timer?.cancel();
     super.dispose();
   }
 
   String _receivedData = 'No UniLink data received';
+  bool _uniLinkHandled = false;
 
+  // Future<void> initUniLinks() async {
+  //   try {
+  //     // Handle the initial link
+  //     final initialLink = await getInitialLink();
+  //     if (initialLink != null) {
+  //       _handleIncomingLink(initialLink);
+  //     }
+  //
+  //     // Handle subsequent links
+  //     _linkSubscription = linkStream.listen((String? link) {
+  //       if (link != null) {
+  //         _handleIncomingLink(link);
+  //       }
+  //     }, onError: (err) {
+  //       print('Error listening for UniLinks: $err');
+  //     });
+  //   } catch (e) {
+  //     print('Error initializing UniLinks: $e');
+  //     // Handle error as necessary
+  //   }
+  // }
+  //
+  // void _handleIncomingLink(String link) {
+  //   if (_uniLinkHandled) {
+  //     return;
+  //   }
+  //   setState(() {
+  //     _receivedData = link;
+  //   });
+  //
+  //   Uri uri = Uri.parse(link);
+  //   String? operation = uri.queryParameters['operation'];
+  //   print('operation this: ' + operation.toString());
+  //   if (operation != null && operation == 'connectWallet') {
+  //     // Navigate to ConnectWalletScreen
+  //     setState(() {
+  //       Provider.of<UserProvider>(context, listen: false).navigateToNeoForConnectWallet = true;
+  //       print("check kro: " +
+  //           Provider.of<UserProvider>(context, listen: false)
+  //               .navigateToNeoForConnectWallet
+  //               .toString());
+  //     });
+  //     _uniLinkHandled = true;
+  //     // Navigator.push(
+  //     //   context,
+  //     //   MaterialPageRoute(builder: (context) => ConnectWalletScreen()),
+  //     // );
+  //
+  //     // Kill or remove the UniLink from the app lifecycle
+  //     _linkSubscription?.cancel();
+  //     _linkSubscription = null;
+  //   } else {
+  //     Provider.of<UserProvider>(context, listen: false).navigateToNeoForConnectWallet = false;
+  //   }
+  // }
   Future<void> initUniLinks() async {
     try {
-      // AppDeepLinking().initDeeplink(); muzamil recommended
-      getLinksStream().listen((String? link) {
+      print('trying');
+      await getLinksStream().firstWhere((String? link) {
         if (link != null) {
-          setState(() {
-            _receivedData = link;
-          });
-
           Uri uri = Uri.parse(link);
           String? operation = uri.queryParameters['operation'];
-          print('operation this' + operation.toString());
+          print("print operation");
+          print(operation);
+
           if (operation != null && operation == 'connectWallet') {
-            // Navigate to page for MintNFT
+            Provider.of<UserProvider>(context, listen: false)
+                .navigateToNeoForConnectWallet = true;
+
             setState(() {
-              fromNeoApp = true; //faltu
-              Provider.of<UserProvider>(context, listen: false)
-                  .navigateToNeoForConnectWallet = true;
-              print("check kro" +
-                  Provider.of<UserProvider>(context, listen: false)
-                      .navigateToNeoForConnectWallet
-                      .toString());
+              isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
+                  .navigateToNeoForConnectWallet;  // Set overlay visibility to true
             });
+
+            print("check kro" +
+                Provider.of<UserProvider>(context, listen: false)
+                    .navigateToNeoForConnectWallet
+                    .toString());
           } else {
             Provider.of<UserProvider>(context, listen: false)
                 .navigateToNeoForConnectWallet = false;
+
+            setState(() {
+              isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
+                  .navigateToNeoForConnectWallet;  // Set overlay visibility to false
+            });
           }
+          return true; // Exit the loop after processing
+        } else{
+          Provider.of<UserProvider>(context, listen: false)
+              .navigateToNeoForConnectWallet = false;
+
+          setState(() {
+            isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
+                .navigateToNeoForConnectWallet;  // Set overlay visibility to false
+          });
+
         }
+
+        return false;
       });
+
+      print('trying end');
+      clearLinkStream();
     } catch (e) {
       print('Error initializing UniLinks: $e');
-      // Handle error as necessary
+      print('trying error');
     }
   }
 
-  //payable non payable functions
+
+  // Future<void> initUniLinks() async {
+  //   try {
+  //     print('trying');
+  //     // AppDeepLinking().initDeeplink(); muzamil recommended
+  //     getLinksStream().listen((String? link) {
+  //       if (link != null) {
+  //         setState(() {
+  //           _receivedData = link;
+  //         });
+  //
+  //         Uri uri = Uri.parse(link);
+  //         String? operation = uri.queryParameters['operation'];
+  //         print("print operation");
+  //         print(operation);
+  //
+  //         if (operation != null && operation == 'connectWallet') {
+  //
+  //
+  //
+  //           Provider.of<UserProvider>(context, listen: false)
+  //               .navigateToNeoForConnectWallet = true;
+  //
+  //           print("check kro" +
+  //               Provider.of<UserProvider>(context, listen: false)
+  //                   .navigateToNeoForConnectWallet
+  //                   .toString());
+  //
+  //         } else {
+  //           Provider.of<UserProvider>(context, listen: false)
+  //               .navigateToNeoForConnectWallet = false;
+  //         }
+  //       }
+  //     });
+  //     print('trying end');
+  //   } catch (e) {
+  //     print('Error initializing UniLinks: $e');
+  //     print('trying error');
+  //
+  //   }
+  // }
+
+  // payable non payable functions
+@override
+  void didChangeDependencies() {
+  // isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
+  //     .navigateToNeoForConnectWallet;
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+
+  }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
-      // App goes into the background
-      setState(() {
-        isOverlayVisible = true;
-      });
+
+      // setState(() {
+      //   isOverlayVisible=false;
+      // });
+      // print('app paused');
+      // SystemNavigator.pop();
+      // initUniLinks();
+      // // App goes into the background
+      //
+      // setState(() {
+      //   isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
+      //       .navigateToNeoForConnectWallet;
+      // });
       // _showLockScreen();
-    } else if (state == AppLifecycleState.resumed) {
+
+
+    }
+    else if (state == AppLifecycleState.resumed) {
+      // SystemNavigator.pop();
+      // setState(() {
+      //   isOverlayVisible=false;
+      // });
+      // initUniLinks();
       // App comes back to the foreground
-      setState(() {
-        isOverlayVisible = true;
-      });
+      // print('app resumed');
+      //
+      // setState(() {
+      //   isOverlayVisible = false;
+      //       // Provider.of<UserProvider>(context, listen: false)
+      //       // .navigateToNeoForConnectWallet;
+      // });
       // _hideLockScreen();
     }
+    else{}
+    // print('isOverlayVisible');
+    // print(isOverlayVisible);
   }
 
   getAccessToken() async {
@@ -321,6 +489,10 @@ print(Provider.of<TransactionProvider>(context, listen: false).showRedDot);
 
   @override
   Widget build(BuildContext context) {
+    final emailVerified =
+        Provider.of<UserProvider>(context, listen: false).isEmailVerified;
+    print('isOverlayVisible testing');
+    print(isOverlayVisible);
     return Sizer(builder: (context, orientation, deviceType) {
       return Consumer<ThemeProvider>(
           builder: (context, ThemeProvider themeProvider, _) {
@@ -342,40 +514,57 @@ print(Provider.of<TransactionProvider>(context, listen: false).showRedDot);
                 ),
           debugShowCheckedModeBanner: false,
           home:
+          // Unlock(),
+          _buildContent(),
               // Provider.of<TokenProvider>(
               //   context,
               //   context,devic
               // ).isTokenEmpty
-              accessToken == ""
-                  ? Stack(
-                      children: [
-                        Wallet(),
-                        if (!isWifiOn)
-                          LoaderBluredScreen(
-                            isWifiOn: false,
-                          )
-                      ],
-                    )
-                  :
-                  //fromNeoApp will be used later
-                  Stack(
-                      children: [
-                        // PinScreen(),
-                        WalletTokensNfts(),
-                        // TransactionRequestAcceptReject(),
-                        // ConnectDapp(),
-                        // if(isOverlayVisible)
-                        //   WelcomeScreen(
-                        //       handler:()=> setState((){
-                        //         isOverlayVisible=false;
-                        //       }),
-                        //   ),
-                        if (!isWifiOn)
-                          LoaderBluredScreen(
-                            isWifiOn: false,
-                          )
-                      ],
-                    ),
+              // accessToken == ""
+              //     ? Stack(
+              //         children: [
+              //           Wallet(),
+              //           if (!isWifiOn)
+              //             LoaderBluredScreen(
+              //               isWifiOn: false,
+              //             )
+              //         ],
+              //       )
+              //     : isOverlayVisible
+              //         ? const ConnectDapp()
+              //         :
+              //         //fromNeoApp will be used later
+              //         Stack(
+              //             children: [
+              //               // PinScreen(),
+              //
+              //               WalletTokensNfts(),
+              //
+              //               // TransactionRequestAcceptReject(),
+              //
+              //               // Consumer<UserProvider>(builder: (context, user, child) {
+              //               //   return user.navigateToNeoForConnectWallet
+              //               //       ? const
+              //
+              //               //       : const SizedBox();
+              //               // }),
+              //               // if (!emailVerified)
+              //               //   OnboardingAddEmail(),
+              //
+              //               if (!isWifiOn)
+              //                 LoaderBluredScreen(
+              //                   isWifiOn: false,
+              //                 ),
+              //
+              //               // Container(
+              //               //   margin: EdgeInsets.only(top: 20.h),
+              //               //   height: 15.h,
+              //               //   width: 50.h,
+              //               //   color: Colors.white,
+              //               //   child: Center(child: Text(_receivedData)),
+              //               // )
+              //             ],
+              //           ),
           routes: {
             SignUpWithEmail.routeName: (context) => const SignUpWithEmail(),
             SigninWithEmail.routeName: (context) => const SigninWithEmail(),
@@ -533,6 +722,61 @@ print(Provider.of<TransactionProvider>(context, listen: false).showRedDot);
       },
     );
   }
+  Widget _buildContent() {
+    return FutureBuilder<void>(
+      future: initUniLinks(),  // Call the modified initUniLinks function
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Show a loading indicator while waiting for the deep link to be processed
+        return accessToken.isEmpty ? const Wallet(): WalletTokensNfts();
+            // Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          // Handle any errors
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          // The future is complete, return your content based on the overlay visibility
+          if (accessToken.isEmpty) {
+            return Stack(
+              children: [
+                Wallet(),
+                if (!isWifiOn)
+                  LoaderBluredScreen(
+                    isWifiOn: false,
+                  ),
+              ],
+            );
+          }  else if (!isOverlayVisible){
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => WalletTokensNfts()),
+                    (Route<dynamic> route) => false,
+              );
+            });
+            return WalletTokensNfts();
+          }
+          else if (isOverlayVisible) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => ConnectDapp()),
+                    (Route<dynamic> route) => false,
+              );
+            });
+            return ConnectDapp();
+          }
+          else {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => WalletTokensNfts()),
+                    (Route<dynamic> route) => false,
+              );
+            });
+            return WalletTokensNfts();
+          }
+        }
+      },
+    );
+  }
+
 }
 
 bool isTokenExpired(String token) {

@@ -209,14 +209,6 @@ class _AppDrawerState extends State<AppDrawer> {
                                       fontWeight: FontWeight.w500,
                                       color: AppColors.textColorGrey),
                                 ),
-                                SizedBox(
-                                  width: 3.sp,
-                                ),
-                                Icon(
-                                  Icons.content_copy,
-                                  size: 10.sp,
-                                  color: AppColors.textColorGrey,
-                                ),
                               ],
                             ),
                           ),
@@ -550,7 +542,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20.sp),
                         child: Text(
-                          'Are you sure, do you want to logout?'.tr(),
+                          'Are you sure you want to log out?'.tr(),
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           style: TextStyle(
@@ -567,8 +559,23 @@ class _AppDrawerState extends State<AppDrawer> {
                       Expanded(child: SizedBox()),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 22),
+                        child: AppButton(
+                            title: 'Cancel'.tr(),
+                            handler: () {
+                              Navigator.pop(context);
+                            },
+                            isGradient: false,
+                            textColor: isDark
+                                ? AppColors.textColorWhite
+                                : AppColors.textColorBlack.withOpacity(0.8),
+                            color: AppColors.appSecondButton.withOpacity(0.10)),
+                      ),
+
+                      SizedBox(height: 2.h),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 22),
                         child: DialogButton(
-                          title: 'Confirm'.tr(),
+                          title: 'Log out'.tr(),
                           handler: () async {
                             // if (isLoading) return;
 
@@ -577,8 +584,8 @@ class _AppDrawerState extends State<AppDrawer> {
                                 isLoading = true;
                               });
                               final resultLogout = await Provider.of<AuthProvider>(
-                                      context,
-                                      listen: false)
+                                  context,
+                                  listen: false)
                                   .logoutUser(token: accessToken, refreshToken: refreshToken, context: context);
 
                               setState(() {
@@ -592,8 +599,8 @@ class _AppDrawerState extends State<AppDrawer> {
                                   MaterialPageRoute(
                                     builder: (context) => Wallet(),
                                   ),
-                                  (route) =>
-                                      false, // This predicate ensures that all previous routes are removed.
+                                      (route) =>
+                                  false, // This predicate ensures that all previous routes are removed.
                                 );
                               } else{
                                 print('Logout Failed');
@@ -614,20 +621,7 @@ class _AppDrawerState extends State<AppDrawer> {
                           textColor: AppColors.errorColor,
                         ),
                       ),
-                      SizedBox(height: 2.h),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 22),
-                        child: AppButton(
-                            title: 'Cancel'.tr(),
-                            handler: () {
-                              Navigator.pop(context);
-                            },
-                            isGradient: false,
-                            textColor: isDark
-                                ? AppColors.textColorWhite
-                                : AppColors.textColorBlack.withOpacity(0.8),
-                            color: AppColors.appSecondButton.withOpacity(0.10)),
-                      ),
+
                       Expanded(child: SizedBox()),
                     ],
                   ),

@@ -26,7 +26,7 @@ class UserProvider with ChangeNotifier {
   String? email;
   String? userAvatar;
   String? idNumber;
-  var isEmailVerified;
+  bool isEmailVerified=false;
   var verifiedEmail;
   bool navigateToNeoForConnectWallet=false;
 
@@ -95,7 +95,7 @@ class UserProvider with ChangeNotifier {
       idNumber = jsonResponse['idNumber'];
       userName = jsonResponse['userName'];
       userAvatar = jsonResponse['userAvatar'];
-      isEmailVerified = jsonResponse['isEmailVerified'].toString();
+      isEmailVerified = jsonResponse['isEmailVerified'];
       verifiedEmail = jsonResponse['email'].toString();
 
       print("User details getting successfully!");
@@ -273,13 +273,14 @@ class UserProvider with ChangeNotifier {
       } else {
         // Show an error message or handle the response as needed
         print("Email verified failed: ${response.body}");
-        _showToast('Email verified failed');
+        final errorResponse = json.decode(response.body);
+        _showToast('${errorResponse['message']}');
         return AuthResult.failure;
       }
     } catch (e) {
       print('Error verifying email: $e');
       // Handle error as necessary
-      _showToast('Error verifying email');
+      _showToast('Error verifying email: $e');
       return AuthResult.failure;
     }
   }
@@ -300,21 +301,23 @@ class UserProvider with ChangeNotifier {
       fToast = FToast();
       fToast.init(context);
       print('forgot password response' + response.body);
+      final jsonResponse = json.decode(response.body);
+      final msg = jsonResponse['message'];
       if (response.statusCode == 201) {
         // Successful request
         print("Email sent successfully!");
-        _showToast('Email sent successfully!');
+        _showToast(msg);
         return AuthResult.success;
       } else {
         // Request failed
         print("Email sending failed: ${response.body}");
-        _showToast('Email sending failed');
+        _showToast(msg);
         return AuthResult.failure;
       }
     } catch (e) {
       // Exception occurred during request
       print("Exception occurred: $e");
-      _showToast('An error occurred');
+      _showToast(e.toString());
       return AuthResult.failure;
     }
   }

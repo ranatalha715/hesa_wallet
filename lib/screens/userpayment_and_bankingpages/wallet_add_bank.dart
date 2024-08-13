@@ -336,7 +336,8 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                 child: Padding(
                                                   padding: EdgeInsets.only(
                                                       bottom: 2.h),
-                                                  child: _searchQuery == "" ||
+                                                  child:
+                                                  _searchQuery == "" ||
                                                           _searchQuery.isEmpty
                                                       ? ListView.builder(
                                                           controller:
@@ -394,7 +395,7 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                                 .bankName
                                                                 .toLowerCase()
                                                                 .contains(
-                                                                    _searchQuery)) {
+                                                                    _searchQuery) ) {
                                                               return Container();
                                                             } else {
                                                               return addBankslist(

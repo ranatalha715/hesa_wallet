@@ -264,7 +264,7 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                               // widget.priceNormal == null
                               )
                             Text(
-                              "+${widget.priceUp} SAR",
+                              "${widget.priceUp} SAR",
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 10.2.sp,
@@ -279,7 +279,7 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                               // color: Colors.blue,
                               width: 23.w,
                               child: Text(
-                                "-${widget.priceDown} SAR",
+                                "${widget.priceDown} SAR",
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.right,

@@ -19,56 +19,83 @@ import '../constants/configs.dart';
 class AuthProvider with ChangeNotifier {
   late FToast fToast;
   bool isOverlayVisible = false;
+  var uniqueIdFromStep1;
 
   // var tokenizedUserPayload;
-
+bool otpErrorResponse=false;
   Future<AuthResult> logInWithMobile({
     required String mobile,
     required String code,
     required BuildContext context,
   }) async {
-    try{
-    final url = Uri.parse(BASE_URL + '/auth/login/otp');
-    final body = {
-      "mobileNumber": "+966" + mobile,
-      "code": code,
-    };
+    try {
+      final url = Uri.parse(BASE_URL + '/auth/login/otp');
+      final body = {
+        "mobileNumber": "+966" + mobile,
+        "code": code,
+      };
 
-    final response = await http.post(url, body: body);
-    fToast = FToast();
-    fToast.init(context);
-    print('loginwithmobileresponse');
-    print(response.body);
-    if (response.statusCode == 201) {
-      // Successful login
-      print("User logged in successfully!");
-      _showToast('User logged in successfully!');
-      final jsonResponse = json.decode(response.body);
-      final accessToken = jsonResponse['data']['accessToken'];
-      final refreshToken = jsonResponse['data']['refreshToken'];
+      final response = await http.post(url, body: body);
+      fToast = FToast();
+      fToast.init(context);
+      print('loginwithmobileresponse');
+      print(response.body);
+      if (response.statusCode == 201) {
+        // Successful login
+        print("User logged in successfully!");
+        _showToast('User logged in successfully!');
+        final jsonResponse = json.decode(response.body);
+        final accessToken = jsonResponse['data']['accessToken'];
+        final refreshToken = jsonResponse['data']['refreshToken'];
 
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('accessToken', accessToken);
-      await prefs.setString('refreshToken', refreshToken);
-      // await prefs.setString('password', password);
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('accessToken', accessToken);
+        await prefs.setString('refreshToken', refreshToken);
+        // await prefs.setString('password', password);
+        print('true ya false h');
+        print(Provider.of<UserProvider>(context, listen: false)
+            .navigateToNeoForConnectWallet);
+        if (Provider.of<UserProvider>(context, listen: false)
+            .navigateToNeoForConnectWallet) {
+          await Navigator.of(context)
+              .pushNamed(ConnectDapp.routeName, arguments: {});
 
-      print('true ya false');
-      await Navigator.of(context).pushNamed(ConnectDapp.routeName, arguments: {
-      });
-      return AuthResult.success;
-    } else {
-      print("Login failed: ${response.body}");
-      _showToast('Login failed  ${response.body}');
+          // await Provider.of<UserProvider>(context,listen: false).getUserDetails(context: context,
+          //     token: accessToken
+          // );
+          // await AppDeepLinking().openNftApp(
+          //   {
+          //     "operation": "connectWallet",
+          //     "walletAddress": Provider.of<UserProvider>(context,listen: false).walletAddress,
+          //     "userName": Provider.of<UserProvider>(context,listen: false).userName,
+          //     "userIcon": Provider.of<UserProvider>(context,listen: false).userAvatar,
+          //     "loginResponse":response.body.toString()
+          //   },
+          // );
+          print('go to neo');
+        } else {
+          await Navigator.of(context).pushNamedAndRemoveUntil(
+              'nfts-page', (Route d) => false,
+              arguments: {});
+        }
+        otpErrorResponse=false;
+        notifyListeners();
+        return AuthResult.success;
+      } else {
+        print("Login failed: ${response.body}");
+        _showToast('Login failed  ${response.body}');
+        otpErrorResponse=true;
+        notifyListeners();
+        return AuthResult.failure;
+      }
+    } on TimeoutException catch (e) {
+      print("TimeoutException during login: $e");
+      _showToast('Timeout occurred during login $e');
       return AuthResult.failure;
-    }
-  } on TimeoutException catch (e) {
-  print("TimeoutException during login: $e");
-  _showToast('Timeout occurred during login $e');
-  return AuthResult.failure;
-  } catch (e) {
-  print("Exception during login: $e");
-  _showToast('An error occurred during login $e');
-  return AuthResult.failure;
+    } catch (e) {
+      print("Exception during login: $e");
+      _showToast('An error occurred during login $e');
+      return AuthResult.failure;
     }
   }
 
@@ -98,7 +125,6 @@ class AuthProvider with ChangeNotifier {
       return AuthResult.failure;
     }
   }
-
 
   Future<AuthResult> deleteAccount({
     required String token,
@@ -138,9 +164,7 @@ class AuthProvider with ChangeNotifier {
     required BuildContext context,
   }) async {
     final url = Uri.parse(BASE_URL + '/auth/logout');
-    final body = {
-      'refreshToken' : refreshToken
-    };
+    final body = {'refreshToken': refreshToken};
 
     final response = await http.post(
       url,
@@ -151,7 +175,7 @@ class AuthProvider with ChangeNotifier {
     );
     fToast = FToast();
     fToast.init(context);
-print('logout response' +response.body);
+    print('logout response' + response.body);
     final jsonResponse = json.decode(response.body);
     final msg = jsonResponse['message'];
     if (response.statusCode == 201) {
@@ -182,18 +206,19 @@ print('logout response' +response.body);
     fToast.init(context);
     print('send login otp' + response.body);
     if (response.statusCode == 201) {
-     print('login Otp Response');
+      print('login Otp Response');
       print("${response.body}");
-      _showToast('OTP sent successfully!');
+      final successResponse = json.decode(response.body);
+      _showToast(successResponse['message']);
       return AuthResult.success;
     } else {
       // Show an error message or handle the response as needed
       print("Something went wrong: ${response.body}");
-      _showToast('OTP Sent Failed!');
+      final errorResponse = json.decode(response.body);
+      _showToast(errorResponse['message']);
       return AuthResult.failure;
     }
   }
-
 
   Future<AuthResult> sendOTP({
     required BuildContext context,
@@ -234,7 +259,6 @@ print('logout response' +response.body);
     }
   }
 
-
   Future<AuthResult> resendRegisterOTP({
     required String tokenizedUserPL,
     required BuildContext context,
@@ -269,27 +293,23 @@ print('logout response' +response.body);
     }
   }
 
-  Future<AuthResult> registerUser({
+  Future<AuthResult> registerUserStep1({
     required String firstName,
     required String lastName,
+    required String nationality,
     required String idType,
     required String idNumber,
-    required String userName,
-    required String password,
-    required String deviceToken,
     required String mobileNumber,
     required BuildContext context,
   }) async {
-    final url = Uri.parse('$BASE_URL/auth/register');
+    final url = Uri.parse('$BASE_URL/register/step1');
     final body = {
       "firstName": firstName,
       "lastName": lastName,
       "idType": idType,
+      "nationality": nationality,
       "idNumber": idNumber,
-      "userName": userName,
-      "password": password,
       "mobileNumber": "+966" + mobileNumber,
-      "deviceToken": deviceToken,
     };
 
     final headers = {
@@ -313,12 +333,15 @@ print('logout response' +response.body);
         // Successful registration
         print("User registered successfully!");
         final jsonResponse = json.decode(response.body);
-        var tokenizedUserPayload;
-        tokenizedUserPayload = jsonResponse['data']['tokenizedUserPayload'];
+
+        final uniqueId = jsonResponse['data']['uniqueId'];
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('tokenizedUserPayload', tokenizedUserPayload);
-        print("tokenizedUserPayload" + tokenizedUserPayload);
-        _showToast('User registered successfully!');
+        await prefs.setString('uniqueId', uniqueId);
+        uniqueIdFromStep1=uniqueId;
+        notifyListeners();
+        print("uniqueId" + uniqueId);
+        final successResponse = json.decode(response.body);
+        _showToast(successResponse['message']);
         return AuthResult.success;
       } else {
         final errorResponse = json.decode(response.body);
@@ -335,8 +358,6 @@ print('logout response' +response.body);
       return AuthResult.failure;
     }
   }
-
-
 
   Future<AuthResult> verifyUser({
     required String mobile,
@@ -363,20 +384,59 @@ print('logout response' +response.body);
       // Successful login, handle navigation or other actions
       print("User registered successfully!");
       _showToast('User registered successfully!');
+      otpErrorResponse=false;
+      notifyListeners();
       return AuthResult.success;
     } else {
       // Show an error message or handle the response as needed
       print("Verifying failed: ${response.body}");
-      _showToast('Registration failed');
+      _showToast('${response.body}');
+      otpErrorResponse=true;
+      notifyListeners();
       return AuthResult.failure;
     }
   }
 
+  Future<AuthResult> registerUserStep2({
+    required String code,
+    // required String uniqueId,
+    required BuildContext context,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/register/step2');
+    final body = {
+      "code": code,
+
+    };
+
+    final response = await http.post(url, body: body,  headers: {
+      'X-Unique-Id': '$uniqueIdFromStep1',
+    },);
+    print('registerUserStep2 Response');
+    print(response.body);
+    fToast = FToast();
+    fToast.init(context);
+    if (response.statusCode == 201) {
+      // Successful login, handle navigation or other actions
+      print("User registered successfully!");
+      _showToast('User registered successfully!');
+      otpErrorResponse=false;
+      notifyListeners();
+      return AuthResult.success;
+    } else {
+      // Show an error message or handle the response as needed
+      print("Verifying failed: ${response.body}");
+      _showToast('${response.body}');
+      otpErrorResponse=true;
+      notifyListeners();
+      return AuthResult.failure;
+    }
+  }
+
+  var loginErrorResponse;
 
   Future<AuthResult> loginWithUsername({
     required String username,
     required String password,
-
     required BuildContext context,
   }) async {
     try {
@@ -386,7 +446,9 @@ print('logout response' +response.body);
         "password": password,
       };
 
-      final response = await http.post(url, body: body).timeout(Duration(seconds: 30)); // Timeout set to 10 seconds
+      final response = await http
+          .post(url, body: body)
+          .timeout(Duration(seconds: 30)); // Timeout set to 10 seconds
       fToast = FToast();
       fToast.init(context);
       print("login with username response");
@@ -403,17 +465,17 @@ print('logout response' +response.body);
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('accessToken', accessToken);
         await prefs.setString('refreshToken', refreshToken);
-        await prefs.setString('password', password);
+        // await prefs.setString('password', password);
         // await updateFCM(FCM: FCM, token: token, context: context)
         print('true ya false h');
-        print(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet);
-               if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
+        print(Provider.of<UserProvider>(context, listen: false)
+            .navigateToNeoForConnectWallet);
+        if (Provider.of<UserProvider>(context, listen: false)
+            .navigateToNeoForConnectWallet) {
+          await Navigator.of(context)
+              .pushNamed(ConnectDapp.routeName, arguments: {});
 
-                 await Navigator.of(context).pushNamed(ConnectDapp.routeName, arguments: {
-
-                 });
-
-                 // await Provider.of<UserProvider>(context,listen: false).getUserDetails(context: context,
+          // await Provider.of<UserProvider>(context,listen: false).getUserDetails(context: context,
           //     token: accessToken
           // );
           // await AppDeepLinking().openNftApp(
@@ -427,26 +489,28 @@ print('logout response' +response.body);
           // );
           print('go to neo');
         } else {
-                 await Navigator.of(context)
-                     .pushNamedAndRemoveUntil(
-                     'nfts-page', (Route d) => false,
-                     arguments: {});
-
-               }
+          await Navigator.of(context).pushNamedAndRemoveUntil(
+              'nfts-page', (Route d) => false,
+              arguments: {});
+        }
+        loginErrorResponse=null;
         return AuthResult.success;
       } else {
         final errorResponse = json.decode(response.body);
         print("Login failed: ${response.body}");
-        _showToast(errorResponse['message'],
-        height: 70,
-        );
-        if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
-      }
+        // _showToast(
+        //   errorResponse['message'],
+        //   height: 70,
+        // );
+        loginErrorResponse=errorResponse['message'];
+        //   if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
+        // }
         return AuthResult.failure;
       }
     } on TimeoutException catch (e) {
       print("TimeoutException during login: $e");
-      _showToast('Timeout occurred during login $e');
+      // _showToast('Timeout occurred during login $e');
+      loginErrorResponse=e.toString();
       // if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet) {
       //   await AppDeepLinking().openNftApp(
       //     {
@@ -464,7 +528,8 @@ print('logout response' +response.body);
     } catch (e) {
       // Catching any other exception that might occur during the login process
       print("Exception during login: $e");
-      _showToast('An error occurred during login $e');
+      // _showToast('An error occurred during login $e');
+      loginErrorResponse=e.toString();
       // if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet) {
       //   await AppDeepLinking().openNftApp(
       //     {
@@ -479,7 +544,6 @@ print('logout response' +response.body);
     }
   }
 
-
   Future<AuthResult> refreshToken({
     required String refreshToken,
     required String token,
@@ -488,19 +552,21 @@ print('logout response' +response.body);
     try {
       final url = Uri.parse(BASE_URL + '/auth/refresh-token');
       final body = {
-        "refreshToken" : refreshToken,
+        "refreshToken": refreshToken,
       };
 
-      final response = await http.post(url, body: body,
+      final response = await http.post(
+        url,
+        body: body,
         headers: {
-        'Authorization': 'Bearer $token',
-      },
+          'Authorization': 'Bearer $token',
+        },
       ); // Timeout set to 10 seconds
       // fToast = FToast();
       // fToast.init(context);
       print("refresh token response");
       print(response.body);
-      print('=='+refreshToken);
+      print('==' + refreshToken);
       if (response.statusCode == 201) {
         final jsonResponse = json.decode(response.body);
         final accessToken = jsonResponse['data']['accessToken'];
@@ -536,10 +602,12 @@ print('logout response' +response.body);
     try {
       final url = Uri.parse(BASE_URL + '/user/update-device-token');
       final body = {
-        "deviceToken" : FCM,
+        "deviceToken": FCM,
       };
 
-      final response = await http.post(url, body: body,
+      final response = await http.post(
+        url,
+        body: body,
         headers: {
           'Authorization': 'Bearer $token',
         },
@@ -559,24 +627,25 @@ print('logout response' +response.body);
     }
   }
 
-  var userNameAvailable=true;
+  var userNameAvailable = true;
+
   Future<AuthResult> checkUsername({
     required String userName,
     required BuildContext context,
   }) async {
     try {
       final url = Uri.parse(BASE_URL + '/user/check-username/$userName');
-      final response = await http.get(url,
-        headers: {
-        },
+      final response = await http.get(
+        url,
+        headers: {},
       );
       print("check username response");
       print(response.body);
       if (response.statusCode == 200) {
-        final extractedData=json.decode(response.body);
+        final extractedData = json.decode(response.body);
         print('success response');
         print(extractedData['success']);
-        userNameAvailable=extractedData['success'];
+        userNameAvailable = extractedData['success'];
         // extractedData['success']==true ? userNameAvailable=true:userNameAvailable=false;
         return AuthResult.success;
       } else {
@@ -602,8 +671,9 @@ print('logout response' +response.body);
       "newPassword": newPassword,
     };
 
-
-    final response = await http.post(url, body: body,
+    final response = await http.post(
+      url,
+      body: body,
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -627,7 +697,7 @@ print('logout response' +response.body);
     }
   }
 
-  _showToast(String message, {int duration = 1000, double height=60}) {
+  _showToast(String message, {int duration = 1000, double height = 60}) {
     Widget toast = Container(
       height: height,
       // width: double.infinity,
@@ -651,9 +721,9 @@ print('logout response' +response.body);
                 overflow: TextOverflow.ellipsis,
                 // .toUpperCase(),
                 style: TextStyle(
-                    color: AppColors.hexaGreen,
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.bold)
+                        color: AppColors.hexaGreen,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.bold)
                     .apply(fontWeightDelta: -2),
               ),
             ),
@@ -676,5 +746,4 @@ print('logout response' +response.body);
           );
         });
   }
-
 }

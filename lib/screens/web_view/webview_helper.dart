@@ -9,6 +9,7 @@ import 'package:sizer/sizer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../constants/colors.dart';
+import '../../providers/transaction_provider.dart';
 import '../../widgets/main_header.dart';
 import '../userpayment_and_bankingpages/wallet_banking_and_payment_empty.dart';
 
@@ -42,17 +43,27 @@ class _WebviewHelperState extends State<WebviewHelper> {
       'checkoutId=55CCB91132C12F2C6BF6D75E28026CD1.uat01-vm-tx01',
       'checkoutId=${widget.checkoutId}',
     );
+    updatedHtml = updatedHtml.replaceAll(
+      'data-brands="VISA MASTER MADA"',
+      Provider.of<
+          TransactionProvider>(
+          context,
+          listen: false)
+          .selectedCardBrand ==
+          "MADA"
+          ? 'data-brands="MADA"'
+          : Provider.of<
+          TransactionProvider>(
+          context,
+          listen: false)
+          .selectedCardBrand=="MASTER" ? 'data-brands="MASTER"':'data-brands="VISA"'
+    );
     return Uri.dataFromString(
       updatedHtml,
       mimeType: 'text/html',
       encoding: Encoding.getByName('utf-8'),
     ).toString();
   }
-
-  // void _updateCheckoutId(WebViewController controller, String newCheckoutId) async {
-  //   await controller.runJavaScript("updateCheckoutId('$newCheckoutId');");
-  // }
-
 
   void _updateCheckoutId(
       WebViewController controller, String newCheckoutId) async {
@@ -61,16 +72,28 @@ class _WebviewHelperState extends State<WebviewHelper> {
 
   checkFormFilledStatus(String checkoutID) async {
     print('Now you should run the add card function');
-    Provider.of<CardProvider>(context, listen: false).tokenizeCardVerify(
-        token: accessToken, context: context, checkoutId: checkoutID);
-    widget.fromTransactionReq ?
-    Navigator.pop(context) :
-    Navigator.pushReplacement(
+    await Provider.of<CardProvider>(context, listen: false).tokenizeCardVerify(
+        token: accessToken, context: context, checkoutId: checkoutID,  brand: Provider.of<
+        TransactionProvider>(
+        context,
+        listen: false)
+        .selectedCardBrand,);
+    Navigator.pop(context);
+    Navigator.pop(context);
+    await Navigator.pushReplacement(
       context,
       MaterialPageRoute(
           builder: (context) =>
               WalletBankingAndPaymentEmpty()),
-    );
+    ).then((value) => print('after going'));
+    // widget.fromTransactionReq ?
+    // Navigator.pop(context) :
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(
+    //       builder: (context) =>
+    //           WalletBankingAndPaymentEmpty()),
+    // ).then((value) => print('after going'));
     //bilal ka function call hoga (3rd api)
   }
 
@@ -106,16 +129,16 @@ class _WebviewHelperState extends State<WebviewHelper> {
                     child: Container(
                       child: Padding(
                         padding:  EdgeInsets.symmetric(horizontal: 10.sp, vertical: 8.sp),
-                        // child: WebView(
-                        //   onWebViewCreated: (WebViewController webViewController) {
-                        //     _controller = webViewController;
-                        //   },
-                        //   onPageFinished: (String url) async {
-                        //     _updateCheckoutId(_controller, widget.checkoutId);
-                        //   },
-                        //   initialUrl: snapshot.data!,
-                        //   javascriptMode: JavascriptMode.unrestricted,
-                        // ),
+                        child: WebView(
+                          onWebViewCreated: (WebViewController webViewController) {
+                            _controller = webViewController;
+                          },
+                          onPageFinished: (String url) async {
+                            _updateCheckoutId(_controller, widget.checkoutId);
+                          },
+                          initialUrl: snapshot.data!,
+                          javascriptMode: JavascriptMode.unrestricted,
+                        ),
                       ),
                     ),
                   ),

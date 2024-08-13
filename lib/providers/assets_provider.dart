@@ -77,8 +77,7 @@ class AssetsProvider with ChangeNotifier {
     required String type,
   }) async {
     final url = Uri.parse(BASE_URL +
-        '/user/assets/?ownerType=$ownerType&limit=10&page=1&type=$type&walletAddress=$walletAddress&filter=FOR_SALE'
-    );
+        '/user/assets/?ownerType=$ownerType&limit=10&page=1&type=$type&walletAddress=$walletAddress&filter=FOR_SALE');
     // final body = {
     //   "walletAddress": walletAddress,
     // };
@@ -95,8 +94,6 @@ class AssetsProvider with ChangeNotifier {
     fToast = FToast();
     fToast.init(context);
     final extractedData = json.decode(response.body)['nfts'] as List<dynamic>?;
-    print("extractedData");
-    print(json.decode(response.body));
     final extractedCollection =
         json.decode(response.body)['collections'] as List<dynamic>?;
     if (response.statusCode == 200) {
@@ -327,7 +324,7 @@ class AssetsProvider with ChangeNotifier {
     );
     fToast = FToast();
     fToast.init(context);
-    print('both response');
+    print('all response');
     print(json.decode(response.body));
     final extractedData = json.decode(response.body)['nfts'] as List<dynamic>?;
     final extractedCollection =
@@ -385,6 +382,109 @@ class AssetsProvider with ChangeNotifier {
     }
   }
 
+
+  var tokenId;
+  var tokenName;
+  var ownerName;
+  var creatorName;
+  var createdAt;
+  var creatorRoyalty;
+  var standard;
+  var status;
+  var chain;
+  var isListable;
+  var burnable;
+  var image;
+  var logoImage;
+  var listingType;
+  var collectionItems;
+  Future<AuthResult> getNftCollectionDetails({
+    required String token,
+    required String type,
+    required String id,
+
+  }) async {
+    final url = Uri.parse(BASE_URL +
+        '/user/assets/$type/$id');
+
+    final response = await http.get(
+      url,
+      // body: body,
+      headers: {
+        "Content-type": "application/json",
+        "Accept": "application/json",
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    print('nft details response');
+    print(json.decode(response.body));
+    final extractedData = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      tokenId=extractedData['id'];
+      tokenName=extractedData['name'];
+      image=extractedData['image'];
+      ownerName=extractedData['owner']['userName'];
+      creatorName=extractedData['creator']['userName'];
+      createdAt=extractedData['createdAt'];
+      isListable=extractedData['isListable'].toString();
+      burnable=extractedData['burnable'].toString();
+      creatorRoyalty=extractedData['creatorRoyalty'].toString();
+      standard=extractedData['standard'];
+      status=extractedData['status'];
+      chain=extractedData['chain'];
+      listingType=extractedData['listingType'].toString();
+      return AuthResult.success;
+    } else {
+      return AuthResult.failure;
+    }
+  }
+
+  Future<AuthResult> getCollectionDetails({
+    required String token,
+    required String type,
+    required String id,
+
+  }) async {
+    final url = Uri.parse(BASE_URL +
+        '/user/assets/$type/$id');
+
+    final response = await http.get(
+      url,
+      // body: body,
+      headers: {
+        "Content-type": "application/json",
+        "Accept": "application/json",
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    print('collection details response');
+    print(json.decode(response.body));
+    final extractedData = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      tokenId=extractedData['id'];
+      tokenName=extractedData['name'];
+      image=extractedData['image'];
+      logoImage=extractedData['logoImage'];
+      ownerName=extractedData['owner']['userName'];
+      creatorName=extractedData['creator']['userName'];
+      createdAt=extractedData['createdAt'];
+      isListable=extractedData['isListable'].toString();
+      burnable=extractedData['isBurn'].toString();
+      creatorRoyalty=extractedData['creatorRoyalty'].toString();
+      standard=extractedData['collectionStandard'];
+      status=extractedData['status'];
+      chain=extractedData['chain'];
+      collectionItems=extractedData['collectionItems'].toString();
+      listingType=extractedData['listingType'].toString();
+      return AuthResult.success;
+    } else {
+      return AuthResult.failure;
+    }
+  }
 
 
   _showToast(String message, {int duration = 1000}) {

@@ -6,14 +6,16 @@ import '../constants/colors.dart';
 class MainHeader extends StatefulWidget {
   final String title;
   final String? subTitle;
+  final String? logoPath;
   final Function? handler;
   double? height;
   bool? IsScrolled ;
   bool showSubTitle;
   bool showLogo;
+  bool showBackBtn;
 
   MainHeader({Key? key, required this.title, this.handler , this.height, this.IsScrolled = false,  this.subTitle,
-    this.showSubTitle=false, this.showLogo=false
+    this.showSubTitle=false, this.showLogo=false, this.logoPath, this.showBackBtn=true
 
   })
       : super(key: key);
@@ -37,6 +39,7 @@ class _MainHeaderState extends State<MainHeader> {
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          if(widget.showBackBtn)
           Padding(
             padding:  EdgeInsets.only(left: isEnglish ? 22.sp : 11.sp, bottom: isEnglish ? 12.sp : 8.sp, right: isEnglish ? 0 : 17.sp),
             child: GestureDetector(
@@ -69,8 +72,9 @@ class _MainHeaderState extends State<MainHeader> {
                       borderRadius: BorderRadius.circular(
                           5.sp),
                       child: Image.network(
+                        widget.logoPath!,
                         // widget.nftsCollection.banner!,
-                        'https://images.pexels.com/photos/11881429/pexels-photo-11881429.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
+                        // /'https://images.pexels.com/photos/11881429/pexels-photo-11881429.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
                         // Path to your placeholder image
                         fit: BoxFit.cover,
                       ),

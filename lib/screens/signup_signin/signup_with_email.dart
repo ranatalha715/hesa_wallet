@@ -55,9 +55,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
     });
   }
 
-
-
-
   FocusNode firstFieldFocusNode = FocusNode();
   FocusNode secondFieldFocusNode = FocusNode();
   FocusNode thirdFieldFocusNode = FocusNode();
@@ -66,7 +63,9 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
   FocusNode sixthFieldFocusNode = FocusNode();
 
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _numberController = TextEditingController();
   final ScrollController scrollController = ScrollController();
 
@@ -84,7 +83,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
       setState(() {
         usernameLoading = true;
       });
-       await Provider.of<AuthProvider>(context, listen: false)
+      await Provider.of<AuthProvider>(context, listen: false)
           .checkUsername(userName: _usernameController.text, context: context);
       setState(() {
         usernameLoading = false;
@@ -106,8 +105,10 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
   void dispose() {
     _timer?.cancel();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     _usernameController.dispose();
     _numberController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -136,8 +137,10 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
   String fcmToken = 'Waiting for FCM token...';
 
   FocusNode userNameFocusNode = FocusNode();
+  FocusNode emailFocusNode = FocusNode();
   FocusNode mobileNumFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
+  FocusNode confirmPasswordFocusNode = FocusNode();
 
   getTokenizedUserPayLoad() async {
     final prefs = await SharedPreferences.getInstance();
@@ -163,6 +166,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
     _passwordController.addListener(_updateButtonState);
     _usernameController.addListener(_updateButtonState);
     _numberController.addListener(_updateButtonState);
+    _emailController.addListener(_updateButtonState);
     otp1Controller.addListener(_updateOtpButtonState);
     otp2Controller.addListener(_updateOtpButtonState);
     otp3Controller.addListener(_updateOtpButtonState);
@@ -362,17 +366,16 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                       focusNode: userNameFocusNode,
                                       textInputAction: TextInputAction.next,
                                       onEditingComplete: () {
-                                        mobileNumFocusNode.requestFocus();
+                                        emailFocusNode.requestFocus();
                                       },
                                       controller: _usernameController,
                                       onChanged: (value) {
-
                                         setState(() {
-                                        usernameLoading=true;
+                                          usernameLoading = true;
                                         });
                                         _onUsernameChanged();
                                         setState(() {
-                                          usernameLoading=false;
+                                          usernameLoading = false;
                                         });
                                       },
                                       scrollPadding: EdgeInsets.only(
@@ -381,7 +384,8 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                               .bottom),
                                       keyboardType: TextInputType.text,
                                       inputFormatters: [
-                                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]')),
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(r'[a-zA-Z0-9]')),
                                       ],
                                       style: TextStyle(
                                           fontSize: 10.2.sp,
@@ -418,16 +422,23 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                               // width: 2.0,
                                             )),
                                         suffixIcon: Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 10, top: 13),
-                                          child: Text(
-                                            '.mjra',
-                                            style: TextStyle(
-                                                fontSize: 10.2.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: AppColors.textColorGrey),
-                                          ),
-                                        ),
+                                            padding: const EdgeInsets.only(
+                                                right: 10, top: 13),
+                                            child: Consumer<AuthProvider>(
+                                                builder:
+                                                    (context, auth, child) {
+                                              return Text('.mjra',
+                                                  style: TextStyle(
+                                                      fontSize: 10.2.sp,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: auth
+                                                              .userNameAvailable && _usernameController.text.isNotEmpty
+                                                          ? AppColors
+                                                              .textColorWhite
+                                                          : AppColors
+                                                              .textColorGrey));
+                                            })),
                                       ),
                                       cursorColor: AppColors.textColorGrey),
                                 ),
@@ -445,46 +456,58 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                     ),
                                   ),
                                 if (_usernameController.text.isNotEmpty)
-                                Consumer<AuthProvider>(
-                                    builder: (context, auth, child) {
-                                  return Padding(
-                                    padding: EdgeInsets.only(top: 7.sp),
-                                    child: usernameLoading ? Text('Checking...',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 10.sp,
-                                          color: AppColors.textColorGreyShade2),
-
-                                    ) : Row(
-                                      children: [
-                                        auth.userNameAvailable ?
-                                        Icon(Icons.check_circle,
-                                        size: 10.sp,
-                                        color: AppColors.hexaGreen,
-                                        ) :
-                                        Icon(Icons.cancel,
-                                          size: 10.sp,
-                                          color: AppColors.errorColor,
-                                        ),
-                                        SizedBox(width: 2.sp,),
-                                        Text(
-                                          auth.userNameAvailable
-                                              ? "This username is available"
-                                              : "This username is taken. Try another.",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 10.sp,
-                                              color: Provider.of<AuthProvider>(
-                                                          context,
-                                                          listen: false)
-                                                      .userNameAvailable
-                                                  ? AppColors.hexaGreen
-                                                  : AppColors.errorColor),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }),
+                                  Consumer<AuthProvider>(
+                                      builder: (context, auth, child) {
+                                    return Padding(
+                                      padding: EdgeInsets.only(top: 7.sp),
+                                      child: usernameLoading
+                                          ? Text(
+                                              'Checking...',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 10.sp,
+                                                  color: AppColors
+                                                      .textColorGreyShade2),
+                                            )
+                                          : Row(
+                                              children: [
+                                                auth.userNameAvailable
+                                                    ? Icon(
+                                                        Icons.check_circle,
+                                                        size: 10.sp,
+                                                        color:
+                                                            AppColors.hexaGreen,
+                                                      )
+                                                    : Icon(
+                                                        Icons.cancel,
+                                                        size: 10.sp,
+                                                        color: AppColors
+                                                            .errorColor,
+                                                      ),
+                                                SizedBox(
+                                                  width: 2.sp,
+                                                ),
+                                                Text(
+                                                  auth.userNameAvailable
+                                                      ? "This username is available"
+                                                      : "This username is taken. Try another.",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      fontSize: 10.sp,
+                                                      color: Provider.of<
+                                                                      AuthProvider>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .userNameAvailable
+                                                          ? AppColors.hexaGreen
+                                                          : AppColors
+                                                              .errorColor),
+                                                ),
+                                              ],
+                                            ),
+                                    );
+                                  }),
                                 SizedBox(
                                   height: 2.h,
                                 ),
@@ -493,7 +516,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                       ? Alignment.centerLeft
                                       : Alignment.centerRight,
                                   child: Text(
-                                    'Mobile number'.tr(),
+                                    'Email Address'.tr(),
                                     style: TextStyle(
                                         fontSize: 11.7.sp,
                                         fontFamily: 'Inter',
@@ -508,17 +531,18 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                 ),
                                 TextFieldParent(
                                   child: TextField(
-                                      focusNode: mobileNumFocusNode,
-                                      textInputAction: TextInputAction.next,
-                                      onEditingComplete: () {
-                                        passwordFocusNode.requestFocus();
-                                      },
-                                      controller: _numberController,
+                                      controller: _emailController,
                                       scrollPadding: EdgeInsets.only(
                                           bottom: MediaQuery.of(context)
                                               .viewInsets
                                               .bottom),
-                                      keyboardType: TextInputType.number,
+                                      focusNode: emailFocusNode,
+                                      textInputAction: TextInputAction.next,
+                                      onEditingComplete: () {
+                                        passwordFocusNode.requestFocus();
+
+                                      },
+                                      keyboardType: TextInputType.emailAddress,
                                       style: TextStyle(
                                           fontSize: 10.2.sp,
                                           color: themeNotifier.isDark
@@ -527,16 +551,11 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                           fontWeight: FontWeight.w400,
                                           // Off-white color,
                                           fontFamily: 'Inter'),
-                                      inputFormatters: [
-                                        LengthLimitingTextInputFormatter(9),
-                                        FilteringTextInputFormatter.digitsOnly,
-                                      ],
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.symmetric(
                                             vertical: 10.0, horizontal: 16.0),
                                         hintText:
-                                            'Enter your mobile number'.tr(),
-                                        // contentPadding: EdgeInsets.only(left: 10),
+                                        'Enter a valid email address'.tr(),
                                         hintStyle: TextStyle(
                                             fontSize: 10.2.sp,
                                             color: AppColors.textColorGrey,
@@ -545,7 +564,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             fontFamily: 'Inter'),
                                         enabledBorder: OutlineInputBorder(
                                             borderRadius:
-                                                BorderRadius.circular(8.0),
+                                            BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
                                               color: Colors.transparent,
                                               // Off-white color
@@ -553,44 +572,28 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             )),
                                         focusedBorder: OutlineInputBorder(
                                             borderRadius:
-                                                BorderRadius.circular(8.0),
+                                            BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
                                               color: Colors.transparent,
                                               // Off-white color
                                               // width: 2.0,
                                             )),
-                                        prefixIcon: Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 10.sp,
-                                              top: 12.7.sp,
-                                              right: 11.4.sp),
-                                          child: Text(
-                                            '+966',
-                                            style: TextStyle(
-                                              color: themeNotifier.isDark
-                                                  ? AppColors.textColorWhite
-                                                  : AppColors.textColorBlack,
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 10.2.sp,
-                                            ),
-                                          ),
-                                        ),
                                       ),
                                       cursorColor: AppColors.textColorGrey),
                                 ),
-                                if (_numberController.text.isEmpty &&
-                                    isValidating)
+                                if (_emailController.text.isEmpty && isValidating)
                                   Padding(
                                     padding: EdgeInsets.only(top: 7.sp),
                                     child: Text(
-                                      // "*This mobile number is registered",
-                                      "*Mobile number should not be empty",
+                                      // "*Please enter a valid email address".tr(),
+                                      "*Email address should not be empty",
                                       style: TextStyle(
-                                          fontWeight: FontWeight.w400,
                                           fontSize: 10.sp,
+                                          fontWeight: FontWeight.w400,
                                           color: AppColors.errorColor),
                                     ),
                                   ),
+
                                 SizedBox(
                                   height: 2.h,
                                 ),
@@ -615,17 +618,16 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                 TextFieldParent(
                                   child: TextField(
                                       focusNode: passwordFocusNode,
-                                      textInputAction: TextInputAction.done,
-                                      onEditingComplete: () {
-                                        FocusManager
-                                            .instance.primaryFocus
-                                            ?.unfocus();
-                                      },
+                                      textInputAction: TextInputAction.next,
+                                        onEditingComplete: () {
+                                          confirmPasswordFocusNode.requestFocus();
 
-                                      scrollPadding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom*25),
+                                      },
+                                      // scrollPadding: EdgeInsets.only(
+                                      //     bottom: MediaQuery.of(context)
+                                      //             .viewInsets
+                                      //             .bottom/2
+                                      // ),
                                       controller: _passwordController,
                                       obscureText: _obscurePassword,
                                       onChanged: (password) {
@@ -694,6 +696,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                           color: AppColors.errorColor),
                                     ),
                                   ),
+
                                 // if (!_isPasswordValid &&
                                 //     isValidating &&
                                 //     _passwordController.text.isNotEmpty)
@@ -724,11 +727,13 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                   padding: EdgeInsets.zero,
                                   shrinkWrap: true,
                                   itemCount: accountDefinitions.length,
-                                  itemBuilder: (BuildContext context, int index) {
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
                                     bool conditionMet;
                                     switch (index) {
                                       case 0:
-                                        conditionMet = _hasUppercase && _hasLowercase;
+                                        conditionMet =
+                                            _hasUppercase && _hasLowercase;
                                         break;
                                       case 1:
                                         conditionMet = _hasDigits;
@@ -744,23 +749,36 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                     }
 
                                     return Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Padding(
-                                          padding: EdgeInsets.only(top: 4.0, right: 8.0),
+                                          padding: EdgeInsets.only(
+                                              top: 4.0, right: 8.0),
                                           child: Icon(
                                             Icons.fiber_manual_record,
                                             size: 7.sp,
-                                            color: _passwordController.text.isEmpty ? AppColors.textColorGrey:conditionMet ? AppColors.hexaGreen : AppColors.errorColor,
+                                            color:
+                                                _passwordController.text.isEmpty
+                                                    ? AppColors.textColorGrey
+                                                    : conditionMet
+                                                        ? AppColors.passwordGreen
+                                                        : AppColors.errorColor,
                                           ),
                                         ),
                                         Expanded(
                                           child: Padding(
-                                            padding: const EdgeInsets.only(bottom: 3),
+                                            padding: const EdgeInsets.only(
+                                                bottom: 3),
                                             child: Text(
                                               accountDefinitions[index],
                                               style: TextStyle(
-                                                color: _passwordController.text.isEmpty ? AppColors.textColorGrey:conditionMet ? AppColors.hexaGreen : AppColors.errorColor,
+                                                color: _passwordController
+                                                        .text.isEmpty
+                                                    ? AppColors.textColorGrey
+                                                    : conditionMet
+                                                        ? AppColors.passwordGreen
+                                                        : AppColors.errorColor,
                                                 fontWeight: FontWeight.w400,
                                                 fontSize: 10.2.sp,
                                                 fontFamily: 'Inter',
@@ -772,49 +790,169 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                     );
                                   },
                                 ),
-                                SizedBox(height: 27.h),
+                                SizedBox(
+                                  height: 2.h,
+                                ),
+                                Align(
+                                  alignment: isEnglish
+                                      ? Alignment.centerLeft
+                                      : Alignment.centerRight,
+                                  child: Text(
+                                    'Confirm Password'.tr(),
+                                    style: TextStyle(
+                                        fontSize: 11.7.sp,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w600,
+                                        color: themeNotifier.isDark
+                                            ? AppColors.textColorWhite
+                                            : AppColors.textColorBlack),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 1.h,
+                                ),
+                                TextFieldParent(
+                                  child: TextField(
+                                      focusNode: confirmPasswordFocusNode,
+                                      textInputAction: TextInputAction.done,
+                                      onEditingComplete: () {
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
+                                      },
+                                      scrollPadding: EdgeInsets.only(
+                                          bottom: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom
+                                      ),
+                                      controller: _confirmPasswordController,
+                                      obscureText: _obscurePassword,
+                                      // onChanged: (password) {
+                                      //   _validatePassword(password);
+                                      // },
+                                      style: TextStyle(
+                                          fontSize: 10.2.sp,
+                                          color: themeNotifier.isDark
+                                              ? AppColors.textColorWhite
+                                              : AppColors.textColorBlack,
+                                          fontWeight: FontWeight.w400,
+                                          // Off-white color,
+                                          fontFamily: 'Inter'),
+                                      decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(
+                                            vertical: 10.0, horizontal: 16.0),
+                                        hintText: 'Enter your password'.tr(),
+                                        hintStyle: TextStyle(
+                                            fontSize: 10.2.sp,
+                                            color: AppColors.textColorGrey,
+                                            fontWeight: FontWeight.w400,
+                                            // Off-white color,
+                                            fontFamily: 'Inter'),
+                                        enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(8.0),
+                                            borderSide: BorderSide(
+                                              color: Colors.transparent,
+                                              // Off-white color
+                                              // width: 2.0,
+                                            )),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(8.0),
+                                            borderSide: BorderSide(
+                                              color: Colors.transparent,
+                                              // Off-white color
+                                              // width: 2.0,
+                                            )),
+                                        // labelText: 'Enter your password',
+                                        suffixIcon: IconButton(
+                                          icon: Icon(
+                                              _obscurePassword
+                                                  ? Icons.visibility_outlined
+                                                  : Icons
+                                                  .visibility_off_outlined,
+                                              size: 17.5.sp,
+                                              color: AppColors.textColorGrey),
+                                          onPressed: _togglePasswordVisibility,
+                                          splashColor: Colors.transparent,
+                                          highlightColor: Colors.transparent,
+                                          hoverColor: Colors.transparent,
+                                        ),
+                                      ),
+                                      cursorColor: AppColors.textColorGrey),
+                                ),
+                                if (_confirmPasswordController.text.isEmpty &&
+                                    isValidating)
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 7.sp),
+                                    child: Text(
+                                      "*Confirm Password should not be empty",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 10.sp,
+                                          color: AppColors.errorColor),
+                                    ),
+                                  ),
+                                if (
+                                _confirmPasswordController.text.isEmpty &&
+                                //     isValidating &&
+                                    _confirmPasswordController.text !=_passwordController.text)
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 7.sp),
+                                    child: Text(
+                                      "*Password doesn't match",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 10.sp,
+                                          color: AppColors.errorColor),
+                                    ),
+                                  ),
+                                SizedBox(height: 10.h),
                                 Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 4.sp ),
+                                  margin:
+                                      EdgeInsets.symmetric(horizontal: 4.sp),
                                   color: Colors.transparent,
                                   child: Column(
                                     children: [
                                       // Expanded(child: SizedBox()),
                                       AppButton(
                                           title: 'Create account'.tr(),
-                                          isactive: isButtonActive ? true : false,
+                                          isactive:
+                                              isButtonActive ? true : false,
                                           handler: () async {
                                             setState(() {
                                               isValidating = true;
                                             });
-                                            if (_usernameController.text.isNotEmpty &&
-                                                _numberController.text.isNotEmpty &&
-                                                _passwordController.text.isNotEmpty) {
+                                            if (_usernameController
+                                                    .text.isNotEmpty &&
+                                                _numberController
+                                                    .text.isNotEmpty &&
+                                                _passwordController
+                                                    .text.isNotEmpty) {
                                               setState(() {
                                                 _isLoading = true;
                                                 if (_isLoading) {
-                                                  FocusManager.instance.primaryFocus
+                                                  FocusManager
+                                                      .instance.primaryFocus
                                                       ?.unfocus();
                                                 }
                                               });
-                                              final result =
-                                              await Provider.of<AuthProvider>(
-                                                  context,
-                                                  listen: false)
-                                                  .registerUser(
+                                              final result = await Provider.of<
+                                                          AuthProvider>(context,
+                                                      listen: false)
+                                                  .registerUserStep1(
                                                 context: context,
                                                 firstName: args['firstName'],
                                                 lastName: args['lastName'],
                                                 idNumber: args['id'],
                                                 idType: args['idType'],
-                                                userName: _usernameController.text,
-                                                mobileNumber: _numberController.text,
-                                                password: _passwordController.text,
-                                                deviceToken: fcmToken,
+                                              nationality: '',
+                                                mobileNumber: ''
                                               );
                                               setState(() {
                                                 _isLoading = false;
                                               });
-                                              if (result == AuthResult.success) {
+                                              if (result ==
+                                                  AuthResult.success) {
                                                 await getTokenizedUserPayLoad();
                                                 startTimer();
                                                 otpDialog(
@@ -833,55 +971,64 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                             .text.isNotEmpty) {
                                                       try {
                                                         setState(() {
-                                                          _isLoadingOtpDialoge = true;
+                                                          _isLoadingOtpDialoge =
+                                                              true;
                                                         });
                                                         print('loading popup' +
-                                                            _isLoadingOtpDialoge.toString());
+                                                            _isLoadingOtpDialoge
+                                                                .toString());
                                                         // Navigator.pop(context);
                                                         final result = await Provider
-                                                            .of<AuthProvider>(
-                                                            context,
-                                                            listen: false)
+                                                                .of<AuthProvider>(
+                                                                    context,
+                                                                    listen:
+                                                                        false)
                                                             .verifyUser(
-                                                            context: context,
-                                                            mobile:
-                                                            _numberController
-                                                                .text,
-                                                            code: otp1Controller
-                                                                .text +
-                                                                otp2Controller
-                                                                    .text +
-                                                                otp3Controller
-                                                                    .text +
-                                                                otp4Controller
-                                                                    .text +
-                                                                otp5Controller
-                                                                    .text +
-                                                                otp6Controller
-                                                                    .text,
-                                                            token:
-                                                            tokenizedUserPL);
+                                                                context:
+                                                                    context,
+                                                                mobile:
+                                                                    _numberController
+                                                                        .text,
+                                                                code: otp1Controller.text +
+                                                                    otp2Controller
+                                                                        .text +
+                                                                    otp3Controller
+                                                                        .text +
+                                                                    otp4Controller
+                                                                        .text +
+                                                                    otp5Controller
+                                                                        .text +
+                                                                    otp6Controller
+                                                                        .text,
+                                                                token:
+                                                                    tokenizedUserPL);
                                                         setState(() {
-                                                          _isLoadingOtpDialoge = false;
+                                                          _isLoadingOtpDialoge =
+                                                              false;
                                                         });
                                                         print('loading popup 2' +
-                                                            _isLoadingOtpDialoge.toString());
+                                                            _isLoadingOtpDialoge
+                                                                .toString());
                                                         if (result ==
-                                                            AuthResult.success) {
+                                                            AuthResult
+                                                                .success) {
                                                           Navigator.of(context)
                                                               .pushNamedAndRemoveUntil(
-                                                              '/TermsAndConditions',
-                                                                  (Route d) => false);
+                                                                  '/TermsAndConditions',
+                                                                  (Route d) =>
+                                                                      false);
                                                         }
                                                       } catch (error) {
                                                         print("Error: $error");
                                                         setState(() {
-                                                          _isLoadingOtpDialoge = false;
+                                                          _isLoadingOtpDialoge =
+                                                              false;
                                                         });
                                                         // _showToast('An error occurred'); // Show an error message
                                                       } finally {
                                                         setState(() {
-                                                          _isLoadingOtpDialoge = false;
+                                                          _isLoadingOtpDialoge =
+                                                              false;
                                                         });
                                                       }
                                                     }
@@ -892,22 +1039,27 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                           'resend function calling');
                                                       try {
                                                         setState(() {
-                                                          _isLoadingResend = true;
+                                                          _isLoadingResend =
+                                                              true;
                                                         });
                                                         final result = await Provider
-                                                            .of<AuthProvider>(
-                                                            context,
-                                                            listen: false)
+                                                                .of<AuthProvider>(
+                                                                    context,
+                                                                    listen:
+                                                                        false)
                                                             .sendLoginOTP(
-                                                            mobile:
-                                                            _numberController
-                                                                .text,
-                                                            context: context);
+                                                                mobile:
+                                                                    _numberController
+                                                                        .text,
+                                                                context:
+                                                                    context);
                                                         setState(() {
-                                                          _isLoadingResend = false;
+                                                          _isLoadingResend =
+                                                              false;
                                                         });
                                                         if (result ==
-                                                            AuthResult.success) {
+                                                            AuthResult
+                                                                .success) {
                                                           startTimer();
                                                         }
                                                       } catch (error) {
@@ -915,7 +1067,8 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                         // _showToast('An error occurred'); // Show an error message
                                                       } finally {
                                                         setState(() {
-                                                          _isLoadingResend = false;
+                                                          _isLoadingResend =
+                                                              false;
                                                         });
                                                       }
                                                     } else {}
@@ -928,36 +1081,45 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                   context: context,
                                                   isDark: themeNotifier.isDark,
                                                   isFirstButtonActive:
-                                                  isOtpButtonActive,
+                                                      isOtpButtonActive,
                                                   isSecondButtonActive: false,
-                                                  otp1Controller: otp1Controller,
-                                                  otp2Controller: otp2Controller,
-                                                  otp3Controller: otp3Controller,
-                                                  otp4Controller: otp4Controller,
-                                                  otp5Controller: otp5Controller,
-                                                  otp6Controller: otp6Controller,
+                                                  otp1Controller:
+                                                      otp1Controller,
+                                                  otp2Controller:
+                                                      otp2Controller,
+                                                  otp3Controller:
+                                                      otp3Controller,
+                                                  otp4Controller:
+                                                      otp4Controller,
+                                                  otp5Controller:
+                                                      otp5Controller,
+                                                  otp6Controller:
+                                                      otp6Controller,
                                                   firstFieldFocusNode:
-                                                  firstFieldFocusNode,
+                                                      firstFieldFocusNode,
                                                   secondFieldFocusNode:
-                                                  secondFieldFocusNode,
+                                                      secondFieldFocusNode,
                                                   thirdFieldFocusNode:
-                                                  thirdFieldFocusNode,
+                                                      thirdFieldFocusNode,
                                                   forthFieldFocusNode:
-                                                  forthFieldFocusNode,
+                                                      forthFieldFocusNode,
                                                   fifthFieldFocusNode:
-                                                  fifthFieldFocusNode,
+                                                      fifthFieldFocusNode,
                                                   sixthFieldFocusNode:
-                                                  sixthFieldFocusNode,
-                                                  firstBtnBgColor:
-                                                  AppColors.activeButtonColor,
+                                                      sixthFieldFocusNode,
+                                                  firstBtnBgColor: AppColors
+                                                      .activeButtonColor,
                                                   firstBtnTextColor:
-                                                  AppColors.textColorBlack,
+                                                      AppColors.textColorBlack,
                                                   secondBtnBgColor:
-                                                  Colors.transparent,
-                                                  secondBtnTextColor: _timeLeft != 0
-                                                      ? AppColors.textColorBlack
-                                                      .withOpacity(0.8)
-                                                      : AppColors.textColorWhite,
+                                                      Colors.transparent,
+                                                  secondBtnTextColor:
+                                                      _timeLeft != 0
+                                                          ? AppColors
+                                                              .textColorBlack
+                                                              .withOpacity(0.8)
+                                                          : AppColors
+                                                              .textColorWhite,
                                                   // themeNotifier.isDark
                                                   //     ? AppColors.textColorWhite
                                                   //     : AppColors.textColorBlack
@@ -994,12 +1156,10 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                         //     color: AppColors.backgroundColor,
                         //   ),
                         // ),
-
                       ],
                     ),
                   ),
                 ),
-
               ],
             ),
           ),
@@ -1022,6 +1182,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
       child: TextField(
         controller: controller,
         focusNode: focusNode,
+       
         onChanged: (value) {
           if (value.isEmpty) {
             focusNode.requestFocus();

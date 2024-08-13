@@ -43,12 +43,14 @@ class CardProvider with ChangeNotifier{
 
   Future<AuthResult> tokenizeCardVerify({
     required String token,
+    required String brand,
     required BuildContext context,
     required String checkoutId,
   }) async {
     final url = Uri.parse(BASE_URL + '/user/tokenize-card-verify');
     final body = {
-      'checkoutId': checkoutId
+      'checkoutId': checkoutId,
+      'brand': brand,
     };
 
     final response = await http.post(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hesa_wallet/providers/transaction_provider.dart';
+import 'package:hesa_wallet/screens/settings/security_and_privacy.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   var _isinit = true;
   int selectedCategoryIndex = 0;
   bool _isloading = false;
-
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -113,38 +113,70 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     //   context: context,
     //   walletAddress: user.walletAddress!,
     // );
-    await Provider.of<AssetsProvider>(context, listen: false)
-        .getListedAssets(
+    await Provider.of<AssetsProvider>(context, listen: false).getListedAssets(
       token: accessToken,
       context: context,
-      walletAddress: user.walletAddress!, ownerType: 'owner', type: 'all',
+      walletAddress: user.walletAddress!,
+      ownerType: 'owner',
+      type: 'all',
     );
-    await Provider.of<AssetsProvider>(context, listen: false)
-        .getCreatedAssets(
+    await Provider.of<AssetsProvider>(context, listen: false).getCreatedAssets(
       token: accessToken,
       context: context,
-      walletAddress: user.walletAddress!, ownerType: 'creator', type: 'all',
+      walletAddress: user.walletAddress!,
+      ownerType: 'creator',
+      type: 'all',
     );
-    await Provider.of<AssetsProvider>(context, listen: false)
-        .getOwnedAssets(
+    await Provider.of<AssetsProvider>(context, listen: false).getOwnedAssets(
       token: accessToken,
       context: context,
-      walletAddress: user.walletAddress!, ownerType: 'owner', type: 'all',
+      walletAddress: user.walletAddress!,
+      ownerType: 'owner',
+      type: 'all',
     );
-    await Provider.of<AssetsProvider>(context, listen: false)
-        .getAllAssets(
+    await Provider.of<AssetsProvider>(context, listen: false).getAllAssets(
       token: accessToken,
       context: context,
-      walletAddress: user.walletAddress!, ownerType: 'both', type: 'all',
+      walletAddress: user.walletAddress!,
+      ownerType: 'both',
+      type: 'all',
     );
     setState(() {
       _isloading = false;
     });
   }
 
+  Future<Map<String, dynamic>> getSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    final passcode = prefs.getString('passcode');
+    final setLockScreen = prefs.getBool('setLockScreen') ?? false;
+    return {
+      'passcode': passcode,
+      'setLockScreen': setLockScreen,
+    };
+  }
+
+  setLockScreenStatus(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('setLockScreen', value);
+  }
+  bool _isPasscodeSet =false;
+  getPasscode() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final passcode = prefs.getString('passcode')!;
+    if(passcode!=""){
+      _isPasscodeSet = true;
+    }
+    else{
+      _isPasscodeSet = false;
+    }
+    print("ispasscodeset" + _isPasscodeSet.toString());
+  }
+
   @override
   void initState() {
     super.initState();
+    getPasscode();
     initUniLinks();
     print('recieved data' + _receivedData);
 
@@ -155,7 +187,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor:
-      AppColors.profileHeaderDark, // Change to your desired color
+          AppColors.profileHeaderDark, // Change to your desired color
     ));
   }
 
@@ -204,32 +236,28 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
         });
         Uri uri = Uri.parse(link);
         String? operation = uri.queryParameters['operation'];
-        print('operation mint' + operation.toString(),);
+        print(
+          'operation mint' + operation.toString(),
+        );
         if (operation != null && operation == 'MintNFT') {
           // Navigate to page for MintNFT operation
           navigateToTransactionRequestWithMint(
               uri.queryParameters, operation, context);
-        } else
-          if (operation != null && operation == 'MintCollection') {
+        } else if (operation != null && operation == 'MintCollection') {
           navigateToTransactionRequestWithMintCollection(
               uri.queryParameters, operation, context);
-        }
-          else
-          if (operation != null && operation == 'MintNFTWithEditions') {
-            navigateToTransactionRequestWithMintNFTWithEditions(
-                uri.queryParameters, operation, context);
-          }
-          else if (operation != null && operation == 'purchaseNFT') {
+        } else if (operation != null && operation == 'MintNFTWithEditions') {
+          navigateToTransactionRequestWithMintNFTWithEditions(
+              uri.queryParameters, operation, context);
+        } else if (operation != null && operation == 'purchaseNFT') {
           //purchaseNFT
           navigateToTransactionRequestWithPurchaseNft(
               uri.queryParameters, operation, context);
-        }
-          else if (operation != null && operation == 'purchaseCollection') {
-            //purchaseNFT
-            navigateToTransactionRequestWithPurchaseCollection(
-                uri.queryParameters, operation, context);
-          }
-          else if (operation != null && operation == 'listNFT') {
+        } else if (operation != null && operation == 'purchaseCollection') {
+          //purchaseNFT
+          navigateToTransactionRequestWithPurchaseCollection(
+              uri.queryParameters, operation, context);
+        } else if (operation != null && operation == 'listNFT') {
           //listNFT
           navigateToTransactionRequestWithListNftFixedPrice(
               uri.queryParameters, operation, context);
@@ -248,138 +276,148 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
           //burnNFT
           navigateToTransactionRequestWithBurnNFT(
               uri.queryParameters, operation, context);
-        }
-        else if (operation != null && operation == 'burnCollection') {
+        } else if (operation != null && operation == 'burnCollection') {
           //burnCollection
           navigateToTransactionRequestWithBurnCollection(
               uri.queryParameters, operation, context);
-        }
-        else if (operation != null && operation == 'makeOfferNFT') {
+        } else if (operation != null && operation == 'makeOfferNFT') {
           //makeOfferNFT
           navigateToTransactionRequestWithMakeOfferNFT(
               uri.queryParameters, operation, context);
-        }
-          else if (operation != null && operation == 'makeOfferCollection') {
-            //makeOfferCollection
-            navigateToTransactionRequestWithMakeOfferCollection(
-                uri.queryParameters, operation, context);
-          }
-        else if (operation != null && operation == 'AcceptNFTOfferReceived') {
+        } else if (operation != null && operation == 'makeOfferCollection') {
+          //makeOfferCollection
+          navigateToTransactionRequestWithMakeOfferCollection(
+              uri.queryParameters, operation, context);
+        } else if (operation != null && operation == 'AcceptNFTOfferReceived') {
           //AcceptNFTOfferReceived
           navigateToTransactionRequestAcceptRejectWithAcceptOffer(
               uri.queryParameters, operation, context);
-        }
-          else if (operation != null && operation == 'AcceptCollectionOffer') {
-            //AcceptCollectionOffer
-            navigateToTransactionRequestAcceptRejectWithAcceptCollectionOffer(
-                uri.queryParameters, operation, context);
-          }
-        else if (operation != null && operation == 'rejectNFTOfferReceived') {
+        } else if (operation != null && operation == 'AcceptCollectionOffer') {
+          //AcceptCollectionOffer
+          navigateToTransactionRequestAcceptRejectWithAcceptCollectionOffer(
+              uri.queryParameters, operation, context);
+        } else if (operation != null && operation == 'rejectNFTOfferReceived') {
           //rejectNFTOfferReceived
           navigateToTransactionRequestAcceptRejectWithrejectNFTOfferReceived(
               uri.queryParameters, operation, context);
-        }
-          else if (operation != null && operation == 'rejectCollectionOfferReceived') {
-            //rejectCollectionOfferReceived
-            navigateToTransactionRequestAcceptRejectWithrejectCollectionOfferReceived(
-                uri.queryParameters, operation, context);
-          }
-        else if (operation != null && operation == 'CancelNFTOfferMade') {
+        } else if (operation != null &&
+            operation == 'rejectCollectionOfferReceived') {
+          //rejectCollectionOfferReceived
+          navigateToTransactionRequestAcceptRejectWithrejectCollectionOfferReceived(
+              uri.queryParameters, operation, context);
+        } else if (operation != null && operation == 'CancelNFTOfferMade') {
           //CancelNFTOfferMade
           navigateToTransactionRequestAcceptRejectWithCancelNFTOfferMade(
               uri.queryParameters, operation, context);
-        }
-          else if (operation != null && operation == 'CancelAuctionListing') {
-            //CancelAuctionListing
-            navigateToTransactionRequestAcceptRejectWithCancelAuctionListing(
-                uri.queryParameters, operation, context);
-          }
-          else if (operation != null && operation == 'CancelCollectionAuctionListing') {
-            //CancelCollectionAuctionListing
-            navigateToTransactionRequestAcceptRejectWithCancelCollectionAuctionListing(
-                uri.queryParameters, operation, context);
-          }
-          else if (operation != null && operation == 'CancelListing') {
-            //CancelListing
-            navigateToTransactionRequestAcceptRejectWithCancelListing(
-                uri.queryParameters, operation, context);
-          }
-          else if (operation != null && operation == 'CancelCollectionListing') {
-            //CancelCollectionListing
-            navigateToTransactionRequestAcceptRejectWithCancelCollectionListing(
-                uri.queryParameters, operation, context);
-          }
-        else
-        if (operation != null && operation == 'CancelCollectionOfferMade') {
+        } else if (operation != null && operation == 'CancelAuctionListing') {
+          //CancelAuctionListing
+          navigateToTransactionRequestAcceptRejectWithCancelAuctionListing(
+              uri.queryParameters, operation, context);
+        } else if (operation != null &&
+            operation == 'CancelCollectionAuctionListing') {
+          //CancelCollectionAuctionListing
+          navigateToTransactionRequestAcceptRejectWithCancelCollectionAuctionListing(
+              uri.queryParameters, operation, context);
+        } else if (operation != null && operation == 'CancelListing') {
+          //CancelListing
+          navigateToTransactionRequestAcceptRejectWithCancelListing(
+              uri.queryParameters, operation, context);
+        } else if (operation != null &&
+            operation == 'CancelCollectionListing') {
+          //CancelCollectionListing
+          navigateToTransactionRequestAcceptRejectWithCancelCollectionListing(
+              uri.queryParameters, operation, context);
+        } else if (operation != null &&
+            operation == 'CancelCollectionOfferMade') {
           //CancelCollectionOfferMade
           navigateToTransactionRequestAcceptRejectWithCancelCollectionOfferMade(
               uri.queryParameters, operation, context);
-        }
-        else if (operation != null && operation == 'makeNFTCounterOffer') {
+        } else if (operation != null && operation == 'makeNFTCounterOffer') {
           //makeNFTCounterOffer
           var data = json.decode(uri.queryParameters["params"]!);
           String? id = data['id'];
           String? offererId = data['offererId'];
           int? offerAmount = int.tryParse(data['offerAmount'].toString() ?? '');
-          print(id.toString() + "  " + offererId.toString() + "  " +
+          print(id.toString() +
+              "  " +
+              offererId.toString() +
+              "  " +
               offerAmount.toString());
           navigateToTransactionRequestAcceptRejectWithMakeCounterOffer(
-              uri.queryParameters, operation, context, id.toString(),
-              offererId.toString(), offerAmount.toString());
-        }
-        else
-        if (operation != null && operation == 'makeCollectionCounterOffer') {
+              uri.queryParameters,
+              operation,
+              context,
+              id.toString(),
+              offererId.toString(),
+              offerAmount.toString());
+        } else if (operation != null &&
+            operation == 'makeCollectionCounterOffer') {
           //makeNFTCounterOffer
           var data = json.decode(uri.queryParameters["params"]!);
           String? id = data['id'];
           String? offererId = data['offererId'];
           int? offerAmount = int.tryParse(data['offerAmount'].toString() ?? '');
-          print(id.toString() + "  " + offererId.toString() + "  " +
+          print(id.toString() +
+              "  " +
+              offererId.toString() +
+              "  " +
               offerAmount.toString());
           navigateToTransactionRequestAcceptRejectWithmakeCollectionCounterOffer(
-              uri.queryParameters, operation, context, id.toString(),
-              offererId.toString(), offerAmount.toString());
-        }
-        else if (operation != null && operation == 'acceptNFTCounterOffer') {
+              uri.queryParameters,
+              operation,
+              context,
+              id.toString(),
+              offererId.toString(),
+              offerAmount.toString());
+        } else if (operation != null && operation == 'acceptNFTCounterOffer') {
           //acceptNFTCounterOffer
           navigateToTransactionRequestWithacceptNFTCounterOffer(
               uri.queryParameters, operation, context);
-        }
-        else if (operation != null && operation == 'rejectNFTCounterOffer') {
+        } else if (operation != null && operation == 'rejectNFTCounterOffer') {
           //makeNFTCounterOffer
           var data = json.decode(uri.queryParameters["params"]!);
           String? id = data['id'];
           String? offererId = data['offererId'];
           int? offerAmount = int.tryParse(data['offerAmount'].toString() ?? '');
-          print(id.toString() + "  " + offererId.toString() + "  " +
+          print(id.toString() +
+              "  " +
+              offererId.toString() +
+              "  " +
               offerAmount.toString());
           navigateToTransactionRequestAcceptRejectWithrejectNFTCounterOffer(
-              uri.queryParameters, operation, context, id.toString(),
-              offererId.toString(), offerAmount.toString());
-        }
-        else
-        if (operation != null && operation == 'rejectCollectionCounterOffer') {
+              uri.queryParameters,
+              operation,
+              context,
+              id.toString(),
+              offererId.toString(),
+              offerAmount.toString());
+        } else if (operation != null &&
+            operation == 'rejectCollectionCounterOffer') {
           //makeNFTCounterOffer
           var data = json.decode(uri.queryParameters["params"]!);
           String? id = data['id'];
           String? offererId = data['offererId'];
           int? offerAmount = int.tryParse(data['offerAmount'].toString() ?? '');
-          print(id.toString() + "  " + offererId.toString() + "  " +
+          print(id.toString() +
+              "  " +
+              offererId.toString() +
+              "  " +
               offerAmount.toString());
           navigateToTransactionRequestAcceptRejectWithrejectCollectionCounterOffer(
-              uri.queryParameters, operation, context, id.toString(),
-              offererId.toString(), offerAmount.toString());
-        }
-        else
-        if (operation != null && operation == 'acceptCollectionCounterOffer') {
+              uri.queryParameters,
+              operation,
+              context,
+              id.toString(),
+              offererId.toString(),
+              offerAmount.toString());
+        } else if (operation != null &&
+            operation == 'acceptCollectionCounterOffer') {
           //acceptCollectionCounterOffer
           navigateToTransactionRequestWithacceptCollectionCounterOffer(
               uri.queryParameters, operation, context);
-        }
-        else {}
+        } else {}
       }
-    }
-    );
+    });
   }
 
   Future<void> navigateToTransactionRequestWithMintCollection(
@@ -392,7 +430,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
   }
 
@@ -406,7 +444,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
   }
 
@@ -420,7 +458,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
   }
 
@@ -434,7 +472,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "walletAddress":userWalletAddress,
+      "walletAddress": userWalletAddress,
     });
   }
 
@@ -448,7 +486,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "walletAddress":userWalletAddress,
+      "walletAddress": userWalletAddress,
     });
   }
 
@@ -462,7 +500,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
   }
 
@@ -476,7 +514,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
   }
 
@@ -490,7 +528,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
   }
 
@@ -504,7 +542,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
   }
 
@@ -518,7 +556,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
   }
 
@@ -532,7 +570,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
   }
 
@@ -572,7 +610,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
   }
 
@@ -586,7 +624,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
   }
 
@@ -596,59 +634,60 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(
-        TransactionRequestAcceptReject.routeName, arguments: {
+    await Navigator.of(ctx)
+        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
   }
 
-  Future<void> navigateToTransactionRequestAcceptRejectWithAcceptCollectionOffer(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
+  Future<void>
+      navigateToTransactionRequestAcceptRejectWithAcceptCollectionOffer(
+          Map<String, dynamic> queryParams,
+          String operation,
+          BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(
-        TransactionRequestAcceptReject.routeName, arguments: {
+    await Navigator.of(ctx)
+        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
   }
 
-  Future<
-      void> navigateToTransactionRequestAcceptRejectWithrejectNFTOfferReceived(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
+  Future<void>
+      navigateToTransactionRequestAcceptRejectWithrejectNFTOfferReceived(
+          Map<String, dynamic> queryParams,
+          String operation,
+          BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(
-        TransactionRequestAcceptReject.routeName, arguments: {
+    await Navigator.of(ctx)
+        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
   }
 
-  Future<
-      void> navigateToTransactionRequestAcceptRejectWithrejectCollectionOfferReceived(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
+  Future<void>
+      navigateToTransactionRequestAcceptRejectWithrejectCollectionOfferReceived(
+          Map<String, dynamic> queryParams,
+          String operation,
+          BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(
-        TransactionRequestAcceptReject.routeName, arguments: {
+    await Navigator.of(ctx)
+        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
   }
 
@@ -658,181 +697,183 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(
-        TransactionRequestAcceptReject.routeName, arguments: {
+    await Navigator.of(ctx)
+        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
   }
 
-  Future<
-      void> navigateToTransactionRequestAcceptRejectWithCancelCollectionOfferMade(
+  Future<void>
+      navigateToTransactionRequestAcceptRejectWithCancelCollectionOfferMade(
+          Map<String, dynamic> queryParams,
+          String operation,
+          BuildContext ctx) async {
+    String paramsString = queryParams['params'] ?? '';
+    String feesString = queryParams['fees'] ?? '';
+    await Navigator.of(ctx)
+        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
+      "params": paramsString,
+      "fees": feesString,
+      "operation": operation,
+      "walletAddress": userWalletAddress
+    });
+  }
+
+  Future<void> navigateToTransactionRequestAcceptRejectWithCancelAuctionListing(
       Map<String, dynamic> queryParams,
       String operation,
       BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(
-        TransactionRequestAcceptReject.routeName, arguments: {
+    await Navigator.of(ctx)
+        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
   }
 
-  Future<
-      void> navigateToTransactionRequestAcceptRejectWithCancelAuctionListing(
+  Future<void>
+      navigateToTransactionRequestAcceptRejectWithCancelCollectionAuctionListing(
+          Map<String, dynamic> queryParams,
+          String operation,
+          BuildContext ctx) async {
+    String paramsString = queryParams['params'] ?? '';
+    String feesString = queryParams['fees'] ?? '';
+    await Navigator.of(ctx)
+        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
+      "params": paramsString,
+      "fees": feesString,
+      "operation": operation,
+      "walletAddress": userWalletAddress
+    });
+  }
+
+  Future<void> navigateToTransactionRequestAcceptRejectWithCancelListing(
       Map<String, dynamic> queryParams,
       String operation,
       BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(
-        TransactionRequestAcceptReject.routeName, arguments: {
+    await Navigator.of(ctx)
+        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
   }
 
-  Future<
-      void> navigateToTransactionRequestAcceptRejectWithCancelCollectionAuctionListing(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
+  Future<void>
+      navigateToTransactionRequestAcceptRejectWithCancelCollectionListing(
+          Map<String, dynamic> queryParams,
+          String operation,
+          BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(
-        TransactionRequestAcceptReject.routeName, arguments: {
+    await Navigator.of(ctx)
+        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "walletAddress":userWalletAddress
-    });
-  }
-
-  Future<
-      void> navigateToTransactionRequestAcceptRejectWithCancelListing(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(
-        TransactionRequestAcceptReject.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress":userWalletAddress
-    });
-  }
-
-  Future<
-      void> navigateToTransactionRequestAcceptRejectWithCancelCollectionListing(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(
-        TransactionRequestAcceptReject.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
   }
 
   Future<void> navigateToTransactionRequestAcceptRejectWithMakeCounterOffer(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx,
-      String id,
-      String offererId,
-      String offerAmount,) async {
+    Map<String, dynamic> queryParams,
+    String operation,
+    BuildContext ctx,
+    String id,
+    String offererId,
+    String offerAmount,
+  ) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(
-        TransactionRequestAcceptReject.routeName, arguments: {
+    await Navigator.of(ctx)
+        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
       "id": id,
       "offererId": offererId,
       "offerAmount": offerAmount,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
   }
 
-  Future<
-      void> navigateToTransactionRequestAcceptRejectWithrejectNFTCounterOffer(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx,
-      String id,
-      String offererId,
-      String offerAmount,) async {
+  Future<void>
+      navigateToTransactionRequestAcceptRejectWithrejectNFTCounterOffer(
+    Map<String, dynamic> queryParams,
+    String operation,
+    BuildContext ctx,
+    String id,
+    String offererId,
+    String offerAmount,
+  ) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(
-        TransactionRequestAcceptReject.routeName, arguments: {
+    await Navigator.of(ctx)
+        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
       "id": id,
       "offererId": offererId,
       "offerAmount": offerAmount,
-      "walletAddress":userWalletAddress
-    });
-    print('chal gia');
-  }
-
-  Future<
-      void> navigateToTransactionRequestAcceptRejectWithrejectCollectionCounterOffer(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx,
-      String id,
-      String offererId,
-      String offerAmount,) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(
-        TransactionRequestAcceptReject.routeName, arguments: {
-      "params": paramsString,
-      "operation": operation,
-      "fees": feesString,
-      "id": id,
-      "offererId": offererId,
-      "offerAmount": offerAmount,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
     print('chal gia');
   }
 
-  Future<
-      void> navigateToTransactionRequestAcceptRejectWithmakeCollectionCounterOffer(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx,
-      String id,
-      String offererId,
-      String offerAmount,) async {
+  Future<void>
+      navigateToTransactionRequestAcceptRejectWithrejectCollectionCounterOffer(
+    Map<String, dynamic> queryParams,
+    String operation,
+    BuildContext ctx,
+    String id,
+    String offererId,
+    String offerAmount,
+  ) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(
-        TransactionRequestAcceptReject.routeName, arguments: {
+    await Navigator.of(ctx)
+        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
+      "params": paramsString,
+      "operation": operation,
+      "fees": feesString,
+      "id": id,
+      "offererId": offererId,
+      "offerAmount": offerAmount,
+      "walletAddress": userWalletAddress
+    });
+    print('chal gia');
+  }
+
+  Future<void>
+      navigateToTransactionRequestAcceptRejectWithmakeCollectionCounterOffer(
+    Map<String, dynamic> queryParams,
+    String operation,
+    BuildContext ctx,
+    String id,
+    String offererId,
+    String offerAmount,
+  ) async {
+    String paramsString = queryParams['params'] ?? '';
+    String feesString = queryParams['fees'] ?? '';
+    await Navigator.of(ctx)
+        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
       "id": id,
       "offererId": offererId,
       "offerAmount": offerAmount,
-      "walletAddress":userWalletAddress
+      "walletAddress": userWalletAddress
     });
   }
 
@@ -841,456 +882,510 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   @override
   Widget build(BuildContext context) {
     final nftsAll =
-        Provider
-            .of<AssetsProvider>(context, listen: false)
-            .assetsAll;
+        Provider.of<AssetsProvider>(context, listen: false).assetsAll;
     final nftsCollectionAll =
-        Provider
-            .of<AssetsProvider>(context, listen: false)
-            .assetsCollectionAll;
+        Provider.of<AssetsProvider>(context, listen: false).assetsCollectionAll;
     final nftsListed =
-        Provider
-            .of<AssetsProvider>(context, listen: false)
-            .assetsListed;
-    final collectionListed =
-        Provider
-            .of<AssetsProvider>(context, listen: false)
-            .assetsCollectionListed;
+        Provider.of<AssetsProvider>(context, listen: false).assetsListed;
+    final collectionListed = Provider.of<AssetsProvider>(context, listen: false)
+        .assetsCollectionListed;
 
     final nftsCreated =
-        Provider
-            .of<AssetsProvider>(context, listen: false)
-            .assetsCreated;
+        Provider.of<AssetsProvider>(context, listen: false).assetsCreated;
     final nftsCollectionCreated =
-        Provider
-            .of<AssetsProvider>(context, listen: false)
+        Provider.of<AssetsProvider>(context, listen: false)
             .assetsCollectionCreated;
 
     final nftsOwned =
-        Provider
-            .of<AssetsProvider>(context, listen: false)
-            .assetsOwned;
+        Provider.of<AssetsProvider>(context, listen: false).assetsOwned;
     final nftsCollectionOwnedByUser =
-        Provider
-            .of<AssetsProvider>(context, listen: false)
+        Provider.of<AssetsProvider>(context, listen: false)
             .assetsCollectionOwned;
     return Consumer<UserProvider>(builder: (context, user, child) {
       return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
         return Stack(
           children: [
-            Scaffold(
-              key: _key,
-              drawer: AppDrawer(),
-              backgroundColor: themeNotifier.isDark
-                  ? AppColors.backgroundColor
-                  : AppColors.textColorWhite,
-              body: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      height: 35.h,
-                      width: double.infinity,
-                      color: themeNotifier.isDark
-                          ? AppColors.backgroundColor
-                          : AppColors.textColorWhite,
+            FutureBuilder<Map<String, dynamic>>(
+                future: getSettings(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<Map<String, dynamic>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done ||
+                      snapshot.connectionState == ConnectionState.waiting) {
+                    if (snapshot.hasData) {
+                      final passcode = snapshot.data!['passcode'] as String?;
+                      final setLockScreen =
+                          snapshot.data!['setLockScreen'] as bool;
+                      print("setLockScreen && passcode");
+                      print(setLockScreen.toString() + passcode.toString());
+                      if (setLockScreen &&
+                          passcode != null &&
+                          passcode.isNotEmpty) {
+                        return WelcomeScreen(handler: (){});
+                        // Navigate to the pin screen
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          // Navigator.pushReplacement(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //       builder: (context) => WelcomeScreen(
+                          //             handler: () {},
+                          //           )),
+                          // );
+
+                        });
+                      }
+                    }
+                  }
+                  return Scaffold(
+                    key: _key,
+                    drawer: AppDrawer(),
+                    backgroundColor: themeNotifier.isDark
+                        ? AppColors.backgroundColor
+                        : AppColors.textColorWhite,
+                    body: SingleChildScrollView(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
-                            height: 12.h,
+                            height: 35.h,
+                            width: double.infinity,
                             color: themeNotifier.isDark
-                                ? AppColors.profileHeaderDark
-                                : AppColors.whiteShade,
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                  left: 14.sp, right: 20.sp, bottom: 8.sp),
-                              child: Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () =>
-                                        _key.currentState!.openDrawer(),
-                                    child: Stack(
+                                ? AppColors.backgroundColor
+                                : AppColors.textColorWhite,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 12.h,
+                                  color: themeNotifier.isDark
+                                      ? AppColors.profileHeaderDark
+                                      : AppColors.whiteShade,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 14.sp,
+                                        right: 20.sp,
+                                        bottom: 8.sp),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
-                                        Icon(
-                                          Icons.menu_rounded,
-                                          color: themeNotifier.isDark
-                                              ? AppColors.textColorWhite
-                                              : AppColors.textColorBlack,
-                                          size: 25.sp,
+                                        GestureDetector(
+                                          onTap: () =>
+                                              _key.currentState!.openDrawer(),
+                                          child: Stack(
+                                            children: [
+                                              Icon(
+                                                Icons.menu_rounded,
+                                                color: themeNotifier.isDark
+                                                    ? AppColors.textColorWhite
+                                                    : AppColors.textColorBlack,
+                                                size: 25.sp,
+                                              ),
+                                              Consumer<TransactionProvider>(
+                                                  builder: (context,
+                                                      TransactionProvider trP,
+                                                      _) {
+                                                return Positioned(
+                                                  right: 1,
+                                                  // bottom: 2.sp,
+                                                  child: Container(
+                                                    height: 4.3.sp,
+                                                    width: 4.3.sp,
+                                                    decoration: BoxDecoration(
+                                                      color: trP.showRedDot
+                                                          ? AppColors.errorColor
+                                                          : Colors.transparent,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10.sp),
+                                                    ),
+                                                  ),
+                                                );
+                                              }),
+                                            ],
+                                          ),
                                         ),
-        Consumer<TransactionProvider>(
-        builder: (context, TransactionProvider trP, _) {
-          return
-            Positioned(
-              right: 1,
-              // bottom: 2.sp,
-              child: Container(
-                height: 4.3.sp,
-                width: 4.3.sp,
-                decoration: BoxDecoration(
-                  color: trP.showRedDot ? AppColors.errorColor:Colors.transparent,
-                  borderRadius:
-                  BorderRadius.circular(10.sp),
-                ),
-              ),
-            );
-        }),
+                                        // Container(
+                                        //   decoration: BoxDecoration(
+                                        //     borderRadius: BorderRadius.circular(20.sp),
+                                        //     border: Border.all(
+                                        //       color: AppColors.textColorGrey,
+                                        //       width: 1,
+                                        //     ),
+                                        //   ),
+                                        //   child: Padding(
+                                        //     padding: EdgeInsets.only(
+                                        //         left: 8.sp,
+                                        //         right: 8.sp,
+                                        //         top: 5.sp,
+                                        //         bottom: 5.sp),
+                                        //     child: Row(
+                                        //       children: [
+                                        //         Icon(
+                                        //           Icons.fiber_manual_record,
+                                        //           size: 7.sp,
+                                        //           color: AppColors.textColorGrey,
+                                        //         ),
+                                        //         SizedBox(
+                                        //           width: 2.w,
+                                        //         ),
+                                        //         Text(
+                                        //           'AlMajra B-01'.tr(),
+                                        //           style: TextStyle(
+                                        //               fontSize: 9.8.sp,
+                                        //               fontWeight: FontWeight.w500,
+                                        //               color: themeNotifier.isDark
+                                        //                   ? AppColors.textColorWhite
+                                        //                   : AppColors.textColorBlack),
+                                        //         ),
+                                        //       ],
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setLockScreenStatus(true);
+                                            _isPasscodeSet ?
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => WelcomeScreen(
+                                                        handler: () {},
+                                                      )),
+                                            ):Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => SecurityAndPrivacy(
+
+                                                  )),
+                                            );
+                                            // setState(() {
+                                            //   showLockedScreen = true;
+                                            // });
+                                          },
+                                          child: Padding(
+                                            padding:
+                                                EdgeInsets.only(bottom: 5.sp),
+                                            child: Image.asset(
+                                              "assets/images/lock.png",
+                                              height: 19.sp,
+                                              width: 19.sp,
+                                              color: themeNotifier.isDark
+                                                  ? AppColors.textColorWhite
+                                                  : AppColors.textColorBlack,
+                                            ),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
-                                  // Container(
-                                  //   decoration: BoxDecoration(
-                                  //     borderRadius: BorderRadius.circular(20.sp),
-                                  //     border: Border.all(
-                                  //       color: AppColors.textColorGrey,
-                                  //       width: 1,
-                                  //     ),
-                                  //   ),
-                                  //   child: Padding(
-                                  //     padding: EdgeInsets.only(
-                                  //         left: 8.sp,
-                                  //         right: 8.sp,
-                                  //         top: 5.sp,
-                                  //         bottom: 5.sp),
-                                  //     child: Row(
-                                  //       children: [
-                                  //         Icon(
-                                  //           Icons.fiber_manual_record,
-                                  //           size: 7.sp,
-                                  //           color: AppColors.textColorGrey,
-                                  //         ),
-                                  //         SizedBox(
-                                  //           width: 2.w,
-                                  //         ),
-                                  //         Text(
-                                  //           'AlMajra B-01'.tr(),
-                                  //           style: TextStyle(
-                                  //               fontSize: 9.8.sp,
-                                  //               fontWeight: FontWeight.w500,
-                                  //               color: themeNotifier.isDark
-                                  //                   ? AppColors.textColorWhite
-                                  //                   : AppColors.textColorBlack),
-                                  //         ),
-                                  //       ],
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  GestureDetector(
-                                    onTap: () =>
-                                        setState(() {
-                                          showLockedScreen = true;
-                                        }),
-                                    child: Padding(
-                                      padding: EdgeInsets.only(bottom: 5.sp),
-                                      child:
-                                      Image.asset(
-                                        "assets/images/lock.png",
-                                        height: 19.sp,
-                                        width: 19.sp,
-                                        color: themeNotifier.isDark
-                                            ? AppColors.textColorWhite
-                                            : AppColors.textColorBlack,
+                                ),
+                                SizedBox(
+                                  height: 4.h,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: AppColors.textColorGrey,
+                                      //     gradient: LinearGradient(
+                                      //       colors: [Color(0xff92B928), Color(0xffC9C317)],
+                                      //       begin: Alignment.topLeft,
+                                      //       end: Alignment.bottomRight,
+                                      //     ),
+                                      borderRadius: BorderRadius.circular(100)),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(1.sp),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color: AppColors.backgroundColor,
+                                          borderRadius:
+                                              BorderRadius.circular(100)),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(1.sp),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          child: user.userAvatar != null
+                                              ? Image.network(
+                                                  user.userAvatar!,
+                                                  height: 55.sp,
+                                                  width: 55.sp,
+                                                  fit: BoxFit.cover,
+                                                  // semanticsLabel: 'A shark?!',
+                                                  // placeholderBuilder: (BuildContext context) => Container(
+                                                  //     padding: const EdgeInsets.all(30.0),
+                                                  //     child: const CircularProgressIndicator()),
+                                                )
+                                              : Image.asset(
+                                                  "assets/images/profile.png",
+                                                  height: 55.sp,
+                                                  width: 55.sp,
+                                                ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 4.h,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                                color: AppColors.textColorGrey,
-                                //     gradient: LinearGradient(
-                                //       colors: [Color(0xff92B928), Color(0xffC9C317)],
-                                //       begin: Alignment.topLeft,
-                                //       end: Alignment.bottomRight,
-                                //     ),
-                                borderRadius: BorderRadius.circular(100)),
-                            child: Padding(
-                              padding: EdgeInsets.all(1.sp),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: AppColors.backgroundColor,
-                                    borderRadius: BorderRadius.circular(100)),
-                                child: Padding(
-                                  padding: EdgeInsets.all(1.sp),
-                                  child:
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(100),
-                                    child: user.userAvatar != null ? Image.network(
-                                      user.userAvatar!,
-                                      height: 55.sp,
-                                        width: 55.sp,
-                                      fit: BoxFit.cover,
-                                      // semanticsLabel: 'A shark?!',
-                                      // placeholderBuilder: (BuildContext context) => Container(
-                                      //     padding: const EdgeInsets.all(30.0),
-                                      //     child: const CircularProgressIndicator()),
-                                    ):
-                                    Image.asset(
-                                      "assets/images/profile.png",
-                                      height: 55.sp,
-                                      width: 55.sp,
-                                    ),
-                                  ),
-
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 2.5.h,
-                          ),
-                          Text(
-                            user.userName != null
-                                ? user.userName!
-                                : 'username.mjra'.tr(),
-                            style: TextStyle(
-                                fontSize: 11.7.sp,
-                                fontFamily: 'Blogger Sans',
-                                fontWeight: FontWeight.w700,
-                                color: themeNotifier.isDark
-                                    ? AppColors.textColorWhite
-                                    : AppColors.textColorBlack),
-                          ),
-                          SizedBox(
-                            height: 0.5.h,
-                          ),
-                          // if(user.walletAddress != null)
-                          GestureDetector(
-                            onTap: () => _copyToClipboard(user.walletAddress!),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  user.walletAddress != null
-                                      ? replaceMiddleWithDots(
-                                      user.walletAddress!)
-                                      : "...",
-                                  // '0x1647f...87332',
-                                  style: TextStyle(
-                                      fontSize: 9.5.sp,
-                                      fontFamily: 'Blogger Sans',
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.textColorGrey),
                                 ),
                                 SizedBox(
-                                  width: 3.sp,
+                                  height: 2.5.h,
                                 ),
-                                Icon(
-                                  Icons.content_copy,
-                                  size: 10.sp,
-                                  color: AppColors.textColorGrey,
+                                Text(
+                                  user.userName != null
+                                      ? user.userName!
+                                      : 'username.mjra'.tr(),
+                                  style: TextStyle(
+                                      fontSize: 11.7.sp,
+                                      fontFamily: 'Blogger Sans',
+                                      fontWeight: FontWeight.w700,
+                                      color: themeNotifier.isDark
+                                          ? AppColors.textColorWhite
+                                          : AppColors.textColorBlack),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      height: 65.h,
-                      width: double.infinity,
-                      color: themeNotifier.isDark
-                          ? AppColors.backgroundColor
-                          : AppColors.textColorWhite,
-                      child: Column(
-                        children: [
-                          PreferredSize(
-                            preferredSize: Size.fromHeight(kToolbarHeight + 10),
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  bottom: 0,
-                                  left: 0,
-                                  right: 0,
-                                  child: Container(
-                                    height: 1.sp,
-                                    color: themeNotifier.isDark
-                                        ? AppColors.transactionSummNeoBorder
-                                        : AppColors.tabUnselectedClorLight,
-                                  ),
+                                SizedBox(
+                                  height: 0.5.h,
                                 ),
-                                Container(
-                                  color: Colors.transparent,
-                                  // Background color of the TabBar
-
-                                  child: TabBar(
-                                    controller: _tabController,
-                                    indicatorColor: AppColors.activeButtonColor,
-                                    unselectedLabelColor:
-                                    AppColors.textColorGrey,
-                                    labelColor: themeNotifier.isDark
-                                        ? AppColors.textColorWhite
-                                        : AppColors.textColorBlack,
-                                    labelStyle: TextStyle(
-                                        color: themeNotifier.isDark
-                                            ? AppColors.textColorWhite
-                                            : AppColors.textColorBlack,
-                                        fontSize: 11.5.sp,
-                                        fontWeight: FontWeight.w600),
-                                    tabs: [
-                                      Tab(text: 'Tokens'.tr()),
-                                      Tab(text: 'NFTs'.tr()),
+                                // if(user.walletAddress != null)
+                                GestureDetector(
+                                  onTap: () =>
+                                      _copyToClipboard(user.walletAddress!),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        user.walletAddress != null
+                                            ? replaceMiddleWithDots(
+                                                user.walletAddress!)
+                                            : "...",
+                                        // '0x1647f...87332',
+                                        style: TextStyle(
+                                            fontSize: 9.5.sp,
+                                            fontFamily: 'Blogger Sans',
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.textColorGrey),
+                                      ),
+                                      // SizedBox(
+                                      //   width: 3.sp,
+                                      // ),
+                                      // Icon(
+                                      //   Icons.content_copy,
+                                      //   size: 10.sp,
+                                      //   color: AppColors.textColorGrey,
+                                      // ),
                                     ],
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          _isloading
-                              ? Padding(
-                            padding: EdgeInsets.only(top: 25.h),
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                color: AppColors.activeButtonColor,
-                              ),
-                            ),
-                          )
-                              : Expanded(
-                            child: TabBarView(
-                              controller: _tabController,
+                          Container(
+                            height: 65.h,
+                            width: double.infinity,
+                            color: themeNotifier.isDark
+                                ? AppColors.backgroundColor
+                                : AppColors.textColorWhite,
+                            child: Column(
                               children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 15.h,
-                                  ),
-                                  child: Text(
-                                    "You have no Tokens",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: themeNotifier.isDark
-                                            ? AppColors
-                                            .textColorGreyShade2
-                                            : AppColors.textColorBlack,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 12.sp,
-                                        fontFamily: 'Blogger Sans'),
+                                PreferredSize(
+                                  preferredSize:
+                                      Size.fromHeight(kToolbarHeight + 10),
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        bottom: 0,
+                                        left: 0,
+                                        right: 0,
+                                        child: Container(
+                                          height: 1.sp,
+                                          color: themeNotifier.isDark
+                                              ? AppColors
+                                                  .transactionSummNeoBorder
+                                              : AppColors
+                                                  .tabUnselectedClorLight,
+                                        ),
+                                      ),
+                                      Container(
+                                        color: Colors.transparent,
+                                        // Background color of the TabBar
+
+                                        child: TabBar(
+                                          controller: _tabController,
+                                          indicatorColor:
+                                              AppColors.activeButtonColor,
+                                          unselectedLabelColor:
+                                              AppColors.textColorGrey,
+                                          labelColor: themeNotifier.isDark
+                                              ? AppColors.textColorWhite
+                                              : AppColors.textColorBlack,
+                                          labelStyle: TextStyle(
+                                              color: themeNotifier.isDark
+                                                  ? AppColors.textColorWhite
+                                                  : AppColors.textColorBlack,
+                                              fontSize: 11.5.sp,
+                                              fontWeight: FontWeight.w600),
+                                          tabs: [
+                                            Tab(text: 'Tokens'.tr()),
+                                            Tab(text: 'NFTs'.tr()),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                //show this when data is empty
-                                // Center(child: Text('You have no NFTs under \nthis wallet ID',
-                                //   textAlign: TextAlign.center,
-                                //   style: TextStyle(
-                                //     color: AppColors.textColorGrey,
-                                //     fontWeight: FontWeight.w400,
-                                //     fontSize: 11.5.sp,
-                                //   ),
-                                // )),
-                                Column(
-                                  children: [
-                                    Container(
-                                        height: 8.h,
-                                        width: 100.w,
-                                        color: themeNotifier.isDark
-                                            ? AppColors.backgroundColor
-                                            : AppColors.textColorWhite,
-                                        child: SingleChildScrollView(
-                                          scrollDirection:
-                                          Axis.horizontal,
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 16.sp,
+                                _isloading
+                                    ? Padding(
+                                        padding: EdgeInsets.only(top: 25.h),
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            color: AppColors.activeButtonColor,
+                                          ),
+                                        ),
+                                      )
+                                    : Expanded(
+                                        child: TabBarView(
+                                          controller: _tabController,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: 15.h,
+                                              ),
+                                              child: Text(
+                                                "You have no Tokens",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: themeNotifier.isDark
+                                                        ? AppColors
+                                                            .textColorGreyShade2
+                                                        : AppColors
+                                                            .textColorBlack,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 12.sp,
+                                                    fontFamily: 'Blogger Sans'),
+                                              ),
                                             ),
-                                            // vertical: 10.sp),
-                                            child: Row(
+                                            //show this when data is empty
+                                            // Center(child: Text('You have no NFTs under \nthis wallet ID',
+                                            //   textAlign: TextAlign.center,
+                                            //   style: TextStyle(
+                                            //     color: AppColors.textColorGrey,
+                                            //     fontWeight: FontWeight.w400,
+                                            //     fontSize: 11.5.sp,
+                                            //   ),
+                                            // )),
+                                            Column(
                                               children: [
-                                                NFTCategoryWidget(
-                                                  title: "All".tr(),
-                                                  // image: "",
-                                                  isFirst: true,
-                                                  index: 0,
-                                                  handler: () =>
-                                                      onCategorySelected(
-                                                          0),
-                                                ),
-                                                NFTCategoryWidget(
-                                                  title: "Owned".tr(),
-                                                  // image:
-                                                  //     'assets/images/cat_dig_art.png',
-                                                  index: 1,
-                                                  handler: () {
-                                                    setState(() {
-                                                      _isloading=true;
-                                                    });
-                                                    onCategorySelected(
-                                                        1);
-                                                    setState(() {
-                                                      _isloading=false;
-                                                    });
-                                                  }
-
-                                                ),
-                                                NFTCategoryWidget(
-                                                  title: "Created".tr(),
-                                                  // image:
-                                                  //     'assets/images/cat_sports.png',
-                                                  index: 2,
-                                                  handler: () =>
-                                                      onCategorySelected(
-                                                          2),
-                                                ),
-                                                NFTCategoryWidget(
-                                                  title: "Listed".tr(),
-                                                  // image:
-                                                  //     'assets/images/cat_animals.png',
-                                                  index: 3,
-                                                  handler: () =>
-                                                      onCategorySelected(
-                                                          3),
-                                                ),
+                                                Container(
+                                                    height: 8.h,
+                                                    width: 100.w,
+                                                    color: themeNotifier.isDark
+                                                        ? AppColors
+                                                            .backgroundColor
+                                                        : AppColors
+                                                            .textColorWhite,
+                                                    child:
+                                                        SingleChildScrollView(
+                                                      scrollDirection:
+                                                          Axis.horizontal,
+                                                      child: Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                          horizontal: 16.sp,
+                                                        ),
+                                                        // vertical: 10.sp),
+                                                        child: Row(
+                                                          children: [
+                                                            NFTCategoryWidget(
+                                                              title: "All".tr(),
+                                                              // image: "",
+                                                              isFirst: true,
+                                                              index: 0,
+                                                              handler: () =>
+                                                                  onCategorySelected(
+                                                                      0),
+                                                            ),
+                                                            NFTCategoryWidget(
+                                                                title: "Owned"
+                                                                    .tr(),
+                                                                // image:
+                                                                //     'assets/images/cat_dig_art.png',
+                                                                index: 1,
+                                                                handler: () {
+                                                                  setState(() {
+                                                                    _isloading =
+                                                                        true;
+                                                                  });
+                                                                  onCategorySelected(
+                                                                      1);
+                                                                  setState(() {
+                                                                    _isloading =
+                                                                        false;
+                                                                  });
+                                                                }),
+                                                            NFTCategoryWidget(
+                                                              title: "Created"
+                                                                  .tr(),
+                                                              // image:
+                                                              //     'assets/images/cat_sports.png',
+                                                              index: 2,
+                                                              handler: () =>
+                                                                  onCategorySelected(
+                                                                      2),
+                                                            ),
+                                                            NFTCategoryWidget(
+                                                              title:
+                                                                  "Listed".tr(),
+                                                              // image:
+                                                              //     'assets/images/cat_animals.png',
+                                                              index: 3,
+                                                              handler: () =>
+                                                                  onCategorySelected(
+                                                                      3),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    )),
+                                                Expanded(
+                                                    child: bottomSpaceContent(
+                                                        nftsCollectionAll,
+                                                        nftsAll,
+                                                        nftsCollectionOwnedByUser,
+                                                        nftsOwned,
+                                                        themeNotifier.isDark,
+                                                        nftsCollectionCreated,
+                                                        nftsCreated,
+                                                        nftsListed,
+                                                        collectionListed))
                                               ],
                                             ),
-                                          ),
-                                        )),
-                                    Expanded(
-                                        child: bottomSpaceContent(
-                                          nftsCollectionAll,
-                                          nftsAll,
-                                          nftsCollectionOwnedByUser,
-                                          nftsOwned,
-                                          themeNotifier.isDark,
-                                          nftsCollectionCreated,
-                                          nftsCreated,
-                                            nftsListed,
-                                          collectionListed
-                                        ))
-                                  ],
-                                ),
+                                          ],
+                                        ),
+                                      )
                               ],
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-            if (showLockedScreen)
-              WelcomeScreen(
-                handler: () =>
-                    setState(() {
-                      showLockedScreen = false;
-                    }),
-              ),
+                  );
+                }),
+            // if (showLockedScreen)
+            //   WelcomeScreen(
+            //     handler: () =>
+            //         setState(() {
+            //           showLockedScreen = false;
+            //         }),
+            //   ),
           ],
         );
       });
     });
   }
 
-  Widget NFTCategoryWidget({required String title,
-    Function? handler,
-    // String? image,
-    bool isFirst = false,
-    required int index}) {
+  Widget NFTCategoryWidget(
+      {required String title,
+      Function? handler,
+      // String? image,
+      bool isFirst = false,
+      required int index}) {
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -1301,7 +1396,9 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       child: Container(
         margin: EdgeInsets.only(right: 10.sp),
         decoration: BoxDecoration(
-            color: _isSelected == index ? Colors.transparent : AppColors.profileHeaderDark,
+            color: _isSelected == index
+                ? Colors.transparent
+                : AppColors.profileHeaderDark,
             border: Border.all(
                 color: _isSelected == index
                     ? AppColors.hexaGreen
@@ -1321,7 +1418,9 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                 style: TextStyle(
                     fontSize: 10.sp,
                     fontWeight: FontWeight.w400,
-                    color: _isSelected == index ? AppColors.hexaGreen : AppColors.textColorGreyShade2),
+                    color: _isSelected == index
+                        ? AppColors.hexaGreen
+                        : AppColors.textColorGreyShade2),
               ),
             ],
           ),
@@ -1331,24 +1430,23 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   }
 
   Widget bottomSpaceContent(
-      var nftsCollectionAll,
-      var nftsAll,
-      var nftsCollectionOwnedByUser,
-      var nftsOwned,
-      var isDark,
-      var nftsCollectionCreated,
-      var nftsCreated,
-      var nftsListed,
-      var nftsCollectionListed,
-
-      ) {
+    var nftsCollectionAll,
+    var nftsAll,
+    var nftsCollectionOwnedByUser,
+    var nftsOwned,
+    var isDark,
+    var nftsCollectionCreated,
+    var nftsCreated,
+    var nftsListed,
+    var nftsCollectionListed,
+  ) {
     switch (selectedCategoryIndex) {
       case 0: // All
-      // Replace AllNFTList with your widget displaying all categories
+        // Replace AllNFTList with your widget displaying all categories
         return NftsCollectionDivision(
             nftsCollection: nftsCollectionAll,
             nfts:
-            nftsAll); // Replace AllNFTList with your widget displaying all categories
+                nftsAll); // Replace AllNFTList with your widget displaying all categories
       case 1: // Owned
         return NftsCollectionDivision(
           nftsCollection: nftsCollectionOwnedByUser,
@@ -1365,7 +1463,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
           nftsCollection: nftsCollectionListed,
           nfts: nftsListed,
         ); // Replace ListedNFTList with your widget displaying listed categories
-    // return ListedNFTList(); // Replace ListedNFTList with your widget displaying listed categories
+      // return ListedNFTList(); // Replace ListedNFTList with your widget displaying listed categories
       default:
         return Container(); // Default case, return an empty container or handle as per your requirement
     }

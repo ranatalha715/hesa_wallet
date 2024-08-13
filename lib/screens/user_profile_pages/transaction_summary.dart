@@ -377,7 +377,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                           if (transactionSummary.txCrdBrand !=
                                                   'VISA' &&
                                               transactionSummary.txCrdBrand !=
-                                                  'MASTER')
+                                                  'MASTER') // MADA missing
                                             Text(
                                               transactionSummary.txCrdBrand,
                                               style: TextStyle(
@@ -567,7 +567,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                                 final String label =
                                                     feeItem.keys.last;
                                                 final String value =
-                                                    transactionSummary.txAmountType !=
+                                                    transactionSummary.txAmountType ==
                                                         'credit' ?  feeItem[label].toString() : '- ' + feeItem[label].toString();
                                                 bool lastIndex = index ==
                                                     transactionSummary
@@ -687,6 +687,9 @@ class _TransactionSummaryState extends State<TransactionSummary> {
               alignment: Alignment.centerRight,
               child: Text(
                 details,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.right,
                 style: TextStyle(
                     color:
                         color == null ? AppColors.textColorGreyShade2 : color,

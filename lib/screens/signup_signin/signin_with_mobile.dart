@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ffi';
 import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hesa_wallet/constants/configs.dart';
@@ -9,6 +10,7 @@ import 'package:hesa_wallet/providers/auth_provider.dart';
 import 'package:hesa_wallet/screens/signup_signin/signin_with_email.dart';
 import 'package:hesa_wallet/screens/signup_signin/signup_with_mobile.dart';
 import 'package:hesa_wallet/screens/signup_signin/terms_conditions.dart';
+import 'package:hesa_wallet/screens/signup_signin/wallet.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:hesa_wallet/widgets/app_header.dart';
 import 'package:hesa_wallet/widgets/otp_dialog.dart';
@@ -88,6 +90,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
     _events = new StreamController<int>();
     _events.add(300);
     // startTimer();
+
     // Listen for changes in the text fields and update the button state
     _numberController.addListener(_updateButtonState);
     otp1Controller.addListener(_updateOtpButtonState);
@@ -100,7 +103,8 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
 
   void _updateButtonState() {
     setState(() {
-      isButtonActive = _numberController.text.isNotEmpty;
+      isButtonActive = _numberController.text.isNotEmpty &&
+          _numberController.text.length >= 9;
     });
   }
 
@@ -124,7 +128,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
     otp4Controller.dispose();
     otp5Controller.dispose();
     otp6Controller.dispose();
-
+    _events.close();
     super.dispose();
   }
 
@@ -137,10 +141,31 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
     });
   }
 
+  removeRoutes(){
+    // Navigator.pop(context);
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => SigninWithEmail(),
+    //   ),
+    // );
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => WalletTokensNfts()),
+          (Route<dynamic> route) => false, // This predicate always returns false, so all previous routes are removed
+    );
+
+  }
+
   @override
   Widget build(BuildContext context) {
+
+
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
+    final auth=Provider.of<AuthProvider>(context,listen: false);
+    print('auth.otpErrorResponse');
+    print(auth.otpErrorResponse);
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return Builder(builder: (BuildContext context) {
         return Stack(
@@ -201,6 +226,10 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                               TextFieldParent(
                                 child: TextFormField(
                                     controller: _numberController,
+                                    inputFormatters: [
+                                      LengthLimitingTextInputFormatter(10),
+                                      FilteringTextInputFormatter.digitsOnly,
+                                    ],
                                     // validator: (v)=>_validateMobileNumber(_numberController.text),
                                     scrollPadding: EdgeInsets.only(
                                         bottom: MediaQuery.of(context)
@@ -300,7 +329,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                   setState(() {
                                     isValidating = true;
                                   });
-                                  if (_numberController.text.isNotEmpty) {
+                                  if (isButtonActive) {
                                     setState(() {
                                       _isLoading = true;
                                       if (_isLoading) {
@@ -309,55 +338,60 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                       }
                                     });
                                     final result =
-
-
-                                      await Provider.of<AuthProvider>(context,
-                                              listen: false)
-                                          .sendLoginOTP(
-                                    mobile: _numberController.text,
-                                    context: context,
+                                        await Provider.of<AuthProvider>(context,
+                                                listen: false)
+                                            .sendLoginOTP(
+                                      mobile: _numberController.text,
+                                      context: context,
                                     );
                                     setState(() {
                                       _isLoading = false;
                                     });
                                     if (result == AuthResult.success) {
                                       startTimer();
+
                                       otpDialog(
+                                        incorrect: auth.otpErrorResponse,
+                                        // onClose: ()=> removeRoutes(),
                                         events: _events,
                                         firstBtnHandler: () async {
-        if (otp1Controller.text.isNotEmpty &&
-        otp2Controller.text.isNotEmpty &&
-        otp3Controller.text.isNotEmpty &&
-        otp4Controller.text.isNotEmpty &&
-        otp5Controller.text.isNotEmpty &&
-        otp6Controller.text.isNotEmpty) {
-                                          setState(() {
-                                            _isLoading = true;
-                                          });
-                                          print('loading popup' +
-                                              _isLoading.toString());
-                                          Navigator.pop(context);
-                                          // Future.delayed(Duration(seconds: 2));
-                                          // final loginResult =
-                                          await Provider.of<AuthProvider>(
-                                                  context,
-                                                  listen: false)
-                                              .logInWithMobile(
-                                            mobile: _numberController.text,
-                                            context: context,
-                                            code: otp1Controller.text +
-                                                otp2Controller.text +
-                                                otp3Controller.text +
-                                                otp4Controller.text +
-                                                otp5Controller.text +
-                                                otp6Controller.text,
-                                          );
-                                          setState(() {
-                                            _isLoading = false;
-                                          });
-                                          print('loading popup 2' +
-                                              _isLoading.toString());
-                                        }},
+                                          if (otp1Controller.text.isNotEmpty &&
+                                              otp2Controller.text.isNotEmpty &&
+                                              otp3Controller.text.isNotEmpty &&
+                                              otp4Controller.text.isNotEmpty &&
+                                              otp5Controller.text.isNotEmpty &&
+                                              otp6Controller.text.isNotEmpty) {
+                                            setState(() {
+                                              _isLoading = true;
+                                            });
+                                            print('loading popup' +
+                                                _isLoading.toString());
+                                            // Navigator.pop(context);
+                                            // Future.delayed(Duration(seconds: 2));
+                                            // final loginResult =
+                                            final loginWithMobile= await Provider.of<AuthProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .logInWithMobile(
+                                              mobile: _numberController.text,
+                                              context: context,
+                                              code: otp1Controller.text +
+                                                  otp2Controller.text +
+                                                  otp3Controller.text +
+                                                  otp4Controller.text +
+                                                  otp5Controller.text +
+                                                  otp6Controller.text,
+                                            );
+                                            setState(() {
+                                              _isLoading = false;
+                                            });
+                                            print('loading popup 2' +
+                                                _isLoading.toString());
+                                            if(loginWithMobile==AuthResult.success){
+                                              Navigator.pop(context);
+                                            }
+                                          }
+                                        },
                                         secondBtnHandler: () async {
                                           if (_timeLeft == 0) {
                                             print('resend function calling');
@@ -429,7 +463,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                         //     ? AppColors.textColorWhite
                                         //     : AppColors.textColorBlack
                                         //         .withOpacity(0.8),
-                                        isLoading: _isLoadingResend,
+                                        isLoading: _isLoadingResend || _isLoading,
                                       );
                                     }
                                   }
