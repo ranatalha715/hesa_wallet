@@ -9,6 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hesa_wallet/providers/payment_fees.dart';
 import 'package:hesa_wallet/providers/token_provider.dart';
+import 'package:hesa_wallet/screens/onboarding_notifications/verify_email.dart';
 import 'package:hesa_wallet/screens/unlock/set_confirm_pin_screen.dart';
 import 'package:hesa_wallet/screens/unlock/set_pin_screen.dart';
 import 'package:hesa_wallet/screens/unlock/unlock.dart';
@@ -514,6 +515,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 ),
           debugShowCheckedModeBanner: false,
           home:
+          // TermsAndConditions(),
           // Unlock(),
           _buildContent(),
               // Provider.of<TokenProvider>(

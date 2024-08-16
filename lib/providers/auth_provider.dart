@@ -293,6 +293,73 @@ bool otpErrorResponse=false;
     }
   }
 
+  Future<AuthResult> registerNumResendOtp({
+    required String token,
+    required String medium,
+    required BuildContext context,
+
+  }) async {
+    final url = Uri.parse(BASE_URL + '/register/resend-otp');
+
+    final body = {
+      "medium" : medium
+    };
+
+    final response = await http.post(url, body: body,  headers: {
+      'X-Unique-Id': '$uniqueIdFromStep1',
+      'Authorization': 'Bearer $token',
+    },);
+    print('sending unique id' + uniqueIdFromStep1.toString());
+    print('registerNumResendOtp Response');
+    print(response.body);
+    fToast = FToast();
+    fToast.init(context);
+    if (response.statusCode == 201) {
+      otpErrorResponse=false;
+      notifyListeners();
+      return AuthResult.success;
+    } else {
+      print("registerNumResendOtp failed: ${response.body}");
+      _showToast('${response.body}');
+      notifyListeners();
+      return AuthResult.failure;
+    }
+  }
+
+
+  Future<AuthResult> registerEmailResendOtp({
+    required String token,
+    required String medium,
+    required BuildContext context,
+
+  }) async {
+    final url = Uri.parse(BASE_URL + '/register/resend-otp');
+
+    final body = {
+      "medium" : medium
+    };
+
+    final response = await http.post(url, body: body,  headers: {
+      'X-Unique-Id': '$uniqueIdFromStep1',
+      'Authorization': 'Bearer $token',
+    },);
+    print('sending unique id' + uniqueIdFromStep1.toString());
+    print('registerEmailResendOtp Response');
+    print(response.body);
+    fToast = FToast();
+    fToast.init(context);
+    if (response.statusCode == 201) {
+      otpErrorResponse=false;
+      notifyListeners();
+      return AuthResult.success;
+    } else {
+      print("registerEmailResendOtp failed: ${response.body}");
+      _showToast('${response.body}');
+      notifyListeners();
+      return AuthResult.failure;
+    }
+  }
+
   Future<AuthResult> registerUserStep1({
     required String firstName,
     required String lastName,
@@ -330,8 +397,6 @@ bool otpErrorResponse=false;
       print(response.statusCode);
 
       if (response.statusCode == 201) {
-        // Successful registration
-        print("User registered successfully!");
         final jsonResponse = json.decode(response.body);
 
         final uniqueId = jsonResponse['data']['uniqueId'];
@@ -403,6 +468,7 @@ bool otpErrorResponse=false;
     required BuildContext context,
   }) async {
     final url = Uri.parse(BASE_URL + '/register/step2');
+
     final body = {
       "code": code,
 
@@ -411,6 +477,8 @@ bool otpErrorResponse=false;
     final response = await http.post(url, body: body,  headers: {
       'X-Unique-Id': '$uniqueIdFromStep1',
     },);
+    print('sending code' + code.toString());
+    print('sending unique id' + uniqueIdFromStep1.toString());
     print('registerUserStep2 Response');
     print(response.body);
     fToast = FToast();
@@ -426,6 +494,139 @@ bool otpErrorResponse=false;
       // Show an error message or handle the response as needed
       print("Verifying failed: ${response.body}");
       _showToast('${response.body}');
+      otpErrorResponse=true;
+      notifyListeners();
+      return AuthResult.failure;
+    }
+  }
+
+  Future<AuthResult> registerUserStep3({
+
+    required String username,
+    required String email,
+    required String password,
+    required BuildContext context,
+  }) async {
+    final url = Uri.parse('$BASE_URL/register/step3');
+    final body = {
+      "username": username,
+      "email": email,
+      "password": password,
+
+    };
+
+    final headers = {
+      'Content-Type': 'application/json',
+
+        'X-Unique-Id': '$uniqueIdFromStep1',
+
+      // Add any other headers here (e.g., authentication headers)
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: jsonEncode(body), // Encode the body as JSON
+      );
+      fToast = FToast();
+      fToast.init(context);
+      print('Register user step3 response');
+      print(response.body);
+      print(response.statusCode);
+
+      if (response.statusCode == 201) {
+        // Successful registration
+        print("User registered successfully!");
+        final jsonResponse = json.decode(response.body);
+        print(jsonResponse);
+
+        // final uniqueId = jsonResponse['data']['uniqueId'];
+        // final prefs = await SharedPreferences.getInstance();
+        // await prefs.setString('uniqueId', uniqueId);
+        // uniqueIdFromStep1=uniqueId;
+        notifyListeners();
+        // print("uniqueId" + uniqueId);
+        // final successResponse = json.decode(response.body);
+        // _showToast(successResponse['message']);
+        return AuthResult.success;
+      } else {
+        final errorResponse = json.decode(response.body);
+        // Registration failed
+        print("Registration failed: ${response.body}");
+        _showToast(errorResponse['message']);
+        // _showToast('Registration failed');
+        return AuthResult.failure;
+      }
+    } catch (e) {
+      // Handle network or other errors
+      print("Error during registration: $e");
+      _showToast('Registration failed: $e');
+      return AuthResult.failure;
+    }
+  }
+
+  Future<AuthResult> registerUserStep4({
+    required String code,
+
+    required BuildContext context,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/register/step4');
+    final body = {
+      "code": code,
+
+    };
+
+    final response = await http.post(url, body: body,  headers: {
+      'X-Unique-Id': '$uniqueIdFromStep1',
+    },);
+    print('registerUserStep4 Response');
+    print(response.body);
+    fToast = FToast();
+    fToast.init(context);
+    if (response.statusCode == 201) {
+      // Successful login, handle navigation or other actions
+      otpErrorResponse=false;
+      notifyListeners();
+      return AuthResult.success;
+    } else {
+      // Show an error message or handle the response as needed
+      otpErrorResponse=true;
+      notifyListeners();
+      return AuthResult.failure;
+    }
+  }
+
+  Future<AuthResult> registerUserStep5({
+    required String termsAndConditions,
+    required String deviceToken,
+    required BuildContext context,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/register/step5');
+    final body = {
+      "termsAndConditions":
+      termsAndConditions == "true" ? "true":"false",
+      "deviceToken": deviceToken,
+
+    };
+
+    final response = await http.post(url, body: body,  headers: {
+      'X-Unique-Id': '$uniqueIdFromStep1',
+    },);
+    print('step 5 body');
+    print(uniqueIdFromStep1);
+    print(deviceToken);
+    print('registerUserStep5 Response');
+    print(response.body);
+    fToast = FToast();
+    fToast.init(context);
+    if (response.statusCode == 201) {
+      // Successful login, handle navigation or other actions
+      otpErrorResponse=false;
+      notifyListeners();
+      return AuthResult.success;
+    } else {
+      // Show an error message or handle the response as needed
       otpErrorResponse=true;
       notifyListeners();
       return AuthResult.failure;

@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:crypto/crypto.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hesa_wallet/screens/signup_signin/signin_with_mobile.dart';
@@ -373,6 +375,10 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                       }
                                       auth.loginErrorResponse=null;
                                     });
+                                    final String password = _passwordController.text;
+                                    final bytes = utf8.encode(password);
+                                    final sha512Hash = sha512.convert(bytes);
+                                    final sha512String = sha512Hash.toString();
                                     final result =
                                         await Provider.of<AuthProvider>(
                                                 context,
@@ -380,7 +386,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                             .loginWithUsername(
                                                 username: _emailController.text,
                                                 password:
-                                                    _passwordController.text,
+                                                sha512String,
                                                 context: context);
                                     setState(() {
                                       _isLoading = false;

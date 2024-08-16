@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -13,9 +14,11 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../widgets/app_header.dart';
 import '../../widgets/main_header.dart';
+import '../../widgets/otp_dialog.dart';
 import '../userpayment_and_bankingpages/wallet_add_bank.dart';
 import '../userpayment_and_bankingpages/wallet_add_card.dart';
 
@@ -34,6 +37,14 @@ class _AccountInformationState extends State<AccountInformation> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _identificationNumberController =
       TextEditingController();
+  final TextEditingController _nationalityController = TextEditingController();
+
+  final TextEditingController otp1Controller = TextEditingController();
+  final TextEditingController otp2Controller = TextEditingController();
+  final TextEditingController otp3Controller = TextEditingController();
+  final TextEditingController otp4Controller = TextEditingController();
+  final TextEditingController otp5Controller = TextEditingController();
+  final TextEditingController otp6Controller = TextEditingController();
 
   FocusNode firstFieldFocusNode = FocusNode();
   FocusNode secondFieldFocusNode = FocusNode();
@@ -46,8 +57,15 @@ class _AccountInformationState extends State<AccountInformation> {
   String lastName = '';
   String mobileNum = '';
   String idNumber = '';
+  bool isOtpButtonActive = false;
   String username = '';
   String email = '';
+  String nationality = '';
+  int _timeLeft = 100;
+  Timer? _timer;
+  bool _isTimerActive = false;
+  var _isLoadingResend = false;
+  late StreamController<int> _events;
   bool isValidating = false;
   bool isButtonActive = false;
   bool isEditAble = false;
@@ -58,6 +76,16 @@ class _AccountInformationState extends State<AccountInformation> {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
     // print(accessToken);
+  }
+
+
+  void startTimer() {
+    _isTimerActive = true;
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      (_timeLeft > 0) ? _timeLeft-- : _timer?.cancel();
+      print(_timeLeft);
+      _events.add(_timeLeft);
+    });
   }
 
   Future<void> init() async {
@@ -87,8 +115,13 @@ class _AccountInformationState extends State<AccountInformation> {
       _identificationNumberController.text = idNumber;
       username = userDetails
           .userName!; // Assuming 'firstName' is a field in userDetails
-      _usernameController.text =
-          username; // Set retrieved firstName in the controller
+      _usernameController.text = username;
+      email = userDetails
+          .verifiedEmail!; // Assuming 'firstName' is a field in userDetails
+      _emailController.text = email;
+      nationality = userDetails
+          .userNationality!; // Assuming 'firstName' is a field in userDetails
+      _nationalityController.text = nationality;
     });
   }
 
@@ -96,6 +129,8 @@ class _AccountInformationState extends State<AccountInformation> {
   void initState() {
     super.initState();
     init();
+    _events = new StreamController<int>();
+    _events.add(300);
     // getAccessToken();
 
     // Listen for changes in the text fields and update the button state
@@ -104,24 +139,44 @@ class _AccountInformationState extends State<AccountInformation> {
     _numberController.addListener(_updateButtonState);
     _lastnameController.addListener(_updateButtonState);
     _emailController.addListener(_updateButtonState);
+    _nationalityController.addListener(_updateButtonState);
+    _identificationNumberController.addListener(_updateButtonState);
+    otp1Controller.addListener(_updateOtpButtonState);
+    otp2Controller.addListener(_updateOtpButtonState);
+    otp3Controller.addListener(_updateOtpButtonState);
+    otp4Controller.addListener(_updateOtpButtonState);
+    otp5Controller.addListener(_updateOtpButtonState);
+    otp6Controller.addListener(_updateOtpButtonState);
+  }
+
+  void _updateOtpButtonState() {
+    setState(() {
+      isOtpButtonActive = otp1Controller.text.isNotEmpty &&
+          otp2Controller.text.isNotEmpty &&
+          otp3Controller.text.isNotEmpty &&
+          otp4Controller.text.isNotEmpty &&
+          otp5Controller.text.isNotEmpty &&
+          otp6Controller.text.isNotEmpty;
+    });
   }
 
   void _updateButtonState() {
     setState(() {
       isButtonActive = _firstnameController.text.isNotEmpty &&
           // _usernameController.text.isNotEmpty &&
-          // _lastnameController.text.isNotEmpty;
-          // &&
-          // _emailController.text.isNotEmpty &&
+          _lastnameController.text.isNotEmpty
+          &&
+          _emailController.text.isNotEmpty &&
           _numberController.text.isNotEmpty;
     });
   }
 
   Future<void> _refreshData() async {
+    Navigator.pop(context);
     setState(() {
       _isLoading = true;
     });
-     Provider.of<UserProvider>(context, listen: false)
+    Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
 
     setState(() {
@@ -136,6 +191,16 @@ class _AccountInformationState extends State<AccountInformation> {
     _numberController.dispose();
     _lastnameController.dispose();
     _emailController.dispose();
+    _nationalityController.dispose();
+    _nationalityController.dispose();
+    _identificationNumberController.dispose();
+    otp1Controller.dispose();
+    otp2Controller.dispose();
+    otp3Controller.dispose();
+    otp4Controller.dispose();
+    otp5Controller.dispose();
+    otp6Controller.dispose();
+    _events.close();
     super.dispose();
   }
 
@@ -143,6 +208,7 @@ class _AccountInformationState extends State<AccountInformation> {
   Widget build(BuildContext context) {
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
+    final auth=Provider.of<AuthProvider>(context,listen: false);
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return Stack(
         children: [
@@ -161,7 +227,7 @@ class _AccountInformationState extends State<AccountInformation> {
                 // ) :
                 Expanded(
                   child: Container(
-                    height: 85.h,
+                    // height: 65.h,
                     // color: Colors.red,
                     width: double.infinity,
                     child: Stack(
@@ -238,8 +304,9 @@ class _AccountInformationState extends State<AccountInformation> {
                                       keyboardType: TextInputType.name,
                                       scrollPadding: EdgeInsets.only(
                                           bottom: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom+200),
+                                                  .viewInsets
+                                                  .bottom +
+                                              200),
                                       style: TextStyle(
                                           fontSize: 10.2.sp,
                                           color: themeNotifier.isDark
@@ -313,7 +380,7 @@ class _AccountInformationState extends State<AccountInformation> {
                                 ),
                                 TextFieldParent(
                                   child: TextField(
-                                      readOnly: true,
+                                      readOnly: isEditAble ? false : true,
                                       controller: _lastnameController,
                                       keyboardType: TextInputType.name,
                                       scrollPadding: EdgeInsets.only(
@@ -370,9 +437,11 @@ class _AccountInformationState extends State<AccountInformation> {
                                           color: AppColors.errorColor),
                                     ),
                                   ),
+                                if(!isEditAble)
                                 SizedBox(
                                   height: 2.h,
                                 ),
+                                if(!isEditAble)
                                 Align(
                                   alignment: isEnglish
                                       ? Alignment.centerLeft
@@ -388,9 +457,11 @@ class _AccountInformationState extends State<AccountInformation> {
                                             : AppColors.textColorBlack),
                                   ),
                                 ),
+                                if(!isEditAble)
                                 SizedBox(
                                   height: 1.h,
                                 ),
+                                if(!isEditAble)
                                 TextFieldParent(
                                   child: TextField(
                                       readOnly: true,
@@ -438,12 +509,94 @@ class _AccountInformationState extends State<AccountInformation> {
                                       ),
                                       cursorColor: AppColors.textColorGrey),
                                 ),
+
                                 if (_usernameController.text.isEmpty &&
-                                    isValidating)
+                                    isValidating &&  !isEditAble)
                                   Padding(
                                     padding: EdgeInsets.only(top: 7.sp),
                                     child: Text(
                                       "*Enter username",
+                                      style: TextStyle(
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.errorColor),
+                                    ),
+                                  ),
+                                SizedBox(
+                                  height: 2.h,
+                                ),
+                                Align(
+                                  alignment: isEnglish
+                                      ? Alignment.centerLeft
+                                      : Alignment.centerRight,
+                                  child: Text(
+                                    'Email Address'.tr(),
+                                    style: TextStyle(
+                                        fontSize: 11.7.sp,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w600,
+                                        color: themeNotifier.isDark
+                                            ? AppColors.textColorWhite
+                                            : AppColors.textColorBlack),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 1.h,
+                                ),
+                                TextFieldParent(
+                                  child: TextField(
+                                      readOnly: isEditAble ? false : true,
+                                      controller: _emailController,
+                                      keyboardType: TextInputType.emailAddress,
+                                      scrollPadding: EdgeInsets.only(
+                                          bottom: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom +
+                                              200),
+                                      style: TextStyle(
+                                          fontSize: 10.2.sp,
+                                          color: themeNotifier.isDark
+                                              ? AppColors.textColorWhite
+                                              : AppColors.textColorBlack,
+                                          fontWeight: FontWeight.w400,
+                                          // Off-white color,
+                                          fontFamily: 'Inter'),
+                                      decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(
+                                            vertical: 10.0, horizontal: 16.0),
+                                        // hintText: 'No payment card have been added',
+                                        hintStyle: TextStyle(
+                                            fontSize: 10.2.sp,
+                                            color: AppColors.textColorGrey,
+                                            fontWeight: FontWeight.w400,
+                                            // Off-white color,
+                                            fontFamily: 'Inter'),
+                                        enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            borderSide: BorderSide(
+                                              color: Colors.transparent,
+                                              // Off-white color
+                                              // width: 2.0,
+                                            )),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            borderSide: BorderSide(
+                                              color: Colors.transparent,
+                                              // Off-white color
+                                              // width: 2.0,
+                                            )),
+                                        // labelText: 'Enter your password',
+                                      ),
+                                      cursorColor: AppColors.textColorGrey),
+                                ),
+                                if (_emailController.text.isEmpty &&
+                                    isValidating)
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 7.sp),
+                                    child: Text(
+                                      "*Enter Email",
                                       style: TextStyle(
                                           fontSize: 10.sp,
                                           fontWeight: FontWeight.w400,
@@ -535,7 +688,8 @@ class _AccountInformationState extends State<AccountInformation> {
                                       ),
                                       cursorColor: AppColors.textColorGrey),
                                 ),
-                                if (_numberController.text.isEmpty && isValidating)
+                                if (_numberController.text.isEmpty &&
+                                    isValidating)
                                   Padding(
                                     padding: EdgeInsets.only(top: 7.sp),
                                     child: Text(
@@ -546,176 +700,17 @@ class _AccountInformationState extends State<AccountInformation> {
                                           color: AppColors.errorColor),
                                     ),
                                   ),
-                                // SizedBox(
-                                //   height: 2.h,
-                                // ),
-                                // Align(
-                                //   alignment: isEnglish
-                                //       ? Alignment.centerLeft
-                                //       : Alignment.centerRight,
-                                //   child: Text(
-                                //     'Email Address'.tr(),
-                                //     style: TextStyle(
-                                //         fontSize: 11.7.sp,
-                                //         fontFamily: 'Inter',
-                                //         fontWeight: FontWeight.w600,
-                                //         color: themeNotifier.isDark
-                                //             ? AppColors.textColorWhite
-                                //             : AppColors.textColorBlack),
-                                //   ),
-                                // ),
-                                // SizedBox(
-                                //   height: 1.h,
-                                // ),
-                                // TextFieldParent(
-                                //   child: TextField(
-                                //       readOnly: isEditAble ? false : true,
-                                //       controller: _emailController,
-                                //       scrollPadding: EdgeInsets.only(
-                                //           bottom: MediaQuery.of(context)
-                                //               .viewInsets
-                                //               .bottom),
-                                //       keyboardType: TextInputType.emailAddress,
-                                //       style: TextStyle(
-                                //           fontSize: 10.2.sp,
-                                //           color: themeNotifier.isDark
-                                //               ? AppColors.textColorWhite
-                                //               : AppColors.textColorBlack,
-                                //           fontWeight: FontWeight.w400,
-                                //           // Off-white color,
-                                //           fontFamily: 'Inter'),
-                                //       decoration: InputDecoration(
-                                //         contentPadding: EdgeInsets.symmetric(
-                                //             vertical: 10.0, horizontal: 16.0),
-                                //         // hintText: 'No banking have been added',
-                                //         hintStyle: TextStyle(
-                                //             fontSize: 10.2.sp,
-                                //             color: AppColors.textColorGrey,
-                                //             fontWeight: FontWeight.w400,
-                                //             // Off-white color,
-                                //             fontFamily: 'Inter'),
-                                //         enabledBorder: OutlineInputBorder(
-                                //             borderRadius:
-                                //                 BorderRadius.circular(8.0),
-                                //             borderSide: BorderSide(
-                                //               color: Colors.transparent,
-                                //               // Off-white color
-                                //               // width: 2.0,
-                                //             )),
-                                //         focusedBorder: OutlineInputBorder(
-                                //             borderRadius:
-                                //                 BorderRadius.circular(8.0),
-                                //             borderSide: BorderSide(
-                                //               color: Colors.transparent,
-                                //               // Off-white color
-                                //               // width: 2.0,
-                                //             )),
-                                //         // labelText: 'Enter your password',
-                                //       ),
-                                //       cursorColor: AppColors.textColorGrey),
-                                // ),
-                                // if (_emailController.text.isEmpty && isValidating)
-                                //   Padding(
-                                //     padding: EdgeInsets.only(top: 7.sp),
-                                //     child: Text(
-                                //       "*Email unverified - resend verification.",
-                                //       style: TextStyle(
-                                //           fontSize: 10.sp,
-                                //           fontWeight: FontWeight.w400,
-                                //           color: AppColors.errorColor),
-                                //     ),
-                                //   ),
-
+                                if(!isEditAble)
                                 SizedBox(
                                   height: 2.h,
                                 ),
-                                // Align(
-                                //   alignment: isEnglish
-                                //       ? Alignment.centerLeft
-                                //       : Alignment.centerRight,
-                                //   child: Text(
-                                //     'Nationality'.tr(),
-                                //     style: TextStyle(
-                                //         fontSize: 11.7.sp,
-                                //         fontFamily: 'Inter',
-                                //         fontWeight: FontWeight.w600,
-                                //         color: themeNotifier.isDark
-                                //             ? AppColors.textColorWhite
-                                //             : AppColors.textColorBlack),
-                                //   ),
-                                // ),
-                                // SizedBox(
-                                //   height: 1.h,
-                                // ),
-                                // TextFieldParent(
-                                //   child: TextField(
-                                //       readOnly: isEditAble ? false : true,
-                                //       // controller: _usernameController,
-                                //       keyboardType: TextInputType.name,
-                                //       scrollPadding: EdgeInsets.only(
-                                //           bottom: MediaQuery.of(context)
-                                //               .viewInsets
-                                //               .bottom),
-                                //       style: TextStyle(
-                                //           fontSize: 10.2.sp,
-                                //           color: themeNotifier.isDark
-                                //               ? AppColors.textColorWhite
-                                //               : AppColors.textColorBlack,
-                                //           fontWeight: FontWeight.w400,
-                                //           // Off-white color,
-                                //           fontFamily: 'Inter'),
-                                //       decoration: InputDecoration(
-                                //         contentPadding: EdgeInsets.symmetric(
-                                //             vertical: 10.0, horizontal: 16.0),
-                                //         // hintText: 'No banking have been added',
-                                //         hintStyle: TextStyle(
-                                //             fontSize: 10.2.sp,
-                                //             color: AppColors.textColorGrey,
-                                //             fontWeight: FontWeight.w400,
-                                //             // Off-white color,
-                                //             fontFamily: 'Inter'),
-                                //         enabledBorder: OutlineInputBorder(
-                                //             borderRadius:
-                                //                 BorderRadius.circular(8.0),
-                                //             borderSide: BorderSide(
-                                //               color: Colors.transparent,
-                                //               // Off-white color
-                                //               // width: 2.0,
-                                //             )),
-                                //         focusedBorder: OutlineInputBorder(
-                                //             borderRadius:
-                                //                 BorderRadius.circular(8.0),
-                                //             borderSide: BorderSide(
-                                //               color: Colors.transparent,
-                                //               // Off-white color
-                                //               // width: 2.0,
-                                //             )),
-                                //         // labelText: 'Enter your password',
-                                //       ),
-                                //       cursorColor: AppColors.textColorGrey),
-                                // ),
-                                // if (_usernameController.text.isEmpty &&
-                                //     isValidating)
-                                //   Padding(
-                                //     padding: EdgeInsets.only(top: 7.sp),
-                                //     child: Text(
-                                //       "*Enter username",
-                                //       style: TextStyle(
-                                //           fontSize: 10.sp,
-                                //           fontWeight: FontWeight.w400,
-                                //           color: AppColors.errorColor),
-                                //     ),
-                                //   ),
-
-                                // SizedBox(
-                                //   height: 2.h,
-                                // ),
+                                if(!isEditAble)
                                 Align(
                                   alignment: isEnglish
                                       ? Alignment.centerLeft
                                       : Alignment.centerRight,
                                   child: Text(
-                                    'Identification Number'.tr(),
+                                    'Nationality'.tr(),
                                     style: TextStyle(
                                         fontSize: 11.7.sp,
                                         fontFamily: 'Inter',
@@ -725,13 +720,15 @@ class _AccountInformationState extends State<AccountInformation> {
                                             : AppColors.textColorBlack),
                                   ),
                                 ),
+                                if(!isEditAble)
                                 SizedBox(
                                   height: 1.h,
                                 ),
+                                if(!isEditAble)
                                 TextFieldParent(
                                   child: TextField(
                                       readOnly: true,
-                                      controller: _identificationNumberController,
+                                      controller: _nationalityController,
                                       keyboardType: TextInputType.name,
                                       scrollPadding: EdgeInsets.only(
                                           bottom: MediaQuery.of(context)
@@ -775,8 +772,93 @@ class _AccountInformationState extends State<AccountInformation> {
                                       ),
                                       cursorColor: AppColors.textColorGrey),
                                 ),
-                                if (_identificationNumberController.text.isEmpty &&
-                                    isValidating)
+                                if (_nationalityController.text.isEmpty &&
+                                    isValidating &&  !isEditAble)
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 7.sp),
+                                    child: Text(
+                                      "*Enter Nationality",
+                                      style: TextStyle(
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.errorColor),
+                                    ),
+                                  ),
+                                SizedBox(
+                                  height: 2.h,
+                                ),
+                                if(!isEditAble)
+                                Align(
+                                  alignment: isEnglish
+                                      ? Alignment.centerLeft
+                                      : Alignment.centerRight,
+                                  child: Text(
+                                    'Identification Number'.tr(),
+                                    style: TextStyle(
+                                        fontSize: 11.7.sp,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w600,
+                                        color: themeNotifier.isDark
+                                            ? AppColors.textColorWhite
+                                            : AppColors.textColorBlack),
+                                  ),
+                                ),
+                                if(!isEditAble)
+                                SizedBox(
+                                  height: 1.h,
+                                ),
+                                if(!isEditAble)
+                                TextFieldParent(
+                                  child: TextField(
+                                      readOnly: true,
+                                      controller:
+                                          _identificationNumberController,
+                                      keyboardType: TextInputType.name,
+                                      scrollPadding: EdgeInsets.only(
+                                          bottom: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom),
+                                      style: TextStyle(
+                                          fontSize: 10.2.sp,
+                                          color: themeNotifier.isDark
+                                              ? AppColors.textColorWhite
+                                              : AppColors.textColorBlack,
+                                          fontWeight: FontWeight.w400,
+                                          // Off-white color,
+                                          fontFamily: 'Inter'),
+                                      decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(
+                                            vertical: 10.0, horizontal: 16.0),
+                                        // hintText: 'No banking have been added',
+                                        hintStyle: TextStyle(
+                                            fontSize: 10.2.sp,
+                                            color: AppColors.textColorGrey,
+                                            fontWeight: FontWeight.w400,
+                                            // Off-white color,
+                                            fontFamily: 'Inter'),
+                                        enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            borderSide: BorderSide(
+                                              color: Colors.transparent,
+                                              // Off-white color
+                                              // width: 2.0,
+                                            )),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            borderSide: BorderSide(
+                                              color: Colors.transparent,
+                                              // Off-white color
+                                              // width: 2.0,
+                                            )),
+                                        // labelText: 'Enter your password',
+                                      ),
+                                      cursorColor: AppColors.textColorGrey),
+                                ),
+                                if (_identificationNumberController
+                                        .text.isEmpty &&
+                                    isValidating &&  !isEditAble)
                                   Padding(
                                     padding: EdgeInsets.only(top: 7.sp),
                                     child: Text(
@@ -799,297 +881,207 @@ class _AccountInformationState extends State<AccountInformation> {
                             ),
                           ),
                         ),
-                        if(isEditAble)
-                        Positioned(
-                          left: 20,
-                          right: 20,
-                          bottom: 0,
-                          child: Column(
-                            children: [
-                              Container(
-                                height: 2.h,
-                                width: double.infinity,
-                                color: AppColors.backgroundColor,
-                              ),
-                              Container(
-                                color: AppColors.backgroundColor,
-                                child: AppButton(
-                                    title: 'Save changes'.tr(),
-                                    isactive:
-                                    isEditAble && isButtonActive ? true : false,
-                                    handler: () async {
-                                      setState(() {
-                                        isValidating = true;
-                                      });
-                                      print(_firstnameController.text);
-                                      print(_numberController.text);
-                                      if (_firstnameController.text.isNotEmpty &&
-                                          _numberController.text.isNotEmpty &&
-                                          isEditAble == true
-
-                                      ) {
+                        if (isEditAble)
+                          Positioned(
+                            left: 20,
+                            right: 20,
+                            bottom: 0,
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 2.h,
+                                  width: double.infinity,
+                                  color: AppColors.backgroundColor,
+                                ),
+                                Container(
+                                  color: AppColors.backgroundColor,
+                                  child:
+                                  AppButton(
+                                      title: 'Save changes'.tr(),
+                                      isactive: isEditAble && isButtonActive
+                                          ? true
+                                          : false,
+                                      handler: () async {
                                         setState(() {
-                                          _isLoading = true;
-                                          if (_isLoading) {
-                                            FocusManager.instance.primaryFocus?.unfocus();
+                                          isValidating = true;
+                                        });
+
+                                        if (isButtonActive &&
+                                            isEditAble == true) {
+                                          setState(() {
+                                            _isLoading = true;
+                                            if (_isLoading) {
+                                              FocusManager.instance.primaryFocus
+                                                  ?.unfocus();
+                                            }
+                                          });
+                                          var result =
+                                             await Provider.of<UserProvider>(context,
+                                                      listen: false)
+                                                  .userUpdateStep1(
+                                            firstName:
+                                                _firstnameController.text,
+                                            lastName:
+                                            _lastnameController.text,
+                                                email:
+                                                _emailController.text,
+                                            mobileNumber:
+                                                '+966' + _numberController.text,
+                                            context: context,
+                                            token: accessToken,
+
+                                          );
+                                          await Future.delayed(
+                                              Duration(milliseconds: 1000),
+                                              () {});
+                                          setState(() {
+                                            _isLoading = false;
+                                          });
+                                          if (result == AuthResult.success) {
+                                            print("Result is successful");
+                                            startTimer();
+                                             otpDialog(
+                                              incorrect: auth.otpErrorResponse,
+                                              // onClose: ()=> removeRoutes(),
+                                              events: _events,
+                                              firstBtnHandler: () async {
+                                                if (otp1Controller.text.isNotEmpty &&
+                                                    otp2Controller.text.isNotEmpty &&
+                                                    otp3Controller.text.isNotEmpty &&
+                                                    otp4Controller.text.isNotEmpty &&
+                                                    otp5Controller.text.isNotEmpty &&
+                                                    otp6Controller.text.isNotEmpty) {
+                                                  setState(() {
+                                                    _isLoading = true;
+                                                  });
+                                                  print('loading popup' +
+                                                      _isLoading.toString());
+                                                  // Navigator.pop(context);
+                                                  // Future.delayed(Duration(seconds: 2));
+                                                  // final loginResult =
+                                                  final userUpdateWithOtpStep2 = await Provider.of<UserProvider>(
+                                                      context,
+                                                      listen: false).userUpdateStep2(
+                                                    context: context,
+                                                    code: otp1Controller.text +
+                                                        otp2Controller.text +
+                                                        otp3Controller.text +
+                                                        otp4Controller.text +
+                                                        otp5Controller.text +
+                                                        otp6Controller.text, token: accessToken,
+                                                  );
+                                                  setState(() {
+                                                    _isLoading = false;
+                                                  });
+                                                  print('loading popup 2' +
+                                                      _isLoading.toString());
+                                                  if(userUpdateWithOtpStep2==AuthResult.success){
+                                                    Navigator.pop(context);
+                                                    Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(builder: (context) => AccountInformation()),
+                                                    );
+
+                                                     // await _refreshData();
+                                                  }
+                                                }
+                                              },
+                                              secondBtnHandler: () async {
+                                                if (_timeLeft == 0) {
+                                                  print('resend function calling');
+                                                  try {
+                                                    setState(() {
+                                                      _isLoadingResend = true;
+                                                    });
+                                                    final result = await Provider.of<
+                                                        UserProvider>(context,
+                                                        listen: false).userUpdateResendOtp(
+                                                        token: accessToken,
+                                                        context: context);
+                                                    setState(() {
+                                                      _isLoadingResend = false;
+                                                    });
+                                                    if (result ==
+                                                        AuthResult.success) {
+                                                      startTimer();
+                                                    }
+                                                  } catch (error) {
+                                                    print("Error: $error");
+                                                    // _showToast('An error occurred'); // Show an error message
+                                                  } finally {
+                                                    setState(() {
+                                                      _isLoadingResend = false;
+                                                    });
+                                                  }
+                                                } else {}
+                                              },
+                                              firstTitle: 'Confirm',
+                                              secondTitle: 'Resend code ',
+
+                                              // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
+
+                                              context: context,
+                                              isDark: themeNotifier.isDark,
+                                              isFirstButtonActive: isOtpButtonActive,
+                                              isSecondButtonActive: false,
+                                              otp1Controller: otp1Controller,
+                                              otp2Controller: otp2Controller,
+                                              otp3Controller: otp3Controller,
+                                              otp4Controller: otp4Controller,
+                                              otp5Controller: otp5Controller,
+                                              otp6Controller: otp6Controller,
+                                              firstFieldFocusNode:
+                                              firstFieldFocusNode,
+                                              secondFieldFocusNode:
+                                              secondFieldFocusNode,
+                                              thirdFieldFocusNode:
+                                              thirdFieldFocusNode,
+                                              forthFieldFocusNode:
+                                              forthFieldFocusNode,
+                                              fifthFieldFocusNode:
+                                              fifthFieldFocusNode,
+                                              sixthFieldFocusNode:
+                                              sixthFieldFocusNode,
+                                              firstBtnBgColor:
+                                              AppColors.activeButtonColor,
+                                              firstBtnTextColor:
+                                              AppColors.textColorBlack,
+                                              secondBtnBgColor: Colors.transparent,
+                                              secondBtnTextColor: _timeLeft != 0
+                                                  ? AppColors.textColorBlack
+                                                  .withOpacity(0.8)
+                                                  : AppColors.textColorWhite,
+                                              // themeNotifier.isDark
+                                              //     ? AppColors.textColorWhite
+                                              //     : AppColors.textColorBlack
+                                              //         .withOpacity(0.8),
+                                              isLoading: _isLoadingResend || _isLoading,
+                                            );
                                           }
-                                        });
-                                        var result = Provider.of<UserProvider>(
-                                            context,
-                                            listen: false)
-                                            .userUpdate(
-                                          context: context,
-                                          token: accessToken,
-                                          editableFirstName:
-                                          _firstnameController.text,
-                                          editableMobileNum:
-                                          '+966' + _numberController.text,
-                                        );
-                                        await Future.delayed(Duration(milliseconds: 1500),
-                                                (){});
-                                        setState(() {
-                                          _isLoading =
-                                          false;
-                                        });
-                                        if (result == AuthResult.success) {
-                                          _refreshData();
                                         }
-                                      }
 
-                                      // if (isButtonActive)
-                                      //   showDialog(
-                                      //     context: context,
-                                      //     builder: (BuildContext context) {
-                                      //       final screenWidth =
-                                      //           MediaQuery.of(context).size.width;
-                                      //       final dialogWidth = screenWidth * 0.85;
-                                      //       return Dialog(
-                                      //         shape: RoundedRectangleBorder(
-                                      //           borderRadius:
-                                      //               BorderRadius.circular(8.0),
-                                      //         ),
-                                      //         backgroundColor: Colors.transparent,
-                                      //         child: BackdropFilter(
-                                      //             filter: ImageFilter.blur(
-                                      //                 sigmaX: 7, sigmaY: 7),
-                                      //             child: Container(
-                                      //               height: 55.h,
-                                      //               width: dialogWidth,
-                                      //               decoration: BoxDecoration(
-                                      //                 // border: Border.all(
-                                      //                 //     width: 0.1.h,
-                                      //                 //     color: AppColors.textColorGrey),
-                                      //                 color: themeNotifier.isDark
-                                      //                     ? AppColors.showDialogClr
-                                      //                     : AppColors.textColorWhite,
-                                      //                 borderRadius:
-                                      //                     BorderRadius.circular(15),
-                                      //               ),
-                                      //               child: Column(
-                                      //                 children: [
-                                      //                   SizedBox(
-                                      //                     height: 3.h,
-                                      //                   ),
-                                      //                   Align(
-                                      //                     alignment:
-                                      //                         Alignment.bottomCenter,
-                                      //                     child: Image.asset(
-                                      //                       "assets/images/svg_icon.png",
-                                      //                       height: 5.9.h,
-                                      //                       width: 5.6.h,
-                                      //                     ),
-                                      //                   ),
-                                      //                   SizedBox(height: 2.h),
-                                      //                   Text(
-                                      //                     'OTP verification'.tr(),
-                                      //                     style: TextStyle(
-                                      //                         fontWeight:
-                                      //                             FontWeight.w600,
-                                      //                         fontSize: 17.5.sp,
-                                      //                         color: themeNotifier
-                                      //                                 .isDark
-                                      //                             ? AppColors
-                                      //                                 .textColorWhite
-                                      //                             : AppColors
-                                      //                                 .textColorBlack),
-                                      //                   ),
-                                      //                   SizedBox(
-                                      //                     height: 2.h,
-                                      //                   ),
-                                      //                   Row(
-                                      //                     mainAxisAlignment:
-                                      //                         MainAxisAlignment
-                                      //                             .center,
-                                      //                     children: [
-                                      //                       otpContainer(
-                                      //                         focusNode:
-                                      //                             firstFieldFocusNode,
-                                      //                         handler: () => FocusScope
-                                      //                                 .of(context)
-                                      //                             .requestFocus(
-                                      //                                 secondFieldFocusNode),
-                                      //                       ),
-                                      //                       SizedBox(
-                                      //                         width: 1.h,
-                                      //                       ),
-                                      //                       otpContainer(
-                                      //                         focusNode:
-                                      //                             secondFieldFocusNode,
-                                      //                         handler: () => FocusScope
-                                      //                                 .of(context)
-                                      //                             .requestFocus(
-                                      //                                 thirdFieldFocusNode),
-                                      //                       ),
-                                      //                       SizedBox(
-                                      //                         width: 1.h,
-                                      //                       ),
-                                      //                       otpContainer(
-                                      //                         focusNode:
-                                      //                             thirdFieldFocusNode,
-                                      //                         handler: () => FocusScope
-                                      //                                 .of(context)
-                                      //                             .requestFocus(
-                                      //                                 forthFieldFocusNode),
-                                      //                       ),
-                                      //                       SizedBox(
-                                      //                         width: 1.h,
-                                      //                       ),
-                                      //                       otpContainer(
-                                      //                         focusNode:
-                                      //                             forthFieldFocusNode,
-                                      //                         handler: () => FocusScope
-                                      //                                 .of(context)
-                                      //                             .requestFocus(
-                                      //                                 fifthFieldFocusNode),
-                                      //                       ),
-                                      //                       SizedBox(
-                                      //                         width: 1.h,
-                                      //                       ),
-                                      //                       otpContainer(
-                                      //                         focusNode:
-                                      //                             fifthFieldFocusNode,
-                                      //                         handler: () => FocusScope
-                                      //                                 .of(context)
-                                      //                             .requestFocus(
-                                      //                                 sixthFieldFocusNode),
-                                      //                       ),
-                                      //                       SizedBox(
-                                      //                         width: 1.h,
-                                      //                       ),
-                                      //                       otpContainer(
-                                      //                         focusNode:
-                                      //                             sixthFieldFocusNode,
-                                      //                         handler: () => null,
-                                      //                       ),
-                                      //                     ],
-                                      //                   ),
-                                      //                   SizedBox(
-                                      //                     height: 1.h,
-                                      //                   ),
-                                      //                   // Text(
-                                      //                   //   '*Incorrect verification code'.tr(),
-                                      //                   //   style: TextStyle(
-                                      //                   //       color: AppColors.errorColor,
-                                      //                   //       fontSize: 10.2.sp,
-                                      //                   //       fontWeight: FontWeight.w400),
-                                      //                   // ),
-                                      //                   SizedBox(
-                                      //                     height: 2.h,
-                                      //                   ),
-                                      //                   Padding(
-                                      //                     padding:
-                                      //                         EdgeInsets.symmetric(
-                                      //                             horizontal: 5.sp),
-                                      //                     child: Text(
-                                      //                       'Please enter the correct verification code sent your mobile number.'
-                                      //                           .tr(),
-                                      //                       textAlign:
-                                      //                           TextAlign.center,
-                                      //                       style: TextStyle(
-                                      //                           height: 1.4,
-                                      //                           color: AppColors
-                                      //                               .textColorGrey,
-                                      //                           fontSize: 10.2.sp,
-                                      //                           fontWeight:
-                                      //                               FontWeight.w400),
-                                      //                       maxLines: 2,
-                                      //                     ),
-                                      //                   ),
-                                      //                   Expanded(child: SizedBox()),
-                                      //                   Padding(
-                                      //                     padding: const EdgeInsets
-                                      //                         .symmetric(
-                                      //                         horizontal: 22),
-                                      //                     child: AppButton(
-                                      //                       title: 'Confirm'.tr(),
-                                      //                       handler: () {
-                                      //                         Navigator.pop(context);
-                                      //                       },
-                                      //                       isGradient: true,
-                                      //                       color: Colors.transparent,
-                                      //                       textColor: AppColors
-                                      //                           .textColorBlack,
-                                      //                     ),
-                                      //                   ),
-                                      //                   SizedBox(height: 2.h),
-                                      //                   Padding(
-                                      //                     padding: const EdgeInsets
-                                      //                         .symmetric(
-                                      //                         horizontal: 22),
-                                      //                     child: AppButton(
-                                      //                         title:
-                                      //                             'Resend code 06:00'
-                                      //                                 .tr(),
-                                      //                         handler: () {
-                                      //                           // Navigator.push(
-                                      //                           //   context,
-                                      //                           //   MaterialPageRoute(
-                                      //                           //     builder: (context) => TermsAndConditions(),
-                                      //                           //   ),
-                                      //                           // );
-                                      //                         },
-                                      //                         isGradient: false,
-                                      //                         textColor: themeNotifier
-                                      //                                 .isDark
-                                      //                             ? AppColors
-                                      //                                 .textColorWhite
-                                      //                             : AppColors
-                                      //                                 .textColorBlack
-                                      //                                 .withOpacity(
-                                      //                                     0.8),
-                                      //                         color:
-                                      //                             Colors.transparent),
-                                      //                   ),
-                                      //                   Expanded(child: SizedBox()),
-                                      //                 ],
-                                      //               ),
-                                      //             )),
-                                      //       );
-                                      //     },
-                                      //   );
-                                    },
-                                    // isLoading: _isLoading,
-                                    isGradient: true,
-                                    color: AppColors.textColorBlack),
-                              ),
-                              Container(
-                                height: 4.h,
-                                width: double.infinity,
-                                color: AppColors.backgroundColor,
-                              ),
-
-                            ],
-                          ),
-                        )
+                                      },
+                                      // isLoading: _isLoading,
+                                      isGradient: true,
+                                      color: AppColors.textColorBlack),
+                                ),
+                                Container(
+                                  height: 4.h,
+                                  width: double.infinity,
+                                  color: AppColors.backgroundColor,
+                                ),
+                              ],
+                            ),
+                          )
                       ],
                     ),
                   ),
                 ),
+
               ],
             ),
           ),
-          if(_isLoading)
-            LoaderBluredScreen()
+          if (_isLoading) LoaderBluredScreen()
         ],
       );
     });

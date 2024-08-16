@@ -7,6 +7,7 @@ import 'package:hesa_wallet/models/connected_sites_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import '../constants/colors.dart';
 import 'package:dio/dio.dart';
@@ -17,7 +18,7 @@ import 'bank_provider.dart';
 
 class UserProvider with ChangeNotifier {
   late FToast fToast;
-  // var walletAddress;
+  bool otpErrorResponse=false;
   String? walletAddress;
   String? userName;
   String? firstName;
@@ -28,7 +29,9 @@ class UserProvider with ChangeNotifier {
   String? idNumber;
   bool isEmailVerified=false;
   var verifiedEmail;
+  var userNationality;
   bool navigateToNeoForConnectWallet=false;
+  var uniqueIdFromStep1;
 
   List<PaymentCard> _paymentCards = [];
 
@@ -97,6 +100,7 @@ class UserProvider with ChangeNotifier {
       userAvatar = jsonResponse['userAvatar'];
       isEmailVerified = jsonResponse['isEmailVerified'];
       verifiedEmail = jsonResponse['email'].toString();
+      userNationality = jsonResponse['nationality'].toString();
 
       print("User details getting successfully!");
       print(userAvatar);
@@ -171,6 +175,118 @@ class UserProvider with ChangeNotifier {
       return AuthResult.failure;
     }
   }
+
+
+  Future<AuthResult> userUpdateStep1({
+    required String firstName,
+    required String lastName,
+    required String mobileNumber,
+    required String email,
+    required BuildContext context,
+    required String token,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/user/update/step1');
+    final body = {
+      "firstName" : firstName,
+      "lastName" : lastName,
+      "mobileNumber" : mobileNumber,
+      "email" : email,
+    };
+
+    final response = await http.post(
+      url,
+      body: body,
+      headers: {
+        // "Content-type": "application/json",
+        "Accept": "application/json",
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print('userupdatestep1' + response.body);
+    fToast = FToast();
+    fToast.init(context);
+    if (response.statusCode == 201) {
+      final jsonResponse = json.decode(response.body);
+
+      final uniqueId = jsonResponse['data']['uniqueId'];
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('uniqueId', uniqueId);
+      uniqueIdFromStep1=uniqueId;
+      notifyListeners();
+      print("uniqueId" + uniqueId);
+      return AuthResult.success;
+    } else {
+      return AuthResult.failure;
+    }
+  }
+
+  Future<AuthResult> userUpdateStep2({
+    required String code,
+    required String token,
+    required BuildContext context,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/user/update/step2');
+
+    final body = {
+      "code": code,
+    };
+
+    final response = await http.post(url, body: body,  headers: {
+      'X-Unique-Id': '$uniqueIdFromStep1',
+      "Accept": "application/json",
+      'Authorization': 'Bearer $token',
+    },);
+    print('sending code' + code.toString());
+    print('sending unique id' + uniqueIdFromStep1.toString());
+    print('userupdateStep2 Response');
+    print(response.body);
+    fToast = FToast();
+    fToast.init(context);
+    if (response.statusCode == 201) {
+      otpErrorResponse=false;
+      notifyListeners();
+      return AuthResult.success;
+    } else {
+      // Show an error message or handle the response as needed
+      print("Updation failed: ${response.body}");
+      _showToast('${response.body}');
+      otpErrorResponse=true;
+      notifyListeners();
+      return AuthResult.failure;
+    }
+  }
+
+  Future<AuthResult> userUpdateResendOtp({
+    required String token,
+    required BuildContext context,
+
+  }) async {
+    final url = Uri.parse(BASE_URL + '/user/update/resend-otp');
+
+    final body = {
+    };
+
+    final response = await http.post(url, body: body,  headers: {
+      'X-Unique-Id': '$uniqueIdFromStep1',
+      'Authorization': 'Bearer $token',
+    },);
+    print('sending unique id' + uniqueIdFromStep1.toString());
+    print('userupdateResendOtp Response');
+    print(response.body);
+    fToast = FToast();
+    fToast.init(context);
+    if (response.statusCode == 201) {
+      otpErrorResponse=false;
+      notifyListeners();
+      return AuthResult.success;
+    } else {
+      print("ResendOtp failed: ${response.body}");
+      _showToast('${response.body}');
+      notifyListeners();
+      return AuthResult.failure;
+    }
+  }
+
 
 
   Future<AuthResult> connectDapps({

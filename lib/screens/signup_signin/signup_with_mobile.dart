@@ -11,6 +11,7 @@ import 'package:hesa_wallet/widgets/button.dart';
 import 'package:hesa_wallet/widgets/main_header.dart';
 import 'package:hesa_wallet/widgets/text_field_parent.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'dart:io' as OS;
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -64,6 +65,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
   bool _isSelectedNationality = false;
   bool _isChecked = false;
   var _isLoadingOtpDialoge = false;
+
   bool isValidating = false;
   var tokenizedUserPL;
   bool isOtpButtonActive = false;
@@ -72,16 +74,23 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
   late StreamController<int> _events;
   bool _isTimerActive = false;
   var _selectedIDType = '';
-
+  var accessToken = "";
   var _selectedNationalityType = '';
   bool isButtonActive = false;
   bool isKeyboardVisible = false;
   var _isLoading = false;
-  int _timeLeft = 300;
+  int _timeLeft = 100;
+
+  getAccessToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    accessToken = prefs.getString('accessToken')!;
+    // print(accessToken);
+  }
 
   @override
   void initState() {
     super.initState();
+     getAccessToken();
     _events = new StreamController<int>();
     _events.add(300);
     // Listen for changes in the text fields and update the button state
@@ -1044,6 +1053,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                 startTimer();
                                 otpDialog(
                                   events: _events,
+
                                   firstBtnHandler: () async {
                                     if (otp1Controller.text.isNotEmpty &&
                                         otp2Controller
@@ -1138,12 +1148,10 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                             context,
                                             listen:
                                             false)
-                                            .sendLoginOTP(
-                                            mobile:
-                                            _numberController
-                                                .text,
+                                            .registerNumResendOtp(
+
                                             context:
-                                            context);
+                                            context, token: accessToken, medium: "sms");
                                         setState(() {
                                           _isLoadingResend =
                                           false;
