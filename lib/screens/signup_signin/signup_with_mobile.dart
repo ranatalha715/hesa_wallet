@@ -71,7 +71,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
   bool isOtpButtonActive = false;
   var _isLoadingResend = false;
   Timer? _timer;
-  late StreamController<int> _events;
+  StreamController<int> _events = StreamController<int>.broadcast();
+  // late StreamController<int> _events;
   bool _isTimerActive = false;
   var _selectedIDType = '';
   var accessToken = "";
@@ -79,7 +80,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
   bool isButtonActive = false;
   bool isKeyboardVisible = false;
   var _isLoading = false;
-  int _timeLeft = 100;
+  int _timeLeft = 60;
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -92,11 +93,13 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
     super.initState();
      getAccessToken();
     _events = new StreamController<int>();
-    _events.add(300);
+    _events.add(60);
     // Listen for changes in the text fields and update the button state
     _firstnameController.addListener(_updateButtonState);
     _lastnameController.addListener(_updateButtonState);
     _identificationnumberController.addListener(_updateButtonState);
+    _identificationtypeController.addListener(_updateButtonState);
+    _numberController.addListener(_updateButtonState);
     otp1Controller.addListener(_updateOtpButtonState);
     otp2Controller.addListener(_updateOtpButtonState);
     otp3Controller.addListener(_updateOtpButtonState);
@@ -132,6 +135,25 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
     });
   }
 
+  void restartCountdown() {
+    // Reset the countdown to 60 seconds
+    _events.add(60);
+    Timer.periodic(Duration(seconds: 1), (timer) async {
+      var events;
+      if (events.hasListener) {
+        // Await the last value of the stream before comparing
+        final currentTime = await events.stream.first;
+        if (currentTime > 0) {
+          events.add(currentTime - 1);
+        } else {
+          timer.cancel();
+        }
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
   @override
   void dispose() {
     // Clean up the controllers when they are no longer needed
@@ -141,15 +163,29 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
     super.dispose();
   }
 
-
   void startTimer() {
     _isTimerActive = true;
     Timer.periodic(Duration(seconds: 1), (timer) {
-      (_timeLeft > 0) ? _timeLeft-- : _timer?.cancel();
-      print(_timeLeft);
-      _events.add(_timeLeft);
+      if (_timeLeft > 0) {
+        _timeLeft--;
+        _events.add(_timeLeft); // Add updated time to the stream
+      } else {
+        timer.cancel(); // Cancel the timer when timeLeft is 0
+      }
     });
   }
+
+
+
+  // void startTimer() {
+  //   _isTimerActive = true;
+  //   Timer.periodic(Duration(seconds: 1), (timer) {
+  //     (_timeLeft > 0) ? _timeLeft-- : _timer?.cancel();
+  //     print("_timeLeft");
+  //     print(_timeLeft);
+  //     _events.add(_timeLeft);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -323,20 +359,22 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                       textCapitalization:
                                           TextCapitalization.words,
                                       focusNode: lastNameFocusNode,
-                                      textInputAction: TextInputAction.done,
+                                      textInputAction: TextInputAction.next,
                                       onEditingComplete: () {
-                                        // idNumFocusNode.requestFocus();
+                                        FocusScope.of(context).unfocus();
+
                                         setState(() {
-                                          _isSelected = true;
+
+                                          _isSelectedNationality=true;
                                         });
                                       },
                                       controller: _lastnameController,
                                       keyboardType: TextInputType.name,
-                                      scrollPadding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context)
-                                                  .viewInsets
-                                                  .bottom /
-                                              2),
+                                      // scrollPadding: EdgeInsets.only(
+                                      //     bottom: MediaQuery.of(context)
+                                      //             .viewInsets
+                                      //             .bottom /
+                                      //         1.5),
                                       style: TextStyle(
                                           fontSize: 10.2.sp,
                                           color: themeNotifier.isDark
@@ -412,7 +450,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                   height: 1.h,
                                 ),
                                 Container(
-                                  decoration: BoxDecoration(
+                                      decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
                                   child: Column(
@@ -715,7 +753,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                 TextFieldParent(
                                   child: TextField(
                                       focusNode: idNumFocusNode,
-                                      textInputAction: TextInputAction.done,
+                                      textInputAction: TextInputAction.next,
                                       // onEditingComplete: () {
                                       // },
                                       controller:
@@ -803,7 +841,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                 TextFieldParent(
                                   child: TextField(
                                       focusNode: mobileNumFocusNode,
-                                      textInputAction: TextInputAction.next,
+                                      textInputAction: TextInputAction.done,
                                       onEditingComplete: () {
                                         // passwordFocusNode.requestFocus();
                                       },
@@ -919,7 +957,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                   margin: EdgeInsets.symmetric(
                     horizontal: 20,
                   ),
-                  // color: AppColors.errorColor,
                   color: themeNotifier.isDark
                       ? AppColors.backgroundColor
                       : AppColors.textColorWhite,
@@ -933,40 +970,72 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(left: 5, top: 2),
-                            child: GestureDetector(
+                            child:
+
+                            GestureDetector(
                               onTap: () => setState(() {
                                 _isChecked = !_isChecked;
                               }),
-                              child: Container(
+                              child: AnimatedContainer(
+                                duration: Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
                                 height: 2.4.h,
                                 width: 2.4.h,
                                 decoration: BoxDecoration(
-                                    // gradient: LinearGradient(
-                                    //   colors: [
-                                    //     _isChecked
-                                    //         ? Color(0xff92B928)
-                                    //         : Colors.transparent,
-                                    //     _isChecked
-                                    //         ? Color(0xffC9C317)
-                                    //         : Colors.transparent
-                                    //   ],
-                                    // ),
-                                    border: Border.all(
-                                        color: AppColors.textColorWhite,
-                                        width: 1),
-                                    borderRadius: BorderRadius.circular(2)),
+                                  color: _isChecked ? AppColors.hexaGreen : Colors.transparent, // Animate the color
+                                  border: Border.all(
+                                      color: _isChecked ?AppColors.hexaGreen : AppColors.textColorWhite,
+                                      width: 1),
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
                                 child: _isChecked
                                     ? Align(
-                                        alignment: Alignment.center,
-                                        child: Icon(
-                                          Icons.check_rounded,
-                                          size: 8.2.sp,
-                                          color: AppColors.textColorWhite,
-                                        ),
-                                      )
+                                  alignment: Alignment.center,
+                                  child: Icon(
+                                    Icons.check_rounded,
+                                    size: 12.sp,
+                                    color: AppColors.textColorBlack,
+                                  ),
+                                )
                                     : SizedBox(),
                               ),
-                            ),
+                            )
+
+                            // GestureDetector(
+                            //   onTap: () => setState(() {
+                            //     _isChecked = !_isChecked;
+                            //   }),
+                            //   child:
+                            //   Container(
+                            //     height: 2.4.h,
+                            //     width: 2.4.h,
+                            //     decoration: BoxDecoration(
+                            //         // gradient: LinearGradient(
+                            //         //   colors: [
+                            //         //     _isChecked
+                            //         //         ? Color(0xff92B928)
+                            //         //         : Colors.transparent,
+                            //         //     _isChecked
+                            //         //         ? Color(0xffC9C317)
+                            //         //         : Colors.transparent
+                            //         //   ],
+                            //         // ),
+                            //         border: Border.all(
+                            //             color: AppColors.textColorWhite,
+                            //             width: 1),
+                            //         borderRadius: BorderRadius.circular(2)),
+                            //     child: _isChecked
+                            //         ? Align(
+                            //             alignment: Alignment.center,
+                            //             child: Icon(
+                            //               Icons.check_rounded,
+                            //               size: 8.2.sp,
+                            //               color: AppColors.textColorWhite,
+                            //             ),
+                            //           )
+                            //         : SizedBox(),
+                            //   ),
+                            // ),
                           ),
                           SizedBox(
                             width: 3.w,
@@ -1159,6 +1228,9 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                         if (result ==
                                             AuthResult
                                                 .success) {
+                                          restartCountdown();
+                                          _events = new StreamController<int>();
+                                            _events.add(60);
                                           startTimer();
                                         }
                                       } catch (error) {
@@ -1175,13 +1247,11 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                   firstTitle: 'Confirm',
                                   secondTitle: 'Resend code: ',
 
-                                  // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
-
                                   context: context,
                                   isDark: themeNotifier.isDark,
                                   isFirstButtonActive:
                                   isOtpButtonActive,
-                                  isSecondButtonActive: false,
+                                  isSecondButtonActive: !_isTimerActive,
                                   otp1Controller:
                                   otp1Controller,
                                   otp2Controller:
@@ -1255,7 +1325,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                   child: GestureDetector(
                     onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
                     child: Container(
-                        color: AppColors.errorColor,
                         height: 4.h,
                         child: Align(
                             alignment: Alignment.centerRight,
@@ -1366,6 +1435,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
     return GestureDetector(
       onTap: () => setState(() {
         _selectedNationalityType = name;
+        _isSelected=true;
         _isSelectedNationality = false;
       }),
       child: Container(

@@ -58,10 +58,12 @@ void otpDialog({
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
           // print("testing" + isFirstButtonActive.toString());
+
           print('test loading' + isLoading.toString());
           return StreamBuilder<int>(
               stream: events.stream,
               builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                print("otp dialoge timeleft");
                 print(snapshot.data.toString());
                 return Dialog(
                   shape: RoundedRectangleBorder(
@@ -137,7 +139,7 @@ void otpDialog({
                                       width: 5.6.h,
                                     ),
                                   ),
-                                 SizedBox(height: 2.h),
+                                SizedBox(height: 2.h),
 
                                 Text(
                                   isEmailOtpDialog
@@ -145,8 +147,8 @@ void otpDialog({
                                       : 'OTP verification'.tr(),
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      fontSize: isEmailOtpDialog
-                                          ? 13.sp: 17.5.sp,
+                                      fontSize:
+                                          isEmailOtpDialog ? 13.sp : 17.5.sp,
                                       color: isDark
                                           ? AppColors.textColorWhite
                                           : AppColors.textColorBlack),
@@ -261,13 +263,20 @@ void otpDialog({
                                   padding:
                                       EdgeInsets.symmetric(horizontal: 22.sp),
                                   child: AppButton(
-                                      title: secondTitle +
-                                          // "${snapshot.data.toString()}"
-                                          "${(snapshot.data! ~/ 60).toString().padLeft(2, '0')}:${(snapshot.data! % 60).toString().padLeft(2, '0')}",
+                                      title:
+                                          // snapshot.data != null && snapshot.data! > 0 ?
+                                          secondTitle +
+                                              // "${snapshot.data.toString()}"
+                                              "${(snapshot.data! ~/ 60).toString().padLeft(2, '0')}:${(snapshot.data! % 60).toString().padLeft(2, '0')}"
+                                      // :secondTitle
+                                      ,
 
                                       // secondTitle,
                                       isactive: isSecondButtonActive,
-                                      handler: () => secondBtnHandler(),
+                                      handler: () {
+                                        secondBtnHandler();
+
+                                      },
                                       isGradient: false,
                                       isGradientWithBorder: false,
                                       textColor: secondBtnTextColor,

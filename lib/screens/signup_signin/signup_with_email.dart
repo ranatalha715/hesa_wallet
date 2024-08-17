@@ -167,6 +167,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
     _events.add(300);
     // Listen for changes in the text fields and update the button state
     _passwordController.addListener(_updateButtonState);
+    _confirmPasswordController.addListener(_updateButtonState);
     _usernameController.addListener(_updateButtonState);
     _numberController.addListener(_updateButtonState);
     _emailController.addListener(_updateButtonState);
@@ -188,7 +189,11 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
               _passwordController
                   .text.isNotEmpty &&
               _confirmPasswordController
-                  .text.isNotEmpty;
+                  .text.isNotEmpty &&
+              _passwordController
+                  .text ==
+              _confirmPasswordController
+                  .text;
     });
   }
 
@@ -632,11 +637,11 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                           confirmPasswordFocusNode.requestFocus();
 
                                       },
-                                      // scrollPadding: EdgeInsets.only(
-                                      //     bottom: MediaQuery.of(context)
-                                      //             .viewInsets
-                                      //             .bottom/2
-                                      // ),
+                                      scrollPadding: EdgeInsets.only(
+                                          bottom: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom-20
+                                      ),
                                       controller: _passwordController,
                                       obscureText: _obscurePassword,
                                       onChanged: (password) {
