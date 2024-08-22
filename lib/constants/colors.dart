@@ -33,6 +33,7 @@ class AppColors {
   static const transparentBtnBorderColorLight = Color(0xffB3B7BB);
   static const bluishClr = Color(0xff12D0DB);
   static const emailNotVerifiedContainer = Color(0xFA08481A);
+  static const deleteAccountBtnColor = Color(0xffFA0848);
   static const disabaledBtnColor = Color(0xffCFD1D4);
   static const drawerDividerdarkColor = Color(0xff424242);
   static const drawerDividerlightColor = Color(0xffB3B7BB);
@@ -53,7 +54,7 @@ class AppColors {
   static const connectedSitesPopupsClr = Color(0xff2B2B2B);
   static const showDialogClr = Color(0xff2B2B2B);
   static const connectedSitesDialog = Color(0xff2B2B2B);
-  static const appButtonUnselectedDark = Color(0xff2B2B2B);
+  static const appButtonUnselectedDark = Color(0xff7F7F7F);
   static const transactionFeeContainer = Color(0xff343434);
   static const transactionSummNeoBorder = Color(0xff343535);
   static const connectDiscSites = Color(0xff04A20A);
@@ -63,6 +64,8 @@ class AppColors {
   static const verifyAccount = Color(0xffDC2626);
   static const languageDivider = Color(0xff343535);
   static const transactionReqBorderWhole= Color(0xff2D2D2D);
+  static const unselectedBtnTextColor= Color(0xff2D2D2D);
   static const headerSubTitle= Color(0xff93979B);
   static const nftsSubtitle= Color(0xff93979B);
+  static const focusTextFieldColor= Color(0xffA3A4A5);
 }

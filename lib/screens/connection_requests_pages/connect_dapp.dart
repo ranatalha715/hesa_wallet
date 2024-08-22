@@ -40,6 +40,8 @@ class _ConnectDappState extends State<ConnectDapp> {
     'Username'.tr(),
     'Display icon'.tr(),
     'NFTs and Collections (owned/created)'.tr(),
+    'Wallet activity (specific to the App)'.tr(),
+    'Email'.tr(),
   ];
 
   List<String> accountDefinitions2 = [
@@ -219,7 +221,7 @@ class _ConnectDappState extends State<ConnectDapp> {
                               ),
                             ),
                             SizedBox(
-                              height: 3.h,
+                              height: 2.h,
                             ),
                             Text(
                               "This App has requested to connect with your wallet. Always make sure you trust this site before connecting."
@@ -231,7 +233,7 @@ class _ConnectDappState extends State<ConnectDapp> {
                                   fontFamily: 'Inter'),
                             ),
                             SizedBox(
-                              height: 3.h,
+                              height: 2.h,
                             ),
                             Text(
                               "Information that site will utilize:".tr(),
@@ -281,7 +283,7 @@ class _ConnectDappState extends State<ConnectDapp> {
                               },
                             ),
                             SizedBox(
-                              height: 3.h,
+                              height: 2.h,
                             ),
                             Text(
                               "Functionalities that site will be able to request:"
@@ -344,6 +346,40 @@ class _ConnectDappState extends State<ConnectDapp> {
                             SizedBox(
                               height: 2.h,
                             ),
+
+                            AppButton(
+                              title: 'Reject'.tr(),
+                              handler: () async {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+
+                                Provider.of<UserProvider>(context, listen: false)
+                                    .navigateToNeoForConnectWallet=false;
+                                await Future.delayed(const Duration(seconds: 1));
+                                setState(() {
+                                  _isLoading = false;
+                                });
+
+                                await AppDeepLinking().openNftApp(
+                                  {
+                                    "operation": "connectWallet",
+                                    "response": 'Connection request rejected.'
+                                  },
+                                );
+                                SystemNavigator.pop();
+                              },
+                              isGradientWithBorder: true,
+                              buttonWithBorderColor: AppColors.errorColor,
+                              color: AppColors.deleteAccountBtnColor
+                                  .withOpacity(0.10),
+                              isGradient: false,
+                              textColor: themeNotifier.isDark
+                                  ? AppColors.textColorWhite
+                                  : AppColors.textColorBlack.withOpacity(0.8),
+
+                            ),
+                            SizedBox(height: 2.h),
                             AppButton(
                               title: 'Connect'.tr(),
                               handler: () async {
@@ -594,55 +630,7 @@ class _ConnectDappState extends State<ConnectDapp> {
                               color: Colors.transparent,
                               textColor: AppColors.textColorBlack,
                             ),
-                            SizedBox(height: 2.h),
-                            AppButton(
-                                title: 'Reject'.tr(),
-                                handler: () async {
-                                  setState(() {
-                                    _isLoading = true;
-                                  });
 
-                                  Provider.of<UserProvider>(context, listen: false)
-                                      .navigateToNeoForConnectWallet=false;
-                                  await Future.delayed(const Duration(seconds: 1));
-                                  setState(() {
-                                    _isLoading = false;
-                                  });
-
-                                  await AppDeepLinking().openNftApp(
-                                    {
-                                      "operation": "connectWallet",
-                                      // "walletAddress":
-                                      //     Provider.of<UserProvider>(context,
-                                      //             listen: false)
-                                      //         .walletAddress,
-                                      // "userName": Provider.of<UserProvider>(
-                                      //         context,
-                                      //         listen: false)
-                                      //     .userName,
-                                      // "userIcon": Provider.of<UserProvider>(
-                                      //         context,
-                                      //         listen: false)
-                                      //     .userAvatar,
-                                      "response": 'Connection request rejected.'
-                                    },
-                                  );
-                                  SystemNavigator.pop();
-                                  // Navigator.pop(context);
-                                  // await Navigator.pushReplacement(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) =>
-                                  //         WalletTokensNfts(),
-                                  //   ),
-                                  // );
-                                },
-                                isGradient: false,
-                                textColor: themeNotifier.isDark
-                                    ? AppColors.textColorWhite
-                                    : AppColors.textColorBlack.withOpacity(0.8),
-                                color: AppColors.appSecondButton
-                                    .withOpacity(0.10)),
                             // SizedBox(
                             //   height: 3.h,
                             // )

@@ -214,9 +214,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: Colors.transparent,
-                                              // Off-white color
-                                              // width: 2.0,
+                                              color: AppColors.focusTextFieldColor,
                                             )),
                                         // labelText: 'Enter your password',
                                         suffixIcon: IconButton(
@@ -377,16 +375,12 @@ class _ResetPasswordState extends State<ResetPassword> {
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
                                               color: Colors.transparent,
-                                              // Off-white color
-                                              // width: 2.0,
                                             )),
                                         focusedBorder: OutlineInputBorder(
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: Colors.transparent,
-                                              // Off-white color
-                                              // width: 2.0,
+                                              color: AppColors.focusTextFieldColor,
                                             )),
                                         // labelText: 'Enter your password',
                                         suffixIcon: IconButton(

@@ -177,7 +177,7 @@ class _AppDrawerState extends State<AppDrawer> {
                           ),
                           Text(
                             user.userName != null
-                                ? user.userName! + ".mjra"
+                                ? user.userName!
                                 : 'username.mjra'.tr(),
                             // 'username.mjra'.tr(),
                             style: TextStyle(

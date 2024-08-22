@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:animated_checkmark/animated_checkmark.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -244,17 +245,19 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                             height: 6.5.h,
                                             decoration: BoxDecoration(
                                               color:
-                                                  AppColors.textFieldParentDark,
+                                              AppColors.textFieldParentDark,
                                               borderRadius: BorderRadius.only(
                                                 topLeft: Radius.circular(8.0),
-                                                // Radius for top-left corner
                                                 topRight: Radius.circular(8.0),
                                                 bottomLeft: Radius.circular(
-                                                    _isSelected ? 0.0 : 8.0),
+                                                    _isSelected
+                                                        ? 8.0
+                                                        : 8.0),
+                                                // Adjust as needed
                                                 bottomRight: Radius.circular(
                                                     _isSelected
-                                                        ? 0.0
-                                                        : 8.0), // Radius for top-right corner
+                                                        ? 8.0
+                                                        : 8.0), // Adjust as needed
                                               ),
                                             ),
                                             child: Padding(
@@ -323,10 +326,17 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                           Stack(
                                             children: [
                                               Container(
-                                                // color:Colors.red,
                                                 height: 27.h,
-
+                                                margin: EdgeInsets.only(left: 1.sp, right: 1.sp,  top: 0.4.h),
                                                 decoration: BoxDecoration(
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.black.withOpacity(0.10), // Shadow color
+                                                        offset: Offset(0, 4), // Pushes the shadow down, removes the top shadow
+                                                        blurRadius: 3, // Adjust the blur radius to change shadow size
+                                                        spreadRadius: 0.5,  // Optional: Adjust spread radius if needed
+                                                      ),
+                                                    ],
                                                     // color: AppColors.errorColor,
                                                     color: AppColors
                                                         .textFieldParentDark,
@@ -335,7 +345,7 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                             8)),
                                                 child: Padding(
                                                   padding: EdgeInsets.only(
-                                                      bottom: 2.h),
+                                                      bottom: 2.h , top:0.5.h),
                                                   child:
                                                   _searchQuery == "" ||
                                                           _searchQuery.isEmpty
@@ -422,9 +432,9 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                 ),
                                               ),
                                               Positioned(
-                                                top: 0,
-                                                left: 0,
-                                                right: 0,
+                                                top: 4,
+                                                left: 1,
+                                                right: 1,
                                                 child: Container(
                                                   height: 6.5.h,
                                                   child: TextField(
@@ -472,9 +482,7 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                             borderRadius:
                                                             BorderRadius.circular(8.0),
                                                             borderSide: BorderSide(
-                                                              color: Colors.transparent,
-                                                              // Off-white color
-                                                              // width: 2.0,
+                                                              color: AppColors.focusTextFieldColor,
                                                             )),
                                                         // labelText: 'Enter your password',
                                                       ),
@@ -580,9 +588,7 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                               borderRadius:
                                                   BorderRadius.circular(8.0),
                                               borderSide: BorderSide(
-                                                color: Colors.transparent,
-                                                // Off-white color
-                                                // width: 2.0,
+                                                color: AppColors.focusTextFieldColor,
                                               )),
                                           // labelText: 'Enter your password',
                                         ),
@@ -666,9 +672,7 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                               borderRadius:
                                                   BorderRadius.circular(8.0),
                                               borderSide: BorderSide(
-                                                color: Colors.transparent,
-                                                // Off-white color
-                                                // width: 2.0,
+                                                color: AppColors.focusTextFieldColor,
                                               )),
                                           // labelText: 'Enter your password',
                                         ),
@@ -723,38 +727,35 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                             onTap: () => setState(() {
                                               _isChecked = !_isChecked;
                                             }),
-                                            child: Container(
+                                            child:
+                                            Container(
                                               height: 2.4.h,
                                               width: 2.4.h,
                                               decoration: BoxDecoration(
-                                                  // gradient: LinearGradient(
-                                                  //   colors: [
-                                                  //     _isChecked
-                                                  //         ? Color(0xff92B928)
-                                                  //         : Colors.transparent,
-                                                  //     _isChecked
-                                                  //         ? Color(0xffC9C317)
-                                                  //         : Colors.transparent
-                                                  //   ],
-                                                  // ),
-                                                  border: Border.all(
-                                                      color: AppColors
-                                                          .textColorWhite,
-                                                      width: 1),
                                                   borderRadius:
-                                                      BorderRadius.circular(2)),
-                                              child: _isChecked
-                                                  ? Align(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Icon(
-                                                        Icons.check_rounded,
-                                                        size: 8.2.sp,
-                                                        color: AppColors
-                                                            .textColorWhite,
-                                                      ),
-                                                    )
-                                                  : SizedBox(),
+                                                  BorderRadius.circular(2)),
+                                              child:
+                                              AnimatedContainer(
+                                                  duration: Duration(milliseconds: 300),
+                                                  curve: Curves.easeInOut,
+                                                  height: 2.4.h,
+                                                  width: 2.4.h,
+                                                  decoration: BoxDecoration(
+                                                    color: _isChecked ? AppColors.hexaGreen : Colors.transparent, // Animate the color
+                                                    border: Border.all(
+                                                        color: _isChecked ?AppColors.hexaGreen : AppColors.textColorWhite,
+                                                        width: 1),
+                                                    borderRadius: BorderRadius.circular(2),
+                                                  ),
+                                                  child:  Checkmark(
+                                                    checked: _isChecked,
+                                                    indeterminate: false,
+                                                    size: 11.sp,
+                                                    color: Colors.black,
+                                                    drawCross: false,
+                                                    drawDash: false,
+                                                  )
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -871,17 +872,6 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                             otpDialog(
                                               events: _events,
                                               firstBtnHandler: () async {
-                                                if (otp1Controller.text.isNotEmpty &&
-                                                    otp2Controller
-                                                        .text.isNotEmpty &&
-                                                    otp3Controller
-                                                        .text.isNotEmpty &&
-                                                    otp4Controller
-                                                        .text.isNotEmpty &&
-                                                    otp5Controller
-                                                        .text.isNotEmpty &&
-                                                    otp6Controller
-                                                        .text.isNotEmpty) {
                                                   setState(() {
                                                     _isLoading = true;
                                                   });
@@ -899,14 +889,7 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                     ibanNumber:
                                                         _ibannumberController
                                                             .text,
-                                                    code: otp1Controller.text +
-                                                        otp2Controller.text +
-                                                        otp3Controller.text +
-                                                        otp4Controller.text +
-                                                        otp5Controller.text +
-                                                        otp6Controller.text,
-                                                    // beneficiaryName:
-                                                    // _accountholdernamerController.text,
+                                                    code:  Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes,
                                                     bankBic: _selectedBankBic,
                                                   );
                                                   setState(() {
@@ -1030,7 +1013,7 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                       },
                                                     );
                                                   }
-                                                }
+
                                               },
                                               secondBtnHandler: () async {
                                                 if (_timeLeft == 0) {
@@ -1134,80 +1117,6 @@ class _WalletAddBankState extends State<WalletAddBank> {
         ),
       );
     });
-  }
-
-  Widget otpContainer({
-    required FocusNode focusNode,
-    required FocusNode previousFocusNode,
-    required TextEditingController controller,
-    required Function handler,
-  }) {
-    return TextFieldParent(
-      width: 9.8.w,
-      otpHeight: 8.h,
-      color: Colors.white.withOpacity(0.15),
-      child: TextField(
-        controller: controller,
-        focusNode: focusNode,
-        onChanged: (value) {
-          if (value.isEmpty) {
-            focusNode.requestFocus();
-            if (controller.text.isNotEmpty) {
-              controller.clear();
-              handler();
-            } else {
-              // Move focus to the previous SMSVerificationTextField
-              // and clear its value recursively
-              // FocusScope.of(context).previousFocus();
-              previousFocusNode.requestFocus();
-            }
-          } else {
-            handler();
-          }
-        },
-        // onChanged: (value) => handler(),
-        keyboardType: TextInputType.number,
-        cursorColor: AppColors.textColorGrey,
-        // obscureText: true,
-        maxLength: 1,
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(1),
-        ],
-        // Hide the entered OTP digits
-        textAlign: TextAlign.center,
-        textAlignVertical: TextAlignVertical.bottom,
-        style: TextStyle(
-          color: AppColors.textColorGrey,
-          fontSize: 17.5.sp,
-          // fontWeight: FontWeight.bold,
-          // letterSpacing: 16,
-        ),
-        decoration: InputDecoration(
-          counterText: '', // Hide the default character counter
-          contentPadding: EdgeInsets.only(top: 16, bottom: 16),
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
-              borderSide: BorderSide(
-                color: Colors.transparent,
-                // Off-white color
-                // width: 2.0,
-              )),
-          focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
-              borderSide: BorderSide(
-                color: Colors.transparent,
-                // Off-white color
-                // width: 2.0,
-              )),
-        ),
-      ),
-      // height: 8.h,
-      // width: 10.w,
-      // decoration: BoxDecoration(
-      //   color: Colors.transparent,
-      //   borderRadius: BorderRadius.circular(10),
-      // )
-    );
   }
 
   Widget addBankslist({

@@ -31,7 +31,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
   bool _isTimerActive = false;
   var _isLoading = false;
   bool isOtpButtonActive = false;
-  int _timeLeft = 100;
+  int _timeLeft = 60;
   var accessToken = "";
 
 
@@ -75,17 +75,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
       isBlurred: false,
       isEmailOtpDialog: true,
       firstBtnHandler: () async {
-        if (otp1Controller.text.isNotEmpty &&
-            otp2Controller
-                .text.isNotEmpty &&
-            otp3Controller
-                .text.isNotEmpty &&
-            otp4Controller
-                .text.isNotEmpty &&
-            otp5Controller
-                .text.isNotEmpty &&
-            otp6Controller
-                .text.isNotEmpty) {
           try {
             setState(() {
               _isLoadingOtpDialoge =
@@ -104,17 +93,8 @@ class _VerifyEmailState extends State<VerifyEmail> {
               context:
               context,
 
-              code: otp1Controller.text +
-                  otp2Controller
-                      .text +
-                  otp3Controller
-                      .text +
-                  otp4Controller
-                      .text +
-                  otp5Controller
-                      .text +
-                  otp6Controller
-                      .text,);
+              code:  Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes,
+            );
 
             setState(() {
               _isLoadingOtpDialoge =
@@ -145,7 +125,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
               false;
             });
           }
-        }
+
       },
       secondBtnHandler: () async {
         if (_timeLeft == 0) {
@@ -260,7 +240,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
     // TODO: implement initState
     getAccessToken();
     _events = new StreamController<int>();
-    _events.add(300);
+    _events.add(60);
 
     otp1Controller.addListener(_updateOtpButtonState);
     otp2Controller.addListener(_updateOtpButtonState);
@@ -283,15 +263,16 @@ class _VerifyEmailState extends State<VerifyEmail> {
       backgroundColor: themeNotifier.isDark
           ? AppColors.backgroundColor
           : AppColors.textColorWhite,
-      body: Column(
+      body: SingleChildScrollView(
+      child: Column(
           children: [
       MainHeader(title: 'Verify Email'),
       // SizedBox(
       //   height: 2.h,
       // ),
       ])
+    ));
 
-    );
     });
   }}
 

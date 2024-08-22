@@ -42,7 +42,7 @@ class DialogButton extends StatelessWidget {
           )
               : BoxDecoration(
             color: themeNotifier.isDark
-                ? AppColors.inActiveDialogButton.withOpacity(0.20)
+                ? AppColors.appButtonUnselectedDark
                 : AppColors.disabaledBtnColor, // LIGHT
             borderRadius: BorderRadius.circular(10),
           )
@@ -58,7 +58,7 @@ class DialogButton extends StatelessWidget {
                     color: isactive
                         ? textColor
                         : themeNotifier.isDark
-                        ? AppColors.textColorGreyShade2
+                        ? AppColors.unselectedBtnTextColor
                         : AppColors.textColorGreyShade3,
                     fontSize: 11.7.sp,
                     fontWeight: FontWeight.w600),

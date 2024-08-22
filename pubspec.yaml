@@ -47,6 +47,7 @@ dependencies:
 #  intl: ^0.18.1
   google_fonts:
   url_launcher:
+  animated_checkmark: ^3.1.0
 #  url_launcher: ^6.1.12
   shared_preferences: ^2.2.0
   http: ^1.2.1
@@ -68,6 +69,7 @@ dependencies:
   connectivity_plus: ^5.0.2
   page_transition: ^2.0.9
   uni_links: ^0.5.1
+  pinput: ^5.0.0
   deep_linking:
 #   path: C:\Users\Talha's PC\AndroidStudioProjects\deepinking_module
    path: ../deepinking_module

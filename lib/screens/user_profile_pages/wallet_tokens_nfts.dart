@@ -77,42 +77,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
         .getUserDetails(token: accessToken, context: context);
     var user = await Provider.of<UserProvider>(context, listen: false);
     userWalletAddress = user.walletAddress;
-    // await Provider.of<NftsProvider>(context, listen: false)
-    //     .getAllNftsCollection(
-    //   token: accessToken,
-    //   context: context,
-    //   walletAddress: user.walletAddress!,
-    // );
-    // await Provider.of<NftsProvider>(context, listen: false).nftsOwnedByUser(
-    //   token: accessToken,
-    //   walletAddress: user.walletAddress!,
-    //   context: context,
-    // );
-    // await Provider.of<NftsProvider>(context, listen: false)
-    //     .getNftsCollectionOwnedByUser(
-    //   token: accessToken,
-    //   walletAddress: user.walletAddress!,
-    //   context: context,
-    // );
-    // await Provider.of<NftsProvider>(context, listen: false).nftsCreatedByUser(
-    //   token: accessToken,
-    //   context: context,
-    //   walletAddress: user.walletAddress!,
-    // );
-    //
-    // await Provider.of<NftsProvider>(context, listen: false)
-    //     .getNftsCollectionCreatedByUser(
-    //   token: accessToken,
-    //   context: context,
-    //   walletAddress: user.walletAddress!,
-    // );
-    //
-    // await Provider.of<NftsProvider>(context, listen: false)
-    //     .getNftsCollectionListed(
-    //   token: accessToken,
-    //   context: context,
-    //   walletAddress: user.walletAddress!,
-    // );
     await Provider.of<AssetsProvider>(context, listen: false).getListedAssets(
       token: accessToken,
       context: context,
@@ -1397,13 +1361,13 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
         margin: EdgeInsets.only(right: 10.sp),
         decoration: BoxDecoration(
             color: _isSelected == index
-                ? Colors.transparent
+                ? AppColors.textColorGrey.withOpacity(0.5)
                 : AppColors.profileHeaderDark,
-            border: Border.all(
-                color: _isSelected == index
-                    ? AppColors.hexaGreen
-                    : Colors.transparent,
-                width: 1),
+            // border: Border.all(
+            //     color: _isSelected == index
+            //         ? AppColors.hexaGreen
+            //         : Colors.transparent,
+            //     width: 1),
             borderRadius: BorderRadius.circular(8)),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 13.sp, vertical: 8.sp),
@@ -1419,7 +1383,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                     fontSize: 10.sp,
                     fontWeight: FontWeight.w400,
                     color: _isSelected == index
-                        ? AppColors.hexaGreen
+                        ? AppColors.textColorWhite
                         : AppColors.textColorGreyShade2),
               ),
             ],

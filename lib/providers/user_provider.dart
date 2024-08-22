@@ -27,7 +27,7 @@ class UserProvider with ChangeNotifier {
   String? email;
   String? userAvatar;
   String? idNumber;
-  bool isEmailVerified=false;
+  String isEmailVerified = "false";
   var verifiedEmail;
   var userNationality;
   bool navigateToNeoForConnectWallet=false;
@@ -98,7 +98,7 @@ class UserProvider with ChangeNotifier {
       idNumber = jsonResponse['idNumber'];
       userName = jsonResponse['userName'];
       userAvatar = jsonResponse['userAvatar'];
-      isEmailVerified = jsonResponse['isEmailVerified'];
+      isEmailVerified = jsonResponse['isEmailVerified'].toString();
       verifiedEmail = jsonResponse['email'].toString();
       userNationality = jsonResponse['nationality'].toString();
 

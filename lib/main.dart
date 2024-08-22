@@ -515,8 +515,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 ),
           debugShowCheckedModeBanner: false,
           home:
-          // TermsAndConditions(),
-          // Unlock(),
           _buildContent(),
               // Provider.of<TokenProvider>(
               //   context,

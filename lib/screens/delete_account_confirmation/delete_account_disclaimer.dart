@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'dart:ui';
 
+import 'package:animated_checkmark/animated_checkmark.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hesa_wallet/constants/colors.dart';
@@ -17,6 +20,8 @@ import '../../widgets/app_header.dart';
 import '../../widgets/button.dart';
 import '../../widgets/dialog_button.dart';
 import '../../widgets/main_header.dart';
+import '../../widgets/otp_dialog.dart';
+import '../signup_signin/terms_conditions.dart';
 import '../signup_signin/wallet.dart';
 
 class DeleteAccountDisclaimer extends StatefulWidget {
@@ -33,11 +38,21 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
   List<String> accountDefinitions = [
     'Account means a unique account created for You to access our Service or parts of our Service.'
         .tr(),
-    'Affiliate means an entity that controls, is controlled by or is under common control with a party, where "control" means ownership of 50% or more of the shares, equity interest or other securities entitled to vote for election of directors or other managing authority.'.tr(),
-    'Affiliate means an entity that controls, is controlled by or is under common control with a party, where "control" means ownership of 50% or more of the shares, equity interest or other securities entitled to vote for election of directors or other managing authority.'.tr()
+    'Affiliate means an entity that controls, is controlled by or is under common control with a party, where "control" means ownership of 50% or more of the shares, equity interest or other securities entitled to vote for election of directors or other managing authority.'
         .tr(),
-    'Affiliate means an entity that controls, is controlled by or is under common control with a party, where "control" means ownership of'.tr(),
+    'Affiliate means an entity that controls, is controlled by or is under common control with a party, where "control" means ownership of 50% or more of the shares, equity interest or other securities entitled to vote for election of directors or other managing authority.'
+        .tr()
+        .tr(),
+    'Affiliate means an entity that controls, is controlled by or is under common control with a party, where "control" means ownership of'
+        .tr(),
   ];
+
+  final TextEditingController otp1Controller = TextEditingController();
+  final TextEditingController otp2Controller = TextEditingController();
+  final TextEditingController otp3Controller = TextEditingController();
+  final TextEditingController otp4Controller = TextEditingController();
+  final TextEditingController otp5Controller = TextEditingController();
+  final TextEditingController otp6Controller = TextEditingController();
 
   FocusNode firstFieldFocusNode = FocusNode();
   FocusNode secondFieldFocusNode = FocusNode();
@@ -49,36 +64,94 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
   bool _isSelected = false;
   var isLoading = false;
   var accessToken = '';
+  var _isLoadingResend = false;
   var _isLoading = false;
-  var _isinit= true;
+  var _isinit = true;
+  bool _isTimerActive = false;
+  var _isLoadingOtpDialoge = false;
+  int _timeLeft = 60;
+  bool isOtpButtonActive = false;
+  Timer? _timer;
+  StreamController<int> _events = StreamController<int>.broadcast();
 
   getWsToken() async {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
   }
 
+  void startTimer() {
+    _isTimerActive = true;
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_timeLeft > 0) {
+        _timeLeft--;
+        _events.add(_timeLeft); // Add updated time to the stream
+      } else {
+        timer.cancel(); // Cancel the timer when timeLeft is 0
+      }
+    });
+  }
+
+  void restartCountdown() {
+    // Reset the countdown to 60 seconds
+    _events.add(60);
+    Timer.periodic(Duration(seconds: 1), (timer) async {
+      var events;
+      if (events.hasListener) {
+        // Await the last value of the stream before comparing
+        final currentTime = await events.stream.first;
+        if (currentTime > 0) {
+          events.add(currentTime - 1);
+        } else {
+          timer.cancel();
+        }
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
+
+    _events = new StreamController<int>();
+    _events.add(60);
     getWsToken();
+    otp1Controller.addListener(_updateOtpButtonState);
+    otp2Controller.addListener(_updateOtpButtonState);
+    otp3Controller.addListener(_updateOtpButtonState);
+    otp4Controller.addListener(_updateOtpButtonState);
+    otp5Controller.addListener(_updateOtpButtonState);
+    otp6Controller.addListener(_updateOtpButtonState);
     super.initState();
+  }
+
+  void _updateOtpButtonState() {
+    setState(() {
+      isOtpButtonActive = otp1Controller.text.isNotEmpty &&
+          otp2Controller.text.isNotEmpty &&
+          otp3Controller.text.isNotEmpty &&
+          otp4Controller.text.isNotEmpty &&
+          otp5Controller.text.isNotEmpty &&
+          otp6Controller.text.isNotEmpty;
+    });
   }
 
   @override
   Future<void> didChangeDependencies() async {
     // TODO: implement didChangeDependencies
-    if(_isinit){
+    if (_isinit) {
       setState(() {
-        _isLoading=true;
+        _isLoading = true;
       });
       await Future.delayed(Duration(milliseconds: 900), () {
         print('This code will be executed after 2 seconds');
       });
       setState(() {
-        _isLoading=false;
+        _isLoading = false;
       });
     }
-    _isinit=false;
+    _isinit = false;
     super.didChangeDependencies();
   }
 
@@ -110,64 +183,32 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(
-                                height: 4.h,
+                                height: 5.h,
                               ),
-                              // Text(
-                              //   "Last updated: October 05, 2022.".tr(),
-                              //   style: TextStyle(
-                              //       color: AppColors.textColorGrey,
-                              //       fontWeight: FontWeight.w400,
-                              //       fontSize: 11.7.sp,
-                              //       fontFamily: 'Inter'),
-                              // ),
-                              // SizedBox(
-                              //   height: 2.h,
-                              // ),
                               Text(
-                                "This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You."
+                                "Are you sure you want to delete your wallet?"
                                     .tr(),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    height: 1.4,
+                                    color: AppColors.textColorWhite,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 19.sp,
+                                    fontFamily: 'Inter'),
+                              ),
+                              SizedBox(
+                                height: 2.h,
+                              ),
+                              Text(
+                                "Deleting your wallet means your wallet will remain inactive and become disabled. Transactions pending on other Dapps will not be able to send requests to your wallet anymore. "
+                                    .tr(),
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                     height: 1.4,
                                     color: AppColors.textColorWhite,
                                     fontWeight: FontWeight.w400,
-                                    fontSize: 11.7.sp,
+                                    fontSize: 14,
                                     fontFamily: 'Inter'),
-                              ),
-                              ListView.builder(
-                                controller: scrollController,
-                                shrinkWrap: true,
-                                itemCount: accountDefinitions.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.only(top: 6.sp, right: 6.sp),
-                                        child: Icon(
-                                          Icons.fiber_manual_record,
-                                          size: 7.sp,
-                                          color: AppColors.textColorWhite,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 12),
-                                          child: Text(
-                                            accountDefinitions[index],
-                                            style: TextStyle(
-                                                height: 1.4,
-                                                color: AppColors.textColorWhite,
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 10.2.sp,
-                                                fontFamily: 'Inter'),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
                               ),
                               SizedBox(
                                 height: 20.h,
@@ -178,7 +219,7 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
                       ),
                     ),
                     Positioned(
-                        bottom: 0,
+                        bottom: 20,
                         left: 20,
                         right: 20,
                         child: Container(
@@ -198,92 +239,92 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
                                       onTap: () => setState(() {
                                         _isSelected = !_isSelected;
                                       }),
-                                      child: Container(
-                                        height: 2.4.h,
-                                        width: 2.4.h,
-                                        decoration: BoxDecoration(
-                                            // gradient: LinearGradient(
-                                            //   colors: [
-                                            //     _isChecked
-                                            //         ? Color(0xff92B928)
-                                            //         : Colors.transparent,
-                                            //     _isChecked
-                                            //         ? Color(0xffC9C317)
-                                            //         : Colors.transparent
-                                            //   ],
-                                            // ),
+                                      child: AnimatedContainer(
+                                          duration: Duration(milliseconds: 300),
+                                          curve: Curves.easeInOut,
+                                          height: 2.4.h,
+                                          width: 2.4.h,
+                                          decoration: BoxDecoration(
+                                            color: _isSelected
+                                                ? AppColors.hexaGreen
+                                                : Colors.transparent,
+                                            // Animate the color
                                             border: Border.all(
-                                                color: AppColors.tabColorlightMode,
+                                                color: _isSelected
+                                                    ? AppColors.hexaGreen
+                                                    : AppColors.textColorWhite,
                                                 width: 1),
-                                            borderRadius: BorderRadius.circular(2)),
-                                        child: _isSelected
-                                            ? Align(
-                                                alignment: Alignment.center,
-                                                child: Icon(
-                                                  Icons.check_rounded,
-                                                  size: 8.2.sp,
-                                                  color: AppColors.textColorGrey,
-                                                ),
-                                              )
-                                            : SizedBox(),
-                                      ),
+                                            borderRadius:
+                                                BorderRadius.circular(2),
+                                          ),
+                                          child: Checkmark(
+                                            checked: _isSelected,
+                                            indeterminate: false,
+                                            size: 11.sp,
+                                            color: Colors.black,
+                                            drawCross: false,
+                                            drawDash: false,
+                                          )
+                                          // _isChecked
+                                          //     ? Align(
+                                          //   alignment: Alignment.center,
+                                          //   child: Icon(
+                                          //     Icons.check_rounded,
+                                          //     size: 12.sp,
+                                          //     color: AppColors.textColorBlack,
+                                          //   ),
+                                          // )
+                                          //     : SizedBox(),
+                                          ),
                                     ),
                                   ),
-                                  // Padding(
-                                  //   padding: const EdgeInsets.only(left: 5),
-                                  //   child: GestureDetector(
-                                  //     onTap: () => setState(() {
-                                  //       _isSelected = !_isSelected;
-                                  //     }),
-                                  //     child: Container(
-                                  //       height: 2.3.h,
-                                  //       width: 2.3.h,
-                                  //       decoration: BoxDecoration(
-                                  //           gradient: LinearGradient(
-                                  //             colors: [
-                                  //               _isSelected
-                                  //                   ? Color(0xff92B928)
-                                  //                   : Colors.transparent,
-                                  //               _isSelected
-                                  //                   ? Color(0xffC9C317)
-                                  //                   : Colors.transparent
-                                  //             ],
-                                  //             begin: Alignment.topLeft,
-                                  //             end: Alignment.bottomRight,
-                                  //           ),
-                                  //           // color: _isSelected
-                                  //           //     ? AppColors.gradientColor1
-                                  //           //     : Colors.transparent,
-                                  //           border: Border.all(
-                                  //               color: AppColors.gradientColor1,
-                                  //               width: 2),
-                                  //           borderRadius: BorderRadius.circular(2)),
-                                  //       child: _isSelected
-                                  //           ? Align(
-                                  //               alignment: Alignment.center,
-                                  //               child: Icon(
-                                  //                 Icons.check_rounded,
-                                  //                 size: 8.2.sp,
-                                  //                 color: themeNotifier.isDark
-                                  //                     ? AppColors.backgroundColor
-                                  //                     : AppColors.textColorBlack,
-                                  //               ),
-                                  //             )
-                                  //           : SizedBox(),
-                                  //     ),
-                                  //   ),
-                                  // ),
                                   SizedBox(
                                     width: 3.w,
                                   ),
-                                  Text(
-                                      'I agree to permanently deleting my account.'
-                                          .tr(),
-                                      style: TextStyle(
-                                          color: AppColors.deleteAccWarningClr,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 10.sp,
-                                          fontFamily: 'Inter'))
+                                  Expanded(
+                                    child: Container(
+                                      margin: EdgeInsets.only(bottom: 3.sp),
+                                      child: Column(
+                                        children: [
+                                          RichText(
+                                            text: TextSpan(
+                                              children: [
+                                                TextSpan(
+                                                    text:
+                                                        'I agree to permanently deleting my account in accordance to Hesa Wallet’s '
+                                                            .tr(),
+                                                    style: TextStyle(
+                                                        color: AppColors
+                                                            .textColorWhite,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        fontSize: 10.sp,
+                                                        fontFamily: 'Inter')),
+                                                TextSpan(
+                                                    recognizer:
+                                                        TapGestureRecognizer()
+                                                          ..onTap = () {},
+                                                    text: 'Terms & Conditions'
+                                                        .tr(),
+                                                    style: TextStyle(
+                                                        height: 1.4,
+                                                        color: themeNotifier
+                                                                .isDark
+                                                            ? AppColors
+                                                                .textColorToska
+                                                            : AppColors
+                                                                .textColorBlack,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 10.sp,
+                                                        fontFamily: 'Inter')),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
                                 ],
                               ),
                               SizedBox(
@@ -292,453 +333,197 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
                               AppButton(
                                 title: 'Delete Account'.tr(),
                                 isactive: _isSelected,
+                                isGradientWithBorder: true,
                                 handler: () async {
-                                  setState(() {
-                                    _isLoading = true;
-                                  });
-                                  await Future.delayed(Duration(milliseconds: 1500),
-                                          (){});
-                                  setState(() {
-                                    _isLoading = false;
-                                  });
-                                  if(_isSelected){
-                                  // Navigator.pop(context);
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      final screenWidth =
-                                          MediaQuery.of(context).size.width;
-                                      final dialogWidth = screenWidth * 0.85;
-                                      return StatefulBuilder(builder:
-                                          (BuildContext context,
-                                              StateSetter setState) {
-                                        return Dialog(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                          ),
-                                          backgroundColor: Colors.transparent,
-                                          child: BackdropFilter(
-                                              filter: ImageFilter.blur(
-                                                  sigmaX: 7, sigmaY: 7),
-                                              child: Container(
-                                                height: 33.h,
-                                                width: dialogWidth,
-                                                decoration: BoxDecoration(
-                                                  // border: Border.all(
-                                                  //     width: 0.1.h,
-                                                  //     color: AppColors.textColorGrey),
-                                                  color: themeNotifier.isDark
-                                                      ? AppColors.showDialogClr
-                                                      : AppColors.textColorWhite,
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                ),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    SizedBox(
-                                                      height: 4.h,
-                                                    ),
-                                                    Padding(
-                                                      padding: EdgeInsets.symmetric(
-                                                          horizontal: 20.sp),
-                                                      child: Text(
-                                                        'Are you sure, you want to delete account?'
-                                                            .tr(),
-                                                        textAlign: TextAlign.center,
-                                                        maxLines: 2,
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontSize: 15.sp,
-                                                            color: themeNotifier
-                                                                    .isDark
-                                                                ? AppColors
-                                                                    .textColorWhite
-                                                                : AppColors
-                                                                    .textColorBlack),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 2.h,
-                                                    ),
-                                                    Expanded(child: SizedBox()),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 22),
-                                                      child: DialogButton(
-                                                        title: 'Confirm'.tr(),
-                                                        handler: () async {
-                                                          if (isLoading) return;
+                                  if (_isSelected) {
+                                    setState(() {
+                                      _isLoading = true;
+                                    });
 
-                                                          try {
-                                                            setState(() {
-                                                              isLoading = true;
-                                                            });
-                                                            final result = await Provider
-                                                                    .of<AuthProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                .deleteAccount(
-                                                                    token: accessToken,
-                                                                    context:
-                                                                        context);
+                                    // await Future.delayed(
+                                    //     Duration(milliseconds: 1500), () {});
+                                    final result = await Provider.of<
+                                        AuthProvider>(context,
+                                        listen: false)
+                                        .deleteAccountStep1(
+                                      termsAndConditions: _isSelected.toString(),
+                                        context: context, token: accessToken,
+                                    );
+                                    setState(() {
+                                      _isLoading = false;
+                                    });
+                                    if (result ==
+                                        AuthResult.success) {
 
-                                                            setState(() {
-                                                              isLoading = false;
-                                                            });
-                                                            if (result ==
-                                                                AuthResult
-                                                                    .success) {
-                                                              Navigator.pop(context);
-                                                              showDialog(
-                                                                context: context,
-                                                                builder:
-                                                                    (BuildContext
-                                                                        context) {
-                                                                  final screenWidth =
-                                                                      MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width;
-                                                                  final dialogWidth =
-                                                                      screenWidth *
-                                                                          0.85;
-                                                                  void
-                                                                      closeDialogAndNavigate() {
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .pop(); // Close the dialog
-                                                                    Navigator
-                                                                        .pushAndRemoveUntil(
-                                                                            context,
-                                                                            MaterialPageRoute(
-                                                                              builder: (context) =>
-                                                                                  Wallet(),
-                                                                            ),
-                                                                            (route) =>
-                                                                                false); // This predicate ensures that all previous routes are removed.
-                                                                    // Close the dialog
-                                                                  }
+                                      startTimer();
+                                      otpDialog(
+                                        events: _events,
 
-                                                                  Future.delayed(
-                                                                      Duration(
-                                                                          seconds:
-                                                                              3),
-                                                                      closeDialogAndNavigate);
-                                                                  return Dialog(
-                                                                    shape:
-                                                                        RoundedRectangleBorder(
-                                                                      borderRadius:
-                                                                          BorderRadius
-                                                                              .circular(
-                                                                                  8.0),
-                                                                    ),
-                                                                    backgroundColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    child:
-                                                                        BackdropFilter(
-                                                                            filter: ImageFilter.blur(
-                                                                                sigmaX:
-                                                                                    7,
-                                                                                sigmaY:
-                                                                                    7),
-                                                                            child:
-                                                                                Container(
-                                                                              height:
-                                                                                  22.h,
-                                                                              width:
-                                                                                  dialogWidth,
-                                                                              decoration:
-                                                                                  BoxDecoration(
-                                                                                color: themeNotifier.isDark
-                                                                                    ? AppColors.showDialogClr
-                                                                                    : AppColors.textColorWhite,
-                                                                                borderRadius:
-                                                                                    BorderRadius.circular(15),
-                                                                              ),
-                                                                              child:
-                                                                                  Column(
-                                                                                mainAxisAlignment:
-                                                                                    MainAxisAlignment.center,
-                                                                                children: [
-                                                                                  // SizedBox(
-                                                                                  //   height: 6.h,
-                                                                                  // ),
-                                                                                  // Align(
-                                                                                  //   alignment: Alignment.bottomCenter,
-                                                                                  //   child: Image.asset(
-                                                                                  //     "assets/images/check_circle.png",
-                                                                                  //     height: 6.h,
-                                                                                  //     width: 5.8.h,
-                                                                                  //   ),
-                                                                                  // ),
-                                                                                  // SizedBox(height: 2.h),
-                                                                                  Text(
-                                                                                    'Account Marked for Deletion'.tr(),
-                                                                                    textAlign: TextAlign.center,
-                                                                                    maxLines: 2,
-                                                                                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17.sp, color: themeNotifier.isDark ? AppColors.textColorWhite : AppColors.textColorBlack),
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    height: 2.h,
-                                                                                  ),
-                                                                                  Padding(
-                                                                                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                                                                                    child: Text(
-                                                                                      'You will receive an email verification confirming this action.'.tr(),
-                                                                                      textAlign: TextAlign.center,
-                                                                                      style: TextStyle(height: 1.4, fontWeight: FontWeight.w400, fontSize: 10.2.sp, color: AppColors.textColorGrey),
-                                                                                    ),
-                                                                                  ),
-                                                                                  // SizedBox(
-                                                                                  //   height: 4.h,
-                                                                                  // ),
-                                                                                ],
-                                                                              ),
-                                                                            )),
-                                                                  );
-                                                                },
-                                                              );
-                                                            }
-                                                          } catch (error) {
-                                                            print("Error: $error");
-                                                            // _showToast('An error occurred'); // Show an error message
-                                                          } finally {
-                                                            setState(() {
-                                                              isLoading = false;
-                                                            });
-                                                          }
-                                                        },
-                                                        isLoading: isLoading,
-                                                        // isGradient: true,
-                                                        color: AppColors.appSecondButton.withOpacity(0.10),
-                                                        textColor: AppColors
-                                                            .errorColor,
-                                                      ),
-                                                    ),
-                                                    SizedBox(height: 2.h),
-                                                    Padding(
-                                                      padding: EdgeInsets.symmetric(
-                                                          horizontal: 18.sp),
-                                                      child: AppButton(
-                                                          title: 'Cancel'.tr(),
-                                                          handler: () {
-                                                            Navigator.pop(context);
-                                                          },
-                                                          isGradient: false,
-                                                          textColor: themeNotifier
-                                                                  .isDark
-                                                              ? AppColors
-                                                                  .textColorWhite
-                                                              : AppColors
-                                                                  .textColorBlack
-                                                                  .withOpacity(0.8),
-                                                        color: AppColors.appSecondButton.withOpacity(0.10),),
-                                                    ),
-                                                    Expanded(child: SizedBox()),
-                                                  ],
-                                                ),
-                                              )),
-                                        );
-                                      });
-                                    },
-                                  );
-                                };
-    },
-                                // handler: () {
-                                //   showDialog(
-                                //     context: context,
-                                //     builder: (BuildContext context) {
-                                //       final screenWidth =
-                                //           MediaQuery.of(context).size.width;
-                                //       final dialogWidth = screenWidth * 0.85;
-                                //       return Dialog(
-                                //         shape: RoundedRectangleBorder(
-                                //           borderRadius: BorderRadius.circular(8.0),
-                                //         ),
-                                //         backgroundColor: Colors.transparent,
-                                //         child: BackdropFilter(
-                                //             filter: ImageFilter.blur(
-                                //                 sigmaX: 7, sigmaY: 7),
-                                //             child: Container(
-                                //               height: 55.h,
-                                //               width: dialogWidth,
-                                //               decoration: BoxDecoration(
-                                //                 color: themeNotifier.isDark
-                                //                     ? AppColors.showDialogClr
-                                //                     : AppColors.textColorWhite,
-                                //                 borderRadius:
-                                //                     BorderRadius.circular(15),
-                                //               ),
-                                //               child: Column(
-                                //                 children: [
-                                //                   SizedBox(
-                                //                     height: 3.h,
-                                //                   ),
-                                //                   Align(
-                                //                     alignment:
-                                //                         Alignment.bottomCenter,
-                                //                     child: Image.asset(
-                                //                       "assets/images/svg_icon.png",
-                                //                       height: 5.9.h,
-                                //                       width: 5.6.h,
-                                //                     ),
-                                //                   ),
-                                //                   SizedBox(height: 2.h),
-                                //                   Text(
-                                //                     'OTP verification'.tr(),
-                                //                     style: TextStyle(
-                                //                         fontWeight: FontWeight.w600,
-                                //                         fontSize: 17.5.sp,
-                                //                         color: themeNotifier.isDark
-                                //                             ? AppColors
-                                //                                 .textColorWhite
-                                //                             : AppColors
-                                //                                 .textColorBlack),
-                                //                   ),
-                                //                   SizedBox(
-                                //                     height: 2.h,
-                                //                   ),
-                                //                   Row(
-                                //                     mainAxisAlignment:
-                                //                         MainAxisAlignment.center,
-                                //                     children: [
-                                //                       otpContainer(
-                                //                         focusNode:
-                                //                             firstFieldFocusNode,
-                                //                         handler: () => FocusScope
-                                //                                 .of(context)
-                                //                             .requestFocus(
-                                //                                 secondFieldFocusNode),
-                                //                       ),
-                                //                       SizedBox(
-                                //                         width: 0.8.h,
-                                //                       ),
-                                //                       otpContainer(
-                                //                         focusNode:
-                                //                             secondFieldFocusNode,
-                                //                         handler: () => FocusScope
-                                //                                 .of(context)
-                                //                             .requestFocus(
-                                //                                 thirdFieldFocusNode),
-                                //                       ),
-                                //                       SizedBox(
-                                //                         width: 0.8.h,
-                                //                       ),
-                                //                       otpContainer(
-                                //                         focusNode:
-                                //                             thirdFieldFocusNode,
-                                //                         handler: () => FocusScope
-                                //                                 .of(context)
-                                //                             .requestFocus(
-                                //                                 forthFieldFocusNode),
-                                //                       ),
-                                //                       SizedBox(
-                                //                         width: 0.8.h,
-                                //                       ),
-                                //                       otpContainer(
-                                //                         focusNode:
-                                //                             forthFieldFocusNode,
-                                //                         handler: () => FocusScope
-                                //                                 .of(context)
-                                //                             .requestFocus(
-                                //                                 fifthFieldFocusNode),
-                                //                       ),
-                                //                       SizedBox(
-                                //                         width: 0.8.h,
-                                //                       ),
-                                //                       otpContainer(
-                                //                         focusNode:
-                                //                             fifthFieldFocusNode,
-                                //                         handler: () => FocusScope
-                                //                                 .of(context)
-                                //                             .requestFocus(
-                                //                                 sixthFieldFocusNode),
-                                //                       ),
-                                //                       SizedBox(
-                                //                         width: 0.8.h,
-                                //                       ),
-                                //                       otpContainer(
-                                //                         focusNode:
-                                //                             sixthFieldFocusNode,
-                                //                         handler: () => null,
-                                //                       ),
-                                //                     ],
-                                //                   ),
-                                //                   SizedBox(
-                                //                     height: 1.h,
-                                //                   ),
-                                //                   Text(
-                                //                     'Enter sms verification code'.tr(),
-                                //                     textAlign: TextAlign.center,
-                                //                     style: TextStyle(
-                                //                         height: 1.4,
-                                //                         color:
-                                //                             AppColors.textColorGrey,
-                                //                         fontSize: 10.2.sp,
-                                //                         fontWeight:
-                                //                             FontWeight.w400),
-                                //                   ),
-                                //                   Expanded(child: SizedBox()),
-                                //                   Padding(
-                                //                     padding:
-                                //                         const EdgeInsets.symmetric(
-                                //                             horizontal: 22),
-                                //                     child: AppButton(
-                                //                       title: 'Verify'.tr(),
-                                //                       handler: () {
-                                //                         Navigator.pop(context);
-                                //
-                                //                       },
-                                //                       isGradient: true,
-                                //                       color: Colors.transparent,
-                                //                       textColor:
-                                //                           AppColors.textColorBlack,
-                                //                     ),
-                                //                   ),
-                                //                   SizedBox(height: 2.h),
-                                //                   Padding(
-                                //                     padding:
-                                //                         const EdgeInsets.symmetric(
-                                //                             horizontal: 22),
-                                //                     child: AppButton(
-                                //                         title: 'Resend code 06:00'
-                                //                             .tr(),
-                                //                         handler: () {
-                                //                           // Navigator.push(
-                                //                           //   context,
-                                //                           //   MaterialPageRoute(
-                                //                           //     builder: (context) => TermsAndConditions(),
-                                //                           //   ),
-                                //                           // );
-                                //                         },
-                                //                         isGradient: false,
-                                //                         textColor: themeNotifier
-                                //                                 .isDark
-                                //                             ? AppColors
-                                //                                 .textColorWhite
-                                //                             : AppColors
-                                //                                 .textColorBlack
-                                //                                 .withOpacity(0.8),
-                                //                         color: Colors.transparent),
-                                //                   ),
-                                //                   Expanded(child: SizedBox()),
-                                //                 ],
-                                //               ),
-                                //             )),
-                                //       );
-                                //     },
-                                //   );
-                                // },
-                                isGradient: true,
-                                color: Colors.transparent,
+                                        firstBtnHandler: () async {
+                                            try {
+                                              setState(() {
+                                                _isLoadingOtpDialoge =
+                                                true;
+                                              });
+                                              print('loading popup' +
+                                                  _isLoadingOtpDialoge
+                                                      .toString());
+                                              // Navigator.pop(context);
+                                              final result = await Provider
+                                                  .of<AuthProvider>(
+                                                  context,
+                                                  listen:
+                                                  false)
+                                                  .deleteAccountStep2(
+                                                context:
+                                                context,
+                                                code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes,
+                                                token: accessToken,);
+                                              setState(() {
+                                                _isLoadingOtpDialoge =
+                                                false;
+                                              });
+                                              print('loading popup 2' +
+                                                  _isLoadingOtpDialoge
+                                                      .toString());
+                                              if (result ==
+                                                  AuthResult
+                                                      .success) {
+
+                                              }
+                                            } catch (error) {
+                                              print("Error: $error");
+                                              setState(() {
+                                                _isLoadingOtpDialoge =
+                                                false;
+                                              });
+                                              // _showToast('An error occurred'); // Show an error message
+                                            } finally {
+                                              setState(() {
+                                                _isLoadingOtpDialoge =
+                                                false;
+                                              });
+                                            }
+                                        },
+                                        secondBtnHandler: () async {
+                                          if (_timeLeft == 0) {
+                                            print(
+                                                'resend function calling');
+                                            try {
+                                              setState(() {
+                                                _isLoadingResend =
+                                                true;
+                                              });
+                                              final result = await Provider
+                                                  .of<AuthProvider>(
+                                                  context,
+                                                  listen:
+                                                  false)
+                                                  .registerNumResendOtp(
+
+                                                  context:
+                                                  context, token: accessToken, medium: "sms");
+                                              setState(() {
+                                                _isLoadingResend =
+                                                false;
+                                              });
+                                              if (result ==
+                                                  AuthResult
+                                                      .success) {
+                                                restartCountdown();
+                                                _events = new StreamController<int>();
+                                                _events.add(60);
+                                                startTimer();
+                                              }
+                                            } catch (error) {
+                                              print("Error: $error");
+                                              // _showToast('An error occurred'); // Show an error message
+                                            } finally {
+                                              setState(() {
+                                                _isLoadingResend =
+                                                false;
+                                              });
+                                            }
+                                          } else {}
+                                        },
+                                        firstTitle: 'Verify',
+                                        secondTitle: 'Resend code: ',
+
+                                        context: context,
+                                        isDark: themeNotifier.isDark,
+                                        isFirstButtonActive:
+                                        isOtpButtonActive,
+                                        isSecondButtonActive: !_isTimerActive,
+                                        otp1Controller:
+                                        otp1Controller,
+                                        otp2Controller:
+                                        otp2Controller,
+                                        otp3Controller:
+                                        otp3Controller,
+                                        otp4Controller:
+                                        otp4Controller,
+                                        otp5Controller:
+                                        otp5Controller,
+                                        otp6Controller:
+                                        otp6Controller,
+                                        firstFieldFocusNode:
+                                        firstFieldFocusNode,
+                                        secondFieldFocusNode:
+                                        secondFieldFocusNode,
+                                        thirdFieldFocusNode:
+                                        thirdFieldFocusNode,
+                                        forthFieldFocusNode:
+                                        forthFieldFocusNode,
+                                        fifthFieldFocusNode:
+                                        fifthFieldFocusNode,
+                                        sixthFieldFocusNode:
+                                        sixthFieldFocusNode,
+                                        firstBtnBgColor: AppColors
+                                            .activeButtonColor,
+                                        firstBtnTextColor:
+                                        AppColors.textColorBlack,
+                                        secondBtnBgColor:
+                                        Colors.transparent,
+                                        secondBtnTextColor:
+                                        _timeLeft != 0
+                                            ? AppColors
+                                            .textColorBlack
+                                            .withOpacity(0.8)
+                                            : AppColors
+                                            .textColorWhite,
+                                        // themeNotifier.isDark
+                                        //     ? AppColors.textColorWhite
+                                        //     : AppColors.textColorBlack
+                                        //         .withOpacity(0.8),
+                                        isLoading: _isLoading,
+                                        // isLoading: _isLoadingResend,
+                                      );
+                                    }
+                                  }
+
+                                },
+
+                                isGradient: false,
+                                color: AppColors.deleteAccountBtnColor
+                                    .withOpacity(0.10),
                                 textColor: AppColors.textColorBlack,
+                                buttonWithBorderColor: AppColors.errorColor,
+                              ),
+                              SizedBox(
+                                height: 3.h,
+                              ),
+                              AppButton(
+                                title: 'Cancel'.tr(),
+                                // isactive: _isSelected,
+                                isGradientWithBorder: true,
+
+                                handler: () => Navigator.pop(context),
+
+                                isGradient: false,
+                                color: AppColors.deleteAccWarningClr
+                                    .withOpacity(0.10),
+                                textColor: AppColors.textColorBlack,
+                                // buttonWithBorderColor: AppColors.errorColor,
                               ),
                               // SizedBox(
                               //   height: 3.h,
@@ -751,8 +536,7 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
               ],
             ),
           ),
-          if(_isLoading)
-            LoaderBluredScreen()
+          if (_isLoading) LoaderBluredScreen()
         ],
       );
     });

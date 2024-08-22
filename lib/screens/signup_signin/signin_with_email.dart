@@ -181,7 +181,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                           borderRadius:
                                               BorderRadius.circular(8.0),
                                           borderSide: BorderSide(
-                                            color: Colors.transparent,
+                                            color: auth.loginErrorResponse != null && _emailController.text.isNotEmpty && isValidating && auth.loginErrorResponse.toString().contains('username') ? AppColors.errorColor : Colors.transparent,
                                             // Off-white color
                                             // width: 2.0,
                                           )),
@@ -189,9 +189,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                           borderRadius:
                                               BorderRadius.circular(8.0),
                                           borderSide: BorderSide(
-                                            color: Colors.transparent,
-                                            // Off-white color
-                                            // width: 2.0,
+                                            color: AppColors.focusTextFieldColor,
                                           )),
                                       // labelText: 'Enter your password',
                                     ),
@@ -209,7 +207,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                         color: AppColors.errorColor),
                                   ),
                                 ),
-                              if (auth.loginErrorResponse != null && _emailController.text.isNotEmpty && isValidating)
+                              if (auth.loginErrorResponse != null && _emailController.text.isNotEmpty && isValidating && auth.loginErrorResponse.toString().contains('username'))
                                 Padding(
                                   padding: EdgeInsets.only(top: 7.sp),
                                   child: Text(
@@ -274,7 +272,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                           borderRadius:
                                               BorderRadius.circular(8.0),
                                           borderSide: BorderSide(
-                                            color: Colors.transparent,
+                                            color: auth.loginErrorResponse != null && _emailController.text.isNotEmpty && isValidating && auth.loginErrorResponse.toString().contains('password') ? AppColors.errorColor : Colors.transparent,
                                             // Off-white color
                                             // width: 2.0,
                                           )),
@@ -282,9 +280,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                           borderRadius:
                                               BorderRadius.circular(8.0),
                                           borderSide: BorderSide(
-                                            color: Colors.transparent,
-                                            // Off-white color
-                                            // width: 2.0,
+                                            color: AppColors.focusTextFieldColor,
                                           )),
                                       // labelText: 'Enter your password',
                                       suffixIcon: IconButton(
@@ -322,7 +318,8 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                       color: themeNotifier.isDark
                                           ? AppColors.textColorWhite
                                           : AppColors.textColorBlack,
-                                      decoration: TextDecoration.underline,
+                                      // decoration: TextDecoration.underline,
+
                                     ),
                                   ),
                                 ),
@@ -340,7 +337,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                         color: AppColors.errorColor),
                                   ),
                                 ),
-                              if (auth.loginErrorResponse != null && _passwordController.text.isNotEmpty && isValidating)
+                              if (auth.loginErrorResponse != null && _passwordController.text.isNotEmpty && isValidating && auth.loginErrorResponse.toString().contains('password'))
                                 Padding(
                                   padding: EdgeInsets.only(top: 7.sp),
                                   child: Text(

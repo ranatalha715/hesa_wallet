@@ -180,9 +180,7 @@ class _OnboardingAddEmailState extends State<OnboardingAddEmail> {
                                           borderRadius:
                                               BorderRadius.circular(8.0),
                                           borderSide: BorderSide(
-                                            color: Colors.transparent,
-                                            // Off-white color
-                                            // width: 2.0,
+                                            color: AppColors.focusTextFieldColor,
                                           )),
                                     ),
                                     cursorColor: AppColors.textColorGrey),

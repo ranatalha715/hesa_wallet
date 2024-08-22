@@ -6,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:animated_checkmark/animated_checkmark.dart';
 import 'package:hesa_wallet/constants/configs.dart';
 import 'package:hesa_wallet/providers/auth_provider.dart';
 import 'package:hesa_wallet/screens/signup_signin/signin_with_email.dart';
@@ -241,32 +242,40 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                               height: 2.4.h,
                                               width: 2.4.h,
                                               decoration: BoxDecoration(
-                                                // gradient: LinearGradient(
-                                                //   colors: [
-                                                //     _isChecked
-                                                //         ? Color(0xff92B928)
-                                                //         : Colors.transparent,
-                                                //     _isChecked
-                                                //         ? Color(0xffC9C317)
-                                                //         : Colors.transparent
-                                                //   ],
-                                                // ),
-                                                  border: Border.all(
-                                                      color: AppColors.textColorWhite,
-                                                      width: 1),
                                                   borderRadius:
                                                   BorderRadius.circular(2)),
-                                              child: _isChecked
-                                                  ? Align(
-                                                alignment: Alignment.center,
-                                                child: Icon(
-                                                  Icons.check_rounded,
-                                                  size: 8.2.sp,
-                                                  color:
-                                                  AppColors.textColorWhite,
-                                                ),
-                                              )
-                                                  : SizedBox(),
+                                              child:
+                                              AnimatedContainer(
+                                                  duration: Duration(milliseconds: 300),
+                                                  curve: Curves.easeInOut,
+                                                  height: 2.4.h,
+                                                  width: 2.4.h,
+                                                  decoration: BoxDecoration(
+                                                    color: _isChecked ? AppColors.hexaGreen : Colors.transparent, // Animate the color
+                                                    border: Border.all(
+                                                        color: _isChecked ?AppColors.hexaGreen : AppColors.textColorWhite,
+                                                        width: 1),
+                                                    borderRadius: BorderRadius.circular(2),
+                                                  ),
+                                                  child:  Checkmark(
+                                                    checked: _isChecked,
+                                                    indeterminate: false,
+                                                    size: 11.sp,
+                                                    color: Colors.black,
+                                                    drawCross: false,
+                                                    drawDash: false,
+                                                  )
+                                                // _isChecked
+                                                //     ? Align(
+                                                //   alignment: Alignment.center,
+                                                //   child: Icon(
+                                                //     Icons.check_rounded,
+                                                //     size: 12.sp,
+                                                //     color: AppColors.textColorBlack,
+                                                //   ),
+                                                // )
+                                                //     : SizedBox(),
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -325,13 +334,6 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                                          'comingFromWallet':false
                                                        }
                                                    );
-
-                                                   // Navigator.pushReplacement(
-                                                   //   context,
-                                                   //   MaterialPageRoute(
-                                                   //       builder: (context) =>
-                                                   //           SigninWithEmail()),
-                                                   // );
                                                  }
 
                                                  Future.delayed(Duration(seconds: 2),
@@ -383,14 +385,19 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                                                      borderRadius:
                                                                      BorderRadius.circular(
                                                                          15)),
-                                                                 // child: Align(
-                                                                 //   alignment: Alignment.center,
-                                                                 //   child: Image.asset(
-                                                                 //     "assets/images/hesa_wallet_logo.png",
-                                                                 //     height: 11.h,
-                                                                 //     width: 11.h,
-                                                                 //   ),
-                                                                 // ),
+                                                                 child:     Align(
+                                                                   alignment: Alignment.center,
+                                                                   child: ClipRRect(
+                                                                     borderRadius: BorderRadius.circular(15),
+                                                                     child: Image.asset(
+                                                                       "assets/images/terms_logo.png",
+                                                                       fit: BoxFit.cover,
+                                                                       width: double.infinity,
+                                                                       // height: 13.8.h,
+                                                                       // width: 13.8.h,
+                                                                     ),
+                                                                   ),
+                                                                 ),
                                                                ),
                                                              ),
                                                            ),

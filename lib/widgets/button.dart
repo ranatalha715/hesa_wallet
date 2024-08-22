@@ -12,6 +12,7 @@ class AppButton extends StatelessWidget {
   final bool isGradient;
   final Color color;
   final Color textColor;
+  final Color buttonWithBorderColor;
   final double width;
   final bool isactive;
   final bool isLoading;
@@ -25,6 +26,7 @@ class AppButton extends StatelessWidget {
     required this.color,
     this.width = double.infinity,
     this.textColor = AppColors.textColorBlack,
+    this.buttonWithBorderColor = AppColors.hexaGreen,
     this.isactive = true,
     this.isLoading = false,
     this.isGradientWithBorder = false,
@@ -60,7 +62,7 @@ class AppButton extends StatelessWidget {
                 ? color == null ? AppColors.transparentBtnBorderColorDark.withOpacity(0.10) : color
                 : AppColors.disabaledBtnColor, // LIGHT
             border:  Border.all(
-                color: isGradientWithBorder ? AppColors.hexaGreen: Colors.transparent
+                color: isGradientWithBorder ? buttonWithBorderColor: Colors.transparent
             ),
             borderRadius: BorderRadius.circular(10),
           ),
@@ -76,10 +78,10 @@ class AppButton extends StatelessWidget {
                               ? textColor
                               :
                           themeNotifier.isDark
-                                  ? AppColors.textColorGreyShade2
+                                  ? AppColors.unselectedBtnTextColor
                                   : AppColors.textColorGreyShade3:
                           isGradientWithBorder ?
-                          AppColors.textColorGreyShade3:  AppColors.textColorGreyShade3,
+                          AppColors.textColorWhite:  AppColors.textColorGreyShade3,
                           fontSize: 11.7.sp,
                           fontWeight: FontWeight.w600),
                     )),

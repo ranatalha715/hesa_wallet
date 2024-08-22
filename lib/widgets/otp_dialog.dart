@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:hesa_wallet/providers/auth_provider.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:hesa_wallet/widgets/text_field_parent.dart';
+import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -44,6 +45,7 @@ void otpDialog({
   required Color firstBtnTextColor,
   required Color secondBtnTextColor,
   Function? onClose,
+  Widget? otpBoxesWidget,
   bool incorrect = false,
   bool isBlurred = true,
   bool isEmailOtpDialog = false,
@@ -55,6 +57,7 @@ void otpDialog({
       final screenWidth = MediaQuery.of(context).size.width;
       final dialogWidth = screenWidth * 0.85;
       return Consumer<AuthProvider>(builder: (context, auth, child) {
+
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
           // print("testing" + isFirstButtonActive.toString());
@@ -65,6 +68,7 @@ void otpDialog({
               builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
                 print("otp dialoge timeleft");
                 print(snapshot.data.toString());
+                var otpPin;
                 return Dialog(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
@@ -73,7 +77,9 @@ void otpDialog({
                   child: BackdropFilter(
                       filter: ImageFilter.blur(
                           sigmaX: isBlurred ? 7 : 0, sigmaY: isBlurred ? 7 : 0),
-                      child: Stack(
+
+                      child:
+                      Stack(
                         children: [
                           Container(
                             height: isEmailOtpDialog ? 70.h : 54.h,
@@ -84,7 +90,9 @@ void otpDialog({
                                   : AppColors.textColorWhite,
                               borderRadius: BorderRadius.circular(15),
                             ),
-                            child: Column(
+                            child:
+
+                Column(
                               children: [
                                 SizedBox(
                                   height: 4.h,
@@ -157,73 +165,126 @@ void otpDialog({
                                 SizedBox(
                                   height: 2.h,
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    OtpInputBox(
-                                      controller: otp1Controller,
-                                      focusNode: firstFieldFocusNode,
-                                      previousFocusNode: firstFieldFocusNode,
-                                      handler: () => FocusScope.of(context)
-                                          .requestFocus(secondFieldFocusNode),
-                                      incorrect: auth.otpErrorResponse,
-                                    ),
-                                    SizedBox(
-                                      width: 0.8.h,
-                                    ),
-                                    OtpInputBox(
-                                      controller: otp2Controller,
-                                      focusNode: secondFieldFocusNode,
-                                      previousFocusNode: firstFieldFocusNode,
-                                      handler: () => FocusScope.of(context)
-                                          .requestFocus(thirdFieldFocusNode),
-                                      incorrect: auth.otpErrorResponse,
-                                    ),
-                                    SizedBox(
-                                      width: 0.8.h,
-                                    ),
-                                    OtpInputBox(
-                                      controller: otp3Controller,
-                                      focusNode: thirdFieldFocusNode,
-                                      previousFocusNode: secondFieldFocusNode,
-                                      handler: () => FocusScope.of(context)
-                                          .requestFocus(forthFieldFocusNode),
-                                      incorrect: auth.otpErrorResponse,
-                                    ),
-                                    SizedBox(
-                                      width: 0.8.h,
-                                    ),
-                                    OtpInputBox(
-                                      controller: otp4Controller,
-                                      focusNode: forthFieldFocusNode,
-                                      previousFocusNode: thirdFieldFocusNode,
-                                      handler: () => FocusScope.of(context)
-                                          .requestFocus(fifthFieldFocusNode),
-                                      incorrect: auth.otpErrorResponse,
-                                    ),
-                                    SizedBox(
-                                      width: 0.8.h,
-                                    ),
-                                    OtpInputBox(
-                                      controller: otp5Controller,
-                                      focusNode: fifthFieldFocusNode,
-                                      previousFocusNode: forthFieldFocusNode,
-                                      handler: () => FocusScope.of(context)
-                                          .requestFocus(sixthFieldFocusNode),
-                                      incorrect: auth.otpErrorResponse,
-                                    ),
-                                    SizedBox(
-                                      width: 0.8.h,
-                                    ),
-                                    OtpInputBox(
-                                      controller: otp6Controller,
-                                      focusNode: sixthFieldFocusNode,
-                                      previousFocusNode: fifthFieldFocusNode,
-                                      handler: () => null,
-                                      incorrect: auth.otpErrorResponse,
-                                    ),
-                                  ],
+                                Padding(
+                                  padding:
+                                  EdgeInsets.symmetric(
+                                      horizontal: 10.sp),
+                                  child: Pinput(
+                                    controller: otp6Controller,
+                                      length: 6,
+                                      defaultPinTheme:
+                                      PinTheme(
+                                        width: 9.8.w,
+                                        height: 8.h,
+                                        textStyle: TextStyle(
+                                            color: AppColors
+                                                .textColorWhite,
+                                            fontSize: 18.sp,
+                                            fontWeight:
+                                            FontWeight
+                                                .w700,
+                                            fontFamily:
+                                            'Blogger Sans'
+                                          // letterSpacing: 16,
+                                        ),
+                                        decoration:
+                                        BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors
+                                                  .transparent),
+                                          borderRadius: BorderRadius.circular(8),
+                                          color: AppColors
+                                              .transparentBtnBorderColorDark
+                                              .withOpacity(
+                                              0.15),
+                                        ),
+                                      ),
+                                      pinputAutovalidateMode:
+                                      PinputAutovalidateMode
+                                          .onSubmit,
+                                      showCursor: true,
+                                      // onChanged: (pin)=> setState(() {
+                                      //   otpPin=pin;
+                                      // }),
+                                      onCompleted: (pin) {
+
+                                        setState(() {
+                                          otpPin = pin;
+
+                                        });
+                                        print("OTP code");
+                                        print(pin.toString());
+                                        Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes = pin;
+                                      }),
                                 ),
+                                // Row(
+                                //   mainAxisAlignment: MainAxisAlignment.center,
+                                //   children: [
+                                //     OtpInputBox(
+                                //       controller: otp1Controller,
+                                //       focusNode: firstFieldFocusNode,
+                                //       previousFocusNode: firstFieldFocusNode,
+                                //       handler: () => FocusScope.of(context)
+                                //           .requestFocus(secondFieldFocusNode),
+                                //       incorrect: auth.otpErrorResponse,
+                                //       autoFocus: true,
+                                //     ),
+                                //     SizedBox(
+                                //       width: 0.8.h,
+                                //     ),
+                                //     OtpInputBox(
+                                //       controller: otp2Controller,
+                                //       focusNode: secondFieldFocusNode,
+                                //       previousFocusNode: firstFieldFocusNode,
+                                //       handler: () => FocusScope.of(context)
+                                //           .requestFocus(thirdFieldFocusNode),
+                                //       incorrect: auth.otpErrorResponse,
+                                //     ),
+                                //     SizedBox(
+                                //       width: 0.8.h,
+                                //     ),
+                                //     OtpInputBox(
+                                //       controller: otp3Controller,
+                                //       focusNode: thirdFieldFocusNode,
+                                //       previousFocusNode: secondFieldFocusNode,
+                                //       handler: () => FocusScope.of(context)
+                                //           .requestFocus(forthFieldFocusNode),
+                                //       incorrect: auth.otpErrorResponse,
+                                //     ),
+                                //     SizedBox(
+                                //       width: 0.8.h,
+                                //     ),
+                                //     OtpInputBox(
+                                //       controller: otp4Controller,
+                                //       focusNode: forthFieldFocusNode,
+                                //       previousFocusNode: thirdFieldFocusNode,
+                                //       handler: () => FocusScope.of(context)
+                                //           .requestFocus(fifthFieldFocusNode),
+                                //       incorrect: auth.otpErrorResponse,
+                                //     ),
+                                //     SizedBox(
+                                //       width: 0.8.h,
+                                //     ),
+                                //     OtpInputBox(
+                                //       controller: otp5Controller,
+                                //       focusNode: fifthFieldFocusNode,
+                                //       previousFocusNode: forthFieldFocusNode,
+                                //       handler: () => FocusScope.of(context)
+                                //           .requestFocus(sixthFieldFocusNode),
+                                //       incorrect: auth.otpErrorResponse,
+                                //     ),
+                                //     SizedBox(
+                                //       width: 0.8.h,
+                                //     ),
+                                //     OtpInputBox(
+                                //       controller: otp6Controller,
+                                //       focusNode: sixthFieldFocusNode,
+                                //       previousFocusNode: fifthFieldFocusNode,
+                                //       handler: () => null,
+                                //       incorrect: auth.otpErrorResponse,
+                                //     ),
+                                //   ],
+                                // ),
                                 if (auth.otpErrorResponse)
                                   Padding(
                                     padding: EdgeInsets.only(top: 2.h),
@@ -247,13 +308,10 @@ void otpDialog({
                                     child: DialogButton(
                                       title: firstTitle,
                                       isactive:
-                                          otp1Controller.text.isNotEmpty &&
-                                              otp2Controller.text.isNotEmpty &&
-                                              otp3Controller.text.isNotEmpty &&
-                                              otp4Controller.text.isNotEmpty &&
-                                              otp5Controller.text.isNotEmpty &&
-                                              otp6Controller.text.isNotEmpty,
-                                      handler: () => firstBtnHandler(),
+
+                                      otp6Controller.text.length == 6 ,
+
+                                      handler: () => otp6Controller.text.length == 6 ? firstBtnHandler(): (){},
                                       isLoading: isLoading,
                                       color: firstBtnBgColor,
                                       textColor: firstBtnTextColor,
@@ -285,6 +343,7 @@ void otpDialog({
                                 Expanded(child: SizedBox()),
                               ],
                             ),
+
                           ),
                           // if (isLoading)
                           //   Positioned(
@@ -296,6 +355,7 @@ void otpDialog({
                           //   )
                         ],
                       )),
+
                 );
               });
         });

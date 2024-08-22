@@ -20,9 +20,11 @@ class AuthProvider with ChangeNotifier {
   late FToast fToast;
   bool isOverlayVisible = false;
   var uniqueIdFromStep1;
+  var codeFromOtpBoxes='';
 
   // var tokenizedUserPayload;
 bool otpErrorResponse=false;
+
   Future<AuthResult> logInWithMobile({
     required String mobile,
     required String code,
@@ -146,17 +148,71 @@ bool otpErrorResponse=false;
     fToast.init(context);
 
     if (response.statusCode == 201) {
-      // Successful account deletion, handle navigation or other actions
-      print("Account deleted successfully!");
-      _showToast('Account deleted successfully!');
       return AuthResult.success;
     } else {
-      // Show an error message or handle the response as needed
-      print("Account deletion failed: ${response.body}");
-      _showToast('Account deletion failed');
       return AuthResult.failure;
     }
   }
+
+
+  Future<AuthResult> deleteAccountStep1({
+    required String token,
+    required String termsAndConditions,
+    required BuildContext context,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/user/delete/step1');
+    final body = {
+      "termsAndConditions": termsAndConditions
+    };
+
+    final response = await http.post(url, body: body, headers: {
+      'Authorization': 'Bearer $token',
+    });
+
+    final fToast = FToast();
+    fToast.init(context);
+print('delete account');
+print(json.decode(response.body));
+    if (response.statusCode == 201) {
+      return AuthResult.success;
+    } else {
+      return AuthResult.failure;
+    }
+  }
+
+  Future<AuthResult> deleteAccountStep2({
+    required String code,
+    required String token,
+
+    required BuildContext context,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/user/delete/step2');
+
+    final body = {
+      "code": code,
+
+    };
+
+    final response = await http.post(url, body: body,  headers: {
+      'Authorization': 'Bearer $token',
+    },);
+    print('sending code' + code.toString());
+    print('sending unique id' + uniqueIdFromStep1.toString());
+    print('deleteaccountatep2 Response');
+    print(response.body);
+    fToast = FToast();
+    fToast.init(context);
+    if (response.statusCode == 201) {
+      otpErrorResponse=false;
+      notifyListeners();
+      return AuthResult.success;
+    } else {
+      otpErrorResponse=true;
+      notifyListeners();
+      return AuthResult.failure;
+    }
+  }
+
 
   Future<AuthResult> logoutUser({
     required String token,
@@ -406,13 +462,13 @@ bool otpErrorResponse=false;
         notifyListeners();
         print("uniqueId" + uniqueId);
         final successResponse = json.decode(response.body);
-        _showToast(successResponse['message']);
+        // _showToast(successResponse['message']);
         return AuthResult.success;
       } else {
         final errorResponse = json.decode(response.body);
         // Registration failed
         print("Registration failed: ${response.body}");
-        _showToast(errorResponse['message']);
+        // _showToast(errorResponse['message']);
         // _showToast('Registration failed');
         return AuthResult.failure;
       }
@@ -484,16 +540,10 @@ bool otpErrorResponse=false;
     fToast = FToast();
     fToast.init(context);
     if (response.statusCode == 201) {
-      // Successful login, handle navigation or other actions
-      print("User registered successfully!");
-      _showToast('User registered successfully!');
       otpErrorResponse=false;
       notifyListeners();
       return AuthResult.success;
     } else {
-      // Show an error message or handle the response as needed
-      print("Verifying failed: ${response.body}");
-      _showToast('${response.body}');
       otpErrorResponse=true;
       notifyListeners();
       return AuthResult.failure;
@@ -655,14 +705,9 @@ bool otpErrorResponse=false;
       print("login with username response");
       print(response.body);
       if (response.statusCode == 201) {
-        // Successful login
-        print("User logged in successfully!");
-        _showToast('User logged in successfully!');
         final jsonResponse = json.decode(response.body);
         final accessToken = jsonResponse['data']['accessToken'];
         final refreshToken = jsonResponse['data']['refreshToken'];
-
-        // Save the wsToken in SharedPreferences
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('accessToken', accessToken);
         await prefs.setString('refreshToken', refreshToken);
@@ -699,11 +744,8 @@ bool otpErrorResponse=false;
       } else {
         final errorResponse = json.decode(response.body);
         print("Login failed: ${response.body}");
-        // _showToast(
-        //   errorResponse['message'],
-        //   height: 70,
-        // );
-        loginErrorResponse=errorResponse['message'];
+
+        loginErrorResponse=errorResponse['message'][0]['message'];
         //   if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
         // }
         return AuthResult.failure;

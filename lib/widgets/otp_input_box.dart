@@ -11,13 +11,16 @@ class OtpInputBox extends StatefulWidget {
   final TextEditingController controller;
   final Function handler;
   final bool incorrect;
+  final bool? autoFocus;
+
 
   const OtpInputBox(
       {required this.focusNode,
       required this.previousFocusNode,
       required this.controller,
       required this.handler,
-      this.incorrect=false
+      this.incorrect=false,
+        this.autoFocus=false
       });
 
   @override
@@ -31,7 +34,8 @@ class _OtpInputBoxState extends State<OtpInputBox> {
       width: 9.8.w,
       otpHeight: 8.h,
       color: AppColors.transparentBtnBorderColorDark.withOpacity(0.15),
-      child: TextField(
+      child:
+      TextField(
         controller: widget.controller,
         focusNode: widget.focusNode,
         onChanged: (value) {
@@ -87,12 +91,7 @@ class _OtpInputBoxState extends State<OtpInputBox> {
               )),
         ),
       ),
-      // height: 8.h,
-      // width: 10.w,
-      // decoration: BoxDecoration(
-      //   color: Colors.transparent,
-      //   borderRadius: BorderRadius.circular(10),
-      // )
+
     );
   }
 }

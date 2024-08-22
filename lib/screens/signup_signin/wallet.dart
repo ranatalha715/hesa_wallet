@@ -38,7 +38,8 @@ class _WalletState extends State<Wallet> {
               children: [
                 Container(
                   height: 60.h,
-                  color: themeNotifier.isDark
+                  color:
+                  themeNotifier.isDark
                       ? AppColors.backgroundColor
                       : AppColors.textColorWhite,
                   child: Padding(
@@ -50,12 +51,19 @@ class _WalletState extends State<Wallet> {
                               ? AppColors.textColorWhite.withOpacity(0.05)
                               : AppColors.backgroundColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(22)),
-                      child: Align(
+
+                      child:
+                      Align(
                         alignment: Alignment.center,
-                        child: Image.asset(
-                          "assets/images/hesa_wallet_logo.png",
-                          height: 13.8.h,
-                          width: 13.8.h,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(22),
+                          child: Image.asset(
+                            "assets/images/wallet_logo2.png",
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            // height: 13.8.h,
+                            // width: 13.8.h,
+                          ),
                         ),
                       ),
                     ),
@@ -135,6 +143,7 @@ class _WalletState extends State<Wallet> {
                               );
                             },
                             isGradient: false,
+                              isGradientWithBorder: true,
                             color: AppColors.appSecondButton.withOpacity(0.10),
                             textColor: themeNotifier.isDark
                                 ? AppColors.textColorWhite

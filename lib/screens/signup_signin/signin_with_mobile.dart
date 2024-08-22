@@ -71,7 +71,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
   bool isOtpButtonActive = false;
   var _isLoading = false;
   Timer? _timer;
-  int _timeLeft = 300;
+  int _timeLeft = 60;
   bool _isTimerActive = false;
   var _isLoadingResend = false;
   late StreamController<int> _events;
@@ -88,7 +88,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
     super.initState();
     getTokenizedUserPayLoad();
     _events = new StreamController<int>();
-    _events.add(300);
+    _events.add(60);
     // startTimer();
 
     // Listen for changes in the text fields and update the button state
@@ -267,9 +267,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                           borderRadius:
                                               BorderRadius.circular(8.0),
                                           borderSide: BorderSide(
-                                            color: Colors.transparent,
-                                            // Off-white color
-                                            // width: 2.0,
+                                            color: AppColors.focusTextFieldColor,
                                           )),
                                       prefixIcon: Padding(
                                         padding: const EdgeInsets.only(
@@ -355,19 +353,11 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                         // onClose: ()=> removeRoutes(),
                                         events: _events,
                                         firstBtnHandler: () async {
-                                          if (otp1Controller.text.isNotEmpty &&
-                                              otp2Controller.text.isNotEmpty &&
-                                              otp3Controller.text.isNotEmpty &&
-                                              otp4Controller.text.isNotEmpty &&
-                                              otp5Controller.text.isNotEmpty &&
-                                              otp6Controller.text.isNotEmpty) {
                                             setState(() {
                                               _isLoading = true;
                                             });
                                             print('loading popup' +
                                                 _isLoading.toString());
-                                            // Navigator.pop(context);
-                                            // Future.delayed(Duration(seconds: 2));
                                             // final loginResult =
                                             final loginWithMobile= await Provider.of<AuthProvider>(
                                                     context,
@@ -375,12 +365,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                                 .logInWithMobile(
                                               mobile: _numberController.text,
                                               context: context,
-                                              code: otp1Controller.text +
-                                                  otp2Controller.text +
-                                                  otp3Controller.text +
-                                                  otp4Controller.text +
-                                                  otp5Controller.text +
-                                                  otp6Controller.text,
+                                              code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes,
                                             );
                                             setState(() {
                                               _isLoading = false;
@@ -390,7 +375,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                             if(loginWithMobile==AuthResult.success){
                                               Navigator.pop(context);
                                             }
-                                          }
+
                                         },
                                         secondBtnHandler: () async {
                                           if (_timeLeft == 0) {
@@ -524,77 +509,4 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
     });
   }
 
-  Widget otpContainer({
-    required FocusNode focusNode,
-    required FocusNode previousFocusNode,
-    required TextEditingController controller,
-    required Function handler,
-  }) {
-    return TextFieldParent(
-      width: 9.8.w,
-      otpHeight: 8.h,
-      color: AppColors.transparentBtnBorderColorDark.withOpacity(0.15),
-      child: TextField(
-        controller: controller,
-        focusNode: focusNode,
-        onChanged: (value) {
-          if (value.isEmpty) {
-            focusNode.requestFocus();
-            if (controller.text.isNotEmpty) {
-              controller.clear();
-              handler();
-            } else {
-              // Move focus to the previous SMSVerificationTextField
-              // and clear its value recursively
-              // FocusScope.of(context).previousFocus();
-              previousFocusNode.requestFocus();
-            }
-          } else {
-            handler();
-          }
-        },
-        // onChanged: (value) => handler(),
-        keyboardType: TextInputType.number,
-        cursorColor: AppColors.textColorGrey,
-        // obscureText: true,
-        maxLength: 1,
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(1),
-        ],
-        // Hide the entered OTP digits
-        textAlign: TextAlign.center,
-        textAlignVertical: TextAlignVertical.bottom,
-        style: TextStyle(
-          color: AppColors.textColorGrey,
-          fontSize: 17.5.sp,
-          // fontWeight: FontWeight.bold,
-          // letterSpacing: 16,
-        ),
-        decoration: InputDecoration(
-          counterText: '', // Hide the default character counter
-          contentPadding: EdgeInsets.only(top: 16, bottom: 16),
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
-              borderSide: BorderSide(
-                color: Colors.transparent,
-                // Off-white color
-                // width: 2.0,
-              )),
-          focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
-              borderSide: BorderSide(
-                color: Colors.transparent,
-                // Off-white color
-                // width: 2.0,
-              )),
-        ),
-      ),
-      // height: 8.h,
-      // width: 10.w,
-      // decoration: BoxDecoration(
-      //   color: Colors.transparent,
-      //   borderRadius: BorderRadius.circular(10),
-      // )
-    );
-  }
 }

@@ -125,6 +125,9 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
         Provider.of<UserProvider>(context, listen: false).isEmailVerified;
     final verifiedEmail =
         Provider.of<UserProvider>(context, listen: false).verifiedEmail;
+    print('email');
+    print(verifiedEmail);
+    print(isEmailVerified);
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return Stack(
         children: [
@@ -149,12 +152,12 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          OnboardingAddEmail()),
-                                );
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //       builder: (context) =>
+                                //           OnboardingAddEmail()),
+                                // );
                               },
                               child: Container(
                                 // height: 10.7.h,
@@ -163,8 +166,7 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                   //   color: AppColors.textColorGrey,
                                   //   width: 1.0,
                                   // ),
-                                  color:
-                                      AppColors.textColorGrey.withOpacity(0.10),
+                                  color: AppColors.textFieldParentDark,
                                   borderRadius: BorderRadius.circular(8.0),
                                 ),
                                 child: Padding(
@@ -294,20 +296,20 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                         //       : AppColors.textColorGrey,
                                         //   width: 1.0,
                                         // ),
-                                        color: AppColors.textColorGrey
-                                            .withOpacity(0.10),
-                                        // borderRadius: BorderRadius.circular(8.0),
+                                        color:
+                                        AppColors.textFieldParentDark,
                                         borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(8),
-                                          // Top-left corner radius
-                                          topRight: Radius.circular(8),
-                                          // Top-right corner radius
+                                          topLeft: Radius.circular(8.0),
+                                          topRight: Radius.circular(8.0),
                                           bottomLeft: Radius.circular(
-                                              _isSelected ? 0 : 8),
-                                          // Bottom-left corner radius (optional)
-                                          bottomRight: Radius.circular(_isSelected
-                                              ? 0
-                                              : 8), // Bottom-right corner radius (optional)
+                                              _isSelected
+                                                  ? 8.0
+                                                  : 8.0),
+                                          // Adjust as needed
+                                          bottomRight: Radius.circular(
+                                              _isSelected
+                                                  ? 8.0
+                                                  : 8.0), // Adjust as needed
                                         ),
                                       ),
                                       child: Padding(
@@ -374,63 +376,78 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                     ),
                                   ),
                                   if (_isSelected)
-                                    ListView(
-                                      controller: _scrollController,
-                                      padding: EdgeInsets.zero,
-                                      shrinkWrap: true,
-                                      children: [
-                                        biometricLock(
-                                            isFirst: true,
-                                            imageUrl:
-                                                "assets/images/face_Id2.png",
-                                            title: 'Face ID'.tr(),
-                                            // subTitle: 'Have been set up'.tr(),
-                                            subTitle:
-                                                'Have not been set up'.tr(),
+                                    Container(
+                                      margin: EdgeInsets.only(left: 1.sp, right: 1.sp,  top: 0.4.h),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.textFieldParentDark,
+                                        borderRadius: BorderRadius.all(Radius.circular(8.sp)),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(0.10), // Shadow color
+                                            offset: Offset(0, 4), // Pushes the shadow down, removes the top shadow
+                                            blurRadius: 3, // Adjust the blur radius to change shadow size
+                                            spreadRadius: 0.5,  // Optional: Adjust spread radius if needed
+                                          ),
+                                        ],
+                                      ),
+                                      child: ListView(
+                                        controller: _scrollController,
+                                        padding: EdgeInsets.only(top: 0.4.h),
+                                        shrinkWrap: true,
+                                        children: [
+                                          biometricLock(
+                                              isFirst: true,
+                                              imageUrl:
+                                                  "assets/images/face_Id2.png",
+                                              title: 'Face ID'.tr(),
+                                              // subTitle: 'Have been set up'.tr(),
+                                              subTitle:
+                                                  'Have not been set up'.tr(),
 
-                                            // isSet: true,
-                                            setUpHandler: () {},
-                                            isDark: themeNotifier.isDark
-                                                ? true
-                                                : false),
-                                        biometricLock(
-                                            isLast: true,
-                                            imageUrl:
-                                                "assets/images/finger_id2.png",
-                                            title: 'Finger ID'.tr(),
-                                            subTitle: _isUserAuthorized
-                                                ? "Have been set up".tr()
-                                                : "Have not been set up".tr(),
-                                            setUpHandler: authenticateUser,
-                                            isSet: _isUserAuthorized
-                                                ? true
-                                                : false,
-                                            isDark: themeNotifier.isDark
-                                                ? true
-                                                : false),
-                                        biometricLock(
-                                            isLast: true,
-                                            imageUrl:
-                                                "assets/images/passcode.png",
-                                            title: 'Pin'.tr(),
-                                            subTitle:
-                                                _isPasscodeSet
-                                                    ? "Have been set up".tr()
-                                                    :
-                                                "Have not been set up".tr(),
-                                            setUpHandler: () => Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          PinScreen()),
-                                                ),
-                                            isSet: _isPasscodeSet
-                                                ? true
-                                                : false,
-                                            isDark: themeNotifier.isDark
-                                                ? true
-                                                : false),
-                                      ],
+                                              // isSet: true,
+                                              setUpHandler: () {},
+                                              isDark: themeNotifier.isDark
+                                                  ? true
+                                                  : false),
+                                          biometricLock(
+                                              // isLast: true,
+                                              imageUrl:
+                                                  "assets/images/finger_id2.png",
+                                              title: 'Finger ID'.tr(),
+                                              subTitle: _isUserAuthorized
+                                                  ? "Have been set up".tr()
+                                                  : "Have not been set up".tr(),
+                                              setUpHandler: authenticateUser,
+                                              isSet: _isUserAuthorized
+                                                  ? true
+                                                  : false,
+                                              isDark: themeNotifier.isDark
+                                                  ? true
+                                                  : false),
+                                          biometricLock(
+                                              isLast: true,
+                                              imageUrl:
+                                                  "assets/images/passcode.png",
+                                              title: 'Pin'.tr(),
+                                              subTitle:
+                                                  _isPasscodeSet
+                                                      ? "Have been set up".tr()
+                                                      :
+                                                  "Have not been set up".tr(),
+                                              setUpHandler: () => Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            PinScreen()),
+                                                  ),
+                                              isSet: _isPasscodeSet
+                                                  ? true
+                                                  : false,
+                                              isDark: themeNotifier.isDark
+                                                  ? true
+                                                  : false),
+                                        ],
+                                      ),
                                     )
                                 ],
                               ),
@@ -447,8 +464,7 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                               child: Container(
                                 height: 6.5.h,
                                 decoration: BoxDecoration(
-                                  color:
-                                      AppColors.textColorGrey.withOpacity(0.10),
+                                  color: AppColors.textFieldParentDark,
                                   // border: Border.all(
                                   //   color: AppColors.textColorGrey,
                                   //   width: 1.0,
@@ -707,11 +723,15 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
         Container(
           height: 8.5.h,
           decoration: BoxDecoration(
-            color: AppColors.textColorGrey.withOpacity(0.10),
+            color: AppColors.textFieldParentDark,
             borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(isFirst ? 0 : 8),
-              // Bottom-left corner radius (optional)
-              bottomRight: Radius.circular(isFirst ? 0 : 8),
+              bottomLeft: Radius.circular(isLast ? 8.0 : 0.0), // Adjust as needed
+              bottomRight:
+              Radius.circular(isLast ? 8.0 : 0.0,), // Adjust as needed
+              topRight:
+              Radius.circular(isFirst ? 8.0 : 0.0,),
+              topLeft:
+              Radius.circular(isFirst ? 8.0 : 0.0,), // Adjust as needed
             ),
           ),
           child: Padding(

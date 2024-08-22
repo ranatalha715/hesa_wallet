@@ -24,6 +24,7 @@ class _TextFieldParentState extends State<TextFieldParent> {
         decoration: BoxDecoration(
           color: widget.color ?? AppColors.textFieldParentDark,
           borderRadius: BorderRadius.circular(8.0),
+
         ),
         child: widget.child);
   }

@@ -423,7 +423,8 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: Colors.transparent,
+                                              color: _usernameController.text.isEmpty &&
+                                                  isValidating ? AppColors.errorColor:Colors.transparent,
                                               // Off-white color
                                               // width: 2.0,
                                             )),
@@ -431,9 +432,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: Colors.transparent,
-                                              // Off-white color
-                                              // width: 2.0,
+                                              color: AppColors.focusTextFieldColor,
                                             )),
                                         suffixIcon: Padding(
                                             padding: const EdgeInsets.only(
@@ -580,7 +579,8 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             borderRadius:
                                             BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: Colors.transparent,
+                                              color: _emailController.text.isEmpty &&
+                                                  isValidating ? AppColors.errorColor:Colors.transparent,
                                               // Off-white color
                                               // width: 2.0,
                                             )),
@@ -588,9 +588,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             borderRadius:
                                             BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: Colors.transparent,
-                                              // Off-white color
-                                              // width: 2.0,
+                                              color: AppColors.focusTextFieldColor,
                                             )),
                                       ),
                                       cursorColor: AppColors.textColorGrey),
@@ -669,7 +667,8 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: Colors.transparent,
+                                              color: _passwordController.text.isEmpty &&
+                                                  isValidating ? AppColors.errorColor:Colors.transparent,
                                               // Off-white color
                                               // width: 2.0,
                                             )),
@@ -677,9 +676,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: Colors.transparent,
-                                              // Off-white color
-                                              // width: 2.0,
+                                              color: AppColors.focusTextFieldColor,
                                             )),
                                         // labelText: 'Enter your password',
                                         suffixIcon: IconButton(
@@ -865,7 +862,8 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             borderRadius:
                                             BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: Colors.transparent,
+                                              color: _confirmPasswordController.text.isEmpty &&
+                                                  isValidating ? AppColors.errorColor:Colors.transparent,
                                               // Off-white color
                                               // width: 2.0,
                                             )),
@@ -873,9 +871,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             borderRadius:
                                             BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: Colors.transparent,
-                                              // Off-white color
-                                              // width: 2.0,
+                                              color: AppColors.focusTextFieldColor,
                                             )),
                                         // labelText: 'Enter your password',
                                         suffixIcon: IconButton(
@@ -907,8 +903,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                     ),
                                   ),
                                 if (
-                                _confirmPasswordController.text.isEmpty &&
-                                //     isValidating &&
+                                _confirmPasswordController.text.isNotEmpty && _passwordController.text.isNotEmpty &&
                                     _confirmPasswordController.text !=_passwordController.text)
                                   Padding(
                                     padding: EdgeInsets.only(top: 7.sp),
@@ -937,14 +932,15 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                               isValidating = true;
                                             });
                                             if (
-                                            _usernameController
-                                                .text.isNotEmpty &&
-                                                _emailController
-                                                    .text.isNotEmpty &&
-                                                _passwordController
-                                                    .text.isNotEmpty &&
-                                                _confirmPasswordController
-                                                    .text.isNotEmpty
+                                            isButtonActive
+                                            // _usernameController
+                                            //     .text.isNotEmpty &&
+                                            //     _emailController
+                                            //         .text.isNotEmpty &&
+                                            //     _passwordController
+                                            //         .text.isNotEmpty &&
+                                            //     _confirmPasswordController
+                                            //         .text.isNotEmpty
 
                                             ) {
                                             final String password = _passwordController.text;
@@ -1021,80 +1017,5 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
         ],
       );
     });
-  }
-
-  Widget otpContainer({
-    required FocusNode focusNode,
-    required FocusNode previousFocusNode,
-    required TextEditingController controller,
-    required Function handler,
-  }) {
-    return TextFieldParent(
-      width: 9.8.w,
-      otpHeight: 8.h,
-      color: Colors.white.withOpacity(0.5),
-      child: TextField(
-        controller: controller,
-        focusNode: focusNode,
-       
-        onChanged: (value) {
-          if (value.isEmpty) {
-            focusNode.requestFocus();
-            if (controller.text.isNotEmpty) {
-              controller.clear();
-              handler();
-            } else {
-              // Move focus to the previous SMSVerificationTextField
-              // and clear its value recursively
-              // FocusScope.of(context).previousFocus();
-              previousFocusNode.requestFocus();
-            }
-          } else {
-            handler();
-          }
-        },
-        // onChanged: (value) => handler(),
-        keyboardType: TextInputType.number,
-        cursorColor: AppColors.textColorGrey,
-        // obscureText: true,
-        maxLength: 1,
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(1),
-        ],
-        // Hide the entered OTP digits
-        textAlign: TextAlign.center,
-        textAlignVertical: TextAlignVertical.bottom,
-        style: TextStyle(
-          color: AppColors.textColorGrey,
-          fontSize: 17.5.sp,
-          // fontWeight: FontWeight.bold,
-          // letterSpacing: 16,
-        ),
-        decoration: InputDecoration(
-          counterText: '', // Hide the default character counter
-          contentPadding: EdgeInsets.only(top: 16, bottom: 16),
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
-              borderSide: BorderSide(
-                color: Colors.transparent,
-                // Off-white color
-                // width: 2.0,
-              )),
-          focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
-              borderSide: BorderSide(
-                color: Colors.transparent,
-                // Off-white color
-                // width: 2.0,
-              )),
-        ),
-      ),
-      // height: 8.h,
-      // width: 10.w,
-      // decoration: BoxDecoration(
-      //   color: Colors.transparent,
-      //   borderRadius: BorderRadius.circular(10),
-      // )
-    );
   }
 }
