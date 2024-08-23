@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../constants/colors.dart';
@@ -12,6 +13,7 @@ import '../../widgets/animated_loader/animated_loader.dart';
 import '../../widgets/button.dart';
 import '../../widgets/text_field_parent.dart';
 import '../account_recovery/reset_email.dart';
+import '../signup_signin/welcome_screen.dart';
 
 class Unlock extends StatefulWidget {
   @override
@@ -25,6 +27,8 @@ class _UnlockState extends State<Unlock> {
   var _savedPassCode;
   bool isValidating = false;
   bool isButtonActive = false;
+  bool setLockScreen = false;
+  String passcode = '';
   bool isMatched = false;
   List<String> numbers = List.generate(6, (index) => '');
   List<String> numbersToSave = List.generate(6, (index) => '');
@@ -40,10 +44,21 @@ class _UnlockState extends State<Unlock> {
     });
   }
 
+   getSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedPasscode = prefs.getString('passcode');
+    final savedSetLockScreen = prefs.getBool('setLockScreen') ?? false;
+    setState(() {
+      passcode=savedPasscode!;
+      setLockScreen=savedSetLockScreen;
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     _passwordController.addListener(_updateButtonState);
+    getSettings();
     super.initState();
   }
 
@@ -109,7 +124,7 @@ class _UnlockState extends State<Unlock> {
                           // ),
                         ],
                       )),
-                  if (!isUnlocked)
+                  // if (!isUnlocked)
                     Container(
                       height: 45.h,
                       // color: Colors.brown,
@@ -125,6 +140,10 @@ class _UnlockState extends State<Unlock> {
                                 isGradientWithBorder: true,
                                 isactive: isButtonActive ? true : false,
                                 handler: () async {
+                                  passcode!="" ? Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => WelcomeScreen(handler: (){})),
+                                  ):(){};
                                   setState(() {
                                     isUnlocked = !isUnlocked;
                                   });
@@ -154,7 +173,7 @@ class _UnlockState extends State<Unlock> {
                         ],
                       ),
                     ),
-                  if (isUnlocked)
+                  if (passcode=="" && isUnlocked)
                     Container(
                       height: 45.h,
                       // color: Colors.grey,

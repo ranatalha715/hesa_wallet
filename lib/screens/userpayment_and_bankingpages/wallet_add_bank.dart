@@ -875,6 +875,7 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                   setState(() {
                                                     _isLoading = true;
                                                   });
+                                                  await Future.delayed(const Duration(milliseconds: 1000));
                                                   print("before adding bank");
 
                                                   final resultsecond =

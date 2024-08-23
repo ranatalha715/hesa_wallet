@@ -19,6 +19,7 @@ import 'bank_provider.dart';
 class UserProvider with ChangeNotifier {
   late FToast fToast;
   bool otpErrorResponse=false;
+  bool otpSuccessResponse=false;
   String? walletAddress;
   String? userName;
   String? firstName;
@@ -244,6 +245,7 @@ class UserProvider with ChangeNotifier {
     fToast.init(context);
     if (response.statusCode == 201) {
       otpErrorResponse=false;
+      otpSuccessResponse=true;
       notifyListeners();
       return AuthResult.success;
     } else {
@@ -251,6 +253,7 @@ class UserProvider with ChangeNotifier {
       print("Updation failed: ${response.body}");
       _showToast('${response.body}');
       otpErrorResponse=true;
+      otpSuccessResponse=false;
       notifyListeners();
       return AuthResult.failure;
     }
@@ -276,12 +279,13 @@ class UserProvider with ChangeNotifier {
     fToast = FToast();
     fToast.init(context);
     if (response.statusCode == 201) {
-      otpErrorResponse=false;
+
       notifyListeners();
       return AuthResult.success;
     } else {
       print("ResendOtp failed: ${response.body}");
       _showToast('${response.body}');
+
       notifyListeners();
       return AuthResult.failure;
     }

@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hesa_wallet/providers/auth_provider.dart';
+import 'package:hesa_wallet/providers/user_provider.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:hesa_wallet/widgets/text_field_parent.dart';
 import 'package:pinput/pinput.dart';
@@ -25,6 +26,7 @@ void otpDialog({
   required String firstTitle,
   required String secondTitle,
   required bool isDark,
+  bool fromAuth = true,
   required bool isFirstButtonActive,
   required bool isLoading,
   required bool isSecondButtonActive,
@@ -57,6 +59,7 @@ void otpDialog({
       final screenWidth = MediaQuery.of(context).size.width;
       final dialogWidth = screenWidth * 0.85;
       return Consumer<AuthProvider>(builder: (context, auth, child) {
+      return Consumer<UserProvider>(builder: (context, user, child) {
 
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
@@ -189,9 +192,21 @@ void otpDialog({
                                         ),
                                         decoration:
                                         BoxDecoration(
-                                          border: Border.all(
-                                              color: Colors
-                                                  .transparent),
+                                          border: fromAuth ? Border.all(
+                                              color:
+                                              auth.otpErrorResponse ?
+                                             AppColors.errorColor: auth.otpSuccessResponse ? AppColors.hexaGreen: Colors
+                                                  .transparent,
+                                            width: 0.3.sp
+                                          ):
+                                          Border.all(
+                                              color:
+                                              user.otpErrorResponse ?
+                                              AppColors.errorColor: user.otpSuccessResponse ? AppColors.hexaGreen: Colors
+                                                  .transparent,
+                                              width: 0.3.sp
+                                          )
+                                          ,
                                           borderRadius: BorderRadius.circular(8),
                                           color: AppColors
                                               .transparentBtnBorderColorDark
@@ -203,18 +218,21 @@ void otpDialog({
                                       PinputAutovalidateMode
                                           .onSubmit,
                                       showCursor: true,
-                                      // onChanged: (pin)=> setState(() {
-                                      //   otpPin=pin;
-                                      // }),
-                                      onCompleted: (pin) {
+                                      onChanged: (v)=> Provider.of<AuthProvider>(context, listen: false).otpSuccessResponse,
+                                      onCompleted: (pin) async {
 
                                         setState(() {
                                           otpPin = pin;
 
                                         });
                                         print("OTP code");
+
                                         print(pin.toString());
                                         Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes = pin;
+                                        Provider.of<AuthProvider>(context, listen: false).otpSuccessResponse;
+
+                                        otp6Controller.text.length == 6 ? firstBtnHandler(): (){};
+
                                       }),
                                 ),
                                 // Row(
@@ -311,7 +329,9 @@ void otpDialog({
 
                                       otp6Controller.text.length == 6 ,
 
-                                      handler: () => otp6Controller.text.length == 6 ? firstBtnHandler(): (){},
+                                      handler: () { otp6Controller.text.length == 6 ?
+                                      firstBtnHandler():
+                                          (){};},
                                       isLoading: isLoading,
                                       color: firstBtnBgColor,
                                       textColor: firstBtnTextColor,
@@ -360,6 +380,9 @@ void otpDialog({
               });
         });
       });
+      });
     },
   );
+
 }
+

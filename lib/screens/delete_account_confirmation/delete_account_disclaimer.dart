@@ -365,6 +365,7 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
                                                 _isLoadingOtpDialoge =
                                                 true;
                                               });
+                                              await Future.delayed(const Duration(milliseconds: 1000));
                                               print('loading popup' +
                                                   _isLoadingOtpDialoge
                                                       .toString());

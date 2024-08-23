@@ -356,6 +356,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                             setState(() {
                                               _isLoading = true;
                                             });
+                                            await Future.delayed(const Duration(milliseconds: 1000));
                                             print('loading popup' +
                                                 _isLoading.toString());
                                             // final loginResult =

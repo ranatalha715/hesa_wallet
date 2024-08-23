@@ -1198,6 +1198,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                           _isLoadingOtpDialoge =
                                                               true;
                                                         });
+                                                        await Future.delayed(const Duration(milliseconds: 1000));
                                                         print('loading popup' +
                                                             _isLoadingOtpDialoge
                                                                 .toString());
@@ -1222,6 +1223,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                         if (result ==
                                                             AuthResult
                                                                 .success) {
+                                                          await Future.delayed(const Duration(milliseconds: 1000));
                                                           // Navigator.of(context)
                                                           //     .pushNamedAndRemoveUntil(
                                                           //     '/TermsAndConditions',
@@ -1356,7 +1358,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                   //     ? AppColors.textColorWhite
                                                   //     : AppColors.textColorBlack
                                                   //         .withOpacity(0.8),
-                                                  isLoading: _isLoading,
+                                                  isLoading: _isLoadingOtpDialoge,
                                                   // isLoading: _isLoadingResend,
                                                 );
                                               }

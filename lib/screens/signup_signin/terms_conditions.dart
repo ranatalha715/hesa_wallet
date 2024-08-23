@@ -151,7 +151,7 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                   Text(
                                     "Last updated: October 05, 2022.".tr(),
                                     style: TextStyle(
-                                        color: AppColors.textColorGrey,
+                                        color: AppColors.textColorWhite,
                                         fontWeight: FontWeight.w400,
                                         fontSize: 11.7.sp,
                                         fontFamily: 'Inter'),
@@ -164,7 +164,7 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                         .tr(),
                                     style: TextStyle(
                                         height: 1.4,
-                                        color: AppColors.textColorGrey,
+                                        color: AppColors.textColorWhite,
                                         fontWeight: FontWeight.w400,
                                         fontSize: 11.7.sp,
                                         fontFamily: 'Inter'),
@@ -184,7 +184,7 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                             child: Icon(
                                               Icons.fiber_manual_record,
                                               size: 7.sp,
-                                              color: AppColors.textColorGrey,
+                                              color: AppColors.textColorWhite,
                                             ),
                                           ),
                                           Expanded(
@@ -195,7 +195,7 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                                 accountDefinitions[index],
                                                 style: TextStyle(
                                                     height: 1.4,
-                                                    color: AppColors.textColorGrey,
+                                                    color: AppColors.textColorWhite,
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: 10.2.sp,
                                                     fontFamily: 'Inter'),
@@ -290,7 +290,7 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                               'I understand the general terms and statements mentioned in this disclaimer and agree to continue'
                                                   .tr(),
                                               style: TextStyle(
-                                                  color: AppColors.textColorGrey,
+                                                  color: AppColors.textColorWhite,
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 9.sp,
                                                   fontFamily: 'Inter'),

@@ -24,6 +24,7 @@ class AuthProvider with ChangeNotifier {
 
   // var tokenizedUserPayload;
 bool otpErrorResponse=false;
+bool otpSuccessResponse=false;
 
   Future<AuthResult> logInWithMobile({
     required String mobile,
@@ -506,6 +507,7 @@ print(json.decode(response.body));
       print("User registered successfully!");
       _showToast('User registered successfully!');
       otpErrorResponse=false;
+      otpSuccessResponse=true;
       notifyListeners();
       return AuthResult.success;
     } else {
@@ -513,6 +515,7 @@ print(json.decode(response.body));
       print("Verifying failed: ${response.body}");
       _showToast('${response.body}');
       otpErrorResponse=true;
+      otpSuccessResponse=false;
       notifyListeners();
       return AuthResult.failure;
     }
@@ -541,10 +544,12 @@ print(json.decode(response.body));
     fToast.init(context);
     if (response.statusCode == 201) {
       otpErrorResponse=false;
+      otpSuccessResponse=true;
       notifyListeners();
       return AuthResult.success;
     } else {
       otpErrorResponse=true;
+      otpSuccessResponse=false;
       notifyListeners();
       return AuthResult.failure;
     }
@@ -595,7 +600,9 @@ print(json.decode(response.body));
         // final prefs = await SharedPreferences.getInstance();
         // await prefs.setString('uniqueId', uniqueId);
         // uniqueIdFromStep1=uniqueId;
+        otpSuccessResponse=false;
         notifyListeners();
+
         // print("uniqueId" + uniqueId);
         // final successResponse = json.decode(response.body);
         // _showToast(successResponse['message']);
@@ -605,6 +612,8 @@ print(json.decode(response.body));
         // Registration failed
         print("Registration failed: ${response.body}");
         _showToast(errorResponse['message']);
+        otpSuccessResponse=false;
+        notifyListeners();
         // _showToast('Registration failed');
         return AuthResult.failure;
       }
@@ -637,11 +646,13 @@ print(json.decode(response.body));
     if (response.statusCode == 201) {
       // Successful login, handle navigation or other actions
       otpErrorResponse=false;
+      otpSuccessResponse=true;
       notifyListeners();
       return AuthResult.success;
     } else {
       // Show an error message or handle the response as needed
       otpErrorResponse=true;
+      otpSuccessResponse=false;
       notifyListeners();
       return AuthResult.failure;
     }

@@ -515,6 +515,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 ),
           debugShowCheckedModeBanner: false,
           home:
+          // ConnectDapp(),
           _buildContent(),
               // Provider.of<TokenProvider>(
               //   context,

@@ -18,6 +18,7 @@ import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../widgets/app_drawer.dart';
 import '../signup_signin/welcome_screen.dart';
+import '../unlock/unlock.dart';
 import '../user_transaction_summaries_with_payment/transaction_req_acceptreject.dart';
 import '../user_transaction_summaries_with_payment/transaction_request.dart';
 
@@ -884,7 +885,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                       if (setLockScreen &&
                           passcode != null &&
                           passcode.isNotEmpty) {
-                        return WelcomeScreen(handler: (){});
+                        return Unlock();
+                          // WelcomeScreen(handler: (){});
                         // Navigate to the pin screen
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           // Navigator.pushReplacement(
@@ -1009,20 +1011,22 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                         GestureDetector(
                                           onTap: () {
                                             setLockScreenStatus(true);
-                                            _isPasscodeSet ?
+                                            // _isPasscodeSet ?
                                             Navigator.pushReplacement(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) => WelcomeScreen(
-                                                        handler: () {},
+                                                  builder: (context) => Unlock(
+                                                        // handler: () {},
                                                       )),
-                                            ):Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => SecurityAndPrivacy(
-
-                                                  )),
                                             );
+                                            //     :Navigator.push(
+                                            //   context,
+                                            //   MaterialPageRoute(
+                                            //       builder: (context) =>
+                                            //           SecurityAndPrivacy(
+                                            //
+                                            //       )),
+                                            // );
                                             // setState(() {
                                             //   showLockedScreen = true;
                                             // });

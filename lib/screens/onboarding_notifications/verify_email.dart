@@ -80,7 +80,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
               _isLoadingOtpDialoge =
               true;
             });
-
+            await Future.delayed(const Duration(milliseconds: 1000));
             print('loading popup' +
                 _isLoadingOtpDialoge
                     .toString());
@@ -248,6 +248,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
     otp4Controller.addListener(_updateOtpButtonState);
     otp5Controller.addListener(_updateOtpButtonState);
     otp6Controller.addListener(_updateOtpButtonState);
+
     Future.delayed(Duration(milliseconds: 500 ), () {
       openVerifyEmailPopup();
     });
