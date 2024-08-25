@@ -882,11 +882,13 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                           snapshot.data!['setLockScreen'] as bool;
                       print("setLockScreen && passcode");
                       print(setLockScreen.toString() + passcode.toString());
-                      if (setLockScreen &&
-                          passcode != null &&
-                          passcode.isNotEmpty) {
+                      if (setLockScreen
+                          // &&
+                          // passcode != null &&
+                          // passcode.isNotEmpty
+                      ) {
                         return Unlock();
-                          // WelcomeScreen(handler: (){});
+                          // return WelcomeScreen(handler: (){});
                         // Navigate to the pin screen
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           // Navigator.pushReplacement(

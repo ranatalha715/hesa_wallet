@@ -13,6 +13,7 @@ import 'package:hesa_wallet/screens/onboarding_notifications/verify_email.dart';
 import 'package:hesa_wallet/screens/unlock/set_confirm_pin_screen.dart';
 import 'package:hesa_wallet/screens/unlock/set_pin_screen.dart';
 import 'package:hesa_wallet/screens/unlock/unlock.dart';
+import 'package:hesa_wallet/screens/unlock/unlock_with_password.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/nfts_details.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:hesa_wallet/widgets/dialog_button.dart';
@@ -791,3 +792,4 @@ bool isTokenExpired(String token) {
 
   return true; // If no expiry information is found, consider it expired
 }
+

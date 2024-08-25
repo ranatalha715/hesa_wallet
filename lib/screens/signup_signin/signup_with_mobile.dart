@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:csc_picker/csc_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -78,6 +79,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
   bool _isTimerActive = false;
   var _selectedIDType = '';
   var accessToken = "";
+  String countryValue = "";
   var _selectedNationalityType = '';
   bool isButtonActive = false;
   bool isKeyboardVisible = false;
@@ -574,34 +576,67 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                               ),
                                             ],
                                           ),
-                                          child: ListView(
-                                            controller: _scrollController,
-                                            padding:
-                                                EdgeInsets.only(top: 0.4.h),
-                                            shrinkWrap: true,
-                                            children: [
-                                              nationalityWidget(
-                                                isFirst: true,
-                                                name: 'Pakistani'.tr(),
-                                                isDark: themeNotifier.isDark
-                                                    ? true
-                                                    : false,
+                                          child:  CSCPicker(
+                                            flagState: CountryFlag.DISABLE,
+                                            // disabledDropdownDecoration: BoxDecoration(
+                                            //   borderRadius: const BorderRadius.all(Radius.circular(30)),
+                                            //   color: Colors.black,
+                                            //   border: Border.all(
+                                            //     color: Colors.grey.shade300,
+                                            //     width: 1,
+                                            //   ),
+                                            // ),
+                                            dropdownDecoration: BoxDecoration(
+                                              borderRadius: const BorderRadius.all(Radius.circular(30)),
+                                              color: Colors.black,
+                                              border: Border.all(
+                                                color: Colors.grey.shade300,
+                                                width: 1,
                                               ),
-                                              nationalityWidget(
-                                                name: 'Saudi'.tr(),
-                                                isDark: themeNotifier.isDark
-                                                    ? true
-                                                    : false,
-                                              ),
-                                              nationalityWidget(
-                                                isLast: true,
-                                                name: 'Indian'.tr(),
-                                                isDark: themeNotifier.isDark
-                                                    ? true
-                                                    : false,
-                                              ),
-                                            ],
+                                            ),
+                                            dropdownHeadingStyle: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            showCities: false,
+                                            showStates: false,
+                                            searchBarRadius: 50,
+                                            defaultCountry: CscCountry.Pakistan,
+                                            countryDropdownLabel: countryValue,
+                                            onCountryChanged: (value) {
+                                              setState(() {
+                                                countryValue = value;
+                                              });
+                                            },
                                           ),
+                                              // yha lgy gi
+                                          // ListView(
+                                          //   controller: _scrollController,
+                                          //   padding:
+                                          //       EdgeInsets.only(top: 0.4.h),
+                                          //   shrinkWrap: true,
+                                          //   children: [
+                                          //     nationalityWidget(
+                                          //       isFirst: true,
+                                          //       name: 'Pakistani'.tr(),
+                                          //       isDark: themeNotifier.isDark
+                                          //           ? true
+                                          //           : false,
+                                          //     ),
+                                          //     nationalityWidget(
+                                          //       name: 'Saudi'.tr(),
+                                          //       isDark: themeNotifier.isDark
+                                          //           ? true
+                                          //           : false,
+                                          //     ),
+                                          //     nationalityWidget(
+                                          //       isLast: true,
+                                          //       name: 'Indian'.tr(),
+                                          //       isDark: themeNotifier.isDark
+                                          //           ? true
+                                          //           : false,
+                                          //     ),
+                                          //   ],
+                                          // ),
                                         ),
                                     ],
                                   ),

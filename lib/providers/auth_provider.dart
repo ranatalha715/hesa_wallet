@@ -46,7 +46,6 @@ bool otpSuccessResponse=false;
       if (response.statusCode == 201) {
         // Successful login
         print("User logged in successfully!");
-        _showToast('User logged in successfully!');
         final jsonResponse = json.decode(response.body);
         final accessToken = jsonResponse['data']['accessToken'];
         final refreshToken = jsonResponse['data']['refreshToken'];
@@ -86,7 +85,6 @@ bool otpSuccessResponse=false;
         return AuthResult.success;
       } else {
         print("Login failed: ${response.body}");
-        _showToast('Login failed  ${response.body}');
         otpErrorResponse=true;
         notifyListeners();
         return AuthResult.failure;
@@ -97,7 +95,6 @@ bool otpSuccessResponse=false;
       return AuthResult.failure;
     } catch (e) {
       print("Exception during login: $e");
-      _showToast('An error occurred during login $e');
       return AuthResult.failure;
     }
   }
@@ -266,13 +263,11 @@ print(json.decode(response.body));
       print('login Otp Response');
       print("${response.body}");
       final successResponse = json.decode(response.body);
-      _showToast(successResponse['message']);
       return AuthResult.success;
     } else {
       // Show an error message or handle the response as needed
       print("Something went wrong: ${response.body}");
       final errorResponse = json.decode(response.body);
-      _showToast(errorResponse['message']);
       return AuthResult.failure;
     }
   }
@@ -698,6 +693,7 @@ print(json.decode(response.body));
 
   Future<AuthResult> loginWithUsername({
     required String username,
+    bool forUnlock=false,
     required String password,
     required BuildContext context,
   }) async {
@@ -746,6 +742,11 @@ print(json.decode(response.body));
           // );
           print('go to neo');
         } else {
+          forUnlock ?   prefs.setBool('setLockScreen', false): null;
+          Future.delayed(Duration(seconds: 1), () {
+            // This code runs after the delay
+            print('This message is printed after a 3-second delay.');
+          });
           await Navigator.of(context).pushNamedAndRemoveUntil(
               'nfts-page', (Route d) => false,
               arguments: {});

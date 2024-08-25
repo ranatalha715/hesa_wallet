@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hesa_wallet/screens/unlock/unlock_with_password.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
@@ -13,6 +14,7 @@ import '../../widgets/animated_loader/animated_loader.dart';
 import '../../widgets/button.dart';
 import '../../widgets/text_field_parent.dart';
 import '../account_recovery/reset_email.dart';
+import '../signup_signin/wallet.dart';
 import '../signup_signin/welcome_screen.dart';
 
 class Unlock extends StatefulWidget {
@@ -124,7 +126,7 @@ class _UnlockState extends State<Unlock> {
                           // ),
                         ],
                       )),
-                  // if (!isUnlocked)
+
                     Container(
                       height: 45.h,
                       // color: Colors.brown,
@@ -140,13 +142,16 @@ class _UnlockState extends State<Unlock> {
                                 isGradientWithBorder: true,
                                 isactive: isButtonActive ? true : false,
                                 handler: () async {
-                                  passcode!="" ? Navigator.pushReplacement(
+                                  passcode=="" ?
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => UnlockWithPassword(),
+                                  ))
+
+                                      : Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(builder: (context) => WelcomeScreen(handler: (){})),
-                                  ):(){};
-                                  setState(() {
-                                    isUnlocked = !isUnlocked;
-                                  });
+                                  );
                                   // setState(() {
                                   //   isValidating = true;
                                   // });
@@ -173,213 +178,7 @@ class _UnlockState extends State<Unlock> {
                         ],
                       ),
                     ),
-                  if (passcode=="" && isUnlocked)
-                    Container(
-                      height: 45.h,
-                      // color: Colors.grey,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 18.sp,
-                        ),
-                        child: Column(
-                          children: [
-                            // Expanded(
-                            //   child:
-                            SizedBox(
-                              height: 5.h,
-                            ),
-                            // ),
 
-                            Align(
-                              alignment: isEnglish
-                                  ? Alignment.centerLeft
-                                  : Alignment.centerRight,
-                              child: Text(
-                                'Password'.tr(),
-                                style: TextStyle(
-                                    fontSize: 11.7.sp,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.w600,
-                                    color: themeNotifier.isDark
-                                        ? AppColors.textColorWhite
-                                        : AppColors.textColorBlack),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 1.h,
-                            ),
-                            TextFieldParent(
-                              child: TextField(
-                                  keyboardType: TextInputType.number,
-                                  // maxLength: 6,
-                                  scrollPadding: EdgeInsets.only(
-                                      bottom: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom /
-                                          1.8),
-                                  controller: _passwordController,
-                                  obscureText: _obscurePassword,
-                                  style: TextStyle(
-                                      fontSize: 10.2.sp,
-                                      color: themeNotifier.isDark
-                                          ? AppColors.textColorWhite
-                                          : AppColors.textColorBlack,
-                                      fontWeight: FontWeight.w400,
-                                      // Off-white color,
-                                      fontFamily: 'Inter'),
-                                  decoration: InputDecoration(
-                                    // fillColor: AppColors.profileHeaderDark,
-                                    contentPadding: EdgeInsets.symmetric(
-                                        vertical: 10.0, horizontal: 16.0),
-                                    hintText: 'Enter your password'.tr(),
-                                    hintStyle: TextStyle(
-                                        fontSize: 10.2.sp,
-                                        color: AppColors.textColorGrey,
-                                        fontWeight: FontWeight.w400,
-                                        // Off-white color,
-                                        fontFamily: 'Inter'),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        borderSide: BorderSide(
-                                          color: Colors.transparent,
-                                          // Off-white color
-                                          // width: 2.0,
-                                        )),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        borderSide: BorderSide(
-                                          color: Colors.transparent,
-                                          // Off-white color
-                                          // width: 2.0,
-                                        )),
-                                    // labelText: 'Enter your password',
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                        _obscurePassword
-                                            ? Icons.visibility_off_outlined
-                                            : Icons.visibility_outlined,
-                                        color: AppColors.textColorGrey,
-                                        size: 17.5.sp,
-                                      ),
-                                      onPressed: _togglePasswordVisibility,
-                                      splashColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                    ),
-                                  ),
-                                  cursorColor: AppColors.textColorGrey),
-                            ),
-                            if (_passwordController.text.isEmpty &&
-                                isValidating)
-                              Padding(
-                                padding: EdgeInsets.only(top: 7.sp),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    "*Enter your password",
-                                    /* textAlign :TextAlign.left,*/
-                                    style: TextStyle(
-                                        fontSize: 10.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.errorColor),
-                                  ),
-                                ),
-                              ),
-                            if (_passwordController.text.isNotEmpty &&
-                                isValidating &&
-                                _passwordController.text != _savedPassCode)
-                              Padding(
-                                padding: EdgeInsets.only(top: 7.sp),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    "*Enter correct pin",
-                                    /* textAlign :TextAlign.left,*/
-                                    style: TextStyle(
-                                        fontSize: 10.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.errorColor),
-                                  ),
-                                ),
-                              ),
-                            SizedBox(
-                              height: 1.h,
-                            ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: GestureDetector(
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ResetEmail(),
-                                  ),
-                                ),
-                                child: Text(
-                                  'Forgot password?'.tr(),
-                                  style: TextStyle(
-                                    fontSize: 11.7.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: themeNotifier.isDark
-                                        ? AppColors.textColorWhite
-                                        : AppColors.textColorBlack,
-                                    // decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            // Expanded(child: SizedBox()),
-                            // Spacer(flex: 1,),
-
-                            SizedBox(
-                              height: 6.h,
-                            ),
-                            AppButton(
-                                title: 'Unlock'.tr(),
-                                isactive: isButtonActive ? true : false,
-                                handler: () async {
-                                  setState(() {
-                                    isValidating = true;
-                                  });
-                                  if (_passwordController.text.isNotEmpty) {
-                                    setState(() {
-                                      _isLoading = true;
-                                    });
-                                    await Future.delayed(
-                                        Duration(milliseconds: 1500), () {});
-                                    if (_passwordController.text ==
-                                        _savedPassCode) {
-                                      // widget.handler();
-                                    }
-
-                                    setState(() {
-                                      _isLoading = false;
-                                    });
-                                  }
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => WalletTokensNfts(),
-                                  //   ),
-                                  // );
-                                },
-                                isGradient: true,
-                                isGradientWithBorder: true,
-                                color: Colors.transparent),
-                            SizedBox(
-                              height: 9.h,
-                            ),
-                            // Spacer(flex: 2,),
-
-                            // FooterText(),
-                            //   SizedBox(
-                            //     height: 2.h,
-                            //   )
-                          ],
-                        ),
-                      ),
-                    ),
                 ],
               ),
             ),
