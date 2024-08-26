@@ -466,9 +466,13 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                             fontWeight: FontWeight.w400,
                                                             // Off-white color,
                                                             fontFamily: 'Inter'),
-                                                        suffixIcon: Icon(
-                                                          Icons.search,
-                                                          color: AppColors.textColorGrey,
+                                                        suffixIcon: Padding(
+                                                          padding:  EdgeInsets.all(13.sp),
+                                                          child: Image.asset(
+                                                            "assets/images/search.png",
+                                                            // height: 10.sp,
+                                                            // width: 10.sp,
+                                                          ),
                                                         ),
                                                         enabledBorder: OutlineInputBorder(
                                                             borderRadius:

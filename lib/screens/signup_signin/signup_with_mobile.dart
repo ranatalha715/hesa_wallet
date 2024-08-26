@@ -22,6 +22,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import '../../constants/configs.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
+
 import '../../widgets/otp_dialog.dart';
 
 class SignupWithMobile extends StatefulWidget {
@@ -93,6 +94,221 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
     // print(accessToken);
   }
 
+  final ScrollController scrollController = ScrollController();
+  List<String> _allNationalities = [
+    'Afghan',
+    'Albanian',
+    'Algerian',
+    'American',
+    'Andorran',
+    'Angolan',
+    'Antiguan',
+    'Argentine',
+    'Armenian',
+    'Australian',
+    'Austrian',
+    'Azerbaijani',
+    'Bahamian',
+    'Bahraini',
+    'Bangladeshi',
+    'Barbadian',
+    'Belarusian',
+    'Belgian',
+    'Belizean',
+    'Beninese',
+    'Bhutanese',
+    'Bolivian',
+    'Bosnian',
+    'Botswanan',
+    'Brazilian',
+    'British',
+    'Bruneian',
+    'Bulgarian',
+    'Burkinabé',
+    'Burmese',
+    'Burundian',
+    'Cabo Verdean',
+    'Cambodian',
+    'Cameroonian',
+    'Canadian',
+    'Central African',
+    'Chadian',
+    'Chilean',
+    'Chinese',
+    'Colombian',
+    'Comoran',
+    'Congolese',
+    'Costa Rican',
+    'Croatian',
+    'Cuban',
+    'Cypriot',
+    'Czech',
+    'Danish',
+    'Djiboutian',
+    'Dominican',
+    'Dutch',
+    'East Timorese',
+    'Ecuadorean',
+    'Egyptian',
+    'Emirati',
+    'Equatorial Guinean',
+    'Eritrean',
+    'Estonian',
+    'Ethiopian',
+    'Fijian',
+    'Finnish',
+    'French',
+    'Gabonese',
+    'Gambian',
+    'Georgian',
+    'German',
+    'Ghanaian',
+    'Greek',
+    'Grenadian',
+    'Guatemalan',
+    'Guinean',
+    'Guinea-Bissauan',
+    'Guyanese',
+    'Haitian',
+    'Honduran',
+    'Hungarian',
+    'Icelander',
+    'Indian',
+    'Indonesian',
+    'Iranian',
+    'Iraqi',
+    'Irish',
+    'Israeli',
+    'Italian',
+    'Ivorian',
+    'Jamaican',
+    'Japanese',
+    'Jordanian',
+    'Kazakh',
+    'Kenyan',
+    'Kiribati',
+    'Kuwaiti',
+    'Kyrgyz',
+    'Laotian',
+    'Latvian',
+    'Lebanese',
+    'Lesotho',
+    'Liberian',
+    'Libyan',
+    'Liechtensteiner',
+    'Lithuanian',
+    'Luxembourger',
+    'Macedonian',
+    'Malagasy',
+    'Malawian',
+    'Malaysian',
+    'Maldivian',
+    'Malian',
+    'Maltese',
+    'Marshallese',
+    'Mauritanian',
+    'Mauritian',
+    'Mexican',
+    'Micronesian',
+    'Moldovan',
+    'Monacan',
+    'Mongolian',
+    'Montenegrin',
+    'Moroccan',
+    'Mozambican',
+    'Namibian',
+    'Nauruan',
+    'Nepalese',
+    'New Zealander',
+    'Nicaraguan',
+    'Nigerien',
+    'Nigerian',
+    'North Korean',
+    'Norwegian',
+    'Omani',
+    'Pakistani',
+    'Palauan',
+    'Panamanian',
+    'Papua New Guinean',
+    'Paraguayan',
+    'Peruvian',
+    'Philippine',
+    'Polish',
+    'Portuguese',
+    'Qatari',
+    'Romanian',
+    'Russian',
+    'Rwandan',
+    'Saint Kitts and Nevis',
+    'Saint Lucian',
+    'Salvadoran',
+    'Samoan',
+    'San Marinese',
+    'Sao Tomean',
+    'Saudi',
+    'Senegalese',
+    'Serbian',
+    'Seychellois',
+    'Sierra Leonean',
+    'Singaporean',
+    'Slovak',
+    'Slovenian',
+    'Solomon Islander',
+    'Somali',
+    'South African',
+    'South Korean',
+    'South Sudanese',
+    'Spanish',
+    'Sri Lankan',
+    'Sudanese',
+    'Surinamese',
+    'Swazi',
+    'Swedish',
+    'Swiss',
+    'Syrian',
+    'Taiwanese',
+    'Tajik',
+    'Tanzanian',
+    'Thai',
+    'Togolese',
+    'Tongan',
+    'Trinidadian',
+    'Tunisian',
+    'Turkish',
+    'Turkmen',
+    'Tuvaluan',
+    'Ugandan',
+    'Ukrainian',
+    'Uruguayan',
+    'Uzbek',
+    'Vanuatuan',
+    'Venezuelan',
+    'Vietnamese',
+    'Yemeni',
+    'Zambian',
+    'Zimbabwean'
+  ];
+
+  List<String> _filteredNationalities = [];
+
+
+
+  void _filterSearchResults(String query) {
+    if (query.isNotEmpty) {
+      List<String> filteredList = _allNationalities
+          .where((nationality) =>
+          nationality.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+      setState(() {
+        _filteredNationalities = filteredList;
+      });
+    } else {
+      setState(() {
+        _filteredNationalities = _allNationalities;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -111,6 +327,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
     otp4Controller.addListener(_updateOtpButtonState);
     otp5Controller.addListener(_updateOtpButtonState);
     otp6Controller.addListener(_updateOtpButtonState);
+    _filteredNationalities = _allNationalities;
     KeyboardVisibilityController().onChange.listen((bool visible) {
       setState(() {
         isKeyboardVisible = visible;
@@ -576,38 +793,161 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                               ),
                                             ],
                                           ),
-                                          child:  CSCPicker(
-                                            flagState: CountryFlag.DISABLE,
-                                            // disabledDropdownDecoration: BoxDecoration(
-                                            //   borderRadius: const BorderRadius.all(Radius.circular(30)),
-                                            //   color: Colors.black,
-                                            //   border: Border.all(
-                                            //     color: Colors.grey.shade300,
-                                            //     width: 1,
-                                            //   ),
-                                            // ),
-                                            dropdownDecoration: BoxDecoration(
-                                              borderRadius: const BorderRadius.all(Radius.circular(30)),
-                                              color: Colors.black,
-                                              border: Border.all(
-                                                color: Colors.grey.shade300,
-                                                width: 1,
+                                          child: Column(
+                                            children: <Widget>[
+                                              Container(
+                                                // padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                                height: 6.5.h,
+                                                decoration: BoxDecoration(
+
+                                                  color: AppColors.transactionFeeBorder,
+                                                  borderRadius: BorderRadius.only(
+                                                    topLeft: Radius.circular(8.0),
+                                                    // Radius for top-left corner
+                                                    topRight: Radius.circular(8.0),
+                                                    bottomLeft: Radius.circular(8.0),
+                                                    bottomRight:
+                                                    Radius.circular(8.0), // Radius for top-right corner
+                                                  ),
+                                                ),
+                                                child: TextField(
+                                                    cursorColor: AppColors.textColorGrey,
+                                                  onChanged: (value) {
+                                                    _filterSearchResults(value);
+                                                  },
+                                                  style: TextStyle(
+                                                      fontSize: 10.2.sp,
+                                                      color: AppColors.textColorWhite,
+                                                      fontWeight: FontWeight.w400,
+                                                      // Off-white color,
+                                                      fontFamily: 'Inter'),
+                                                  decoration: InputDecoration(
+                                                    contentPadding:
+                                                    EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+                                                    hintText: 'Search'.tr(),
+                                                    hintStyle: TextStyle(
+                                                        fontSize: 10.2.sp,
+                                                        color: AppColors.textColorGrey,
+                                                        fontWeight: FontWeight.w400,
+                                                        // Off-white color,
+                                                        fontFamily: 'Inter'),
+                                                    suffixIcon: Padding(
+                                                      padding:  EdgeInsets.all(13.sp),
+                                                      child: Image.asset(
+                                                        "assets/images/search.png",
+                                                        // height: 10.sp,
+                                                        // width: 10.sp,
+                                                      ),
+                                                    ),
+                                                    enabledBorder: OutlineInputBorder(
+                                                        borderRadius: BorderRadius.circular(8.0),
+                                                        borderSide: BorderSide(
+                                                          color: Colors.transparent,
+                                                          // Off-white color
+                                                          // width: 2.0,
+                                                        )),
+                                                    focusedBorder: OutlineInputBorder(
+                                                        borderRadius: BorderRadius.circular(8.0),
+                                                        borderSide: BorderSide(
+                                                          color: AppColors.focusTextFieldColor,
+                                                        )),
+                                                    // labelText: 'Enter your password',
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                            dropdownHeadingStyle: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            showCities: false,
-                                            showStates: false,
-                                            searchBarRadius: 50,
-                                            defaultCountry: CscCountry.Pakistan,
-                                            countryDropdownLabel: countryValue,
-                                            onCountryChanged: (value) {
-                                              setState(() {
-                                                countryValue = value;
-                                              });
-                                            },
-                                          ),
+                                              Container(
+                                                height: _filteredNationalities.length == 1 || _filteredNationalities.length == 2
+                                                    ? 12.h:
+                                                _filteredNationalities.length == 0 ? 12.h:
+                                                18.h,
+                                                child: Padding(
+                                                  padding:  EdgeInsets.only(bottom: 10.sp),
+                                                  child: ListView.builder(
+                                                    controller: scrollController,
+                                                    padding: EdgeInsets.zero,
+                                                    // shrinkWrap: true,
+                                                    itemCount: _filteredNationalities.length,
+                                                    itemBuilder: (context, index) {
+                                                      bool isLast = index == _filteredNationalities.length - 1;
+                                                      return GestureDetector(onTap: (){
+                                                        setState(() {
+                                                          _selectedNationalityType = _filteredNationalities[index];
+                                                          _isSelected = true;
+                                                          _isSelectedNationality = false;
+                                                        });},
+                                                        child: Container(
+                                                          decoration: BoxDecoration(
+                                                            borderRadius: BorderRadius.only(
+                                                              bottomLeft: Radius.circular(isLast ? 8.0 : 0.0), // Adjust as needed
+                                                              bottomRight: Radius.circular(
+                                                                isLast ? 8.0 : 0.0,
+                                                              ),
+                                                              // Adjust as needed
+                                                            ),
+                                                            color: AppColors.textFieldParentDark, // Your desired background color
+                                                          ),
+                                                          child: Column(
+                                                            children: [
+                                                              // if (isFirst)
+                                                              //   Divider(
+                                                              //     color: AppColors.textColorGrey,
+                                                              //   ),
+                                                              Container(
+                                                                height: 5.h,
+                                                                decoration: BoxDecoration(
+                                                                  // color: Colors.red,
+                                                                  // border: Border.all(
+                                                                  //   color: _isSelected
+                                                                  //       ? Colors.transparent
+                                                                  //       : AppColors.textColorGrey,
+                                                                  //   width: 1.0,
+                                                                  // ),
+
+                                                                  borderRadius: BorderRadius.circular(8.0),
+                                                                ),
+                                                                child: Padding(
+                                                                  padding: EdgeInsets.symmetric(horizontal: 10.sp),
+                                                                  child: Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding: EdgeInsets.only(),
+                                                                        child: Text(
+                                                                          _filteredNationalities[index],
+                                                                          style: TextStyle(
+                                                                              fontSize: 11.7.sp,
+                                                                              fontFamily: 'Inter',
+                                                                              fontWeight: FontWeight.w500,
+                                                                              color: AppColors.textColorWhite
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              // if (!isLast)
+                                                              //   Divider(
+                                                              //     color: AppColors.textColorGrey,
+                                                              //   ),
+                                                              // if (isLast)
+                                                              SizedBox(
+                                                                height: 1.h,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      );
+                                                      //   ListTile(
+                                                      //   title: Text(_filteredNationalities[index]),
+                                                      // );
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          )
                                               // yha lgy gi
                                           // ListView(
                                           //   controller: _scrollController,
@@ -706,7 +1046,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                               bottomLeft: Radius.circular(
                                                   _isSelectedNationality
                                                       ? 8.0
-                                                      : 8.0),
+                                                      : 8.0
+                                              ),
                                               // Adjust as needed
                                               bottomRight: Radius.circular(
                                                   _isSelectedNationality
