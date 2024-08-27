@@ -1,11 +1,14 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:hesa_wallet/constants/configs.dart';
 import 'package:hesa_wallet/providers/assets_provider.dart';
+import 'package:hesa_wallet/screens/web_view/mjr_explorer_webview.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../constants/colors.dart';
 import '../../providers/theme_provider.dart';
@@ -163,15 +166,32 @@ class _NftsDetailsState extends State<NftsDetails> {
                    // // ),
                    nftsDetailsWidget(
                        title: 'Token ID:'.tr(),
+                       func:()=>  Navigator.push(
+                         context,
+                         MaterialPageRoute(
+                           builder: (context) => MjrWebviewExplored(
+                             url: "https://www.mjraexplorer.com/nft/" + assetsDetails.tokenId,
+                           ),
+                         ),
+                       ),
                        details:
                        replaceMiddleWithDotsCollectionId(assetsDetails.tokenId),
                        // replaceMiddleWithDotsCollectionId(args["tokenId"]),
                        isDark: themeNotifier.isDark ? true : false,
                        color:  AppColors.textColorToska
                    ),
+
                    if (assetsDetails.creatorName != null)
                      nftsDetailsWidget(
                        title: 'Creator:'.tr(),
+                       func:()=>  Navigator.push(
+                         context,
+                         MaterialPageRoute(
+                           builder: (context) => MjrWebviewExplored(
+                             url: "https://www.mjraexplorer.com/address/"+ assetsDetails.creatorName,
+                           ),
+                         ),
+                       ),
                        details: replaceMiddleWithDots(assetsDetails.creatorName) ?? "N/A",
                        isDark: themeNotifier.isDark ? true : false,
                        color: AppColors.textColorToska,
@@ -243,7 +263,9 @@ class _NftsDetailsState extends State<NftsDetails> {
       {required String title,
       required String details,
       Color? color,
-      bool isDark = true}) {
+      bool isDark = true,
+      Function? func
+      }) {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.sp, left: 20.sp, right: 20.sp),
       child: Row(
@@ -262,19 +284,22 @@ class _NftsDetailsState extends State<NftsDetails> {
             ),
           ),
           Spacer(),
-          Container(
-            width: 45.w,
-            // color: Colors.yellow,
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                details,
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                    color:
-                        color == null ? AppColors.textColorGreyShade2 : color,
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w400),
+          GestureDetector(
+            onTap: ()=>func!(),
+            child: Container(
+              width: 45.w,
+              // color: Colors.yellow,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  details,
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                      color:
+                          color == null ? AppColors.textColorGreyShade2 : color,
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w400),
+                ),
               ),
             ),
           ),

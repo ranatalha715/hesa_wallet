@@ -538,7 +538,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
         trPro.selectedCardTokenId = paymentCards[0].id;
       }
     }
-    print("oye" + paymentCards.toString());
+    print("apple pay h k nhe" + Provider.of<TransactionProvider>(context,
+        listen: false)
+        .selectedPaymentMethod.toString());
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       setThemeDark = themeNotifier.isDark;
       return Stack(
@@ -899,6 +901,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                         Spacer(),
                                         GestureDetector(
                                           onTap: () async {
+
                                             confirmBrandDialogue(
                                               () async {
                                                 var result = await Provider.of<
@@ -1420,7 +1423,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: OS.Platform.isIOS ? 0.0.h : 2.h),
+                                SizedBox(height: OS.Platform.isIOS ? 2.h : 2.h),
                                 if (OS.Platform.isIOS)
                                 GestureDetector(
                                   onTap: () {
@@ -1599,6 +1602,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   Provider.of<UserProvider>(
                                                       context,
                                                       listen: false);
+
                                               confirmBrandDialogue(() async {
 
                                                 if (operation ==
@@ -2526,7 +2530,28 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                               context,
                                                               listen: false)
                                                           .paymentCards
-                                                          .isEmpty);
+                                                          .isEmpty &&
+                                                      Provider.of<TransactionProvider>(
+                                                      context,
+                                                      listen:
+                                                      false)
+                                                      .selectedPaymentMethod !=
+                                                      "apple_pay" ? true:false
+                                                  //
+                                                  //         Provider.of<TransactionProvider>(
+                                                  //             context,
+                                                  //             listen:
+                                                  //             false)
+                                                  //             .selectedPaymentMethod !=
+                                                  //             "cards")
+                                                  // ||
+                                                  //         Provider.of<TransactionProvider>(
+                                                  //         context,
+                                                  //         listen:
+                                                  //         false)
+                                                  //         .selectedPaymentMethod !=
+                                                  //         "apple_pay"
+                                              );
 
 
                                               // if (result == AuthResult.success) {

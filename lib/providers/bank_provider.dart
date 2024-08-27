@@ -30,7 +30,7 @@ class BankProvider with ChangeNotifier{
   required BuildContext context,
   }) async {
   final String url = BASE_URL + '/user/add-bank-account';
-  final Map<String, String> body = {
+  final Map<String, dynamic> body = {
   // "beneficiaryBank": bankName,
   // "beneficiaryBankAddress": "CBC",
   // "beneficiaryBankClearingCode": "02",
@@ -38,7 +38,7 @@ class BankProvider with ChangeNotifier{
   // "beneficiaryAccountNo": "858888888",
   // "beneficiaryName": beneficiaryName,
   // "beneficiaryAddress": "Karachi",
-  "isPrimary": "true",
+  "isPrimary": true,
   "accountNumber": ibanNumber,
   "bic": bankBic,
   "code": code,

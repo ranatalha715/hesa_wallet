@@ -263,11 +263,13 @@ print(json.decode(response.body));
       print('login Otp Response');
       print("${response.body}");
       final successResponse = json.decode(response.body);
+      loginErrorResponse= null;
       return AuthResult.success;
     } else {
       // Show an error message or handle the response as needed
       print("Something went wrong: ${response.body}");
       final errorResponse = json.decode(response.body);
+      loginErrorResponse=errorResponse['message'][0]['message'];
       return AuthResult.failure;
     }
   }
@@ -412,6 +414,8 @@ print(json.decode(response.body));
     }
   }
 
+  var registerUserErrorResponse;
+
   Future<AuthResult> registerUserStep1({
     required String firstName,
     required String lastName,
@@ -459,13 +463,13 @@ print(json.decode(response.body));
         print("uniqueId" + uniqueId);
         final successResponse = json.decode(response.body);
         // _showToast(successResponse['message']);
+        registerUserErrorResponse= null;
         return AuthResult.success;
       } else {
         final errorResponse = json.decode(response.body);
         // Registration failed
         print("Registration failed: ${response.body}");
-        // _showToast(errorResponse['message']);
-        // _showToast('Registration failed');
+        registerUserErrorResponse = errorResponse['message'][0]['message'];
         return AuthResult.failure;
       }
     } catch (e) {
@@ -601,12 +605,13 @@ print(json.decode(response.body));
         // print("uniqueId" + uniqueId);
         // final successResponse = json.decode(response.body);
         // _showToast(successResponse['message']);
+        registerUserErrorResponse=null;
         return AuthResult.success;
       } else {
         final errorResponse = json.decode(response.body);
+        registerUserErrorResponse = errorResponse['message'][0]['message'];
         // Registration failed
         print("Registration failed: ${response.body}");
-        _showToast(errorResponse['message']);
         otpSuccessResponse=false;
         notifyListeners();
         // _showToast('Registration failed');
@@ -615,7 +620,6 @@ print(json.decode(response.body));
     } catch (e) {
       // Handle network or other errors
       print("Error during registration: $e");
-      _showToast('Registration failed: $e');
       return AuthResult.failure;
     }
   }

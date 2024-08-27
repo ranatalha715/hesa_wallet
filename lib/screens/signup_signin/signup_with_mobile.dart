@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:csc_picker/csc_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -87,12 +86,13 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
   var _isLoading = false;
   int _timeLeft = 60;
 
-
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
     // print(accessToken);
   }
+
+
 
   final ScrollController scrollController = ScrollController();
   List<String> _allNationalities = [
@@ -291,13 +291,11 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
 
   List<String> _filteredNationalities = [];
 
-
-
   void _filterSearchResults(String query) {
     if (query.isNotEmpty) {
       List<String> filteredList = _allNationalities
           .where((nationality) =>
-          nationality.toLowerCase().contains(query.toLowerCase()))
+              nationality.toLowerCase().contains(query.toLowerCase()))
           .toList();
       setState(() {
         _filteredNationalities = filteredList;
@@ -397,10 +395,10 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
     });
   }
 
-  void updateDialogBoxButtonState(){
- setState(() {
-   isOtpButtonActive=true;
- });
+  void updateDialogBoxButtonState() {
+    setState(() {
+      isOtpButtonActive = true;
+    });
   }
 
   // void startTimer() {
@@ -417,6 +415,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
   Widget build(BuildContext context) {
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
+    final auth=Provider.of<AuthProvider>(context, listen: false);
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return Stack(
         children: [
@@ -494,6 +493,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                 ),
                                 TextFieldParent(
                                   child: TextField(
+
                                       textCapitalization:
                                           TextCapitalization.words,
                                       focusNode: firstNameFocusNode,
@@ -502,12 +502,11 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                         lastNameFocusNode.requestFocus();
                                       },
                                       controller: _firstnameController,
-                                      keyboardType: TextInputType.name,
-                                      // scrollPadding: EdgeInsets.only(
-                                      //     bottom: MediaQuery.of(context)
-                                      //         .viewInsets
-                                      //         .bottom
-                                      // ),
+                                      keyboardType: TextInputType.text,
+                                      scrollPadding: EdgeInsets.only(
+                                          bottom: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom),
                                       style: TextStyle(
                                           fontSize: 10.2.sp,
                                           color: themeNotifier.isDark
@@ -540,6 +539,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                               // width: 2.0,
                                             )),
                                         focusedBorder: OutlineInputBorder(
+                                            gapPadding: 0.0,
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
@@ -599,7 +599,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                         });
                                       },
                                       controller: _lastnameController,
-                                      keyboardType: TextInputType.name,
+                                      keyboardType: TextInputType.text,
                                       // scrollPadding: EdgeInsets.only(
                                       //     bottom: MediaQuery.of(context)
                                       //             .viewInsets
@@ -770,214 +770,284 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                       ),
                                       if (_isSelectedNationality)
                                         Container(
-                                          margin: EdgeInsets.only(
-                                              left: 1.sp,
-                                              right: 1.sp,
-                                              top: 0.4.h),
-                                          decoration: BoxDecoration(
-                                            color:
-                                                AppColors.textFieldParentDark,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(8.sp)),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black
-                                                    .withOpacity(0.10),
-                                                // Shadow color
-                                                offset: Offset(0, 4),
-                                                // Pushes the shadow down, removes the top shadow
-                                                blurRadius: 3,
-                                                // Adjust the blur radius to change shadow size
-                                                spreadRadius:
-                                                    0.5, // Optional: Adjust spread radius if needed
-                                              ),
-                                            ],
-                                          ),
-                                          child: Column(
-                                            children: <Widget>[
-                                              Container(
-                                                // padding: EdgeInsets.symmetric(horizontal: 10.0),
-                                                height: 6.5.h,
-                                                decoration: BoxDecoration(
-
-                                                  color: AppColors.transactionFeeBorder,
-                                                  borderRadius: BorderRadius.only(
-                                                    topLeft: Radius.circular(8.0),
-                                                    // Radius for top-left corner
-                                                    topRight: Radius.circular(8.0),
-                                                    bottomLeft: Radius.circular(8.0),
-                                                    bottomRight:
-                                                    Radius.circular(8.0), // Radius for top-right corner
-                                                  ),
+                                            margin: EdgeInsets.only(
+                                                left: 1.sp,
+                                                right: 1.sp,
+                                                top: 0.4.h),
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  AppColors.textFieldParentDark,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(8.sp)),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black
+                                                      .withOpacity(0.10),
+                                                  // Shadow color
+                                                  offset: Offset(0, 4),
+                                                  // Pushes the shadow down, removes the top shadow
+                                                  blurRadius: 3,
+                                                  // Adjust the blur radius to change shadow size
+                                                  spreadRadius:
+                                                      0.5, // Optional: Adjust spread radius if needed
                                                 ),
-                                                child: TextField(
-                                                    cursorColor: AppColors.textColorGrey,
-                                                  onChanged: (value) {
-                                                    _filterSearchResults(value);
-                                                  },
-                                                  style: TextStyle(
-                                                      fontSize: 10.2.sp,
-                                                      color: AppColors.textColorWhite,
-                                                      fontWeight: FontWeight.w400,
-                                                      // Off-white color,
-                                                      fontFamily: 'Inter'),
-                                                  decoration: InputDecoration(
-                                                    contentPadding:
-                                                    EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
-                                                    hintText: 'Search'.tr(),
-                                                    hintStyle: TextStyle(
+                                              ],
+                                            ),
+                                            child: Column(
+                                              children: <Widget>[
+                                                Container(
+                                                  // padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                                  height: 6.5.h,
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors
+                                                        .transactionFeeBorder,
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                      topLeft:
+                                                          Radius.circular(8.0),
+                                                      // Radius for top-left corner
+                                                      topRight:
+                                                          Radius.circular(8.0),
+                                                      bottomLeft:
+                                                          Radius.circular(8.0),
+                                                      bottomRight: Radius.circular(
+                                                          8.0), // Radius for top-right corner
+                                                    ),
+                                                  ),
+                                                  child: TextField(
+                                                    cursorColor:
+                                                        AppColors.textColorGrey,
+                                                    onChanged: (value) {
+                                                      _filterSearchResults(
+                                                          value);
+                                                    },
+                                                    style: TextStyle(
                                                         fontSize: 10.2.sp,
-                                                        color: AppColors.textColorGrey,
-                                                        fontWeight: FontWeight.w400,
+                                                        color: AppColors
+                                                            .textColorWhite,
+                                                        fontWeight:
+                                                            FontWeight.w400,
                                                         // Off-white color,
                                                         fontFamily: 'Inter'),
-                                                    suffixIcon: Padding(
-                                                      padding:  EdgeInsets.all(13.sp),
-                                                      child: Image.asset(
-                                                        "assets/images/search.png",
-                                                        // height: 10.sp,
-                                                        // width: 10.sp,
+                                                    decoration: InputDecoration(
+                                                      contentPadding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 10.0,
+                                                              horizontal: 16.0),
+                                                      hintText: 'Search'.tr(),
+                                                      hintStyle: TextStyle(
+                                                          fontSize: 10.2.sp,
+                                                          color: AppColors
+                                                              .textColorGrey,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          // Off-white color,
+                                                          fontFamily: 'Inter'),
+                                                      suffixIcon: Padding(
+                                                        padding: EdgeInsets.all(
+                                                            13.sp),
+                                                        child: Image.asset(
+                                                          "assets/images/search.png",
+                                                          // height: 10.sp,
+                                                          // width: 10.sp,
+                                                        ),
                                                       ),
+                                                      enabledBorder:
+                                                          OutlineInputBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8.0),
+                                                              borderSide:
+                                                                  BorderSide(
+                                                                color: Colors
+                                                                    .transparent,
+                                                                // Off-white color
+                                                                // width: 2.0,
+                                                              )),
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8.0),
+                                                              borderSide:
+                                                                  BorderSide(
+                                                                color: AppColors
+                                                                    .focusTextFieldColor,
+                                                              )),
+                                                      // labelText: 'Enter your password',
                                                     ),
-                                                    enabledBorder: OutlineInputBorder(
-                                                        borderRadius: BorderRadius.circular(8.0),
-                                                        borderSide: BorderSide(
-                                                          color: Colors.transparent,
-                                                          // Off-white color
-                                                          // width: 2.0,
-                                                        )),
-                                                    focusedBorder: OutlineInputBorder(
-                                                        borderRadius: BorderRadius.circular(8.0),
-                                                        borderSide: BorderSide(
-                                                          color: AppColors.focusTextFieldColor,
-                                                        )),
-                                                    // labelText: 'Enter your password',
                                                   ),
                                                 ),
-                                              ),
-                                              Container(
-                                                height: _filteredNationalities.length == 1 || _filteredNationalities.length == 2
-                                                    ? 12.h:
-                                                _filteredNationalities.length == 0 ? 12.h:
-                                                18.h,
-                                                child: Padding(
-                                                  padding:  EdgeInsets.only(bottom: 10.sp),
-                                                  child: ListView.builder(
-                                                    controller: scrollController,
-                                                    padding: EdgeInsets.zero,
-                                                    // shrinkWrap: true,
-                                                    itemCount: _filteredNationalities.length,
-                                                    itemBuilder: (context, index) {
-                                                      bool isLast = index == _filteredNationalities.length - 1;
-                                                      return GestureDetector(onTap: (){
-                                                        setState(() {
-                                                          _selectedNationalityType = _filteredNationalities[index];
-                                                          _isSelected = true;
-                                                          _isSelectedNationality = false;
-                                                        });},
-                                                        child: Container(
-                                                          decoration: BoxDecoration(
-                                                            borderRadius: BorderRadius.only(
-                                                              bottomLeft: Radius.circular(isLast ? 8.0 : 0.0), // Adjust as needed
-                                                              bottomRight: Radius.circular(
-                                                                isLast ? 8.0 : 0.0,
-                                                              ),
-                                                              // Adjust as needed
-                                                            ),
-                                                            color: AppColors.textFieldParentDark, // Your desired background color
-                                                          ),
-                                                          child: Column(
-                                                            children: [
-                                                              // if (isFirst)
-                                                              //   Divider(
-                                                              //     color: AppColors.textColorGrey,
-                                                              //   ),
-                                                              Container(
-                                                                height: 5.h,
-                                                                decoration: BoxDecoration(
-                                                                  // color: Colors.red,
-                                                                  // border: Border.all(
-                                                                  //   color: _isSelected
-                                                                  //       ? Colors.transparent
-                                                                  //       : AppColors.textColorGrey,
-                                                                  //   width: 1.0,
-                                                                  // ),
-
-                                                                  borderRadius: BorderRadius.circular(8.0),
+                                                Container(
+                                                  height: _filteredNationalities
+                                                                  .length ==
+                                                              1 ||
+                                                          _filteredNationalities
+                                                                  .length ==
+                                                              2
+                                                      ? 12.h
+                                                      : _filteredNationalities
+                                                                  .length ==
+                                                              0
+                                                          ? 12.h
+                                                          : 18.h,
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        bottom: 10.sp),
+                                                    child: ListView.builder(
+                                                      controller:
+                                                          scrollController,
+                                                      padding: EdgeInsets.zero,
+                                                      // shrinkWrap: true,
+                                                      itemCount:
+                                                          _filteredNationalities
+                                                              .length,
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        bool isLast = index ==
+                                                            _filteredNationalities
+                                                                    .length -
+                                                                1;
+                                                        return GestureDetector(
+                                                          onTap: () {
+                                                            setState(() {
+                                                              _selectedNationalityType =
+                                                                  _filteredNationalities[
+                                                                      index];
+                                                              _isSelected =
+                                                                  true;
+                                                              _isSelectedNationality =
+                                                                  false;
+                                                            });
+                                                          },
+                                                          child: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .only(
+                                                                bottomLeft: Radius
+                                                                    .circular(isLast
+                                                                        ? 8.0
+                                                                        : 0.0),
+                                                                // Adjust as needed
+                                                                bottomRight:
+                                                                    Radius
+                                                                        .circular(
+                                                                  isLast
+                                                                      ? 8.0
+                                                                      : 0.0,
                                                                 ),
-                                                                child: Padding(
-                                                                  padding: EdgeInsets.symmetric(horizontal: 10.sp),
-                                                                  child: Row(
-                                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                                                    children: [
+                                                                // Adjust as needed
+                                                              ),
+                                                              color: AppColors
+                                                                  .textFieldParentDark, // Your desired background color
+                                                            ),
+                                                            child: Column(
+                                                              children: [
+                                                                // if (isFirst)
+                                                                //   Divider(
+                                                                //     color: AppColors.textColorGrey,
+                                                                //   ),
+                                                                Container(
+                                                                  height: 5.h,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    // color: Colors.red,
+                                                                    // border: Border.all(
+                                                                    //   color: _isSelected
+                                                                    //       ? Colors.transparent
+                                                                    //       : AppColors.textColorGrey,
+                                                                    //   width: 1.0,
+                                                                    // ),
+
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            8.0),
+                                                                  ),
+                                                                  child:
                                                                       Padding(
-                                                                        padding: EdgeInsets.only(),
-                                                                        child: Text(
-                                                                          _filteredNationalities[index],
-                                                                          style: TextStyle(
-                                                                              fontSize: 11.7.sp,
-                                                                              fontFamily: 'Inter',
-                                                                              fontWeight: FontWeight.w500,
-                                                                              color: AppColors.textColorWhite
+                                                                    padding: EdgeInsets.symmetric(
+                                                                        horizontal:
+                                                                            10.sp),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .start,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding:
+                                                                              EdgeInsets.only(),
+                                                                          child:
+                                                                              Text(
+                                                                            _filteredNationalities[index],
+                                                                            style: TextStyle(
+                                                                                fontSize: 11.7.sp,
+                                                                                fontFamily: 'Inter',
+                                                                                fontWeight: FontWeight.w500,
+                                                                                color: AppColors.textColorWhite),
                                                                           ),
                                                                         ),
-                                                                      ),
-                                                                    ],
+                                                                      ],
+                                                                    ),
                                                                   ),
                                                                 ),
-                                                              ),
-                                                              // if (!isLast)
-                                                              //   Divider(
-                                                              //     color: AppColors.textColorGrey,
-                                                              //   ),
-                                                              // if (isLast)
-                                                              SizedBox(
-                                                                height: 1.h,
-                                                              ),
-                                                            ],
+                                                                // if (!isLast)
+                                                                //   Divider(
+                                                                //     color: AppColors.textColorGrey,
+                                                                //   ),
+                                                                // if (isLast)
+                                                                SizedBox(
+                                                                  height: 1.h,
+                                                                ),
+                                                              ],
+                                                            ),
                                                           ),
-                                                        ),
-                                                      );
-                                                      //   ListTile(
-                                                      //   title: Text(_filteredNationalities[index]),
-                                                      // );
-                                                    },
+                                                        );
+                                                        //   ListTile(
+                                                        //   title: Text(_filteredNationalities[index]),
+                                                        // );
+                                                      },
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
-                                          )
-                                              // yha lgy gi
-                                          // ListView(
-                                          //   controller: _scrollController,
-                                          //   padding:
-                                          //       EdgeInsets.only(top: 0.4.h),
-                                          //   shrinkWrap: true,
-                                          //   children: [
-                                          //     nationalityWidget(
-                                          //       isFirst: true,
-                                          //       name: 'Pakistani'.tr(),
-                                          //       isDark: themeNotifier.isDark
-                                          //           ? true
-                                          //           : false,
-                                          //     ),
-                                          //     nationalityWidget(
-                                          //       name: 'Saudi'.tr(),
-                                          //       isDark: themeNotifier.isDark
-                                          //           ? true
-                                          //           : false,
-                                          //     ),
-                                          //     nationalityWidget(
-                                          //       isLast: true,
-                                          //       name: 'Indian'.tr(),
-                                          //       isDark: themeNotifier.isDark
-                                          //           ? true
-                                          //           : false,
-                                          //     ),
-                                          //   ],
-                                          // ),
-                                        ),
+                                              ],
+                                            )
+                                            // yha lgy gi
+                                            // ListView(
+                                            //   controller: _scrollController,
+                                            //   padding:
+                                            //       EdgeInsets.only(top: 0.4.h),
+                                            //   shrinkWrap: true,
+                                            //   children: [
+                                            //     nationalityWidget(
+                                            //       isFirst: true,
+                                            //       name: 'Pakistani'.tr(),
+                                            //       isDark: themeNotifier.isDark
+                                            //           ? true
+                                            //           : false,
+                                            //     ),
+                                            //     nationalityWidget(
+                                            //       name: 'Saudi'.tr(),
+                                            //       isDark: themeNotifier.isDark
+                                            //           ? true
+                                            //           : false,
+                                            //     ),
+                                            //     nationalityWidget(
+                                            //       isLast: true,
+                                            //       name: 'Indian'.tr(),
+                                            //       isDark: themeNotifier.isDark
+                                            //           ? true
+                                            //           : false,
+                                            //     ),
+                                            //   ],
+                                            // ),
+                                            ),
                                     ],
                                   ),
                                 ),
@@ -1046,8 +1116,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                               bottomLeft: Radius.circular(
                                                   _isSelectedNationality
                                                       ? 8.0
-                                                      : 8.0
-                                              ),
+                                                      : 8.0),
                                               // Adjust as needed
                                               bottomRight: Radius.circular(
                                                   _isSelectedNationality
@@ -1302,6 +1371,9 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                   child: TextField(
                                       focusNode: mobileNumFocusNode,
                                       textInputAction: TextInputAction.done,
+                                      onChanged: (v){
+                                        auth.registerUserErrorResponse=null;
+                                      },
                                       onEditingComplete: () {
                                         // passwordFocusNode.requestFocus();
                                         FocusScope.of(context).unfocus();
@@ -1340,10 +1412,9 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: _numberController
-                                                          .text.isEmpty &&
-                                                      isValidating
-                                                  ? AppColors.errorColor
+                                              color:  (isValidating && _numberController.text.isEmpty) || (_numberController.text.length < 9 &&
+                                                  _numberController.text.isNotEmpty  && isValidating) || auth.registerUserErrorResponse.toString().contains('Mobile number')
+                                                       ? AppColors.errorColor
                                                   : Colors.transparent,
                                               // Off-white color
                                               // width: 2.0,
@@ -1394,6 +1465,18 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                     child: Text(
                                       // "*This mobile number is registered",
                                       "*Mobile Number should be minimum 9 Characters",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 10.sp,
+                                          color: AppColors.errorColor),
+                                    ),
+                                  ),
+                                if (auth.registerUserErrorResponse != null && _numberController.text.isNotEmpty && isValidating && auth.registerUserErrorResponse.toString().contains('Mobile number'))
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 7.sp),
+                                    child: Text(
+
+                                      "*${auth.registerUserErrorResponse}",
                                       style: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           fontSize: 10.sp,
@@ -1568,75 +1651,80 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                   events: _events,
 
                                                   firstBtnHandler: () async {
-
-                                                      try {
-                                                        setState(() {
-                                                          _isLoadingOtpDialoge =
-                                                              true;
-                                                        });
-                                                        await Future.delayed(const Duration(milliseconds: 1000));
-                                                        print('loading popup' +
-                                                            _isLoadingOtpDialoge
-                                                                .toString());
-                                                        // Navigator.pop(context);
-                                                        final result = await Provider
-                                                                .of<AuthProvider>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                            .registerUserStep2(
-                                                                context:
-                                                                    context,
-                                                                code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes
-                                                                );
-                                                        setState(() {
-                                                          _isLoadingOtpDialoge =
-                                                              false;
-                                                        });
-                                                        print('loading popup 2' +
-                                                            _isLoadingOtpDialoge
-                                                                .toString());
-                                                        if (result ==
-                                                            AuthResult
-                                                                .success) {
-                                                          await Future.delayed(const Duration(milliseconds: 1000));
-                                                          // Navigator.of(context)
-                                                          //     .pushNamedAndRemoveUntil(
-                                                          //     '/TermsAndConditions',
-                                                          //         (Route d) =>
-                                                          //     false);
-                                                          Navigator.of(context)
-                                                              .pushNamed(
-                                                                  SignUpWithEmail
-                                                                      .routeName,
-                                                                  arguments: {
-                                                                'firstName':
-                                                                    _firstnameController
-                                                                        .text,
-                                                                'lastName':
-                                                                    _lastnameController
-                                                                        .text,
-                                                                'id':
-                                                                    _identificationnumberController
-                                                                        .text,
-                                                                'idType':
-                                                                    _selectedIDType,
-                                                              });
-                                                        }
-                                                      } catch (error) {
-                                                        print("Error: $error");
-                                                        setState(() {
-                                                          _isLoadingOtpDialoge =
-                                                              false;
-                                                        });
-                                                        // _showToast('An error occurred'); // Show an error message
-                                                      } finally {
-                                                        setState(() {
-                                                          _isLoadingOtpDialoge =
-                                                              false;
-                                                        });
+                                                    try {
+                                                      setState(() {
+                                                        _isLoadingOtpDialoge =
+                                                            true;
+                                                      });
+                                                      await Future.delayed(
+                                                          const Duration(
+                                                              milliseconds:
+                                                                  1000));
+                                                      print('loading popup' +
+                                                          _isLoadingOtpDialoge
+                                                              .toString());
+                                                      // Navigator.pop(context);
+                                                      final result = await Provider
+                                                              .of<AuthProvider>(
+                                                                  context,
+                                                                  listen: false)
+                                                          .registerUserStep2(
+                                                              context: context,
+                                                              code: Provider.of<
+                                                                          AuthProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .codeFromOtpBoxes);
+                                                      setState(() {
+                                                        _isLoadingOtpDialoge =
+                                                            false;
+                                                      });
+                                                      print('loading popup 2' +
+                                                          _isLoadingOtpDialoge
+                                                              .toString());
+                                                      if (result ==
+                                                          AuthResult.success) {
+                                                        await Future.delayed(
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    1000));
+                                                        // Navigator.of(context)
+                                                        //     .pushNamedAndRemoveUntil(
+                                                        //     '/TermsAndConditions',
+                                                        //         (Route d) =>
+                                                        //     false);
+                                                        Navigator.of(context)
+                                                            .pushNamed(
+                                                                SignUpWithEmail
+                                                                    .routeName,
+                                                                arguments: {
+                                                              'firstName':
+                                                                  _firstnameController
+                                                                      .text,
+                                                              'lastName':
+                                                                  _lastnameController
+                                                                      .text,
+                                                              'id':
+                                                                  _identificationnumberController
+                                                                      .text,
+                                                              'idType':
+                                                                  _selectedIDType,
+                                                            });
                                                       }
-
+                                                    } catch (error) {
+                                                      print("Error: $error");
+                                                      setState(() {
+                                                        _isLoadingOtpDialoge =
+                                                            false;
+                                                      });
+                                                      // _showToast('An error occurred'); // Show an error message
+                                                    } finally {
+                                                      setState(() {
+                                                        _isLoadingOtpDialoge =
+                                                            false;
+                                                      });
+                                                    }
                                                   },
                                                   secondBtnHandler: () async {
                                                     if (_timeLeft == 0) {
@@ -1683,13 +1771,13 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                       }
                                                     } else {}
                                                   },
-                                                  firstTitle:
-                                                  'Confirm',
+                                                  firstTitle: 'Confirm',
                                                   secondTitle: 'Resend code: ',
 
                                                   context: context,
                                                   isDark: themeNotifier.isDark,
-                                                  isFirstButtonActive: isOtpButtonActive,
+                                                  isFirstButtonActive:
+                                                      isOtpButtonActive,
 
                                                   isSecondButtonActive:
                                                       !_isTimerActive,
@@ -1734,7 +1822,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                   //     ? AppColors.textColorWhite
                                                   //     : AppColors.textColorBlack
                                                   //         .withOpacity(0.8),
-                                                  isLoading: _isLoadingOtpDialoge,
+                                                  isLoading:
+                                                      _isLoadingOtpDialoge,
                                                   // isLoading: _isLoadingResend,
                                                 );
                                               }
@@ -1749,7 +1838,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                   ),
                                 ),
                                 SizedBox(
-                                  height: 3.h,
+                                  height: OS.Platform.isIOS ? 6.h:4.h,
                                 ),
                               ],
                             ),
@@ -1956,5 +2045,13 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
         ),
       ),
     );
+  }
+}
+
+
+extension Capitalizing on String {
+  String get capitalized {
+    if (isEmpty) return '';
+    return replaceFirst(this[0], this[0].toUpperCase());
   }
 }

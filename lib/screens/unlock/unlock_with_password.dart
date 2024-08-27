@@ -16,16 +16,12 @@ import '../../widgets/text_field_parent.dart';
 import '../account_recovery/reset_email.dart';
 import 'package:crypto/crypto.dart';
 
-
 class UnlockWithPassword extends StatefulWidget {
-
-
   @override
   State<UnlockWithPassword> createState() => _UnlockWithPasswordState();
 }
 
 class _UnlockWithPasswordState extends State<UnlockWithPassword> {
-
   final TextEditingController _passwordController = TextEditingController();
 
   bool _obscurePassword = true;
@@ -33,7 +29,6 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
   bool isValidating = false;
   bool isButtonActive = false;
   var _isLoading = false;
-
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -46,11 +41,10 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
     });
   }
 
-
   setLockScreenStatus(bool value) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('setLockScreen', value);
-    var lul=prefs.getBool('setLockScreen');
+    var lul = prefs.getBool('setLockScreen');
     print("lul");
     print(lul);
   }
@@ -68,7 +62,7 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
   }
 
   @override
-   initState()  {
+  initState() {
     // TODO: implement initState
     init();
     _passwordController.addListener(_updateButtonState);
@@ -86,50 +80,49 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
   Widget build(BuildContext context) {
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
-    final auth=Provider.of<AuthProvider>(context, listen: false);
-    final user=Provider.of<UserProvider>(context, listen: false);
-   return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    final user = Provider.of<UserProvider>(context, listen: false);
+    return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return Scaffold(
         backgroundColor: AppColors.backgroundColor,
-
         body: SingleChildScrollView(
           child: Column(
-          children: [
-            Container(
-                height: 55.h,
-                width: 100.w,
-                // color: Colors.brown,
-                child: Column(
-                  children: [
-                    Spacer(
-                      flex: 5,
-                    ),
-                    Text(
-                      'Account Locked'.tr(),
-                      style: TextStyle(
-                          color: themeNotifier.isDark
-                              ? AppColors.textColorWhite
-                              : AppColors.textColorBlack,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 25.sp,
-                          fontFamily: 'Blogger Sans'),
-                    ),
-                    SizedBox(
-                      height: 1.h,
-                    ),
-                    Image.asset(
-                      "assets/images/lock_big.png",
-                      height: 17.h,
-                      width: 17.h,
-                      color: themeNotifier.isDark
-                          ? AppColors.textColorWhite
-                          : AppColors.textColorBlack,
-                    ),
-                    // Spacer(
-                    //   flex: 1,
-                    // ),
-                  ],
-                )),
+            children: [
+              Container(
+                  height: 55.h,
+                  width: 100.w,
+                  // color: Colors.brown,
+                  child: Column(
+                    children: [
+                      Spacer(
+                        flex: 5,
+                      ),
+                      Text(
+                        'Account Locked'.tr(),
+                        style: TextStyle(
+                            color: themeNotifier.isDark
+                                ? AppColors.textColorWhite
+                                : AppColors.textColorBlack,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 25.sp,
+                            fontFamily: 'Blogger Sans'),
+                      ),
+                      SizedBox(
+                        height: 1.h,
+                      ),
+                      Image.asset(
+                        "assets/images/lock_big.png",
+                        height: 17.h,
+                        width: 17.h,
+                        color: themeNotifier.isDark
+                            ? AppColors.textColorWhite
+                            : AppColors.textColorBlack,
+                      ),
+                      // Spacer(
+                      //   flex: 1,
+                      // ),
+                    ],
+                  )),
               Container(
                 height: 45.h,
                 // color: Colors.grey,
@@ -145,7 +138,7 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                         height: 5.h,
                       ),
                       // ),
-          
+
                       Align(
                         alignment: isEnglish
                             ? Alignment.centerLeft
@@ -167,11 +160,14 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                       TextFieldParent(
                         child: TextField(
                             keyboardType: TextInputType.text,
+                            onChanged: (v) {
+                              auth.loginErrorResponse = null;
+                            },
                             // maxLength: 6,
                             scrollPadding: EdgeInsets.only(
-                                bottom: MediaQuery.of(context)
-                                    .viewInsets
-                                    .bottom/1.4),
+                                bottom:
+                                    MediaQuery.of(context).viewInsets.bottom /
+                                        1.4),
                             controller: _passwordController,
                             obscureText: _obscurePassword,
                             style: TextStyle(
@@ -194,19 +190,30 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                                   // Off-white color,
                                   fontFamily: 'Inter'),
                               enabledBorder: OutlineInputBorder(
-                                  borderRadius:
-                                  BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(8.0),
                                   borderSide: BorderSide(
-                                    color: Colors.transparent,
+                                    color: (isValidating &&
+                                                _passwordController
+                                                    .text.isEmpty) ||
+                                            auth.loginErrorResponse
+                                                .toString()
+                                                .contains('password')
+                                        ? AppColors.errorColor
+                                        : Colors.transparent,
                                     // Off-white color
                                     // width: 2.0,
                                   )),
                               focusedBorder: OutlineInputBorder(
-                                  borderRadius:
-                                  BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(8.0),
                                   borderSide: BorderSide(
-                                    color:
-                                    AppColors.focusTextFieldColor,
+                                    color: (isValidating &&
+                                                _passwordController
+                                                    .text.isEmpty) ||
+                                            auth.loginErrorResponse
+                                                .toString()
+                                                .contains('password')
+                                        ? AppColors.errorColor
+                                        : AppColors.focusTextFieldColor,
                                     // Off-white color
                                     // width: 2.0,
                                   )),
@@ -227,14 +234,13 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                             ),
                             cursorColor: AppColors.textColorGrey),
                       ),
-                      if (_passwordController.text.isEmpty &&
-                          isValidating)
+                      if (_passwordController.text.isEmpty && isValidating)
                         Padding(
                           padding: EdgeInsets.only(top: 7.sp),
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              "*Enter your password",
+                              "*Password should not be empty",
                               /* textAlign :TextAlign.left,*/
                               style: TextStyle(
                                   fontSize: 10.sp,
@@ -243,23 +249,25 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                             ),
                           ),
                         ),
-                      // if (_passwordController.text.isNotEmpty &&
-                      //     isValidating &&
-                      //     _passwordController.text != _savedPassCode)
-                      //   Padding(
-                      //     padding: EdgeInsets.only(top: 7.sp),
-                      //     child: Align(
-                      //       alignment: Alignment.centerLeft,
-                      //       child: Text(
-                      //         "*Enter correct pin",
-                      //         /* textAlign :TextAlign.left,*/
-                      //         style: TextStyle(
-                      //             fontSize: 10.sp,
-                      //             fontWeight: FontWeight.w400,
-                      //             color: AppColors.errorColor),
-                      //       ),
-                      //     ),
-                      //   ),
+                      if (auth.loginErrorResponse != null &&
+                          _passwordController.text.isNotEmpty &&
+                          isValidating &&
+                          auth.loginErrorResponse
+                              .toString()
+                              .contains('password'))
+                        Padding(
+                          padding: EdgeInsets.only(top: 7.sp),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "*${auth.loginErrorResponse}",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 10.sp,
+                                  color: AppColors.errorColor),
+                            ),
+                          ),
+                        ),
                       SizedBox(
                         height: 1.h,
                       ),
@@ -287,7 +295,7 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                       ),
                       // Expanded(child: SizedBox()),
                       // Spacer(flex: 1,),
-          
+
                       SizedBox(
                         height: 6.h,
                       ),
@@ -299,30 +307,26 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                               isValidating = true;
                             });
 
-                            if (
-                                _passwordController.text.isNotEmpty) {
+                            if (_passwordController.text.isNotEmpty) {
                               setState(() {
                                 _isLoading = true;
                                 if (_isLoading) {
                                   FocusManager.instance.primaryFocus?.unfocus();
                                 }
-                                auth.loginErrorResponse=null;
+                                auth.loginErrorResponse = null;
                               });
                               final String password = _passwordController.text;
                               final bytes = utf8.encode(password);
                               final sha512Hash = sha512.convert(bytes);
                               final sha512String = sha512Hash.toString();
-                              final result =
-                              await Provider.of<AuthProvider>(
-                                  context,
-                                  listen: false)
+                              final result = await Provider.of<AuthProvider>(
+                                      context,
+                                      listen: false)
                                   .loginWithUsername(
-                                  username: user.userName!,
-                                  password:
-                                  sha512String,
-                                  context: context,
-                              forUnlock: true
-                              );
+                                      username: user.userName!,
+                                      password: sha512String,
+                                      context: context,
+                                      forUnlock: true);
                               setState(() {
                                 _isLoading = false;
                               });
@@ -352,7 +356,7 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                         height: 9.h,
                       ),
                       // Spacer(flex: 2,),
-          
+
                       // FooterText(),
                       //   SizedBox(
                       //     height: 2.h,
@@ -361,10 +365,10 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                   ),
                 ),
               ),
-          ],
-                ),
+            ],
+          ),
         ),
-    );
-   });
+      );
+    });
   }
 }

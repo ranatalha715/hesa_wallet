@@ -66,7 +66,8 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
   FocusNode sixthFieldFocusNode = FocusNode();
 
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _numberController = TextEditingController();
@@ -181,19 +182,11 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
 
   void _updateButtonState() {
     setState(() {
-      isButtonActive =
-          _usernameController
-              .text.isNotEmpty &&
-              _emailController
-                  .text.isNotEmpty &&
-              _passwordController
-                  .text.isNotEmpty &&
-              _confirmPasswordController
-                  .text.isNotEmpty &&
-              _passwordController
-                  .text ==
-              _confirmPasswordController
-                  .text;
+      isButtonActive = _usernameController.text.isNotEmpty &&
+          _emailController.text.isNotEmpty &&
+          _passwordController.text.isNotEmpty &&
+          _confirmPasswordController.text.isNotEmpty &&
+          _passwordController.text == _confirmPasswordController.text;
     });
   }
 
@@ -306,6 +299,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
+    final auth=Provider.of<AuthProvider>(context, listen: false);
     print(args['id']);
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return Stack(
@@ -375,86 +369,106 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                 SizedBox(
                                   height: 1.h,
                                 ),
-                                TextFieldParent(
-                                  child: TextField(
-                                      focusNode: userNameFocusNode,
-                                      textInputAction: TextInputAction.next,
-                                      onEditingComplete: () {
-                                        emailFocusNode.requestFocus();
-                                      },
-                                      controller: _usernameController,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          usernameLoading = true;
-                                        });
-                                        _onUsernameChanged();
-                                        setState(() {
-                                          usernameLoading = false;
-                                        });
-                                      },
-                                      scrollPadding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom),
-                                      keyboardType: TextInputType.text,
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp(r'[a-zA-Z0-9]')),
-                                      ],
-                                      style: TextStyle(
-                                          fontSize: 10.2.sp,
-                                          color: themeNotifier.isDark
-                                              ? AppColors.textColorWhite
-                                              : AppColors.textColorBlack,
-                                          fontWeight: FontWeight.w400,
-                                          // Off-white color,
-                                          fontFamily: 'Inter'),
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.symmetric(
-                                            vertical: 10.0, horizontal: 16.0),
-                                        hintText: 'username'.tr(),
-                                        hintStyle: TextStyle(
+                                Consumer<AuthProvider>(
+                                    builder: (context, auth, child) {
+                                  return TextFieldParent(
+                                    child: TextField(
+                                        focusNode: userNameFocusNode,
+                                        textInputAction: TextInputAction.next,
+                                        onEditingComplete: () {
+                                          emailFocusNode.requestFocus();
+                                        },
+                                        controller: _usernameController,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            usernameLoading = true;
+                                          });
+                                          _onUsernameChanged();
+                                          setState(() {
+                                            usernameLoading = false;
+                                          });
+                                        },
+                                        scrollPadding: EdgeInsets.only(
+                                            bottom: MediaQuery.of(context)
+                                                .viewInsets
+                                                .bottom),
+                                        keyboardType: TextInputType.text,
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(
+                                              RegExp(r'[a-zA-Z0-9]')),
+                                        ],
+                                        style: TextStyle(
                                             fontSize: 10.2.sp,
-                                            color: AppColors.textColorGrey,
+                                            color: themeNotifier.isDark
+                                                ? AppColors.textColorWhite
+                                                : AppColors.textColorBlack,
                                             fontWeight: FontWeight.w400,
                                             // Off-white color,
                                             fontFamily: 'Inter'),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            borderSide: BorderSide(
-                                              color: _usernameController.text.isEmpty &&
-                                                  isValidating ? AppColors.errorColor:Colors.transparent,
-                                              // Off-white color
-                                              // width: 2.0,
-                                            )),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            borderSide: BorderSide(
-                                              color: AppColors.focusTextFieldColor,
-                                            )),
-                                        suffixIcon: Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 10, top: 13),
-                                            child: Consumer<AuthProvider>(
-                                                builder:
-                                                    (context, auth, child) {
-                                              return Text('.mjra',
-                                                  style: TextStyle(
-                                                      fontSize: 10.2.sp,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: auth
-                                                              .userNameAvailable && _usernameController.text.isNotEmpty
-                                                          ? AppColors
-                                                              .textColorWhite
-                                                          : AppColors
-                                                              .textColorGrey));
-                                            })),
-                                      ),
-                                      cursorColor: AppColors.textColorGrey),
-                                ),
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.symmetric(
+                                              vertical: 10.0, horizontal: 16.0),
+                                          hintText: 'username'.tr(),
+                                          hintStyle: TextStyle(
+                                              fontSize: 10.2.sp,
+                                              color: AppColors.textColorGrey,
+                                              fontWeight: FontWeight.w400,
+                                              // Off-white color,
+                                              fontFamily: 'Inter'),
+                                          enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                              borderSide: BorderSide(
+                                                color: (_usernameController
+                                                                .text.isEmpty &&
+                                                            isValidating) ||
+                                                        (!auth.userNameAvailable &&
+                                                            _usernameController
+                                                                .text
+                                                                .isNotEmpty)
+                                                    ? AppColors.errorColor
+                                                    : Colors.transparent,
+                                                // Off-white color
+                                                // width: 2.0,
+                                              )),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                              borderSide: BorderSide(
+                                                color: (_usernameController
+                                                    .text.isEmpty &&
+                                                    isValidating) ||
+                                                    (!auth.userNameAvailable &&
+                                                        _usernameController
+                                                            .text
+                                                            .isNotEmpty)
+                                                    ? AppColors.errorColor : AppColors
+                                                    .focusTextFieldColor,
+                                              )),
+                                          suffixIcon: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 10, top: 13),
+                                              child: Consumer<AuthProvider>(
+                                                  builder:
+                                                      (context, auth, child) {
+                                                return Text('.mjra',
+                                                    style: TextStyle(
+                                                        fontSize: 10.2.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: auth.userNameAvailable &&
+                                                                _usernameController
+                                                                    .text
+                                                                    .isNotEmpty
+                                                            ? AppColors
+                                                                .textColorWhite
+                                                            : AppColors
+                                                                .textColorGrey));
+                                              })),
+                                        ),
+                                        cursorColor: AppColors.textColorGrey),
+                                  );
+                                }),
                                 if (_usernameController.text.isEmpty &&
                                     isValidating)
                                   Padding(
@@ -545,6 +559,9 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                 TextFieldParent(
                                   child: TextField(
                                       controller: _emailController,
+                                      onChanged: (v){
+                                        auth.registerUserErrorResponse=null;
+                                      },
                                       scrollPadding: EdgeInsets.only(
                                           bottom: MediaQuery.of(context)
                                               .viewInsets
@@ -553,7 +570,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                       textInputAction: TextInputAction.next,
                                       onEditingComplete: () {
                                         passwordFocusNode.requestFocus();
-
                                       },
                                       keyboardType: TextInputType.emailAddress,
                                       style: TextStyle(
@@ -568,7 +584,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                         contentPadding: EdgeInsets.symmetric(
                                             vertical: 10.0, horizontal: 16.0),
                                         hintText:
-                                        'Enter a valid email address'.tr(),
+                                            'Enter a valid email address'.tr(),
                                         hintStyle: TextStyle(
                                             fontSize: 10.2.sp,
                                             color: AppColors.textColorGrey,
@@ -577,23 +593,53 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             fontFamily: 'Inter'),
                                         enabledBorder: OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(8.0),
+                                                BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: _emailController.text.isEmpty &&
-                                                  isValidating ? AppColors.errorColor:Colors.transparent,
+                                              color: (isValidating && _emailController.text.isEmpty)  || auth.registerUserErrorResponse.toString().contains('Email')
+                                              || ((!_emailController.text.contains('@') || !_emailController.text.contains('.com')) && _emailController.text.isNotEmpty)
+                                                  ? AppColors.errorColor
+                                                  : Colors.transparent,
                                               // Off-white color
                                               // width: 2.0,
                                             )),
                                         focusedBorder: OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(8.0),
+                                                BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: AppColors.focusTextFieldColor,
+                                              color:
+                                                  AppColors.focusTextFieldColor,
                                             )),
                                       ),
                                       cursorColor: AppColors.textColorGrey),
                                 ),
-                                if (_emailController.text.isEmpty && isValidating)
+                                if (auth.registerUserErrorResponse != null && _emailController.text.isNotEmpty && isValidating && auth.registerUserErrorResponse.toString().contains('Email'))
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 7.sp),
+                                    child: Text(
+
+                                      "*${auth.registerUserErrorResponse}",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 10.sp,
+                                          color: AppColors.errorColor),
+                                    ),
+                                  ),
+                                if (_emailController.text.isNotEmpty &&
+                                    isValidating && (!_emailController.text.contains('@') || !_emailController.text.contains('.com')))
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 7.sp),
+                                    child: Text(
+                                      // "*Please enter a valid email address".tr(),
+                                      "*Enter valid email address",
+                                      style: TextStyle(
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.errorColor),
+                                    ),
+                                  ),
+
+                                if (_emailController.text.isEmpty &&
+                                    isValidating)
                                   Padding(
                                     padding: EdgeInsets.only(top: 7.sp),
                                     child: Text(
@@ -631,15 +677,14 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                   child: TextField(
                                       focusNode: passwordFocusNode,
                                       textInputAction: TextInputAction.next,
-                                        onEditingComplete: () {
-                                          confirmPasswordFocusNode.requestFocus();
-
+                                      onEditingComplete: () {
+                                        confirmPasswordFocusNode.requestFocus();
                                       },
                                       scrollPadding: EdgeInsets.only(
                                           bottom: MediaQuery.of(context)
                                                   .viewInsets
-                                                  .bottom-20
-                                      ),
+                                                  .bottom -
+                                              20),
                                       controller: _passwordController,
                                       obscureText: _obscurePassword,
                                       onChanged: (password) {
@@ -667,8 +712,13 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: _passwordController.text.isEmpty &&
-                                                  isValidating ? AppColors.errorColor:Colors.transparent,
+                                              color: (_passwordController
+                                                          .text.isEmpty &&
+                                                      isValidating) || ( !_hasUppercase || !_hasLowercase || !_hasDigits  || !_hasSpecialCharacters
+                                                  ||
+                                                  !_hasMinLength)
+                                                  ? AppColors.errorColor
+                                                  : Colors.transparent,
                                               // Off-white color
                                               // width: 2.0,
                                             )),
@@ -676,7 +726,9 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: AppColors.focusTextFieldColor,
+                                              color:
+                                              _hasUppercase && _hasLowercase && _hasDigits  && _hasSpecialCharacters &&
+                                               _hasMinLength ? AppColors.focusTextFieldColor : AppColors.errorColor,
                                             )),
                                         // labelText: 'Enter your password',
                                         suffixIcon: IconButton(
@@ -769,12 +821,12 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                           child: Icon(
                                             Icons.fiber_manual_record,
                                             size: 7.sp,
-                                            color:
-                                                _passwordController.text.isEmpty
-                                                    ? AppColors.textColorGrey
-                                                    : conditionMet
-                                                        ? AppColors.passwordGreen
-                                                        : AppColors.errorColor,
+                                            color: _passwordController
+                                                    .text.isEmpty
+                                                ? AppColors.textColorGrey
+                                                : conditionMet
+                                                    ? AppColors.passwordGreen
+                                                    : AppColors.errorColor,
                                           ),
                                         ),
                                         Expanded(
@@ -788,7 +840,8 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                         .text.isEmpty
                                                     ? AppColors.textColorGrey
                                                     : conditionMet
-                                                        ? AppColors.passwordGreen
+                                                        ? AppColors
+                                                            .passwordGreen
                                                         : AppColors.errorColor,
                                                 fontWeight: FontWeight.w400,
                                                 fontSize: 10.2.sp,
@@ -826,6 +879,9 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                   child: TextField(
                                       focusNode: confirmPasswordFocusNode,
                                       textInputAction: TextInputAction.done,
+                                      onChanged: (v){
+                                        auth.registerUserErrorResponse=null;
+                                      },
                                       onEditingComplete: () {
                                         FocusManager.instance.primaryFocus
                                             ?.unfocus();
@@ -833,8 +889,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                       scrollPadding: EdgeInsets.only(
                                           bottom: MediaQuery.of(context)
                                               .viewInsets
-                                              .bottom
-                                      ),
+                                              .bottom),
                                       controller: _confirmPasswordController,
                                       obscureText: _obscurePassword,
                                       // onChanged: (password) {
@@ -860,18 +915,30 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             fontFamily: 'Inter'),
                                         enabledBorder: OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(8.0),
+                                                BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: _confirmPasswordController.text.isEmpty &&
-                                                  isValidating ? AppColors.errorColor:Colors.transparent,
+                                              color: (_confirmPasswordController
+                                                          .text.isEmpty &&
+                                                      isValidating ) ||  _confirmPasswordController
+                                                  .text.isNotEmpty &&
+                                                  _passwordController.text.isNotEmpty &&
+                                                  _confirmPasswordController.text !=
+                                                      _passwordController.text
+                                                  ? AppColors.errorColor
+                                                  : Colors.transparent,
                                               // Off-white color
                                               // width: 2.0,
                                             )),
                                         focusedBorder: OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(8.0),
+                                                BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: AppColors.focusTextFieldColor,
+                                              color:
+                                              _confirmPasswordController
+                                                  .text.isNotEmpty &&
+                                                  _passwordController.text.isNotEmpty &&
+                                                  _confirmPasswordController.text !=
+                                                      _passwordController.text ? AppColors.errorColor : AppColors.focusTextFieldColor,
                                             )),
                                         // labelText: 'Enter your password',
                                         suffixIcon: IconButton(
@@ -879,7 +946,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                               _obscurePassword
                                                   ? Icons.visibility_outlined
                                                   : Icons
-                                                  .visibility_off_outlined,
+                                                      .visibility_off_outlined,
                                               size: 17.5.sp,
                                               color: AppColors.textColorGrey),
                                           onPressed: _togglePasswordVisibility,
@@ -902,9 +969,11 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                           color: AppColors.errorColor),
                                     ),
                                   ),
-                                if (
-                                _confirmPasswordController.text.isNotEmpty && _passwordController.text.isNotEmpty &&
-                                    _confirmPasswordController.text !=_passwordController.text)
+                                if (_confirmPasswordController
+                                        .text.isNotEmpty &&
+                                    _passwordController.text.isNotEmpty &&
+                                    _confirmPasswordController.text !=
+                                        _passwordController.text)
                                   Padding(
                                     padding: EdgeInsets.only(top: 7.sp),
                                     child: Text(
@@ -931,22 +1000,25 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             setState(() {
                                               isValidating = true;
                                             });
-                                            if (
-                                            isButtonActive
-                                            // _usernameController
-                                            //     .text.isNotEmpty &&
-                                            //     _emailController
-                                            //         .text.isNotEmpty &&
-                                            //     _passwordController
-                                            //         .text.isNotEmpty &&
-                                            //     _confirmPasswordController
-                                            //         .text.isNotEmpty
+                                            if (isButtonActive
+                                                // _usernameController
+                                                //     .text.isNotEmpty &&
+                                                //     _emailController
+                                                //         .text.isNotEmpty &&
+                                                //     _passwordController
+                                                //         .text.isNotEmpty &&
+                                                //     _confirmPasswordController
+                                                //         .text.isNotEmpty
 
-                                            ) {
-                                            final String password = _passwordController.text;
-                                            final bytes = utf8.encode(password);
-                                            final sha512Hash = sha512.convert(bytes);
-                                            final sha512String = sha512Hash.toString();
+                                                ) {
+                                              final String password =
+                                                  _passwordController.text;
+                                              final bytes =
+                                                  utf8.encode(password);
+                                              final sha512Hash =
+                                                  sha512.convert(bytes);
+                                              final sha512String =
+                                                  sha512Hash.toString();
                                               setState(() {
                                                 _isLoading = true;
                                                 if (_isLoading) {
@@ -959,13 +1031,13 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                           AuthProvider>(context,
                                                       listen: false)
                                                   .registerUserStep3(
-                                                context: context,
-                                                email: _emailController.text,
-                                                username: _usernameController.text, password: sha512String
-
-
-
-                                              );
+                                                      context: context,
+                                                      email:
+                                                          _emailController.text,
+                                                      username:
+                                                          _usernameController
+                                                              .text,
+                                                      password: sha512String);
                                               setState(() {
                                                 _isLoading = false;
                                               });
@@ -973,10 +1045,10 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                   AuthResult.success) {
                                                 Navigator.pushReplacement(
                                                   context,
-                                                  MaterialPageRoute(builder: (context) => VerifyEmail()),
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          VerifyEmail()),
                                                 );
-
-
                                               }
                                             }
                                           },

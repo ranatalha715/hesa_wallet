@@ -226,6 +226,9 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                               TextFieldParent(
                                 child: TextFormField(
                                     controller: _numberController,
+                                    onChanged: (v){
+                                      auth.loginErrorResponse=null;
+                                    },
                                     inputFormatters: [
                                       LengthLimitingTextInputFormatter(10),
                                       FilteringTextInputFormatter.digitsOnly,
@@ -259,7 +262,9 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                           borderRadius:
                                               BorderRadius.circular(8.0),
                                           borderSide: BorderSide(
-                                            color: Colors.transparent,
+                                            color:  (isValidating && _numberController.text.isEmpty) || (_numberController.text.length < 9 &&
+                                                _numberController.text.isNotEmpty  && isValidating)|| auth.loginErrorResponse.toString().contains('mobile number')
+                                                ? AppColors.errorColor : Colors.transparent,
                                             // Off-white color
                                             // width: 2.0,
                                           )),
@@ -293,6 +298,31 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                   child: Text(
                                     // "*Mobile number not recognized",
                                     "*Mobile number should not be empty",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 10.sp,
+                                        color: AppColors.errorColor),
+                                  ),
+                                ),
+                              if (_numberController.text.length < 9 &&
+                                  _numberController.text.isNotEmpty)
+                                Padding(
+                                  padding: EdgeInsets.only(top: 7.sp),
+                                  child: Text(
+                                    // "*This mobile number is registered",
+                                    "*Mobile Number should be minimum 9 Characters",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 10.sp,
+                                        color: AppColors.errorColor),
+                                  ),
+                                ),
+                              if (auth.loginErrorResponse != null && _numberController.text.isNotEmpty && isValidating && auth.loginErrorResponse.toString().contains('mobile number'))
+                                Padding(
+                                  padding: EdgeInsets.only(top: 7.sp),
+                                  child: Text(
+
+                                    "*${auth.loginErrorResponse}",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 10.sp,

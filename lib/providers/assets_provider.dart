@@ -398,6 +398,7 @@ class AssetsProvider with ChangeNotifier {
   var logoImage;
   var listingType;
   var collectionItems;
+
   Future<AuthResult> getNftCollectionDetails({
     required String token,
     required String type,

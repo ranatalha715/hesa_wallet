@@ -47,15 +47,14 @@ class _WalletState extends State<Wallet> {
                         left: 20, right: 20, bottom: 10, top: 70),
                     child: Container(
                       decoration: BoxDecoration(
+
                           color: themeNotifier.isDark
                               ? AppColors.textColorWhite.withOpacity(0.05)
                               : AppColors.backgroundColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(22)),
 
                       child:
-                      Align(
-                        alignment: Alignment.center,
-                        child: ClipRRect(
+                      ClipRRect(
                           borderRadius: BorderRadius.circular(22),
                           child: Image.asset(
                             "assets/images/wallet_logo2.png",
@@ -63,7 +62,7 @@ class _WalletState extends State<Wallet> {
                             width: double.infinity,
                             // height: 13.8.h,
                             // width: 13.8.h,
-                          ),
+
                         ),
                       ),
                     ),

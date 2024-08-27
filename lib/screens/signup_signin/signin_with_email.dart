@@ -153,11 +153,14 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                 child: TextField(
                                     controller: _emailController,
                                     keyboardType: TextInputType.emailAddress,
-                                    scrollPadding: EdgeInsets.only(
-                                        bottom: MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom +
-                                            140),
+                                    onChanged: (v){
+                                      auth.loginErrorResponse=null;
+                                    },
+                                    // scrollPadding: EdgeInsets.only(
+                                    //     bottom: MediaQuery.of(context)
+                                    //             .viewInsets
+                                    //             .bottom +
+                                    //         140),
                                     style: TextStyle(
                                         fontSize: 10.2.sp,
                                         color: themeNotifier.isDark
@@ -181,7 +184,8 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                           borderRadius:
                                               BorderRadius.circular(8.0),
                                           borderSide: BorderSide(
-                                            color: auth.loginErrorResponse != null && _emailController.text.isNotEmpty && isValidating && auth.loginErrorResponse.toString().contains('username') ? AppColors.errorColor : Colors.transparent,
+                                            color: (isValidating && _emailController.text.isEmpty) || auth.loginErrorResponse.toString().contains('username')
+                                                ? AppColors.errorColor : Colors.transparent,
                                             // Off-white color
                                             // width: 2.0,
                                           )),
@@ -249,6 +253,9 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                             140),
                                     controller: _passwordController,
                                     keyboardType: TextInputType.visiblePassword,
+                                    onChanged: (v){
+                                      auth.loginErrorResponse=null;
+                                    },
                                     obscureText: _obscurePassword,
                                     style: TextStyle(
                                         fontSize: 10.2.sp,
@@ -272,7 +279,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                           borderRadius:
                                               BorderRadius.circular(8.0),
                                           borderSide: BorderSide(
-                                            color: auth.loginErrorResponse != null && _emailController.text.isNotEmpty && isValidating && auth.loginErrorResponse.toString().contains('password') ? AppColors.errorColor : Colors.transparent,
+                                            color: (isValidating && _passwordController.text.isEmpty) || auth.loginErrorResponse.toString().contains('password') ? AppColors.errorColor : Colors.transparent,
                                             // Off-white color
                                             // width: 2.0,
                                           )),
@@ -349,7 +356,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                         color: AppColors.errorColor),
                                   ),
                                 ),
-                              SizedBox(height: 5.h,),
+                              SizedBox(height: 3.h,),
                               Expanded(child: SizedBox()),
                               AppButton(
                                 title: 'Log in'.tr(),

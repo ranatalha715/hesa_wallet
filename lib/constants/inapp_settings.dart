@@ -24,7 +24,7 @@ class InAppPaymentSetting {
   //     'http://161.35.16.112:3001/payable-transactions/process';
   static const String shopperResultUrl= "com.testpayment.payment";
   // static const String shopperResultUrl= "unilink://hesawallet.com";
-  static const String merchantId= "MerchantId";
+  static const String merchantId= "merchant.com.payments.hesawallet";
   static const String countryCode="SA";
   static const getLang ="en_US";
   // {
