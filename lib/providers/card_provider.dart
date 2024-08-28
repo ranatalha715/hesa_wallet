@@ -31,12 +31,10 @@ class CardProvider with ChangeNotifier{
     if (response.statusCode == 201) {
       // Successful login, handle navigation or other actions
       print("Card added successfully!");
-      _showToast('Card added successfully!');
       return AuthResult.success;
     } else {
       // Show an error message or handle the response as needed
       print("Card not be added: ${response.body}");
-      _showToast('Card not be added');
       return AuthResult.failure;
     }
   }
@@ -68,12 +66,10 @@ class CardProvider with ChangeNotifier{
     if (response.statusCode == 201) {
       // Successful login, handle navigation or other actions
       print("Card added successfully!");
-      _showToast('Card added successfully!');
       return AuthResult.success;
     } else {
       // Show an error message or handle the response as needed
       print("Card not be added: ${response.body}");
-      _showToast('Card not be added');
       return AuthResult.failure;
     }
   }
@@ -104,12 +100,10 @@ class CardProvider with ChangeNotifier{
     if (response.statusCode == 201) {
       // Successful login, handle navigation or other actions
       print("Card Deleted successfully!");
-      _showToast('Card Deleted successfully!');
       return AuthResult.success;
     } else {
       // Show an error message or handle the response as needed
       print("Card not be Deleted: ${response.body}");
-      _showToast('Card not be Deleted');
       return AuthResult.failure;
     }
   }

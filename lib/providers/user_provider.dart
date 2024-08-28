@@ -316,14 +316,8 @@ class UserProvider with ChangeNotifier {
     fToast.init(context);
     print(response.body + 'connect Dapp Response');
     if (response.statusCode == 201) {
-      // Successful login, handle navigation or other actions
-      print("Successuly connected this site");
-      _showToast('Successuly connected this site');
       return AuthResult.success;
     } else {
-      // Show an error message or handle the response as needed
-      print("Url not found: ${response.body}");
-      _showToast('This site is already connected');
       return AuthResult.failure;
     }
   }

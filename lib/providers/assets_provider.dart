@@ -386,7 +386,9 @@ class AssetsProvider with ChangeNotifier {
   var tokenId;
   var tokenName;
   var ownerName;
+  var ownerAddress;
   var creatorName;
+  var creatorAddress;
   var createdAt;
   var creatorRoyalty;
   var standard;
@@ -427,7 +429,9 @@ class AssetsProvider with ChangeNotifier {
       tokenName=extractedData['name'];
       image=extractedData['image'];
       ownerName=extractedData['owner']['userName'];
+      ownerAddress=extractedData['owner']['id'];
       creatorName=extractedData['creator']['userName'];
+      creatorAddress=extractedData['creator']['id'];
       createdAt=extractedData['createdAt'];
       isListable=extractedData['isListable'].toString();
       burnable=extractedData['burnable'].toString();
@@ -471,7 +475,9 @@ class AssetsProvider with ChangeNotifier {
       image=extractedData['image'];
       logoImage=extractedData['logoImage'];
       ownerName=extractedData['owner']['userName'];
+      ownerAddress=extractedData['owner']['id'];
       creatorName=extractedData['creator']['userName'];
+      creatorAddress=extractedData['creator']['id'];
       createdAt=extractedData['createdAt'];
       isListable=extractedData['isListable'].toString();
       burnable=extractedData['isBurn'].toString();

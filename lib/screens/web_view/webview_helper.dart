@@ -44,7 +44,7 @@ class _WebviewHelperState extends State<WebviewHelper> {
       'checkoutId=${widget.checkoutId}',
     );
     updatedHtml = updatedHtml.replaceAll(
-      'data-brands="VISA MASTER MADA"',
+      'data-brands="VISA MASTER AMEX"',
       Provider.of<
           TransactionProvider>(
           context,
@@ -78,7 +78,7 @@ class _WebviewHelperState extends State<WebviewHelper> {
         context,
         listen: false)
         .selectedCardBrand,);
-    Navigator.pop(context);
+    // Navigator.pop(context);
     Navigator.pop(context);
     await Navigator.pushReplacement(
       context,

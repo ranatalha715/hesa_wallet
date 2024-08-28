@@ -1149,6 +1149,31 @@ class _TransactionRequestAcceptRejectState
                                                           ),
                                                           SizedBox(height: 1.5.h),
                                                           AppButton(
+                                                            title:
+                                                            "Reject request"
+                                                                .tr(),
+                                                            handler: () {
+                                                              // if(operation=="MintNFT"){
+                                                              rejectTransactions();
+                                                              // }
+                                                            },
+                                                            isGradient: false,
+                                                            isGradientWithBorder: true,
+                                                            buttonWithBorderColor: AppColors.errorColor,
+                                                            color: AppColors.deleteAccountBtnColor
+                                                                .withOpacity(0.10),
+                                                            textColor: themeNotifier.isDark
+                                                                ? AppColors
+                                                                .textColorWhite
+                                                                : AppColors
+                                                                .textColorBlack
+                                                                .withOpacity(
+                                                                0.8),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 2.h,
+                                                          ),
+                                                          AppButton(
                                                               title:
                                                               "Accept".tr(),
                                                               handler: () async {
@@ -1785,31 +1810,7 @@ class _TransactionRequestAcceptRejectState
                             isGradient: true,
                             color: AppColors
                                 .textColorBlack),
-                        SizedBox(height: 2.h),
-                        AppButton(
-                            title:
-                            "Reject request"
-                                .tr(),
-                            handler: () {
-                              // if(operation=="MintNFT"){
-                              rejectTransactions();
-                              // }
-                            },
-                            isGradient: false,
-                            textColor: themeNotifier.isDark
-                                ? AppColors
-                                .textColorWhite
-                                : AppColors
-                                .textColorBlack
-                                .withOpacity(
-                                0.8),
-                            color: AppColors
-                                .appSecondButton
-                                .withOpacity(
-                                0.10)),
-                        SizedBox(
-                          height: 2.h,
-                        )
+
                       ],
                     ),
                   ),

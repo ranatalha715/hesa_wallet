@@ -46,40 +46,27 @@ class _WalletBankingAndPaymentEmptyState
 
   navigateToAddCard() async {
     print('card brand');
-    print(
-        Provider.of<
-            TransactionProvider>(
-            context,
-            listen: false)
-            .selectedCardBrand
-    );
-    var result = await Provider.of<
-        TransactionProvider>(
-        context,
-        listen: false)
+    print(Provider.of<TransactionProvider>(context, listen: false)
+        .selectedCardBrand);
+    var result = await Provider.of<TransactionProvider>(context, listen: false)
         .tokenizeCardRequest(
-        token: accessToken,
-        brand: Provider.of<
-            TransactionProvider>(
-            context,
-            listen: false)
-            .selectedCardBrand,
-        context: context);
+            token: accessToken,
+            brand: Provider.of<TransactionProvider>(context, listen: false)
+                .selectedCardBrand,
+            context: context);
     if (result == AuthResult.success) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              WalletAddCard(
-                tokenizedCheckoutId: Provider
-                    .of<TransactionProvider>(
-                    context,
-                    listen: false)
+          builder: (context) => WalletAddCard(
+            tokenizedCheckoutId:
+                Provider.of<TransactionProvider>(context, listen: false)
                     .tokenizedCheckoutId,
-              ),
+          ),
         ),
       );
-  }}
+    }
+  }
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -107,15 +94,15 @@ class _WalletBankingAndPaymentEmptyState
   }
 
   Future<void> refreshPage() async {
-    // setState(() {
-    //   isLoading = true;
-    // });
+    setState(() {
+      isLoading = true;
+    });
     // await getAccessToken();
-    // await Provider.of<UserProvider>(context, listen: false)
-    //     .getUserDetails(token: accessToken, context: context);
-    // setState(() {
-    //   isLoading = false;
-    // });
+    await Provider.of<UserProvider>(context, listen: false)
+        .getUserDetails(token: accessToken, context: context);
+    setState(() {
+      isLoading = false;
+    });
   }
 
   Future<void> updateBankAccountAndRefreshDetails(int index, String accessToken,
@@ -258,8 +245,6 @@ class _WalletBankingAndPaymentEmptyState
                                     .selectedCardBrand = 'VISA';
                                 // Navigator.pop(context);
                                 navigateToAddCard();
-
-
                               },
                               child: Image.asset(
                                 "assets/images/VisaPopup.png",
@@ -270,7 +255,7 @@ class _WalletBankingAndPaymentEmptyState
                             GestureDetector(
                               onTap: () {
                                 Provider.of<TransactionProvider>(context,
-                                    listen: false)
+                                        listen: false)
                                     .selectedCardBrand = 'MASTER';
                                 // Navigator.pop(context);
                                 navigateToAddCard();
@@ -284,7 +269,7 @@ class _WalletBankingAndPaymentEmptyState
                             GestureDetector(
                               onTap: () {
                                 Provider.of<TransactionProvider>(context,
-                                    listen: false)
+                                        listen: false)
                                     .selectedCardBrand = 'MADA';
                                 // Navigator.pop(context);
                                 navigateToAddCard();
@@ -295,7 +280,6 @@ class _WalletBankingAndPaymentEmptyState
                                 width: 44.sp,
                               ),
                             ),
-
                           ],
                         ),
                         SizedBox(
@@ -327,9 +311,9 @@ class _WalletBankingAndPaymentEmptyState
       if (trPro.selectedCardNum == null || trPro.selectedCardNum == "") {
         if (paymentCards.isNotEmpty) {
           trPro.selectedCardNum = paymentCards[0].bin;
-          print('testabc');
-          print(trPro.selectedCardNum.toString());
-          print(paymentCards[0].bin);
+          // print('testabc');
+          // print(trPro.selectedCardNum.toString());
+          // print(paymentCards[0].bin);
         }
       }
       return Stack(
@@ -465,9 +449,11 @@ class _WalletBankingAndPaymentEmptyState
                               child: Column(
                                 children: [
                                   GestureDetector(
-                                    onTap: () => paymentCards.isNotEmpty ? setState(() {
-                                      _isSelected = !_isSelected;
-                                    }):{},
+                                    onTap: () => paymentCards.isNotEmpty
+                                        ? setState(() {
+                                            _isSelected = !_isSelected;
+                                          })
+                                        : {},
                                     child: Container(
                                       height: 6.5.h,
                                       decoration: BoxDecoration(
@@ -810,129 +796,125 @@ class _WalletBankingAndPaymentEmptyState
                                   ),
                                   _isSelectedBank
                                       ?
-                                  //     isLoading
-                                  //         ?
-                                  // CircularProgressIndicator(
-                                  //             color:
-                                  //                 AppColors.activeButtonColor,
-                                  //           )
-                                  //         :
-                                  ListView.builder(
-                                              controller: scrollController,
-                                              itemCount: banks.length,
-                                              shrinkWrap: true,
-                                              padding: EdgeInsets.zero,
-                                              itemBuilder: (context, index) {
-                                                bool isFirst = index == 0;
-                                                bool isLast =
-                                                    index == banks.length - 1;
+                                      //     isLoading
+                                      //         ?
+                                      // CircularProgressIndicator(
+                                      //             color:
+                                      //                 AppColors.activeButtonColor,
+                                      //           )
+                                      //         :
+                                      ListView.builder(
+                                          controller: scrollController,
+                                          itemCount: banks.length,
+                                          shrinkWrap: true,
+                                          padding: EdgeInsets.zero,
+                                          itemBuilder: (context, index) {
+                                            bool isFirst = index == 0;
+                                            bool isLast =
+                                                index == banks.length - 1;
 
-                                                // Extracting the last four characters of the IBAN
-                                                String lastFourDigits =
-                                                    banks[index]
-                                                        .ibanNumber
-                                                        .substring(
-                                                          banks[index]
-                                                                  .ibanNumber
-                                                                  .length -
-                                                              4,
-                                                        );
-                                                // setState(() {
-                                                bankpro.selectedBank =
-                                                    banks[index].isPrimary ==
-                                                            "true"
-                                                        ? banks[index]
-                                                            .ibanNumber
-                                                        : "";
-                                                print("selectedBank");
-                                                print(bankpro.selectedBank);
-                                                // });
-                                                return bankingDetailsWidget(
-                                                  accountNumber:
-                                                      "**** " + lastFourDigits,
-                                                  fullAccountNumber:
-                                                      banks[index].ibanNumber,
-                                                  isLast: isLast,
-                                                  isFirst: isFirst,
-                                                  handler: () async {
-                                                    setState(() {
-                                                      isLoading=true;
-                                                    });
-                                                    // Navigator.pop(context);
-                                                    await updateBankAccountAndRefreshDetails(
-                                                      index,
-                                                      accessToken,
-                                                      banks[index].ibanNumber,
-                                                      banks[index].bic,
-                                                      context,
-                                                    );
-                                                    setState(() {
-                                                      isLoading=false;
-                                                    });
-                                                  },
+                                            // Extracting the last four characters of the IBAN
+                                            String lastFourDigits = banks[index]
+                                                .ibanNumber
+                                                .substring(
+                                                  banks[index]
+                                                          .ibanNumber
+                                                          .length -
+                                                      4,
+                                                );
+                                            // setState(() {
+                                            bankpro.selectedBank =
+                                                banks[index].isPrimary == "true"
+                                                    ? banks[index].ibanNumber
+                                                    : "";
+                                            print("selectedBank");
+                                            print(bankpro.selectedBank);
+                                            // });
+                                            return bankingDetailsWidget(
+                                              accountNumber:
+                                                  "**** " + lastFourDigits,
+                                              fullAccountNumber:
+                                                  banks[index].ibanNumber,
+                                              isLast: isLast,
+                                              isFirst: isFirst,
+                                              handler: () async {
+                                                setState(() {
+                                                  isLoading = true;
+                                                });
+                                                // Navigator.pop(context);
+                                                await updateBankAccountAndRefreshDetails(
+                                                  index,
+                                                  accessToken,
+                                                  banks[index].ibanNumber,
+                                                  banks[index].bic,
+                                                  context,
+                                                );
+                                                setState(() {
+                                                  isLoading = false;
+                                                });
+                                              },
 
-                                                  // handler: () async {
-                                                  //   // Call the function to update the bank account and refresh details
-                                                  //   await updateBankAccountAndRefreshDetails(
-                                                  //       index,
-                                                  //       accessToken,
-                                                  //       banks[index]
-                                                  //           .ibanNumber,
-                                                  //       banks[index].bic,
-                                                  //       context);
-                                                  // },
+                                              // handler: () async {
+                                              //   // Call the function to update the bank account and refresh details
+                                              //   await updateBankAccountAndRefreshDetails(
+                                              //       index,
+                                              //       accessToken,
+                                              //       banks[index]
+                                              //           .ibanNumber,
+                                              //       banks[index].bic,
+                                              //       context);
+                                              // },
 
-                                                  // handler: () async {
-                                                  //   print('before update');
-                                                  //   var result =
-                                                  //   await bankpro
-                                                  //       .updateBankAccount(
-                                                  //     isPrimary: true,
-                                                  //     index: index,
-                                                  //     accountNumber:
-                                                  //         banks[index].ibanNumber,
-                                                  //     bic: banks[index].bic,
-                                                  //     token: accessToken,
-                                                  //     context: context,
-                                                  //   );
-                                                  //   print('after update');
-                                                  //   await refreshUserDetails();
-                                                  //
-                                                  //   if (result ==
-                                                  //       AuthResult.success) {
-                                                  //     await refreshUserDetails();
-                                                  //     // setState(() {
-                                                  //     //   isLoading = true;
-                                                  //     // });
-                                                  //     // // Provider.of<UserProvider>(context, listen: false).banks.clear();
-                                                  //     //
-                                                  //     // await Provider.of<UserProvider>(
-                                                  //     //         context,
-                                                  //     //         listen: false)
-                                                  //     //     .getUserDetails(
-                                                  //     //         token: accessToken,
-                                                  //     //         context: context);
-                                                  //     // setState(() {
-                                                  //     //   isLoading = false;
-                                                  //     // });
-                                                  //     // Navigator.pop(context);
-                                                  //   }
-                                                  // },
-                                                  isPrimary:
-                                                      banks[index].isPrimary ==
-                                                              "true"
-                                                          ? true
-                                                          : false,
-                                                  english:
-                                                      isEnglish ? true : false,
-                                                  isDark: themeNotifier.isDark
+                                              // handler: () async {
+                                              //   print('before update');
+                                              //   var result =
+                                              //   await bankpro
+                                              //       .updateBankAccount(
+                                              //     isPrimary: true,
+                                              //     index: index,
+                                              //     accountNumber:
+                                              //         banks[index].ibanNumber,
+                                              //     bic: banks[index].bic,
+                                              //     token: accessToken,
+                                              //     context: context,
+                                              //   );
+                                              //   print('after update');
+                                              //   await refreshUserDetails();
+                                              //
+                                              //   if (result ==
+                                              //       AuthResult.success) {
+                                              //     await refreshUserDetails();
+                                              //     // setState(() {
+                                              //     //   isLoading = true;
+                                              //     // });
+                                              //     // // Provider.of<UserProvider>(context, listen: false).banks.clear();
+                                              //     //
+                                              //     // await Provider.of<UserProvider>(
+                                              //     //         context,
+                                              //     //         listen: false)
+                                              //     //     .getUserDetails(
+                                              //     //         token: accessToken,
+                                              //     //         context: context);
+                                              //     // setState(() {
+                                              //     //   isLoading = false;
+                                              //     // });
+                                              //     // Navigator.pop(context);
+                                              //   }
+                                              // },
+                                              isPrimary:
+                                                  banks[index].isPrimary ==
+                                                          "true"
                                                       ? true
                                                       : false,
-                                                  selectedBankName:
-                                                      banks[index].bic,
-                                                );
-                                              },
-                                            )
+                                              english: isEnglish ? true : false,
+                                              isDark: themeNotifier.isDark
+                                                  ? true
+                                                  : false,
+                                              selectedBankName:
+                                                  banks[index].bic,
+                                            );
+                                          },
+                                        )
                                       : SizedBox(),
 
                                   // isLoading ? CircularProgressIndicator(color: Colors.red,) :
@@ -1305,23 +1287,31 @@ class _WalletBankingAndPaymentEmptyState
                   color: isDark
                       ? AppColors.textFieldParentDark
                       : AppColors.textColorWhite,
+                  shadowColor: Colors.transparent,
+                  splashRadius: 1.0,
+                  surfaceTintColor: Colors.transparent,
                   icon: Align(
-                      alignment: english
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
-                      child: Icon(
-                        Icons.more_vert,
-                        color: isDark
-                            ? AppColors.textColorWhite
-                            : AppColors.textColorBlack,
+                    alignment:
+                        english ? Alignment.centerRight : Alignment.centerLeft,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        child: Icon(
+                          Icons.more_vert,
+                          color: isDark
+                              ? AppColors.textColorWhite
+                              : AppColors.textColorBlack,
+                        ),
                       ),
-
+                    ),
                   ),
-
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
                         20), // Add your preferred radius here
                   ),
+                  elevation: 0,
                   onSelected: (value) {
                     // Handle the selected item here
                     print("Selected: $value");
@@ -1722,13 +1712,16 @@ class _WalletBankingAndPaymentEmptyState
                                 isDialogLoading = false;
                               });
                               if (result == AuthResult.success) {
+                                await Provider.of<TransactionProvider>(context,
+                                            listen: false).removeSelectedCardNum();
+                                // refreshPage();
                                 await Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           WalletBankingAndPaymentEmpty()),
                                 );
-                                // Navigator.pop(context);
+
                                 // refreshPage();
                               }
                             },
@@ -1756,9 +1749,6 @@ class _WalletBankingAndPaymentEmptyState
                         ),
                         Expanded(child: SizedBox())
                       ],
-
-
-
                     ),
                   )));
         });

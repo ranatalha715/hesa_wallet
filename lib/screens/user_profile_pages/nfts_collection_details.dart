@@ -1,9 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/colors.dart';
 import '../../providers/assets_provider.dart';
@@ -78,6 +80,13 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
     super.initState();
   }
 
+  void _launchURL(String url) async {
+    Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Future<void> didChangeDependencies() async {
     final args =
@@ -131,6 +140,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                 controller: scrollController,
                 children: [
                   Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10.sp),
                     // color: Colors.red,
                     height: 47.h,
                     width: 45.h,
@@ -154,6 +164,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                   ),
                   nftsDetailsWidget(
                     title: 'Collection ID:'.tr(),
+                    func: ()=>_launchURL("https://www.mjraexplorer.com/collection/" + assetsDetails.tokenId),
                     details: replaceMiddleWithDotsCollectionId(assetsDetails.tokenId),
                     isDark: themeNotifier.isDark ? true : false,
                     color: AppColors.textColorToska,
@@ -161,6 +172,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                   if(assetsDetails.creatorName != null)
                     nftsDetailsWidget(
                       title: 'Creator:'.tr(),
+                      func: ()=>_launchURL("https://www.mjraexplorer.com/address/" + assetsDetails.creatorAddress),
                       details: replaceMiddleWithDots(assetsDetails.creatorName)?? "N/A",
                       isDark: themeNotifier.isDark ? true : false,
                       color: AppColors.textColorToska,
@@ -174,6 +186,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                   if(assetsDetails.ownerName != "null")
                     nftsDetailsWidget(
                       title: 'Owned by:'.tr(),
+                      func: ()=>_launchURL("https://www.mjraexplorer.com/address/" + assetsDetails.ownerAddress),
                       details: replaceMiddleWithDots(assetsDetails.ownerName)?? "N/A",
                       isDark: themeNotifier.isDark ? true : false,
                       color: AppColors.textColorToska,
@@ -230,7 +243,9 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
       {required String title,
         required String details,
         Color? color,
-        bool isDark = true}) {
+        bool isDark = true,
+        Function? func,
+      }) {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.sp, left: 20.sp, right: 20.sp),
       child: Row(
@@ -249,18 +264,21 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
             ),
           ),
           Spacer(),
-          Container(
-            width: 45.w,
-            // color: Colors.yellow,
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                details,
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                    color: color == null ? AppColors.textColorGreyShade2 : color,
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w400),
+          GestureDetector(
+            onTap: () => func!(),
+            child: Container(
+              width: 45.w,
+              // color: Colors.yellow,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  details,
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                      color: color == null ? AppColors.textColorGreyShade2 : color,
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w400),
+                ),
               ),
             ),
           ),

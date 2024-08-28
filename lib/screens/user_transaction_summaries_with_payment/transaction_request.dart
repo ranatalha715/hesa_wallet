@@ -1266,11 +1266,12 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   //   width: 0.5.h,
                                                   // ),
                                                   Text(
-                                                    trPro.selectedCardNum ==
-                                                                "" ||
-                                                            trPro.selectedCardNum ==
-                                                                null
-                                                        ? "**** **** **** ****"
+                                                    // trPro.selectedCardNum ==
+                                                    //             "" ||
+                                                    //         trPro.selectedCardNum ==
+                                                    //             null
+                                                    paymentCards.isEmpty
+                                                        ? "Add payment method"
                                                         : trPro.selectedCardNum +
                                                             " **********",
                                                     // "2561 **** **** 1234",
@@ -1278,7 +1279,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         fontSize: 11.7.sp,
                                                         fontFamily: 'Inter',
                                                         fontWeight:
-                                                            FontWeight.w400,
+                                                        paymentCards.isEmpty ? FontWeight.w700 :  FontWeight.w700 ,
                                                         color:
                                                         Provider.of<TransactionProvider>(
                                                             context,
@@ -1301,19 +1302,42 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   //   width: 0.5.h,
                                                   // ),
                                                   Spacer(),
-                                                  Image.asset(
-                                                    "assets/images/Visa.png",
-                                                    height: 20.sp,
-                                                    color: themeNotifier.isDark
-                                                        ? AppColors
-                                                            .textColorWhite
-                                                        : AppColors
-                                                            .textColorBlack,
-                                                    // width: 20.sp,
-                                                  ),
+                                                  // Image.asset(
+                                                  //   "assets/images/Visa.png",
+                                                  //   height: 20.sp,
+                                                  //   color: themeNotifier.isDark
+                                                  //       ? AppColors
+                                                  //           .textColorWhite
+                                                  //       : AppColors
+                                                  //           .textColorBlack,
+                                                  //   // width: 20.sp,
+                                                  // ),
                                                   SizedBox(
                                                     width: 1.w,
                                                   ),
+                                                  if(paymentCards.isEmpty)
+                                                    Container(
+                                                      margin: EdgeInsets.only(right: 5.sp),
+                                                      width: 12.sp,
+                                                      height: 12.sp,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: Colors.transparent,
+                                                        border: Border.all(
+                                                            color: AppColors
+                                                                .textColorGreyShade2),
+                                                      ),
+                                                      child: Icon(
+                                                        Icons.add,
+                                                        size: 10.sp,
+                                                        color: themeNotifier.isDark
+                                                            ? AppColors
+                                                            .textColorGreyShade2
+                                                            : AppColors
+                                                            .textColorBlack,
+                                                      ),
+                                                    ),
+                                                  if(paymentCards.isNotEmpty)
                                                   Padding(
                                                     padding: EdgeInsets.only(
                                                         left: 0.sp),
@@ -1581,6 +1605,26 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                         ),
 
                                         SizedBox(height: 1.5.h),
+                                        AppButton(
+                                          title: "Reject request".tr(),
+                                          handler: () {
+                                            // if(operation=="MintNFT"){
+                                            rejectTransactions();
+                                            // }
+                                          },
+                                          isGradient: false,
+                                          isGradientWithBorder: true,
+                                          buttonWithBorderColor: AppColors.errorColor,
+                                          color: AppColors.deleteAccountBtnColor
+                                              .withOpacity(0.10),
+                                          textColor: themeNotifier.isDark
+                                              ? AppColors.textColorWhite
+                                              : AppColors.textColorBlack
+                                              .withOpacity(0.8),
+                                          // color: AppColors.appSecondButton
+                                          //     .withOpacity(0.10)
+                                        ),
+                                        SizedBox(height: 2.h),
                                         AppButton(
                                             title: "Pay".tr(),
                                             handler: () async {
@@ -2833,21 +2877,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                             // isLoading: isLoading,
                                             isGradient: true,
                                             color: AppColors.textColorBlack),
-                                        SizedBox(height: 2.h),
-                                        AppButton(
-                                            title: "Reject request".tr(),
-                                            handler: () {
-                                              // if(operation=="MintNFT"){
-                                              rejectTransactions();
-                                              // }
-                                            },
-                                            isGradient: false,
-                                            textColor: themeNotifier.isDark
-                                                ? AppColors.textColorWhite
-                                                : AppColors.textColorBlack
-                                                    .withOpacity(0.8),
-                                            color: AppColors.appSecondButton
-                                                .withOpacity(0.10)),
+
+
                                         // SizedBox(
                                         //   height: 3.h,
                                         // )
@@ -3804,7 +3835,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                         Expanded(child: SizedBox()),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 22),
-                          child: AppButton(
+                          child:
+                          AppButton(
                             title: 'Remove'.tr(),
                             handler: () async {
                               setState(() {

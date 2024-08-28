@@ -27,6 +27,11 @@ class TransactionProvider with ChangeNotifier {
 
   // var decodedMetaData;
 
+  removeSelectedCardNum(){
+    selectedCardNum=null;
+    notifyListeners();
+  }
+
   Future<String> decodeMetaData({required String url}) async {
     final response = await http.get(Uri.parse(url));
 
