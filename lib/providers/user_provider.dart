@@ -399,6 +399,8 @@ class UserProvider with ChangeNotifier {
     }
   }
 
+  var emailErrorResponse;
+
   Future<AuthResult> forgotPassword({
     required String email,
     required BuildContext context,
@@ -420,12 +422,12 @@ class UserProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         // Successful request
         print("Email sent successfully!");
-        _showToast(msg);
+        emailErrorResponse= null;
         return AuthResult.success;
       } else {
-        // Request failed
+        final errorResponse = json.decode(response.body);
         print("Email sending failed: ${response.body}");
-        _showToast(msg);
+        emailErrorResponse = errorResponse['message'][0]['message'];
         return AuthResult.failure;
       }
     } catch (e) {

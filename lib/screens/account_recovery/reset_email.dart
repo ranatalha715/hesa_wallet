@@ -68,6 +68,7 @@ class _ResetEmailState extends State<ResetEmail> {
 
   @override
   Widget build(BuildContext context) {
+    final user =Provider.of<UserProvider>(context, listen: false);
     Locale currentLocale = context.locale;
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return Stack(
@@ -143,6 +144,9 @@ class _ResetEmailState extends State<ResetEmail> {
                                 TextFieldParent(
                                   child: TextField(
                                       controller: _emailController,
+                                      onChanged: (v){
+                                        user.emailErrorResponse=null;
+                                      },
                                       scrollPadding: EdgeInsets.only(
                                           bottom: MediaQuery.of(context)
                                               .viewInsets
@@ -171,7 +175,9 @@ class _ResetEmailState extends State<ResetEmail> {
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: Colors.transparent,
+                                              color: (isValidating && _emailController.text.isEmpty) || user.emailErrorResponse.toString().contains('Email')
+                                                  ? AppColors.errorColor
+                                                  : Colors.transparent,
                                               // Off-white color
                                               // width: 2.0,
                                             )),
@@ -191,6 +197,18 @@ class _ResetEmailState extends State<ResetEmail> {
                                     child: Text(
                                       // "*Email address not recognized".tr(),
                                       "*Email address should not be empty".tr(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 10.sp,
+                                          color: AppColors.errorColor),
+                                    ),
+                                  ),
+                                if (user.emailErrorResponse != null && _emailController.text.isNotEmpty && isValidating && user.emailErrorResponse.toString().contains('Email'))
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 7.sp),
+                                    child: Text(
+
+                                      "*${user.emailErrorResponse}",
                                       style: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           fontSize: 10.sp,
@@ -224,6 +242,7 @@ class _ResetEmailState extends State<ResetEmail> {
                                   if (isLoading) {
                                     FocusManager.instance.primaryFocus?.unfocus();
                                   }
+                                  user.emailErrorResponse=null;
                                 });
                                 final result = await Provider.of<UserProvider>(
                                   context,

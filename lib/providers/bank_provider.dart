@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import '../constants/colors.dart';
 import '../constants/configs.dart';
@@ -19,6 +20,9 @@ class BankProvider with ChangeNotifier{
   }
 
   var selectedBank = "";
+  bool otpErrorResponse=false;
+  bool otpSuccessResponse=false;
+  var uniqueIdFromStep1;
 
   Future<AuthResult> addBankAccount({
   required String token,
@@ -72,10 +76,100 @@ class BankProvider with ChangeNotifier{
   }
   } else {
   print("Failed to add bank account. Status code: ${response.body}");
-  // Show an error message or handle the failure as needed
   return AuthResult.failure;
   }
   }
+
+
+  var addBankErrorResponse;
+
+
+  Future<AuthResult> addBankAccountStep1({
+    required String token,
+    required String ibanNumber,
+    required String bankBic,
+    required String accountTitle,
+    required BuildContext context,
+  }) async {
+    final String url = BASE_URL + '/user/bank-account/add/step1';
+    final Map<String, dynamic> body = {
+      "accountNumber": ibanNumber,
+      "accountTitle": accountTitle,
+      "bic": bankBic,
+      "isPrimary": true,
+    };
+
+    final response = await http.post(
+      Uri.parse(url),
+      body: json.encode(body),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    fToast = FToast();
+    fToast.init(context);
+    print('addbankStep1');
+    print(response.body);
+    if (response.statusCode == 201) {
+      final responseData = json.decode(response.body);
+      final uniqueId = responseData['data']['uniqueId'];
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('uniqueId', uniqueId);
+      uniqueIdFromStep1=uniqueId;
+      notifyListeners();
+      print("uniqueId" + uniqueId);
+      if (responseData['success']) {
+        print("Bank Added");
+        addBankErrorResponse=null;
+        return AuthResult.success;
+      } else {
+
+        print("Failed to add bank account: ${responseData['message']}");
+
+        return AuthResult.failure;
+      }
+    } else {
+      final errorResponse = json.decode(response.body);
+      print("Failed to add bank account. Status code: ${response.body}");
+      addBankErrorResponse = errorResponse['message'][0]['message'];
+      return AuthResult.failure;
+    }
+  }
+
+  Future<AuthResult> addBankAccountStep2({
+    required String code,
+    required String token,
+    required BuildContext context,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/user/bank-account/add/step2');
+
+    final body = {
+      "code": code,
+
+    };
+
+    final response = await http.post(url, body: body,  headers: {
+      'X-Unique-Id': '$uniqueIdFromStep1',
+      'Authorization': 'Bearer $token',
+    },);
+    print('addbankStep2');
+    print(response.body);
+    fToast = FToast();
+    fToast.init(context);
+    if (response.statusCode == 201) {
+      otpErrorResponse=false;
+      otpSuccessResponse=true;
+      notifyListeners();
+      return AuthResult.success;
+    } else {
+      otpErrorResponse=true;
+      otpSuccessResponse=false;
+      notifyListeners();
+      return AuthResult.failure;
+    }
+  }
+
 
   Future<AuthResult> getAllBanks(String token) async {
     final String url = BASE_URL + '/bank-info';
@@ -162,7 +256,7 @@ class BankProvider with ChangeNotifier{
     required String token,
     required String accountNumber,
   }) async {
-    final url = Uri.parse(BASE_URL + '/user/delete-bank-account');
+    final url = Uri.parse(BASE_URL + '/user/bank-account/delete');
     final body = {
       "accountNumber" : accountNumber.toString(),
     };

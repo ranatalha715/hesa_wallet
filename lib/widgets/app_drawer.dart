@@ -36,6 +36,7 @@ class _AppDrawerState extends State<AppDrawer> {
   var isLoading = false;
   var accessToken = '';
   var refreshToken = '';
+  bool showCopiedMsg = false;
 
   getaccessToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -377,34 +378,77 @@ class _AppDrawerState extends State<AppDrawer> {
                     ),
                   ),
                   Expanded(
-                      child: Container(
-                    // margin: EdgeInsets.only(top: 1.sp),
-                    width: double.infinity,
-                    // color: Colors.teal,
-                    color: AppColors.drawerOptBackgroundClr,
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: SizedBox(),
-                        ),
-                        Text(
-                          'Version 1.0.0'.tr(),
-                          style: TextStyle(
-                              color: AppColors.textColorGrey,
-                              fontSize: 8.7.sp,
-                              fontWeight: FontWeight.w400),
-                        ),
-                        // FooterText(
-                        //   textcolor: themeNotifier.isDark
-                        //       ? AppColors.textColorGrey
-                        //       : AppColors.tabColorlightMode,
-                        // ),
-                        SizedBox(
-                          height: 3.h,
-                        )
-                      ],
-                    ),
-                  ))
+                      child: Stack(
+                        children: [
+                          Container(
+                                              // margin: EdgeInsets.only(top: 1.sp),
+                                              width: double.infinity,
+                                              // color: Colors.teal,
+                                              color: AppColors.drawerOptBackgroundClr,
+                                              child: Column(
+                          children: [
+                            Expanded(
+                              child: SizedBox(),
+                            ),
+                            Text(
+                              'Version 1.0.0'.tr(),
+                              style: TextStyle(
+                                  color: AppColors.textColorGrey,
+                                  fontSize: 8.7.sp,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                            // FooterText(
+                            //   textcolor: themeNotifier.isDark
+                            //       ? AppColors.textColorGrey
+                            //       : AppColors.tabColorlightMode,
+                            // ),
+                            SizedBox(
+                              height: 3.h,
+                            )
+                          ],
+                                              ),
+                                            ),
+                          if(showCopiedMsg)
+                          Positioned(
+                            left: 10,
+                            right: 10,
+                            bottom: 20,
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                height: 4.h,
+                                width: 35.w,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.sp),
+                                  color: AppColors.profileHeaderDark,
+                                ),
+
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      "assets/images/hesa_wallet_logo.png",
+                                      fit: BoxFit.cover,
+                                      height: 12.sp,
+                                      width: 12.sp,
+                                    ),
+                                    SizedBox(width: 5.sp,),
+                                    Text(
+                                      'Address copied!',
+                                      style: TextStyle(
+                                          fontSize: 9.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.textColorWhite,
+                                          fontFamily: 'Blogger Sans'
+                                      ),)
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ))
                 ],
               ),
             ),
@@ -633,18 +677,17 @@ class _AppDrawerState extends State<AppDrawer> {
   }
 
   void _copyToClipboard(String text) {
-    Clipboard.setData(
-        ClipboardData(text: text)); // Copies the provided text to clipboard
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: AppColors.profileHeaderDark,
-        content: Text(
-          'Wallet Address Copied',
-          style: TextStyle(
-              color: AppColors.textColorWhite, fontWeight: FontWeight.w400),
-        ),
-        duration: Duration(seconds: 1),
-      ),
-    );
+    Clipboard.setData(ClipboardData(text: text));
+    setState(() {
+      showCopiedMsg=true;
+    });
+    Future.delayed(Duration(milliseconds: 3000), () {
+      setState(() {
+        showCopiedMsg=false;
+      });
+    });
+    // fToast = FToast();
+    // fToast.init(context);
+
   }
 }

@@ -1,5 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:ui';
-
+import 'package:crypto/crypto.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,9 +17,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../providers/theme_provider.dart';
+import '../../providers/user_provider.dart';
 import '../../widgets/app_header.dart';
 import '../../widgets/button.dart';
 import '../../widgets/main_header.dart';
+import '../../widgets/otp_dialog.dart';
 
 class ChangePassword extends StatefulWidget {
   const ChangePassword({Key? key}) : super(key: key);
@@ -33,6 +37,12 @@ class _ChangePasswordState extends State<ChangePassword> {
   FocusNode forthFieldFocusNode = FocusNode();
   FocusNode fifthFieldFocusNode = FocusNode();
   FocusNode sixthFieldFocusNode = FocusNode();
+
+  FocusNode oldPasswordFocusNode = FocusNode();
+  FocusNode newPasswordFocusNode = FocusNode();
+  FocusNode confirmPasswordFocusNode = FocusNode();
+
+
   List<String> accountDefinitions = [
     'Upper and lowercase letters'.tr(),
     'Numerical characters'.tr(),
@@ -59,6 +69,7 @@ class _ChangePasswordState extends State<ChangePassword> {
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _oldPasswordController = TextEditingController();
   ScrollController _scrollController = ScrollController();
+  final TextEditingController _numberController = TextEditingController();
 
   final TextEditingController otp1Controller = TextEditingController();
   final TextEditingController otp2Controller = TextEditingController();
@@ -72,7 +83,14 @@ class _ChangePasswordState extends State<ChangePassword> {
   bool _obscurePassword = true;
   bool _obscurePasswordNew = true;
   bool _obscurePasswordConfirm = true;
+  bool _isTimerActive = false;
+  bool isOtpButtonActive = false;
+  var _isLoadingResend = false;
+  Timer? _timer;
+  int _timeLeft = 60;
+  StreamController<int> _events = StreamController<int>.broadcast();
   bool isButtonActive = false;
+  var _isLoadingOtpDialoge = false;
   bool isValidating = false;
   var _isLoading = false;
   var accessToken = "";
@@ -82,22 +100,82 @@ class _ChangePasswordState extends State<ChangePassword> {
     accessToken = prefs.getString('accessToken')!;
   }
 
+  void _updateOtpButtonState() {
+    setState(() {
+      isOtpButtonActive = otp1Controller.text.isNotEmpty &&
+          otp2Controller.text.isNotEmpty &&
+          otp3Controller.text.isNotEmpty &&
+          otp4Controller.text.isNotEmpty &&
+          otp5Controller.text.isNotEmpty &&
+          otp6Controller.text.isNotEmpty;
+    });
+  }
+
   @override
   initState() {
+    getAccessToken();
+     Provider.of<UserProvider>(context, listen: false)
+        .getUserDetails(token: accessToken, context: context);
+    Provider.of<AuthProvider>(context, listen: false)
+        .changePasswordError = null;
     super.initState();
-
-    // Listen for changes in the text fields and update the button state
+    _events = new StreamController<int>();
+    _events.add(60);
     _newPasswordController.addListener(_updateButtonState);
     _oldPasswordController.addListener(_updateButtonState);
     _confirmPasswordController.addListener(_updateButtonState);
-    getAccessToken();
+    otp1Controller.addListener(_updateOtpButtonState);
+    otp2Controller.addListener(_updateOtpButtonState);
+    otp3Controller.addListener(_updateOtpButtonState);
+    otp4Controller.addListener(_updateOtpButtonState);
+    otp5Controller.addListener(_updateOtpButtonState);
+    otp6Controller.addListener(_updateOtpButtonState);
+
   }
+
+  void updateDialogBoxButtonState() {
+    setState(() {
+      isOtpButtonActive = true;
+    });
+  }
+
+  void startTimer() {
+    _isTimerActive = true;
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_timeLeft > 0) {
+        _timeLeft--;
+        _events.add(_timeLeft); // Add updated time to the stream
+      } else {
+        timer.cancel(); // Cancel the timer when timeLeft is 0
+      }
+    });
+  }
+
 
   void _updateButtonState() {
     setState(() {
       isButtonActive = _newPasswordController.text.isNotEmpty &&
           _confirmPasswordController.text.isNotEmpty &&
           _oldPasswordController.text.isNotEmpty;
+    });
+  }
+
+  void restartCountdown() {
+    // Reset the countdown to 60 seconds
+    _events.add(60);
+    Timer.periodic(Duration(seconds: 1), (timer) async {
+      var events;
+      if (events.hasListener) {
+        // Await the last value of the stream before comparing
+        final currentTime = await events.stream.first;
+        if (currentTime > 0) {
+          events.add(currentTime - 1);
+        } else {
+          timer.cancel();
+        }
+      } else {
+        timer.cancel();
+      }
     });
   }
 
@@ -134,8 +212,12 @@ class _ChangePasswordState extends State<ChangePassword> {
   Widget build(BuildContext context) {
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
+    final auth=Provider.of<AuthProvider>(context, listen: false);
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
-      return Stack(
+      return Consumer<UserProvider>(builder: (context, user, child) {
+
+      return
+        Stack(
         children: [
           Scaffold(
             backgroundColor: themeNotifier.isDark
@@ -179,7 +261,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                                   "Please start by entering your current password."
                                       .tr(),
                                   style: TextStyle(
-                                      color: AppColors.textColorGrey,
+                                      color: AppColors.textColorWhite,
                                       fontWeight: FontWeight.w400,
                                       fontSize: 11.7.sp,
                                       fontFamily: 'Inter'),
@@ -214,6 +296,14 @@ class _ChangePasswordState extends State<ChangePassword> {
                                       controller: _oldPasswordController,
                                       keyboardType:
                                           TextInputType.visiblePassword,
+                                      focusNode: oldPasswordFocusNode,
+                                      textInputAction: TextInputAction.next,
+                                      onEditingComplete: () {
+                                        newPasswordFocusNode.requestFocus();
+                                      },
+                                      onChanged: (v){
+                                        auth.changePasswordError=null;
+                                      },
                                       obscureText: _obscurePassword,
                                       style: TextStyle(
                                           fontSize: 10.2.sp,
@@ -237,7 +327,9 @@ class _ChangePasswordState extends State<ChangePassword> {
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: Colors.transparent,
+                                              color: (isValidating && _oldPasswordController.text.isEmpty) || auth.changePasswordError.toString().contains('Old Password')
+                                                  ? AppColors.errorColor
+                                                  : Colors.transparent,
                                               // Off-white color
                                               // width: 2.0,
                                             )),
@@ -278,16 +370,19 @@ class _ChangePasswordState extends State<ChangePassword> {
                                             color: AppColors.errorColor),
                                       ),
                                     ),
-                                  // Padding(
-                                  //   padding: EdgeInsets.only(top: 7.sp),
-                                  //   child: Text(
-                                  //     "*Password is incorrect".tr(),
-                                  //     style: TextStyle(
-                                  //         fontSize: 10.sp,
-                                  //         fontWeight: FontWeight.w400,
-                                  //         color: AppColors.errorColor),
-                                  //   ),
-                                  // ),
+                                if (auth.changePasswordError != null && _oldPasswordController.text.isNotEmpty && isValidating && auth.changePasswordError.toString().contains('Old Password'))
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 7.sp),
+                                    child: Text(
+
+                                      "*${auth.changePasswordError}",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 10.sp,
+                                          color: AppColors.errorColor),
+                                    ),
+                                  ),
+
                                 SizedBox(
                                   height: 2.h,
                                 ),
@@ -314,11 +409,16 @@ class _ChangePasswordState extends State<ChangePassword> {
                                       scrollPadding: EdgeInsets.only(
                                           bottom: MediaQuery.of(context)
                                               .viewInsets
-                                              .bottom+200),
+                                              .bottom+50),
                                       controller: _newPasswordController,
                                       keyboardType:
                                           TextInputType.visiblePassword,
                                       obscureText: _obscurePasswordNew,
+                                      focusNode: newPasswordFocusNode,
+                                      textInputAction: TextInputAction.next,
+                                      onEditingComplete: () {
+                                        confirmPasswordFocusNode.requestFocus();
+                                      },
                                       onChanged: (password) {
                                         _validatePassword(password);
                                       },
@@ -344,7 +444,9 @@ class _ChangePasswordState extends State<ChangePassword> {
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: Colors.transparent,
+                                              color: (isValidating && _newPasswordController.text.isEmpty)
+                                                  ? AppColors.errorColor
+                                                  : Colors.transparent,
                                               // Off-white color
                                               // width: 2.0,
                                             )),
@@ -495,6 +597,11 @@ class _ChangePasswordState extends State<ChangePassword> {
                                       controller: _confirmPasswordController,
                                       keyboardType:
                                           TextInputType.visiblePassword,
+                                      focusNode: confirmPasswordFocusNode,
+                                      textInputAction: TextInputAction.done,
+                                      onChanged: (v){
+                                        auth.changePasswordError=null;
+                                      },
                                       obscureText: _obscurePasswordConfirm,
                                       style: TextStyle(
                                           fontSize: 10.2.sp,
@@ -518,7 +625,9 @@ class _ChangePasswordState extends State<ChangePassword> {
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: Colors.transparent,
+                                              color: (isValidating && _confirmPasswordController.text.isEmpty) || auth.changePasswordError.toString().contains('match')
+                                                  ? AppColors.errorColor
+                                                  : Colors.transparent,
                                               // Off-white color
                                               // width: 2.0,
                                             )),
@@ -558,235 +667,235 @@ class _ChangePasswordState extends State<ChangePassword> {
                                           color: AppColors.errorColor),
                                     ),
                                   ),
-                                // if (_confirmPasswordController.text !=
-                                //         _newPasswordController.text &&
-                                //     _confirmPasswordController.text.isEmpty &&
-                                //     _newPasswordController.text.isEmpty &&
-                                //     isValidating)
-                                  // Padding(
-                                  //   padding: EdgeInsets.only(top: 7.sp),
-                                  //   child: Text(
-                                  //     "*Password does not match".tr(),
-                                  //     style: TextStyle(
-                                  //         fontSize: 10.sp,
-                                  //         fontWeight: FontWeight.w400,
-                                  //         color: AppColors.errorColor),
-                                  //   ),
-                                  // ),
-                                // Expanded(child: SizedBox()),
+                                if (auth.changePasswordError != null && _confirmPasswordController.text.isNotEmpty && isValidating && auth.changePasswordError.toString().contains('match'))
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 7.sp),
+                                    child: Text(
 
+                                      "*${auth.changePasswordError}",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 10.sp,
+                                          color: AppColors.errorColor),
+                                    ),
+                                  ),
                                 SizedBox(
-                                  height: 20.h,
-                                )
+                                  height: 14.h,
+                                ),
+                                Column(
+                                  children: [
+                                    Container(
+                                      color: themeNotifier.isDark
+                                          ? AppColors.backgroundColor
+                                          : AppColors.textColorWhite,
+                                      child: AppButton(
+                                        title: 'Change password'.tr(),
+                                        isactive: isButtonActive ? true : false,
+                                        handler: () async {
+                                          setState(() {
+                                            isValidating=true;
+                                          });
+                                          if (_oldPasswordController.text.isNotEmpty &&
+                                              _newPasswordController.text.isNotEmpty &&
+                                              _confirmPasswordController
+                                                  .text.isNotEmpty) {
+                                            setState(() {
+                                              _isLoading = true;
+                                              if (_isLoading) {
+                                                FocusManager.instance.primaryFocus?.unfocus();
+                                              }
+                                              auth.changePasswordError=null;
+                                            });
+                                            final String password = _oldPasswordController.text;
+                                            final bytes = utf8.encode(password);
+                                            final sha512Hash = sha512.convert(bytes);
+                                            final sha512String = sha512Hash.toString();
+                                            var result=  await Provider.of<AuthProvider>(context,
+                                                listen: false)
+                                                .changePasswordStep1(
+                                                oldPassword:
+                                                sha512String,
+                                                newPassword:
+                                                _newPasswordController.text,
+                                                confirmPassword: _confirmPasswordController.text,
+                                                context: context,
+                                                token: accessToken);
+                                            setState(() {
+                                              _isLoading = false;
+                                            });
+                                            if(result ==AuthResult.success)
+                                            {
+                                              startTimer();
+                                              otpDialog(
+                                                events: _events,
+
+                                                firstBtnHandler: () async {
+                                                  try {
+                                                    setState(() {
+                                                      _isLoadingOtpDialoge =
+                                                      true;
+                                                    });
+                                                    await Future.delayed(
+                                                        const Duration(
+                                                            milliseconds:
+                                                            1000));
+                                                    print('loading popup' +
+                                                        _isLoadingOtpDialoge
+                                                            .toString());
+                                                    final result2 = await Provider
+                                                        .of<AuthProvider>(
+                                                        context,
+                                                        listen: false)
+                                                        .changePasswordStep2(
+                                                        context: context,
+                                                        code: Provider.of<
+                                                            AuthProvider>(
+                                                            context,
+                                                            listen:
+                                                            false)
+                                                            .codeFromOtpBoxes, token: accessToken);
+                                                    setState(() {
+                                                      _isLoadingOtpDialoge =
+                                                      false;
+                                                    });
+                                                    print('loading popup 2' +
+                                                        _isLoadingOtpDialoge
+                                                            .toString());
+                                                    if (result2 ==
+                                                        AuthResult.success) {
+                                                      setState(() {
+                                                        _isLoadingOtpDialoge =
+                                                        true;
+                                                      });
+
+                                                      await Future.delayed(
+                                                          const Duration(
+                                                              milliseconds:
+                                                              1000));
+                                                      Navigator.pop(context);
+                                                      changePasswordSuccessDialoge();
+                                                    }
+                                                  } catch (error) {
+                                                    print("Error: $error");
+
+                                                  } finally {
+                                                    setState(() {
+                                                      _isLoadingOtpDialoge =
+                                                      false;
+                                                    });
+                                                  }
+                                                },
+                                                secondBtnHandler: () async {
+                                                  if (_timeLeft == 0) {
+                                                    print(
+                                                        'resend function calling');
+                                                    try {
+                                                      setState(() {
+                                                        _isLoadingResend =
+                                                        true;
+                                                      });
+                                                      final result = await Provider
+                                                          .of<AuthProvider>(
+                                                          context,
+                                                          listen:
+                                                          false)
+                                                          .sendOTP(
+                                                        context:
+                                                        context, token: accessToken,
+                                                      );
+                                                      setState(() {
+                                                        _isLoadingResend =
+                                                        false;
+                                                      });
+                                                      if (result ==
+                                                          AuthResult
+                                                              .success) {
+                                                        restartCountdown();
+                                                        _events =
+                                                        new StreamController<
+                                                            int>();
+                                                        _events.add(60);
+                                                        startTimer();
+                                                      }
+                                                    } catch (error) {
+                                                      print("Error: $error");
+                                                      // _showToast('An error occurred'); // Show an error message
+                                                    } finally {
+                                                      setState(() {
+                                                        _isLoadingResend =
+                                                        false;
+                                                      });
+                                                    }
+                                                  } else {}
+                                                },
+                                                firstTitle: 'Confirm',
+                                                secondTitle: 'Resend code: ',
+
+                                                context: context,
+                                                isDark: themeNotifier.isDark,
+                                                isFirstButtonActive:
+                                                isOtpButtonActive,
+
+                                                isSecondButtonActive:
+                                                !_isTimerActive,
+                                                otp1Controller:
+                                                otp1Controller,
+                                                otp2Controller:
+                                                otp2Controller,
+                                                otp3Controller:
+                                                otp3Controller,
+                                                otp4Controller:
+                                                otp4Controller,
+                                                otp5Controller:
+                                                otp5Controller,
+                                                otp6Controller:
+                                                otp6Controller,
+                                                firstFieldFocusNode:
+                                                firstFieldFocusNode,
+                                                secondFieldFocusNode:
+                                                secondFieldFocusNode,
+                                                thirdFieldFocusNode:
+                                                thirdFieldFocusNode,
+                                                forthFieldFocusNode:
+                                                forthFieldFocusNode,
+                                                fifthFieldFocusNode:
+                                                fifthFieldFocusNode,
+                                                sixthFieldFocusNode:
+                                                sixthFieldFocusNode,
+                                                firstBtnBgColor: AppColors
+                                                    .activeButtonColor,
+                                                firstBtnTextColor:
+                                                AppColors.textColorBlack,
+                                                secondBtnBgColor:
+                                                Colors.transparent,
+                                                secondBtnTextColor:
+                                                _timeLeft != 0
+                                                    ? AppColors
+                                                    .textColorBlack
+                                                    .withOpacity(0.8)
+                                                    : AppColors
+                                                    .textColorWhite,
+                                                isLoading:
+                                                _isLoadingOtpDialoge,
+                                                // isLoading: _isLoadingResend,
+                                              );
+                                            }
+                                          }
+                                        },
+                                        isGradient: true,
+                                        color: Colors.transparent,
+                                        textColor: AppColors.textColorBlack,
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 4.h,
+                                      width: double.infinity,
+                                      color: AppColors.backgroundColor,
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
-                          ),
-                        ),
-                        Positioned(
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          child: Column(
-                            children: [
-                              Container(
-                                color: themeNotifier.isDark
-                                    ? AppColors.backgroundColor
-                                    : AppColors.textColorWhite,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 20, bottom: 0, right: 20, top: 10),
-                                  child: AppButton(
-                                    title: 'Change password'.tr(),
-                                    isactive: isButtonActive ? true : false,
-                                    handler: () async {
-                                      setState(() {
-                                        isValidating=true;
-                                      });
-                                      if (_oldPasswordController.text.isNotEmpty &&
-                                          _newPasswordController.text.isNotEmpty &&
-                                          _confirmPasswordController
-                                              .text.isNotEmpty) {
-                                        setState(() {
-                                          _isLoading = true;
-                                          if (_isLoading) {
-                                            FocusManager.instance.primaryFocus?.unfocus();
-                                          }
-                                        });
-                                        // await Future.delayed(Duration(milliseconds: 1500),
-                                        //         (){});
-                                        var result=  await Provider.of<AuthProvider>(context,
-                                            listen: false)
-                                            .changePassword(
-                                            oldPassword:
-                                            _oldPasswordController.text,
-                                            newPassword:
-                                            _newPasswordController.text,
-                                            context: context,
-                                            token: accessToken);
-                                        setState(() {
-                                          _isLoading = false;
-                                        });
-                                        if(result ==AuthResult.success)
-                                        {
-                                          showDialog(
-                                            context: context,
-                                            builder:
-                                                (BuildContext context) {
-                                              final screenWidth =
-                                                  MediaQuery.of(context)
-                                                      .size
-                                                      .width;
-                                              final dialogWidth =
-                                                  screenWidth * 0.85;
-                                              void
-                                              closeDialogAndNavigate() {
-                                                Navigator.of(context)
-                                                    .pop(); // Close the dialog// Close the dialog
-                                                Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        WalletTokensNfts(),
-                                                  ),
-                                                );
-                                              }
-
-                                              Future.delayed(
-                                                  Duration(milliseconds: 1500),
-                                                  closeDialogAndNavigate);
-                                              return Dialog(
-                                                shape:
-                                                RoundedRectangleBorder(
-                                                  borderRadius:
-                                                  BorderRadius
-                                                      .circular(
-                                                      8.0),
-                                                ),
-                                                backgroundColor:
-                                                Colors.transparent,
-                                                child: BackdropFilter(
-                                                    filter: ImageFilter
-                                                        .blur(
-                                                        sigmaX: 7,
-                                                        sigmaY: 7),
-                                                    child: Container(
-                                                      height: 25.h,
-                                                      width:
-                                                      dialogWidth,
-                                                      decoration:
-                                                      BoxDecoration(
-                                                        // border: Border.all(
-                                                        //     width:
-                                                        //         0.1.h,
-                                                        //     color: AppColors
-                                                        //         .textColorGrey),
-                                                        color: themeNotifier.isDark
-                                                            ? AppColors
-                                                            .showDialogClr
-                                                            : AppColors
-                                                            .textColorWhite,
-                                                        borderRadius:
-                                                        BorderRadius
-                                                            .circular(
-                                                            15),
-                                                      ),
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                        children: [
-                                                          SizedBox(
-                                                            height: 4.h,
-                                                          ),
-
-                                                          // SizedBox(height: 2.h),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                            crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                            children: [
-                                                              Text(
-                                                                'Password Updated'.tr(),
-                                                                textAlign:
-                                                                TextAlign.center,
-                                                                maxLines:
-                                                                2,
-                                                                style: TextStyle(
-                                                                    fontWeight: FontWeight
-                                                                        .w600,
-                                                                    fontSize: 17
-                                                                        .sp,
-                                                                    color: themeNotifier.isDark
-                                                                        ? AppColors.textColorWhite
-                                                                        : AppColors.textColorBlack),
-                                                              ),
-                                                              SizedBox(
-                                                                width:
-                                                                1.h,
-                                                              ),
-                                                              Image
-                                                                  .asset(
-                                                                "assets/images/check_circle.png",
-                                                                height:
-                                                                4.h,
-                                                                width:
-                                                                4.h,
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          SizedBox(
-                                                            height: 2.h,
-                                                          ),
-                                                          Padding(
-                                                            padding: const EdgeInsets
-                                                                .symmetric(
-                                                                horizontal:
-                                                                20),
-                                                            child: Text(
-                                                              'Your password is now updated. Please remember to secure your password.'.tr(),
-                                                              textAlign:
-                                                              TextAlign
-                                                                  .center,
-                                                              style: TextStyle(
-                                                                  height:
-                                                                  1.4,
-                                                                  fontWeight: FontWeight
-                                                                      .w400,
-                                                                  fontSize:
-                                                                  16,
-                                                                  color:
-                                                                  AppColors.textColorGrey),
-                                                            ),
-                                                          ),
-                                                          // SizedBox(
-                                                          //   height: 4.h,
-                                                          // ),
-                                                        ],
-                                                      ),
-                                                    )
-
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        }
-                                      }
-                                    },
-                                    isGradient: true,
-                                    color: Colors.transparent,
-                                    textColor: AppColors.textColorBlack,
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                height: 4.h,
-                                width: double.infinity,
-                                color: AppColors.backgroundColor,
-                              ),
-                            ],
                           ),
                         ),
                       ],
@@ -801,5 +910,146 @@ class _ChangePasswordState extends State<ChangePassword> {
         ],
       );
     });
+    });}
+
+  void changePasswordSuccessDialoge(){
+      showDialog(
+      context: context,
+      builder:
+          (BuildContext context) {
+        final screenWidth =
+            MediaQuery.of(context)
+                .size
+                .width;
+        final dialogWidth =
+            screenWidth * 0.85;
+        void
+        closeDialogAndNavigate() {
+          Navigator.of(context)
+              .pop(); // Close the dialog// Close the dialog
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  WalletTokensNfts(),
+            ),
+          );
+        }
+
+        Future.delayed(
+            Duration(milliseconds: 1500),
+            closeDialogAndNavigate);
+        return Dialog(
+          shape:
+          RoundedRectangleBorder(
+            borderRadius:
+            BorderRadius
+                .circular(
+                8.0),
+          ),
+          backgroundColor:
+          Colors.transparent,
+          child: BackdropFilter(
+              filter: ImageFilter
+                  .blur(
+                  sigmaX: 7,
+                  sigmaY: 7),
+              child: Container(
+                height: 25.h,
+                width:
+                dialogWidth,
+                decoration:
+                BoxDecoration(
+                  color:  AppColors
+                      .showDialogClr,
+
+                  borderRadius:
+                  BorderRadius
+                      .circular(
+                      15),
+                ),
+                child: Column(
+                  mainAxisAlignment:
+                  MainAxisAlignment
+                      .center,
+                  children: [
+                    SizedBox(
+                      height: 4.h,
+                    ),
+
+                    // SizedBox(height: 2.h),
+                    Row(
+                      mainAxisAlignment:
+                      MainAxisAlignment
+                          .center,
+                      crossAxisAlignment:
+                      CrossAxisAlignment
+                          .center,
+                      children: [
+                        Text(
+                          'Password Updated'.tr(),
+                          textAlign:
+                          TextAlign.center,
+                          maxLines:
+                          2,
+                          style: TextStyle(
+                              fontWeight: FontWeight
+                                  .w600,
+                              fontSize: 17
+                                  .sp,
+                              color:
+                              AppColors.textColorWhite
+                          ),
+                        ),
+                        SizedBox(
+                          width:
+                          1.h,
+                        ),
+                        Image
+                            .asset(
+                          "assets/images/check_circle.png",
+                          height:
+                          4.h,
+                          width:
+                          4.h,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 2.h,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets
+                          .symmetric(
+                          horizontal:
+                          20),
+                      child: Text(
+                        'Your password is now updated. Please remember to secure your password.'.tr(),
+                        textAlign:
+                        TextAlign
+                            .center,
+                        style: TextStyle(
+                            height:
+                            1.4,
+                            fontWeight: FontWeight
+                                .w400,
+                            fontSize:
+                            16,
+                            color:
+                            AppColors.textColorGrey),
+                      ),
+                    ),
+                    // SizedBox(
+                    //   height: 4.h,
+                    // ),
+                  ],
+                ),
+              )
+
+          ),
+        );
+      },
+    );
   }
+
 }

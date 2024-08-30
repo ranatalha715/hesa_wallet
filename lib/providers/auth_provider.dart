@@ -297,18 +297,15 @@ print(json.decode(response.body));
       print('send otp' + response.body);
 
       if (response.statusCode == 201) {
-        _showToast('OTP sent successfully!');
         return AuthResult.success;
       } else {
         // Show an error message or handle the response as needed
         print("Something went wrong: ${response.body}");
-        _showToast('OTP Sent Failed!');
         return AuthResult.failure;
       }
     } catch (e) {
       // Handle the exception
       print("Exception occurred: $e");
-      _showToast('Error sending OTP');
       return AuthResult.failure;
     }
   }
@@ -467,7 +464,6 @@ print(json.decode(response.body));
         return AuthResult.success;
       } else {
         final errorResponse = json.decode(response.body);
-        // Registration failed
         print("Registration failed: ${response.body}");
         registerUserErrorResponse = errorResponse['message'][0]['message'];
         return AuthResult.failure;
@@ -918,16 +914,20 @@ print(json.decode(response.body));
     }
   }
 
-  Future<AuthResult> changePassword({
+  var changePasswordError;
+
+  Future<AuthResult> changePasswordStep1({
     required String token,
     required String oldPassword,
     required String newPassword,
+    required String confirmPassword,
     required BuildContext context,
   }) async {
-    final url = Uri.parse(BASE_URL + '/user/change-password');
+    final url = Uri.parse(BASE_URL + '/user/change/password/step1');
     final body = {
       "oldPassword": oldPassword,
       "newPassword": newPassword,
+      "confirmPassword": confirmPassword,
     };
 
     final response = await http.post(
@@ -939,19 +939,47 @@ print(json.decode(response.body));
     );
     fToast = FToast();
     fToast.init(context);
-    print('update password' + response.body);
+    print('change password step 1' + response.body);
     if (response.statusCode == 201) {
       // Successful login, handle navigation or other actions
       print("Password updated successfully!");
-      _showToast('Password updated successfully!');
+      changePasswordError=null;
       return AuthResult.success;
     } else {
-      // print("Password updated successfully!");
-      // _showToast('Password updated successfully!');
-      // return AuthResult.success;
-      // Show an error message or handle the response as needed
       print("Password updation failed: ${response.body}");
-      _showToast('Password updation failed');
+      final errorResponse = json.decode(response.body);
+      print("Registration failed: ${response.body}");
+      changePasswordError = errorResponse['message'][0]['message'];
+      return AuthResult.failure;
+    }
+  }
+
+  Future<AuthResult> changePasswordStep2({
+    required String code,
+    required String token,
+    required BuildContext context,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/user/change/password/step2');
+
+    final body = {
+      "code": code,
+    };
+
+    final response = await http.post(url, body: body,  headers: {
+      'Authorization': 'Bearer $token',
+    },);
+    print('sending code' + code.toString());
+    print('changePasswordstep2 Response');
+    print(response.body);
+    if (response.statusCode == 201) {
+      otpErrorResponse=false;
+      otpSuccessResponse=true;
+      notifyListeners();
+      return AuthResult.success;
+    } else {
+      otpErrorResponse=true;
+      otpSuccessResponse=false;
+      notifyListeners();
       return AuthResult.failure;
     }
   }

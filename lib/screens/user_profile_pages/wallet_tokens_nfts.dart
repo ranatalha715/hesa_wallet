@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hesa_wallet/providers/transaction_provider.dart';
 import 'package:hesa_wallet/screens/settings/security_and_privacy.dart';
@@ -42,6 +43,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   var _isinit = true;
   int selectedCategoryIndex = 0;
   bool _isloading = false;
+  bool showCopiedMsg = false;
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -1146,197 +1148,241 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                               ],
                             ),
                           ),
-                          Container(
-                            height: 65.h,
-                            width: double.infinity,
-                            color: themeNotifier.isDark
-                                ? AppColors.backgroundColor
-                                : AppColors.textColorWhite,
-                            child: Column(
-                              children: [
-                                PreferredSize(
-                                  preferredSize:
-                                      Size.fromHeight(kToolbarHeight + 10),
-                                  child: Stack(
-                                    children: [
-                                      Positioned(
-                                        bottom: 0,
-                                        left: 0,
-                                        right: 0,
-                                        child: Container(
-                                          height: 1.sp,
-                                          color: themeNotifier.isDark
-                                              ? AppColors
-                                                  .transactionSummNeoBorder
-                                              : AppColors
-                                                  .tabUnselectedClorLight,
-                                        ),
-                                      ),
-                                      Container(
-                                        color: Colors.transparent,
-                                        // Background color of the TabBar
-
-                                        child: TabBar(
-                                          controller: _tabController,
-                                          indicatorColor:
-                                              AppColors.activeButtonColor,
-                                          unselectedLabelColor:
-                                              AppColors.textColorGrey,
-                                          labelColor: themeNotifier.isDark
-                                              ? AppColors.textColorWhite
-                                              : AppColors.textColorBlack,
-                                          labelStyle: TextStyle(
+                          Stack(
+                            children: [
+                              Container(
+                                height: 65.h,
+                                width: double.infinity,
+                                color: themeNotifier.isDark
+                                    ? AppColors.backgroundColor
+                                    : AppColors.textColorWhite,
+                                child: Column(
+                                  children: [
+                                    PreferredSize(
+                                      preferredSize:
+                                          Size.fromHeight(kToolbarHeight + 10),
+                                      child: Stack(
+                                        children: [
+                                          Positioned(
+                                            bottom: 0,
+                                            left: 0,
+                                            right: 0,
+                                            child: Container(
+                                              height: 1.sp,
                                               color: themeNotifier.isDark
+                                                  ? AppColors
+                                                      .transactionSummNeoBorder
+                                                  : AppColors
+                                                      .tabUnselectedClorLight,
+                                            ),
+                                          ),
+                                          Container(
+                                            color: Colors.transparent,
+                                            // Background color of the TabBar
+
+                                            child: TabBar(
+                                              controller: _tabController,
+                                              indicatorColor:
+                                                  AppColors.activeButtonColor,
+                                              unselectedLabelColor:
+                                                  AppColors.textColorGrey,
+                                              labelColor: themeNotifier.isDark
                                                   ? AppColors.textColorWhite
                                                   : AppColors.textColorBlack,
-                                              fontSize: 11.5.sp,
-                                              fontWeight: FontWeight.w600),
-                                          tabs: [
-                                            Tab(text: 'Tokens'.tr()),
-                                            Tab(text: 'NFTs'.tr()),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                _isloading
-                                    ? Padding(
-                                        padding: EdgeInsets.only(top: 25.h),
-                                        child: Center(
-                                          child: CircularProgressIndicator(
-                                            color: AppColors.activeButtonColor,
-                                          ),
-                                        ),
-                                      )
-                                    : Expanded(
-                                        child: TabBarView(
-                                          controller: _tabController,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                vertical: 15.h,
-                                              ),
-                                              child: Text(
-                                                "You have no Tokens",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    color: themeNotifier.isDark
-                                                        ? AppColors
-                                                            .textColorGreyShade2
-                                                        : AppColors
-                                                            .textColorBlack,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 12.sp,
-                                                    fontFamily: 'Blogger Sans'),
-                                              ),
-                                            ),
-                                            //show this when data is empty
-                                            // Center(child: Text('You have no NFTs under \nthis wallet ID',
-                                            //   textAlign: TextAlign.center,
-                                            //   style: TextStyle(
-                                            //     color: AppColors.textColorGrey,
-                                            //     fontWeight: FontWeight.w400,
-                                            //     fontSize: 11.5.sp,
-                                            //   ),
-                                            // )),
-                                            Column(
-                                              children: [
-                                                Container(
-                                                    height: 8.h,
-                                                    width: 100.w,
-                                                    color: themeNotifier.isDark
-                                                        ? AppColors
-                                                            .backgroundColor
-                                                        : AppColors
-                                                            .textColorWhite,
-                                                    child:
-                                                        SingleChildScrollView(
-                                                      scrollDirection:
-                                                          Axis.horizontal,
-                                                      child: Padding(
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                          horizontal: 16.sp,
-                                                        ),
-                                                        // vertical: 10.sp),
-                                                        child: Row(
-                                                          children: [
-                                                            NFTCategoryWidget(
-                                                              title: "All".tr(),
-                                                              // image: "",
-                                                              isFirst: true,
-                                                              index: 0,
-                                                              handler: () =>
-                                                                  onCategorySelected(
-                                                                      0),
-                                                            ),
-                                                            NFTCategoryWidget(
-                                                                title: "Owned"
-                                                                    .tr(),
-                                                                // image:
-                                                                //     'assets/images/cat_dig_art.png',
-                                                                index: 1,
-                                                                handler: () {
-                                                                  setState(() {
-                                                                    _isloading =
-                                                                        true;
-                                                                  });
-                                                                  onCategorySelected(
-                                                                      1);
-                                                                  setState(() {
-                                                                    _isloading =
-                                                                        false;
-                                                                  });
-                                                                }),
-                                                            NFTCategoryWidget(
-                                                              title: "Created"
-                                                                  .tr(),
-                                                              // image:
-                                                              //     'assets/images/cat_sports.png',
-                                                              index: 2,
-                                                              handler: () =>
-                                                                  onCategorySelected(
-                                                                      2),
-                                                            ),
-                                                            NFTCategoryWidget(
-                                                              title:
-                                                                  "Listed".tr(),
-                                                              // image:
-                                                              //     'assets/images/cat_animals.png',
-                                                              index: 3,
-                                                              handler: () =>
-                                                                  onCategorySelected(
-                                                                      3),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    )),
-                                                Expanded(
-                                                    child: bottomSpaceContent(
-                                                        nftsCollectionAll,
-                                                        nftsAll,
-                                                        nftsCollectionOwnedByUser,
-                                                        nftsOwned,
-                                                        themeNotifier.isDark,
-                                                        nftsCollectionCreated,
-                                                        nftsCreated,
-                                                        nftsListed,
-                                                        collectionListed))
+                                              labelStyle: TextStyle(
+                                                  color: themeNotifier.isDark
+                                                      ? AppColors.textColorWhite
+                                                      : AppColors.textColorBlack,
+                                                  fontSize: 11.5.sp,
+                                                  fontWeight: FontWeight.w600),
+                                              tabs: [
+                                                Tab(text: 'Tokens'.tr()),
+                                                Tab(text: 'NFTs'.tr()),
                                               ],
                                             ),
-                                          ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    _isloading
+                                        ? Padding(
+                                            padding: EdgeInsets.only(top: 25.h),
+                                            child: Center(
+                                              child: CircularProgressIndicator(
+                                                color: AppColors.activeButtonColor,
+                                              ),
+                                            ),
+                                          )
+                                        : Expanded(
+                                            child: TabBarView(
+                                              controller: _tabController,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                    vertical: 15.h,
+                                                  ),
+                                                  child: Text(
+                                                    "You have no Tokens",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        color: themeNotifier.isDark
+                                                            ? AppColors
+                                                                .textColorGreyShade2
+                                                            : AppColors
+                                                                .textColorBlack,
+                                                        fontWeight: FontWeight.w500,
+                                                        fontSize: 12.sp,
+                                                        fontFamily: 'Blogger Sans'),
+                                                  ),
+                                                ),
+                                                //show this when data is empty
+                                                // Center(child: Text('You have no NFTs under \nthis wallet ID',
+                                                //   textAlign: TextAlign.center,
+                                                //   style: TextStyle(
+                                                //     color: AppColors.textColorGrey,
+                                                //     fontWeight: FontWeight.w400,
+                                                //     fontSize: 11.5.sp,
+                                                //   ),
+                                                // )),
+                                                Column(
+                                                  children: [
+                                                    Container(
+                                                        height: 8.h,
+                                                        width: 100.w,
+                                                        color: themeNotifier.isDark
+                                                            ? AppColors
+                                                                .backgroundColor
+                                                            : AppColors
+                                                                .textColorWhite,
+                                                        child:
+                                                            SingleChildScrollView(
+                                                          scrollDirection:
+                                                              Axis.horizontal,
+                                                          child: Padding(
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                              horizontal: 16.sp,
+                                                            ),
+                                                            // vertical: 10.sp),
+                                                            child: Row(
+                                                              children: [
+                                                                NFTCategoryWidget(
+                                                                  title: "All".tr(),
+                                                                  // image: "",
+                                                                  isFirst: true,
+                                                                  index: 0,
+                                                                  handler: () =>
+                                                                      onCategorySelected(
+                                                                          0),
+                                                                ),
+                                                                NFTCategoryWidget(
+                                                                    title: "Owned"
+                                                                        .tr(),
+                                                                    // image:
+                                                                    //     'assets/images/cat_dig_art.png',
+                                                                    index: 1,
+                                                                    handler: () {
+                                                                      setState(() {
+                                                                        _isloading =
+                                                                            true;
+                                                                      });
+                                                                      onCategorySelected(
+                                                                          1);
+                                                                      setState(() {
+                                                                        _isloading =
+                                                                            false;
+                                                                      });
+                                                                    }),
+                                                                NFTCategoryWidget(
+                                                                  title: "Created"
+                                                                      .tr(),
+                                                                  // image:
+                                                                  //     'assets/images/cat_sports.png',
+                                                                  index: 2,
+                                                                  handler: () =>
+                                                                      onCategorySelected(
+                                                                          2),
+                                                                ),
+                                                                NFTCategoryWidget(
+                                                                  title:
+                                                                      "Listed".tr(),
+                                                                  // image:
+                                                                  //     'assets/images/cat_animals.png',
+                                                                  index: 3,
+                                                                  handler: () =>
+                                                                      onCategorySelected(
+                                                                          3),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        )),
+                                                    Expanded(
+                                                        child: bottomSpaceContent(
+                                                            nftsCollectionAll,
+                                                            nftsAll,
+                                                            nftsCollectionOwnedByUser,
+                                                            nftsOwned,
+                                                            themeNotifier.isDark,
+                                                            nftsCollectionCreated,
+                                                            nftsCreated,
+                                                            nftsListed,
+                                                            collectionListed))
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                  ],
+                                ),
+                              ),
+                              if(showCopiedMsg)
+                              Positioned(
+                                left: 10,
+                                right: 10,
+                                bottom: 40,
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    height: 4.h,
+                                    width: 35.w,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5.sp),
+                                      color: AppColors.profileHeaderDark,
+                                    ),
+
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          "assets/images/hesa_wallet_logo.png",
+                                          fit: BoxFit.cover,
+                                          height: 12.sp,
+                                          width: 12.sp,
                                         ),
-                                      )
-                              ],
-                            ),
+                                        SizedBox(width: 5.sp,),
+                                        Text(
+                                          'Address copied!',
+                                          style: TextStyle(
+                                              fontSize: 9.sp,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColors.textColorWhite,
+                                              fontFamily: 'Blogger Sans'
+                                          ),)
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
                         ],
                       ),
                     ),
                   );
                 }),
+
             // if (showLockedScreen)
             //   WelcomeScreen(
             //     handler: () =>
@@ -1439,10 +1485,20 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     }
   }
 
+
+
   void _copyToClipboard(String text) {
     Clipboard.setData(ClipboardData(text: text));
-    fToast = FToast();
-    fToast.init(context);
-    // _showToast('Wallet address copied!');
+    setState(() {
+      showCopiedMsg=true;
+    });
+    Future.delayed(Duration(milliseconds: 3000), () {
+      setState(() {
+        showCopiedMsg=false;
+      });
+    });
+    // fToast = FToast();
+    // fToast.init(context);
+
   }
 }

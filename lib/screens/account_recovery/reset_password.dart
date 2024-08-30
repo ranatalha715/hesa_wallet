@@ -454,11 +454,12 @@ class _ResetPasswordState extends State<ResetPassword> {
                                 final result = await Provider.of<AuthProvider>(
                                         context,
                                         listen: false)
-                                    .changePassword(
+                                    .changePasswordStep1(
                                         oldPassword:
                                             _newPasswordController.text,
                                         newPassword:
                                             _confirmPasswordController.text,
+                                        confirmPassword: _confirmPasswordController.text,
                                         context: context,
                                         token: '');
                                 setState(() {
