@@ -71,6 +71,7 @@ dependencies:
   page_transition: ^2.0.9
   uni_links: ^0.5.1
   pinput: ^5.0.0
+  restart_app: ^1.2.1
   deep_linking:
 #   path: C:\Users\Talha's PC\AndroidStudioProjects\deepinking_module
    path: ../deepinking_module
