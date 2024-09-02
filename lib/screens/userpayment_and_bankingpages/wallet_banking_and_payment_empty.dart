@@ -8,6 +8,7 @@ import 'package:hesa_wallet/models/payment_card_model.dart';
 import 'package:hesa_wallet/providers/bank_provider.dart';
 import 'package:hesa_wallet/screens/userpayment_and_bankingpages/wallet_add_bank.dart';
 import 'package:hesa_wallet/screens/userpayment_and_bankingpages/wallet_add_card.dart';
+import 'package:hesa_wallet/screens/userpayment_and_bankingpages/wallet_update_bank.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -911,7 +912,11 @@ class _WalletBankingAndPaymentEmptyState
                                                   ? true
                                                   : false,
                                               selectedBankName:
-                                                  banks[index].bic,
+                                                  banks[index].bankName!,
+                                              selectedBic:
+                                              banks[index].bic!,
+                                              selectedAccTitle:
+                                              banks[index].accountTitle ?? 'null',
                                             );
                                           },
                                         )
@@ -1197,6 +1202,8 @@ class _WalletBankingAndPaymentEmptyState
     required Function handler,
     bool isDark = true,
     String accountNumber = "****",
+    String selectedAccTitle = "",
+    String selectedBic = "",
     required String fullAccountNumber,
     required String selectedBankName,
   }) {
@@ -1321,7 +1328,7 @@ class _WalletBankingAndPaymentEmptyState
                       if (!isPrimary)
                         PopupMenuItem<String>(
                           value: 'Make Primary '.tr(),
-                          child: GestureDetector(
+
                             onTap: () async {
                               // setState(() {
                               //   isLoading = true;
@@ -1361,7 +1368,7 @@ class _WalletBankingAndPaymentEmptyState
                                 ),
                               ],
                             ),
-                          ),
+
                         ),
                       // if (!isPrimary)
                       //   PopupMenuItem<String>(
@@ -1378,14 +1385,13 @@ class _WalletBankingAndPaymentEmptyState
                       // if(!isPrimary)
                       PopupMenuItem<String>(
                         value: 'Delete Account'.tr(),
-                        child: GestureDetector(
-                          onTap: () => showPopupDeleteBank(
-                            isDark,
-                            accountNumber,
-                            fullAccountNumber,
-                            "BANQUE SAUDI",
-                          ),
-                          child: Text(
+                        onTap: ()=> showPopupDeleteBank(
+                          isDark,
+                          accountNumber,
+                          fullAccountNumber,
+                          selectedBankName,
+                        ),
+                        child:  Text(
                             'Delete Account'.tr(),
                             style: TextStyle(
                                 fontFamily: 'Poppins',
@@ -1394,7 +1400,32 @@ class _WalletBankingAndPaymentEmptyState
                                     : AppColors.textColorBlack,
                                 fontWeight: FontWeight.w400,
                                 fontSize: 13.sp),
-                          ),
+
+                        ),
+                      ),
+                      PopupMenuItem<String>(
+                        value: 'Update'.tr(),
+                        onTap:()=>Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => WalletUpdateBank(
+                      accountNumber: fullAccountNumber,
+                      isPrimary: isPrimary.toString(),
+
+                      bankName: selectedBankName,
+                      bic: selectedBic,
+                      accountTitle: selectedAccTitle,
+                    )),
+                    ),
+                        child: Text(
+                            'Update'.tr(),
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                color: isDark
+                                    ? AppColors.textColorWhite
+                                    : AppColors.textColorBlack,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 13.sp),
+
                         ),
                       ),
                       // Add more menu options as needed

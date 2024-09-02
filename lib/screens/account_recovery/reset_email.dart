@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hesa_wallet/constants/configs.dart';
 import 'package:hesa_wallet/providers/auth_provider.dart';
 import 'package:hesa_wallet/providers/user_provider.dart';
@@ -10,7 +11,7 @@ import 'package:hesa_wallet/widgets/text_field_parent.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-
+import 'dart:io' as OS;
 import '../../constants/colors.dart';
 import '../../providers/theme_provider.dart';
 import '../../widgets/animated_loader/animated_loader.dart';
@@ -33,6 +34,7 @@ class _ResetEmailState extends State<ResetEmail> {
   bool isLoading = false;
   bool isButtonActive = false;
   var _isLoading = false;
+  bool isKeyboardVisible = false;
   var accessToken;
 
   getAccessToken() async {
@@ -51,6 +53,11 @@ class _ResetEmailState extends State<ResetEmail> {
     init();
     // Listen for changes in the text fields and update the button state
     _emailController.addListener(_updateButtonState);
+    KeyboardVisibilityController().onChange.listen((bool visible) {
+      setState(() {
+        isKeyboardVisible = visible;
+      });
+    });
   }
 
   void _updateButtonState() {
@@ -227,7 +234,7 @@ class _ResetEmailState extends State<ResetEmail> {
                         Positioned(
                           left: 20,
                           right: 20,
-                          bottom: 30,
+                          bottom:  OS.Platform.isIOS  && !isKeyboardVisible ? 50 :30,
                           child:
                           AppButton(
                             title: 'Proceed'.tr(),

@@ -314,8 +314,7 @@ class UserProvider with ChangeNotifier {
     );
     fToast = FToast();
     fToast.init(context);
-    print('connect wallet response');
-    print(json.decode(response.body));
+    print(response.body + 'connect Dapp Response');
     if (response.statusCode == 201) {
       return AuthResult.success;
     } else {

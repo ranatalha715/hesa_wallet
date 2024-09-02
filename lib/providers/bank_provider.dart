@@ -251,6 +251,83 @@ class BankProvider with ChangeNotifier{
     }
   }
 
+  Future<AuthResult> updateBankAccountStep1({
+    required bool isPrimary,
+    required String accountNumber,
+    required String accountTitle,
+    required String bic,
+    required String token,
+    required BuildContext context,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/user/bank-account/update/step1');
+    final body = {
+      "accountNumber" : accountNumber.toString(),
+      "accountTitle": accountTitle.toString(),
+      "bic" : bic.toString(),
+      "isPrimary": isPrimary.toString(),
+    };
+
+    final response = await http.post(
+      url,
+      body: body,
+      headers: {
+        // "Content-type": "application/json",
+        "Accept": "application/json",
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print('updated bank response' + response.body);
+    if (response.statusCode == 201) {
+      final jsonResponse = json.decode(response.body);
+      final uniqueId = jsonResponse['data']['uniqueId'];
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('uniqueId', uniqueId);
+      uniqueIdFromStep1=uniqueId;
+      notifyListeners();
+      print("Update bank successfully!");
+      return AuthResult.success;
+    } else {
+      print("Bank is not updated yet: ${response.body}");
+      return AuthResult.failure;
+    }
+  }
+
+  Future<AuthResult> updateBankAccountStep2({
+    required String code,
+    required String token,
+    required BuildContext context,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/user/bank-account/update/step2');
+
+    final body = {
+      "code": code,
+    };
+
+    final response = await http.post(url, body: body,  headers: {
+
+      "Accept": "application/json",
+      'Authorization': 'Bearer $token',
+      'X-Unique-Id': '$uniqueIdFromStep1',
+    },);
+
+    print('updateBankStep2 Response');
+    print(response.body);
+    fToast = FToast();
+    fToast.init(context);
+    if (response.statusCode == 201) {
+      otpErrorResponse=false;
+      otpSuccessResponse=true;
+      notifyListeners();
+      return AuthResult.success;
+    } else {
+      otpErrorResponse=true;
+      otpSuccessResponse=false;
+      notifyListeners();
+      return AuthResult.failure;
+    }
+  }
+
+
   Future<AuthResult> deleteBankAccount({
     required BuildContext context,
     required String token,

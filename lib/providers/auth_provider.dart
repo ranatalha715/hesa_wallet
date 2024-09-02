@@ -9,7 +9,6 @@ import 'package:hesa_wallet/screens/connection_requests_pages/connect_dapp.dart'
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:restart_app/restart_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
@@ -77,13 +76,9 @@ bool otpSuccessResponse=false;
           // );
           print('go to neo');
         } else {
-          await Restart.restartApp();
-          await Future.delayed(const Duration(milliseconds: 500));
           await Navigator.of(context).pushNamedAndRemoveUntil(
               'nfts-page', (Route d) => false,
               arguments: {});
-
-
         }
         otpErrorResponse=false;
         notifyListeners();

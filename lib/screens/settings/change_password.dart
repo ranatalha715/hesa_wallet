@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hesa_wallet/constants/colors.dart';
 import 'package:hesa_wallet/constants/configs.dart';
+import 'dart:io' as OS;
 import 'package:hesa_wallet/providers/auth_provider.dart';
 import 'package:hesa_wallet/screens/settings/account_information.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/wallet_tokens_nfts.dart';
@@ -680,7 +681,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                                     ),
                                   ),
                                 SizedBox(
-                                  height: 14.h,
+                                  height: OS.Platform.isIOS ? 12.h : 14.h,
                                 ),
                                 Column(
                                   children: [

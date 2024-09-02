@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:hesa_wallet/constants/colors.dart';
 import 'package:hesa_wallet/constants/configs.dart';
 import 'package:hesa_wallet/providers/user_provider.dart';
+import 'dart:io' as OS;
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:hesa_wallet/widgets/button.dart';
 import 'package:hesa_wallet/widgets/text_field_parent.dart';
@@ -901,245 +902,230 @@ class _AccountInformationState extends State<AccountInformation> {
                                   height: 19.h,
                                 ),
                                 if (isEditAble)
-                                  Positioned(
-                                    left: 20,
-                                    right: 20,
-                                    bottom: 0,
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          height: 2.h,
-                                          width: double.infinity,
-                                          color: AppColors.backgroundColor,
-                                        ),
-                                        Container(
-                                          color: AppColors.backgroundColor,
-                                          child: AppButton(
-                                              title: 'Save changes'.tr(),
-                                              isactive:
-                                                  isEditAble && isButtonActive
-                                                      ? true
-                                                      : false,
-                                              handler: () async {
+                                  Column(
+                                    children: [
+                                      Container(
+                                        height: 2.h,
+                                        width: double.infinity,
+                                        color: AppColors.backgroundColor,
+                                      ),
+                                      Container(
+                                        color: AppColors.backgroundColor,
+                                        child: AppButton(
+                                            title: 'Save changes'.tr(),
+                                            isactive:
+                                                isEditAble && isButtonActive
+                                                    ? true
+                                                    : false,
+                                            handler: () async {
+                                              setState(() {
+                                                isValidating = true;
+                                              });
+
+                                              if (isButtonActive &&
+                                                  isEditAble == true) {
                                                 setState(() {
-                                                  isValidating = true;
-                                                });
-
-                                                if (isButtonActive &&
-                                                    isEditAble == true) {
-                                                  setState(() {
-                                                    _isLoading = true;
-                                                    if (_isLoading) {
-                                                      FocusManager
-                                                          .instance.primaryFocus
-                                                          ?.unfocus();
-                                                    }
-                                                  });
-                                                  var result = await Provider
-                                                          .of<UserProvider>(
-                                                              context,
-                                                              listen: false)
-                                                      .userUpdateStep1(
-                                                    firstName:
-                                                        _firstnameController
-                                                            .text,
-                                                    lastName:
-                                                        _lastnameController
-                                                            .text,
-                                                    email:
-                                                        _emailController.text,
-                                                    mobileNumber: '+966' +
-                                                        _numberController.text,
-                                                    context: context,
-                                                    token: accessToken,
-                                                  );
-                                                  await Future.delayed(
-                                                      Duration(
-                                                          milliseconds: 1000),
-                                                      () {});
-                                                  setState(() {
-                                                    _isLoading = false;
-                                                  });
-                                                  if (result ==
-                                                      AuthResult.success) {
-                                                    print(
-                                                        "Result is successful");
-                                                    startTimer();
-                                                    otpDialog(
-                                                      fromAuth: false,
-                                                      incorrect:
-                                                          auth.otpErrorResponse,
-                                                      // onClose: ()=> removeRoutes(),
-                                                      events: _events,
-                                                      firstBtnHandler:
-                                                          () async {
-                                                        setState(() {
-                                                          _isLoading = true;
-                                                        });
-                                                        await Future.delayed(
-                                                            const Duration(
-                                                                milliseconds:
-                                                                    1000));
-                                                        print('loading popup' +
-                                                            _isLoading
-                                                                .toString());
-                                                        final userUpdateWithOtpStep2 =
-                                                            await Provider.of<
-                                                                        UserProvider>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .userUpdateStep2(
-                                                          context: context,
-                                                          code: Provider.of<
-                                                                      AuthProvider>(
-                                                                  context,
-                                                                  listen: false)
-                                                              .codeFromOtpBoxes,
-                                                          token: accessToken,
-                                                        );
-                                                        setState(() {
-                                                          _isLoading = false;
-                                                        });
-                                                        print('loading popup 2' +
-                                                            _isLoading
-                                                                .toString());
-                                                        if (userUpdateWithOtpStep2 ==
-                                                            AuthResult
-                                                                .success) {
-                                                          Navigator.pop(
-                                                              context);
-                                                          Navigator
-                                                              .pushReplacement(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        AccountInformation()),
-                                                          );
-                                                        }
-                                                      },
-                                                      secondBtnHandler:
-                                                          () async {
-                                                        if (_timeLeft == 0) {
-                                                          print(
-                                                              'resend function calling');
-                                                          try {
-                                                            setState(() {
-                                                              _isLoadingResend =
-                                                                  true;
-                                                            });
-                                                            final result = await Provider.of<
-                                                                        UserProvider>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .userUpdateResendOtp(
-                                                                    token:
-                                                                        accessToken,
-                                                                    context:
-                                                                        context);
-                                                            setState(() {
-                                                              _isLoadingResend =
-                                                                  false;
-                                                            });
-                                                            if (result ==
-                                                                AuthResult
-                                                                    .success) {
-                                                              startTimer();
-                                                            }
-                                                          } catch (error) {
-                                                            print(
-                                                                "Error: $error");
-                                                            // _showToast('An error occurred'); // Show an error message
-                                                          } finally {
-                                                            setState(() {
-                                                              _isLoadingResend =
-                                                                  false;
-                                                            });
-                                                          }
-                                                        } else {}
-                                                      },
-                                                      firstTitle: 'Confirm',
-                                                      secondTitle:
-                                                          'Resend code ',
-
-                                                      // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
-
-                                                      context: context,
-                                                      isDark:
-                                                          themeNotifier.isDark,
-                                                      isFirstButtonActive:
-                                                          isOtpButtonActive,
-                                                      isSecondButtonActive:
-                                                          false,
-                                                      otp1Controller:
-                                                          otp1Controller,
-                                                      otp2Controller:
-                                                          otp2Controller,
-                                                      otp3Controller:
-                                                          otp3Controller,
-                                                      otp4Controller:
-                                                          otp4Controller,
-                                                      otp5Controller:
-                                                          otp5Controller,
-                                                      otp6Controller:
-                                                          otp6Controller,
-                                                      firstFieldFocusNode:
-                                                          firstFieldFocusNode,
-                                                      secondFieldFocusNode:
-                                                          secondFieldFocusNode,
-                                                      thirdFieldFocusNode:
-                                                          thirdFieldFocusNode,
-                                                      forthFieldFocusNode:
-                                                          forthFieldFocusNode,
-                                                      fifthFieldFocusNode:
-                                                          fifthFieldFocusNode,
-                                                      sixthFieldFocusNode:
-                                                          sixthFieldFocusNode,
-                                                      firstBtnBgColor: AppColors
-                                                          .activeButtonColor,
-                                                      firstBtnTextColor:
-                                                          AppColors
-                                                              .textColorBlack,
-                                                      secondBtnBgColor:
-                                                          Colors.transparent,
-                                                      secondBtnTextColor:
-                                                          _timeLeft != 0
-                                                              ? AppColors
-                                                                  .textColorBlack
-                                                                  .withOpacity(
-                                                                      0.8)
-                                                              : AppColors
-                                                                  .textColorWhite,
-                                                      // themeNotifier.isDark
-                                                      //     ? AppColors.textColorWhite
-                                                      //     : AppColors.textColorBlack
-                                                      //         .withOpacity(0.8),
-                                                      isLoading:
-                                                          _isLoadingResend ||
-                                                              _isLoading,
-                                                    );
+                                                  _isLoading = true;
+                                                  if (_isLoading) {
+                                                    FocusManager
+                                                        .instance.primaryFocus
+                                                        ?.unfocus();
                                                   }
-                                                }
-                                              },
-                                              // isLoading: _isLoading,
-                                              isGradient: true,
-                                              color: AppColors.textColorBlack),
-                                        ),
-                                        Container(
-                                          height: 4.h,
-                                          width: double.infinity,
-                                          color: AppColors.backgroundColor,
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                // Expanded(child: SizedBox()),
+                                                });
+                                                var result = await Provider
+                                                        .of<UserProvider>(
+                                                            context,
+                                                            listen: false)
+                                                    .userUpdateStep1(
+                                                  firstName:
+                                                      _firstnameController
+                                                          .text,
+                                                  lastName:
+                                                      _lastnameController
+                                                          .text,
+                                                  email:
+                                                      _emailController.text,
+                                                  mobileNumber: '+966' +
+                                                      _numberController.text,
+                                                  context: context,
+                                                  token: accessToken,
+                                                );
+                                                await Future.delayed(
+                                                    Duration(
+                                                        milliseconds: 1000),
+                                                    () {});
+                                                setState(() {
+                                                  _isLoading = false;
+                                                });
+                                                if (result ==
+                                                    AuthResult.success) {
+                                                  print(
+                                                      "Result is successful");
+                                                  startTimer();
+                                                  otpDialog(
+                                                    fromAuth: false,
+                                                    incorrect:
+                                                        auth.otpErrorResponse,
+                                                    // onClose: ()=> removeRoutes(),
+                                                    events: _events,
+                                                    firstBtnHandler:
+                                                        () async {
+                                                      setState(() {
+                                                        _isLoading = true;
+                                                      });
+                                                      await Future.delayed(
+                                                          const Duration(
+                                                              milliseconds:
+                                                                  1000));
+                                                      print('loading popup' +
+                                                          _isLoading
+                                                              .toString());
+                                                      final userUpdateWithOtpStep2 =
+                                                          await Provider.of<
+                                                                      UserProvider>(
+                                                                  context,
+                                                                  listen:
+                                                                      false)
+                                                              .userUpdateStep2(
+                                                        context: context,
+                                                        code: Provider.of<
+                                                                    AuthProvider>(
+                                                                context,
+                                                                listen: false)
+                                                            .codeFromOtpBoxes,
+                                                        token: accessToken,
+                                                      );
+                                                      setState(() {
+                                                        _isLoading = false;
+                                                      });
+                                                      print('loading popup 2' +
+                                                          _isLoading
+                                                              .toString());
+                                                      if (userUpdateWithOtpStep2 ==
+                                                          AuthResult
+                                                              .success) {
+                                                        Navigator.pop(
+                                                            context);
+                                                        Navigator
+                                                            .pushReplacement(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      AccountInformation()),
+                                                        );
+                                                      }
+                                                    },
+                                                    secondBtnHandler:
+                                                        () async {
+                                                      if (_timeLeft == 0) {
+                                                        print(
+                                                            'resend function calling');
+                                                        try {
+                                                          setState(() {
+                                                            _isLoadingResend =
+                                                                true;
+                                                          });
+                                                          final result = await Provider.of<
+                                                                      UserProvider>(
+                                                                  context,
+                                                                  listen:
+                                                                      false)
+                                                              .userUpdateResendOtp(
+                                                                  token:
+                                                                      accessToken,
+                                                                  context:
+                                                                      context);
+                                                          setState(() {
+                                                            _isLoadingResend =
+                                                                false;
+                                                          });
+                                                          if (result ==
+                                                              AuthResult
+                                                                  .success) {
+                                                            startTimer();
+                                                          }
+                                                        } catch (error) {
+                                                          print(
+                                                              "Error: $error");
+                                                          // _showToast('An error occurred'); // Show an error message
+                                                        } finally {
+                                                          setState(() {
+                                                            _isLoadingResend =
+                                                                false;
+                                                          });
+                                                        }
+                                                      } else {}
+                                                    },
+                                                    firstTitle: 'Confirm',
+                                                    secondTitle:
+                                                        'Resend code ',
 
-                                // SizedBox(
-                                //   height: 2.h,
-                                // ),
+                                                    // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
+
+                                                    context: context,
+                                                    isDark:
+                                                        themeNotifier.isDark,
+                                                    isFirstButtonActive:
+                                                        isOtpButtonActive,
+                                                    isSecondButtonActive:
+                                                        false,
+                                                    otp1Controller:
+                                                        otp1Controller,
+                                                    otp2Controller:
+                                                        otp2Controller,
+                                                    otp3Controller:
+                                                        otp3Controller,
+                                                    otp4Controller:
+                                                        otp4Controller,
+                                                    otp5Controller:
+                                                        otp5Controller,
+                                                    otp6Controller:
+                                                        otp6Controller,
+                                                    firstFieldFocusNode:
+                                                        firstFieldFocusNode,
+                                                    secondFieldFocusNode:
+                                                        secondFieldFocusNode,
+                                                    thirdFieldFocusNode:
+                                                        thirdFieldFocusNode,
+                                                    forthFieldFocusNode:
+                                                        forthFieldFocusNode,
+                                                    fifthFieldFocusNode:
+                                                        fifthFieldFocusNode,
+                                                    sixthFieldFocusNode:
+                                                        sixthFieldFocusNode,
+                                                    firstBtnBgColor: AppColors
+                                                        .activeButtonColor,
+                                                    firstBtnTextColor:
+                                                        AppColors
+                                                            .textColorBlack,
+                                                    secondBtnBgColor:
+                                                        Colors.transparent,
+                                                    secondBtnTextColor:
+                                                        _timeLeft != 0
+                                                            ? AppColors
+                                                                .textColorBlack
+                                                                .withOpacity(
+                                                                    0.8)
+                                                            : AppColors
+                                                                .textColorWhite,
+                                                    // themeNotifier.isDark
+                                                    //     ? AppColors.textColorWhite
+                                                    //     : AppColors.textColorBlack
+                                                    //         .withOpacity(0.8),
+                                                    isLoading:
+                                                        _isLoadingResend ||
+                                                            _isLoading,
+                                                  );
+                                                }
+                                              }
+                                            },
+                                            // isLoading: _isLoading,
+                                            isGradient: true,
+                                            color: AppColors.textColorBlack),
+                                      ),
+                                    ],
+                                  ),
                               ],
                             ),
                           ),

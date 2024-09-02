@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:ffi';
+import 'dart:io';
 import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hesa_wallet/constants/configs.dart';
 import 'package:hesa_wallet/providers/auth_provider.dart';
 import 'package:hesa_wallet/screens/signup_signin/signin_with_email.dart';
@@ -14,6 +16,7 @@ import 'package:hesa_wallet/screens/signup_signin/wallet.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:hesa_wallet/widgets/app_header.dart';
 import 'package:hesa_wallet/widgets/otp_dialog.dart';
+import 'dart:io' as OS;
 import 'package:hesa_wallet/widgets/text_field_parent.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -77,6 +80,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
   late StreamController<int> _events;
 
   var tokenizedUserPL;
+  bool isKeyboardVisible = false;
 
   getTokenizedUserPayLoad() async {
     final prefs = await SharedPreferences.getInstance();
@@ -99,6 +103,11 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
     otp4Controller.addListener(_updateOtpButtonState);
     otp5Controller.addListener(_updateOtpButtonState);
     otp6Controller.addListener(_updateOtpButtonState);
+    KeyboardVisibilityController().onChange.listen((bool visible) {
+      setState(() {
+        isKeyboardVisible = visible;
+      });
+    });
   }
 
   void _updateButtonState() {
@@ -522,7 +531,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                 ),
                               ),
                               SizedBox(
-                                height: 2.h,
+                                height:  OS.Platform.isIOS && !isKeyboardVisible ? 5.h : 2.h,
                               )
                             ],
                           ),

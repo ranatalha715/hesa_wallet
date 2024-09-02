@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:restart_app/restart_app.dart';
 import 'package:hesa_wallet/constants/configs.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/connected_sites.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/wallet_tokens_nfts.dart';
@@ -24,9 +23,8 @@ import '../signup_signin/terms_conditions.dart';
 
 class ConnectDapp extends StatefulWidget {
   static const routeName = 'connection-request';
-  final Function? disconnectHandler;
 
-  const ConnectDapp({Key? key, this.disconnectHandler}) : super(key: key);
+  const ConnectDapp({Key? key}) : super(key: key);
 
   @override
   State<ConnectDapp> createState() => _ConnectDappState();
@@ -369,10 +367,7 @@ class _ConnectDappState extends State<ConnectDapp> {
                                     "response": 'Connection request rejected.'
                                   },
                                 );
-
-                                await Future.delayed(const Duration(milliseconds: 500));
-                                await Restart.restartApp();
-
+                                SystemNavigator.pop();
                               },
                               isGradientWithBorder: true,
                               buttonWithBorderColor: AppColors.errorColor,

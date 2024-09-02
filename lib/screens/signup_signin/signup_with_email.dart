@@ -135,7 +135,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
   bool _isPasswordValid = false;
   bool _obscurePassword = true;
   bool isOtpButtonActive = false;
-  int _timeLeft = 300;
+  int _timeLeft = 60;
   late StreamController<int> _events;
 
   String fcmToken = 'Waiting for FCM token...';
@@ -165,7 +165,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
     super.initState();
     generateFcmToken();
     _events = new StreamController<int>();
-    _events.add(300);
+    _events.add(60);
     // Listen for changes in the text fields and update the button state
     _passwordController.addListener(_updateButtonState);
     _confirmPasswordController.addListener(_updateButtonState);
@@ -178,6 +178,8 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
     otp4Controller.addListener(_updateOtpButtonState);
     otp5Controller.addListener(_updateOtpButtonState);
     otp6Controller.addListener(_updateOtpButtonState);
+    Provider.of<AuthProvider>(context, listen: false)
+        .registerUserErrorResponse = null;
   }
 
   void _updateButtonState() {
@@ -562,10 +564,10 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                       onChanged: (v){
                                         auth.registerUserErrorResponse=null;
                                       },
-                                      scrollPadding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom),
+                                      // scrollPadding: EdgeInsets.only(
+                                      //     bottom: MediaQuery.of(context)
+                                      //         .viewInsets
+                                      //         .bottom),
                                       focusNode: emailFocusNode,
                                       textInputAction: TextInputAction.next,
                                       onEditingComplete: () {
@@ -683,12 +685,12 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                       scrollPadding: EdgeInsets.only(
                                           bottom: MediaQuery.of(context)
                                                   .viewInsets
-                                                  .bottom -
-                                              20),
+                                                  .bottom/1.8),
                                       controller: _passwordController,
                                       obscureText: _obscurePassword,
                                       onChanged: (password) {
                                         _validatePassword(password);
+                                        auth.registerUserErrorResponse=null;
                                       },
                                       style: TextStyle(
                                           fontSize: 10.2.sp,
@@ -714,9 +716,9 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             borderSide: BorderSide(
                                               color: (_passwordController
                                                           .text.isEmpty &&
-                                                      isValidating) || ( !_hasUppercase || !_hasLowercase || !_hasDigits  || !_hasSpecialCharacters
+                                                      isValidating) || (( !_hasUppercase || !_hasLowercase || !_hasDigits  || !_hasSpecialCharacters
                                                   ||
-                                                  !_hasMinLength)
+                                                  !_hasMinLength) && _passwordController.text.isNotEmpty)
                                                   ? AppColors.errorColor
                                                   : Colors.transparent,
                                               // Off-white color
@@ -727,8 +729,13 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
                                               color:
-                                              _hasUppercase && _hasLowercase && _hasDigits  && _hasSpecialCharacters &&
-                                               _hasMinLength ? AppColors.focusTextFieldColor : AppColors.errorColor,
+                                              (_passwordController
+                                                  .text.isEmpty &&
+                                                  isValidating) || (( !_hasUppercase || !_hasLowercase || !_hasDigits  || !_hasSpecialCharacters
+                                                  ||
+                                                  !_hasMinLength) && _passwordController.text.isNotEmpty)
+                                                  ? AppColors.errorColor
+                                                  : AppColors.focusTextFieldColor,
                                             )),
                                         // labelText: 'Enter your password',
                                         suffixIcon: IconButton(
@@ -1056,11 +1063,11 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                           isGradient: true,
                                           color: Colors.transparent,
                                           textColor: AppColors.textColorBlack),
-                                      Container(
-                                        height: 4.h,
-                                        width: double.infinity,
-                                        color: AppColors.backgroundColor,
-                                      ),
+                                      // Container(
+                                      //   height: 4.h,
+                                      //   width: double.infinity,
+                                      //   color: AppColors.errorColor,
+                                      // ),
                                     ],
                                   ),
                                 ),

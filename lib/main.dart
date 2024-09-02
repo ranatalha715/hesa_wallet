@@ -15,6 +15,7 @@ import 'package:hesa_wallet/screens/unlock/set_pin_screen.dart';
 import 'package:hesa_wallet/screens/unlock/unlock.dart';
 import 'package:hesa_wallet/screens/unlock/unlock_with_password.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/nfts_details.dart';
+import 'package:hesa_wallet/screens/userpayment_and_bankingpages/wallet_update_bank.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:hesa_wallet/widgets/dialog_button.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -76,7 +77,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await localized.EasyLocalization.ensureInitialized();
   // WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
   // HyperPay.init("", "");
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp, // Disable landscape mode
@@ -204,7 +205,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     print('Link stream has been cleared.');
   }
 
-
   @override
   initState() {
     super.initState();
@@ -212,9 +212,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     AppDeepLinking().initDeeplink();
     fToast = FToast();
     fToast.init(context);
-    // this.initUniLinks();
+    this.initUniLinks();
     getAccessToken();
-
     // Future.delayed(Duration(seconds: 2), () {
     //   if(accessToken !='') {
     //     Provider.of<AuthProvider>(context, listen: false)
@@ -239,7 +238,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       // print(Provider.of<UserProvider>(context, listen: false)
       //     .isEmailVerified);
     });
-    _startListeningForUniLinks();
     Timer.periodic(Duration(seconds: 30), (timer) async {
       await Provider.of<AuthProvider>(context, listen: false)
           .updateFCM(FCM: fcmToken, token: accessToken, context: context);
@@ -250,48 +248,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     });
   }
 
-  void _startListeningForUniLinks() {
-    _linkSubscription = getLinksStream().listen((String? link) async {
-      if (link != null) {
-        Uri uri = Uri.parse(link);
-        String? operation = uri.queryParameters['operation'];
-
-        if (operation != null && operation == 'connectWallet') {
-          setState(() {
-            isOverlayVisible = true;
-            Provider.of<UserProvider>(context, listen: false).navigateToNeoForConnectWallet = true;
-          });
-
-          // Navigate to ConnectDapp if not already there
-
-          _navigateToConnectDapp();
-        }
-      }
-    }, onError: (err) {
-      print('Error receiving UniLink: $err');
-    });
-  }
-
-  void _navigateToConnectDapp() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => ConnectDapp(disconnectHandler: ()=>clearLinkStream(),)),
-            (Route<dynamic> route) => false,  // Remove all previous routes
-      );
-
-    });
-  }
-
-
-
-
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _linkSubscription?.cancel();
     _timer?.cancel();
-
     super.dispose();
   }
 
@@ -300,107 +261,158 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   // Future<void> initUniLinks() async {
   //   try {
-  //     print('trying unilink');
-  //     await getLinksStream().firstWhere((String? link) {
+  //     // Handle the initial link
+  //     final initialLink = await getInitialLink();
+  //     if (initialLink != null) {
+  //       _handleIncomingLink(initialLink);
+  //     }
+  //
+  //     // Handle subsequent links
+  //     _linkSubscription = linkStream.listen((String? link) {
   //       if (link != null) {
+  //         _handleIncomingLink(link);
+  //       }
+  //     }, onError: (err) {
+  //       print('Error listening for UniLinks: $err');
+  //     });
+  //   } catch (e) {
+  //     print('Error initializing UniLinks: $e');
+  //     // Handle error as necessary
+  //   }
+  // }
+  //
+  // void _handleIncomingLink(String link) {
+  //   if (_uniLinkHandled) {
+  //     return;
+  //   }
+  //   setState(() {
+  //     _receivedData = link;
+  //   });
+  //
+  //   Uri uri = Uri.parse(link);
+  //   String? operation = uri.queryParameters['operation'];
+  //   print('operation this: ' + operation.toString());
+  //   if (operation != null && operation == 'connectWallet') {
+  //     // Navigate to ConnectWalletScreen
+  //     setState(() {
+  //       Provider.of<UserProvider>(context, listen: false).navigateToNeoForConnectWallet = true;
+  //       print("check kro: " +
+  //           Provider.of<UserProvider>(context, listen: false)
+  //               .navigateToNeoForConnectWallet
+  //               .toString());
+  //     });
+  //     _uniLinkHandled = true;
+  //     // Navigator.push(
+  //     //   context,
+  //     //   MaterialPageRoute(builder: (context) => ConnectWalletScreen()),
+  //     // );
+  //
+  //     // Kill or remove the UniLink from the app lifecycle
+  //     _linkSubscription?.cancel();
+  //     _linkSubscription = null;
+  //   } else {
+  //     Provider.of<UserProvider>(context, listen: false).navigateToNeoForConnectWallet = false;
+  //   }
+  // }
+  Future<void> initUniLinks() async {
+    try {
+      print('trying');
+      await getLinksStream().firstWhere((String? link) {
+        if (link != null) {
+          Uri uri = Uri.parse(link);
+          String? operation = uri.queryParameters['operation'];
+          print("print operation");
+          print(operation);
+
+          if (operation != null && operation == 'connectWallet') {
+            Provider.of<UserProvider>(context, listen: false)
+                .navigateToNeoForConnectWallet = true;
+
+            setState(() {
+              isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
+                  .navigateToNeoForConnectWallet;  // Set overlay visibility to true
+            });
+
+            print("check kro" +
+                Provider.of<UserProvider>(context, listen: false)
+                    .navigateToNeoForConnectWallet
+                    .toString());
+          } else {
+            Provider.of<UserProvider>(context, listen: false)
+                .navigateToNeoForConnectWallet = false;
+
+            setState(() {
+              isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
+                  .navigateToNeoForConnectWallet;  // Set overlay visibility to false
+            });
+          }
+          return true; // Exit the loop after processing
+        } else{
+          Provider.of<UserProvider>(context, listen: false)
+              .navigateToNeoForConnectWallet = false;
+
+          setState(() {
+            isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
+                .navigateToNeoForConnectWallet;  // Set overlay visibility to false
+          });
+
+        }
+
+        return false;
+      });
+
+      print('trying end');
+      clearLinkStream();
+    } catch (e) {
+      print('Error initializing UniLinks: $e');
+      print('trying error');
+    }
+  }
+
+
+  // Future<void> initUniLinks() async {
+  //   try {
+  //     print('trying');
+  //     // AppDeepLinking().initDeeplink(); muzamil recommended
+  //     getLinksStream().listen((String? link) {
+  //       if (link != null) {
+  //         setState(() {
+  //           _receivedData = link;
+  //         });
+  //
   //         Uri uri = Uri.parse(link);
   //         String? operation = uri.queryParameters['operation'];
   //         print("print operation");
   //         print(operation);
   //
   //         if (operation != null && operation == 'connectWallet') {
+  //
+  //
+  //
   //           Provider.of<UserProvider>(context, listen: false)
   //               .navigateToNeoForConnectWallet = true;
   //
-  //           setState(() {
-  //             // isOverlayVisible=true;
-  //             isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
-  //                 .navigateToNeoForConnectWallet;  // Set overlay visibility to true
-  //           });
-  //
   //           print("check kro" +
-  //               isOverlayVisible.toString()
-  //               // Provider.of<UserProvider>(context, listen: false)
-  //               //     .navigateToNeoForConnectWallet
-  //               //     .toString()
-  //           );
+  //               Provider.of<UserProvider>(context, listen: false)
+  //                   .navigateToNeoForConnectWallet
+  //                   .toString());
+  //
   //         } else {
   //           Provider.of<UserProvider>(context, listen: false)
   //               .navigateToNeoForConnectWallet = false;
-  //
-  //           setState(() {
-  //             // isOverlayVisible=false;
-  //             isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
-  //                 .navigateToNeoForConnectWallet;  // Set overlay visibility to false
-  //           });
   //         }
-  //         return true; // Exit the loop after processing
-  //       } else{
-  //         Provider.of<UserProvider>(context, listen: false)
-  //             .navigateToNeoForConnectWallet = false;
-  //
-  //         setState(() {
-  //           // isOverlayVisible=false;
-  //           isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
-  //               .navigateToNeoForConnectWallet;  // Set overlay visibility to false
-  //         });
-  //
   //       }
-  //
-  //       return false;
   //     });
-  //
   //     print('trying end');
-  //     // clearLinkStream();
-  //     Provider.of<UserProvider>(context, listen: false)
-  //         .navigateToNeoForConnectWallet = false;
-  //
-  //     setState(() {
-  //       // isOverlayVisible=false;
-  //       isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
-  //           .navigateToNeoForConnectWallet;  // Set overlay visibility to false
-  //     });
   //   } catch (e) {
   //     print('Error initializing UniLinks: $e');
   //     print('trying error');
+  //
   //   }
   // }
 
-  Future<void> initUniLinks() async {
-    try {
-      print('trying unilink');
-
-      // Use a timeout to avoid indefinite waiting
-      final link = await getLinksStream().firstWhere((String? link) => link != null, orElse: () => null);
-
-      if (link != null) {
-        Uri uri = Uri.parse(link);
-        String? operation = uri.queryParameters['operation'];
-        print("Operation: $operation");
-
-        if (operation != null && operation == 'connectWallet') {
-          Provider.of<UserProvider>(context, listen: false).navigateToNeoForConnectWallet = true;
-        } else {
-          Provider.of<UserProvider>(context, listen: false).navigateToNeoForConnectWallet = false;
-        }
-      } else {
-        Provider.of<UserProvider>(context, listen: false).navigateToNeoForConnectWallet = false;
-      }
-
-      // Reflect the state in the UI
-      setState(() {
-        isOverlayVisible = Provider.of<UserProvider>(context, listen: false).navigateToNeoForConnectWallet;
-      });
-
-      print('Unilink processing completed');
-    } catch (e) {
-      print('Error initializing UniLinks: $e');
-    }
-  }
-
-
-
-  @override
+  // payable non payable functions
+@override
   void didChangeDependencies() {
   // isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
   //     .navigateToNeoForConnectWallet;
@@ -482,8 +494,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final emailVerified =
         Provider.of<UserProvider>(context, listen: false).isEmailVerified;
-    print('isOverlayVisible testing' + isOverlayVisible.toString());
-
+    print('isOverlayVisible testing');
+    print(isOverlayVisible);
     return Sizer(builder: (context, orientation, deviceType) {
       return Consumer<ThemeProvider>(
           builder: (context, ThemeProvider themeProvider, _) {
@@ -505,7 +517,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 ),
           debugShowCheckedModeBanner: false,
           home:
-          // ConnectDapp(),
+
           _buildContent(),
               // Provider.of<TokenProvider>(
               //   context,
@@ -713,80 +725,59 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       },
     );
   }
-  // Widget _buildContent() {
-  //   return FutureBuilder<void>(
-  //     future: initUniLinks(),  // Call the modified initUniLinks function
-  //     builder: (context, snapshot) {
-  //       if (snapshot.connectionState == ConnectionState.waiting) {
-  //         // Show a loading indicator while waiting for the deep link to be processed
-  //       // return ConnectDapp();
-  //         // accessToken.isEmpty ? const Wallet(): WalletTokensNfts();
-  //           return Center(child: CircularProgressIndicator());
-  //       }
-  //       if (snapshot.connectionState == ConnectionState.active) {
-  //             return Container(color: Colors.red, height: 100, width: 100,);
-  //       }
-  //       if (snapshot.hasData) {
-  //         return Container(color: Colors.green, height: 100, width: 100,);
-  //       }
-  //       else if (snapshot.hasError) {
-  //         // Handle any errors
-  //         return Center(child: Text('Error: ${snapshot.error}'));
-  //       } else if(snapshot.hasData){
-  //         // The future is complete, return your content based on the overlay visibility
-  //         if (accessToken.isEmpty ) {
-  //           return Stack(
-  //             children: [
-  //               Wallet(),
-  //               // if (!isWifiOn)
-  //               //   LoaderBluredScreen(
-  //               //     isWifiOn: false,
-  //               //   ),
-  //             ],
-  //           );
-  //         }  else if (!isOverlayVisible){
-  //           WidgetsBinding.instance.addPostFrameCallback((_) {
-  //             Navigator.of(context).pushAndRemoveUntil(
-  //               MaterialPageRoute(builder: (context) => WalletTokensNfts()),
-  //                   (Route<dynamic> route) => false,
-  //             );
-  //           });
-  //           return
-  //             WalletTokensNfts();
-  //         }
-  //         // else if (isOverlayVisible) {
-  //         //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //         //     Navigator.of(context).pushAndRemoveUntil(
-  //         //       MaterialPageRoute(builder: (context) => ConnectDapp()),
-  //         //           (Route<dynamic> route) => false,
-  //         //     );
-  //         //   }); // isOverlayVisible=false, kill unilink
-  //         //   return ConnectDapp();
-  //         // }
-  //         else if(accessToken.isNotEmpty){
-  //           WidgetsBinding.instance.addPostFrameCallback((_) {
-  //             Navigator.of(context).pushAndRemoveUntil(
-  //               MaterialPageRoute(builder: (context) => WalletTokensNfts()),
-  //                   (Route<dynamic> route) => false,
-  //             );
-  //           });
-  //           return WalletTokensNfts();
-  //         } else {
-  //           return CircularProgressIndicator();
-  //         }
-  //       } else{return CircularProgressIndicator();}
-  //     },
-  //   );
-  // }
-
   Widget _buildContent() {
-    if (accessToken.isEmpty) {
-      return Wallet();
-    } else if (isOverlayVisible) {
-      return ConnectDapp();
-    } else {
-      return WalletTokensNfts();
-    }
+    return FutureBuilder<void>(
+      future: initUniLinks(),  // Call the modified initUniLinks function
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Show a loading indicator while waiting for the deep link to be processed
+        return accessToken.isEmpty ? const Wallet(): WalletTokensNfts();
+            // Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          // Handle any errors
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          // The future is complete, return your content based on the overlay visibility
+          if (accessToken.isEmpty) {
+            return Stack(
+              children: [
+                Wallet(),
+                if (!isWifiOn)
+                  LoaderBluredScreen(
+                    isWifiOn: false,
+                  ),
+              ],
+            );
+          }  else if (!isOverlayVisible){
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => WalletTokensNfts()),
+                    (Route<dynamic> route) => false,
+              );
+            });
+            return WalletTokensNfts();
+          }
+          else if (isOverlayVisible) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => ConnectDapp()),
+                    (Route<dynamic> route) => false,
+              );
+            });
+            return ConnectDapp();
+          }
+          else {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => WalletTokensNfts()),
+                    (Route<dynamic> route) => false,
+              );
+            });
+            return WalletTokensNfts();
+          }
+        }
+      },
+    );
   }
 
 }

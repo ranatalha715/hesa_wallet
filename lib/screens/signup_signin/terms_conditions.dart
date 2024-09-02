@@ -15,7 +15,7 @@ import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:hesa_wallet/widgets/app_header.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-
+import 'dart:io' as OS;
 import '../../constants/colors.dart';
 import '../../providers/theme_provider.dart';
 import '../../widgets/button.dart';
@@ -527,6 +527,9 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                       color: Colors.transparent,
                                       textColor: AppColors.textColorBlack,
                                         isLoading:_isLoading
+                                    ),
+                                    SizedBox(
+                                      height:  OS.Platform.isIOS ? 2.h : 0,
                                     ),
                                   ],
                                 ),

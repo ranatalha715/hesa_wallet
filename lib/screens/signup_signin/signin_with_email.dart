@@ -4,10 +4,12 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hesa_wallet/screens/signup_signin/signin_with_mobile.dart';
 import 'package:hesa_wallet/screens/signup_signin/terms_conditions.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/wallet_tokens_nfts.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
+import 'dart:io' as OS;
 import 'package:hesa_wallet/widgets/app_header.dart';
 import 'package:hesa_wallet/widgets/text_field_parent.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +38,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
   bool _obscurePassword = true;
   var _isLoading = false;
   bool isButtonActive = false;
+  bool isKeyboardVisible = false;
 
   @override
   void initState() {
@@ -44,6 +47,12 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
     // Listen for changes in the text fields and update the button state
     _emailController.addListener(_updateButtonState);
     _passwordController.addListener(_updateButtonState);
+
+    KeyboardVisibilityController().onChange.listen((bool visible) {
+      setState(() {
+        isKeyboardVisible = visible;
+      });
+    });
   }
 
   void _updateButtonState() {
@@ -450,7 +459,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                 ),
                               ),
                               SizedBox(
-                                height: 2.h,
+                                height: OS.Platform.isIOS && !isKeyboardVisible ? 5.h : 2.h,
                               )
                             ],
                           ),
