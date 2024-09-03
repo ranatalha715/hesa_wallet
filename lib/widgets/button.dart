@@ -17,6 +17,7 @@ class AppButton extends StatelessWidget {
   final bool isactive;
   final bool isLoading;
   final bool isGradientWithBorder;
+  final bool? secondBtnBorderClr;
 
   const AppButton({
     Key? key,
@@ -24,6 +25,7 @@ class AppButton extends StatelessWidget {
     required this.handler,
     required this.isGradient,
     required this.color,
+    this.secondBtnBorderClr=false,
     this.width = double.infinity,
     this.textColor = AppColors.textColorBlack,
     this.buttonWithBorderColor = AppColors.hexaGreen,
@@ -62,7 +64,8 @@ class AppButton extends StatelessWidget {
                 ? color == null ? AppColors.transparentBtnBorderColorDark.withOpacity(0.10) : color
                 : AppColors.disabaledBtnColor, // LIGHT
             border:  Border.all(
-                color: isGradientWithBorder ? buttonWithBorderColor: Colors.transparent
+                color: secondBtnBorderClr! && isGradientWithBorder ?  AppColors
+                    .focusTextFieldColor: isGradientWithBorder  ? buttonWithBorderColor: Colors.transparent
             ),
             borderRadius: BorderRadius.circular(10),
           ),

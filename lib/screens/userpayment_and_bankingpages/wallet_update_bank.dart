@@ -19,6 +19,7 @@ import 'package:sizer/sizer.dart';
 
 import '../../constants/configs.dart';
 import '../../constants/styles.dart';
+import '../../models/bank_model.dart';
 import '../../providers/theme_provider.dart';
 import '../../widgets/app_header.dart';
 import '../../widgets/button.dart';
@@ -138,6 +139,36 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
     // print(accessToken);
   }
 
+  List<BankName> allBanks=[];
+  List<BankName> _filteredBanks = [];
+
+  void _filterSearchResults(String query) {
+    if (query.isNotEmpty) {
+      List<BankName> filteredList = allBanks.where((bank) {
+        String bankNameLower = bank.bankName.trim().toLowerCase();
+        // String bankNameArLower = bank.bankNameAr.trim().toLowerCase();
+        String queryLower = query.trim().toLowerCase();
+
+        // Match either the English or Arabic bank name
+        return bankNameLower.contains(queryLower);
+        // ||
+        // bankNameArLower.contains(queryLower);
+      }).toList();
+      // List<BankName> filteredList = allBanks
+      //     .where((bank) =>
+      //     bank.bankName.toLowerCase().contains(query.toLowerCase()))
+      //     .toList();
+      print("Filtered List Length: ${filteredList.length}");
+      setState(() {
+        _filteredBanks = filteredList;
+      });
+    } else {
+      setState(() {
+        _filteredBanks = allBanks;
+      });
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -171,6 +202,18 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
     super.initState();
   }
 
+  init() async {
+    await getAccessToken();
+    await Provider.of<BankProvider>(context, listen: false)
+        .getAllBanks(accessToken);
+
+    allBanks =  Provider.of<BankProvider>(context, listen: false).banks;
+    // await Future.delayed(
+    //     const Duration(
+    //         milliseconds: 1000));
+    _filteredBanks = allBanks;
+  }
+
   void _updateButtonState() {
     setState(() {
       isButtonActive = _ibannumberController.text.isNotEmpty &&
@@ -187,9 +230,8 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
       setState(() {
         _isLoading = true;
       });
-      await getAccessToken();
-      await Provider.of<BankProvider>(context, listen: false)
-          .getAllBanks(accessToken);
+
+      await init();
       setState(() {
         _isLoading = false;
       });
@@ -310,11 +352,11 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                           focusNode: _ibanfocusNode,
                                           keyboardType: TextInputType.number,
                                           textInputAction: TextInputAction.next,
-                                          scrollPadding: EdgeInsets.only(
-                                              bottom: MediaQuery.of(context)
-                                                      .viewInsets
-                                                      .bottom +
-                                                  200),
+                                          // scrollPadding: EdgeInsets.only(
+                                          //     bottom: MediaQuery.of(context)
+                                          //             .viewInsets
+                                          //             .bottom +
+                                          //         200),
                                           onEditingComplete: () {
                                             _beneficaryNamefocusNode
                                                 .requestFocus();
@@ -446,24 +488,28 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                                       padding: const EdgeInsets
                                                           .symmetric(
                                                           horizontal: 8.0),
-                                                      child: Text(
-                                                        _selectedBank == ""
-                                                            ? widget.bankName!
-                                                            : _selectedBank,
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontSize: 10.2.sp,
-                                                            color: themeNotifier
-                                                                    .isDark
-                                                                ? _selectedBank ==
-                                                                        ""
-                                                                    ? AppColors
-                                                                        .textColorWhite
-                                                                    : AppColors
-                                                                        .textColorWhite
-                                                                : AppColors
-                                                                    .textColorBlack),
+                                                      child: Container(
+                                                        width: 65.w,
+                                                        child: Text(
+                                                          _selectedBank == ""
+                                                              ? widget.bankName!
+                                                              : _selectedBank,
+                                                          maxLines: 1,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight.w500,
+                                                              fontSize: 10.2.sp,
+                                                              color: themeNotifier
+                                                                      .isDark
+                                                                  ? _selectedBank ==
+                                                                          ""
+                                                                      ? AppColors
+                                                                          .textColorWhite
+                                                                      : AppColors
+                                                                          .textColorWhite
+                                                                  : AppColors
+                                                                      .textColorBlack),
+                                                        ),
                                                       ),
                                                     ),
                                                     Spacer(),
@@ -495,7 +541,13 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                             Stack(
                                               children: [
                                                 Container(
-                                                  height: 27.h,
+                                                  height: _filteredBanks
+                                                      .length ==
+                                                      1 ||
+                                                      _filteredBanks
+                                                          .length ==
+                                                          2
+                                                      ? 17.h : 24.h,
                                                   margin: EdgeInsets.only(
                                                       left: 1.sp,
                                                       right: 1.sp,
@@ -521,95 +573,50 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               8)),
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        bottom: 2.h,
-                                                        top: 0.5.h),
-                                                    child: _searchQuery == "" ||
-                                                            _searchQuery.isEmpty
-                                                        ? ListView.builder(
-                                                            controller:
-                                                                scrollController,
-                                                            itemCount:
-                                                                banks.length,
-                                                            // shrinkWrap: true,
-                                                            padding:
-                                                                EdgeInsets.zero,
-                                                            itemBuilder:
-                                                                (context,
-                                                                    index) {
-                                                              bool isFirst =
-                                                                  index == 0;
+                                                  child:
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          bottom: 2.h, top: 0.5.h),
+                                                      child:
+                                                      ListView.builder(
+                                                          controller:
+                                                          scrollController,
+                                                          itemCount:
+                                                          _filteredBanks.length,
+                                                          shrinkWrap: true,
+                                                          padding:
+                                                          EdgeInsets.zero,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            bool isFirst =
+                                                                index == 0;
 
-                                                              bool isLast = index ==
-                                                                  banks.length -
-                                                                      1;
+                                                            bool isLast = index ==
+                                                                _filteredBanks.length -
+                                                                    1;
 
-                                                              return addBankslist(
-                                                                bankName: banks[
-                                                                        index]
-                                                                    .bankName,
-                                                                english:
-                                                                    isEnglish
-                                                                        ? true
-                                                                        : false,
+                                                            return
+
+                                                              addBankslist(
+                                                                bankName:
+                                                                _filteredBanks[index]
+                                                                    .bankName!,
+                                                                english: isEnglish
+                                                                    ? true
+                                                                    : false,
                                                                 isDark:
-                                                                    themeNotifier
-                                                                            .isDark
-                                                                        ? true
-                                                                        : false,
+                                                                themeNotifier
+                                                                    .isDark
+                                                                    ? true
+                                                                    : false,
                                                                 isLast: isLast,
                                                                 bankBic:
-                                                                    banks[index]
-                                                                        .bic,
-                                                                // isFirst: isFirst,
+                                                                _filteredBanks[index]
+                                                                    .bic,
+                                                                isFirst: isFirst,
                                                               );
-                                                            })
-                                                        : ListView.builder(
-                                                            controller:
-                                                                scrollController,
-                                                            itemCount:
-                                                                banks.length,
-                                                            // shrinkWrap: true,
-                                                            padding:
-                                                                EdgeInsets.zero,
-                                                            itemBuilder:
-                                                                (context,
-                                                                    index) {
-                                                              bool isFirst =
-                                                                  index == 0;
+                                                          })
 
-                                                              bool isLast = index ==
-                                                                  banks.length -
-                                                                      1;
-                                                              if (!banks[index]
-                                                                  .bankName
-                                                                  .toLowerCase()
-                                                                  .contains(
-                                                                      _searchQuery)) {
-                                                                return Container();
-                                                              } else {
-                                                                return addBankslist(
-                                                                  bankName: banks[
-                                                                          index]
-                                                                      .bankName,
-                                                                  english:
-                                                                      isEnglish
-                                                                          ? true
-                                                                          : false,
-                                                                  isDark: themeNotifier
-                                                                          .isDark
-                                                                      ? true
-                                                                      : false,
-                                                                  isLast:
-                                                                      isLast,
-                                                                  bankBic: banks[
-                                                                          index]
-                                                                      .bic,
-                                                                  // isFirst: isFirst,
-                                                                );
-                                                              }
-                                                            }),
                                                   ),
                                                 ),
                                                 Positioned(
@@ -618,16 +625,38 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                                   right: 1,
                                                   child: Container(
                                                     height: 6.5.h,
+                                                    decoration:
+                                                    BoxDecoration(
+                                                      color: AppColors
+                                                          .transactionFeeBorder,
+                                                      borderRadius:
+                                                      BorderRadius.only(
+                                                        topLeft:
+                                                        Radius.circular(
+                                                            8.0),
+                                                        // Radius for top-left corner
+                                                        topRight:
+                                                        Radius.circular(
+                                                            8.0),
+                                                        bottomLeft:
+                                                        Radius.circular(
+                                                            8.0),
+                                                        bottomRight:
+                                                        Radius.circular(
+                                                            8.0), // Radius for top-right corner
+                                                      ),
+                                                    ),
                                                     child: TextField(
                                                       // autofocus: true,
                                                       controller:
                                                           _searchController,
                                                       cursorColor: AppColors
-                                                          .textColorGreyShade2,
-                                                      onChanged: (value) =>
-                                                          setState(() {
-                                                        _searchQuery = value;
-                                                      }),
+                                                          .textColorGrey,
+                                                      onChanged: (value) {
+                                                        print("Search Query: $value");
+                                                        _filterSearchResults(
+                                                            value);
+                                                      },
                                                       style: TextStyle(
                                                           fontSize: 10.2.sp,
                                                           color: themeNotifier
@@ -696,26 +725,7 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                                         // labelText: 'Enter your password',
                                                       ),
                                                     ),
-                                                    decoration: BoxDecoration(
-                                                      color: AppColors
-                                                          .transactionFeeBorder,
-                                                      borderRadius:
-                                                          BorderRadius.only(
-                                                        topLeft:
-                                                            Radius.circular(
-                                                                8.0),
-                                                        // Radius for top-left corner
-                                                        topRight:
-                                                            Radius.circular(
-                                                                8.0),
-                                                        bottomLeft:
-                                                            Radius.circular(
-                                                                8.0),
-                                                        bottomRight:
-                                                            Radius.circular(
-                                                                8.0), // Radius for top-right corner
-                                                      ),
-                                                    ),
+
                                                   ),
                                                 )
                                               ],
@@ -762,11 +772,11 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                         focusNode: _ibanfocusNode,
                                         keyboardType: TextInputType.number,
                                         textInputAction: TextInputAction.next,
-                                        scrollPadding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                    .viewInsets
-                                                    .bottom +
-                                                200),
+                                        // scrollPadding: EdgeInsets.only(
+                                        //     bottom: MediaQuery.of(context)
+                                        //             .viewInsets
+                                        //             .bottom +
+                                        //         200),
                                         onEditingComplete: () {
                                           _beneficaryNamefocusNode
                                               .requestFocus();
@@ -944,320 +954,316 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                       ),
                                     ),
                                   SizedBox(
-                                    height: 25.h,
-                                  )
+                                    height: _isSelected?6.5.h:31.h,
+                                  ),
+                                  if (isEditAble)
+                                    Container(
+                                      color: themeNotifier.isDark
+                                          ? AppColors.backgroundColor
+                                          : AppColors.textColorWhite,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            bottom: 30.sp, left: 1.sp, right: 1.sp),
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              width: double.infinity,
+                                              height: 1.5.h,
+                                              color: AppColors.backgroundColor,
+                                            ),
+                                            Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                  EdgeInsets.only(left: 4.sp),
+                                                  child: GestureDetector(
+                                                    onTap: () => setState(() {
+                                                      _isChecked = !_isChecked;
+                                                    }),
+                                                    child: Container(
+                                                      height: 2.4.h,
+                                                      width: 2.4.h,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                          BorderRadius.circular(
+                                                              2)),
+                                                      child: AnimatedContainer(
+                                                          duration: Duration(
+                                                              milliseconds: 300),
+                                                          curve: Curves.easeInOut,
+                                                          height: 2.4.h,
+                                                          width: 2.4.h,
+                                                          decoration: BoxDecoration(
+                                                            color: _isChecked
+                                                                ? AppColors.hexaGreen
+                                                                : Colors.transparent,
+                                                            // Animate the color
+                                                            border: Border.all(
+                                                                color: _isChecked
+                                                                    ? AppColors
+                                                                    .hexaGreen
+                                                                    : AppColors
+                                                                    .textColorWhite,
+                                                                width: 1),
+                                                            borderRadius:
+                                                            BorderRadius.circular(
+                                                                2),
+                                                          ),
+                                                          child: Checkmark(
+                                                            checked: _isChecked,
+                                                            indeterminate: false,
+                                                            size: 11.sp,
+                                                            color: Colors.black,
+                                                            drawCross: false,
+                                                            drawDash: false,
+                                                          )),
+                                                    ),
+                                                  ),
+                                                ),
+                                                // SizedBox(
+                                                //   width: 2.w,
+                                                // ),
+                                                Expanded(
+                                                  child: Container(
+                                                    margin:
+                                                    EdgeInsets.only(bottom: 3.sp),
+                                                    child: Column(
+                                                      children: [
+                                                        RichText(
+                                                          text: TextSpan(
+                                                            children: [
+                                                              TextSpan(
+                                                                  text:
+                                                                  'I Agree to the Hesa Wallet '
+                                                                      .tr(),
+                                                                  style: TextStyle(
+                                                                      color: AppColors
+                                                                          .textColorWhite,
+                                                                      fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                      fontSize: 10.sp,
+                                                                      fontFamily:
+                                                                      'Inter')),
+                                                              TextSpan(
+                                                                  recognizer:
+                                                                  TapGestureRecognizer()
+                                                                    ..onTap = () {
+
+                                                                    },
+                                                                  text:
+                                                                  'Terms & Conditions'
+                                                                      .tr(),
+                                                                  style: TextStyle(
+                                                                      color: themeNotifier.isDark
+                                                                          ? AppColors
+                                                                          .textColorToska
+                                                                          : AppColors
+                                                                          .textColorBlack,
+                                                                      decoration:
+                                                                      TextDecoration
+                                                                          .underline,
+                                                                      fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                      fontSize: 10.sp,
+                                                                      fontFamily:
+                                                                      'Inter')),
+                                                              // TextSpan(
+                                                              //     text: ' of payment receiving.'
+                                                              //         .tr(),
+                                                              //     style: TextStyle(
+                                                              //         color: AppColors
+                                                              //             .textColorGrey,
+                                                              //         fontWeight:
+                                                              //         FontWeight.w400,
+                                                              //         fontSize: 12.sp,
+                                                              //         fontFamily: 'Inter'))
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 2.h,
+                                            ),
+
+                                            // SizedBox(height: 3.h,),
+                                            AppButton(
+                                              title: 'Update'.tr(),
+                                              isactive: isButtonActive && _isChecked
+                                                  ? true
+                                                  : false,
+                                              handler: () async {
+                                                setState(() {
+                                                  isValidating = true;
+                                                });
+                                                if (_ibannumberController
+                                                    .text.isNotEmpty &&
+                                                    _accountholdernamerController
+                                                        .text.isNotEmpty &&
+                                                    _selectedBank != "") {
+                                                  setState(() {
+                                                    _isLoading = true;
+                                                  });
+                                                  final result =
+                                                  await Provider.of<BankProvider>(
+                                                      context,
+                                                      listen: false)
+                                                      .updateBankAccountStep1(
+                                                    bic: _selectedBankBic,
+                                                    context: context,
+                                                    token: accessToken,
+                                                    isPrimary:
+                                                    widget.isPrimary == "true"
+                                                        ? true
+                                                        : false, accountNumber: _ibannumberController.text, accountTitle: _accountholdernamerController.text,
+                                                  );
+                                                  setState(() {
+                                                    _isLoading = false;
+                                                  });
+                                                  if (result == AuthResult.success) {
+                                                    startTimer();
+                                                    otpDialog(
+                                                      events: _events,
+                                                      firstBtnHandler: () async {
+                                                        setState(() {
+                                                          _isLoading = true;
+                                                        });
+                                                        await Future.delayed(
+                                                            const Duration(
+                                                                milliseconds: 1000));
+                                                        final resultsecond = await Provider
+                                                            .of<BankProvider>(
+                                                            context,
+                                                            listen: false)
+                                                            .updateBankAccountStep2(
+                                                            context: context,
+                                                            token: accessToken,
+                                                            code: Provider.of<
+                                                                AuthProvider>(
+                                                                context,
+                                                                listen: false)
+                                                                .codeFromOtpBoxes);
+                                                        setState(() {
+                                                          _isLoading = false;
+                                                        });
+                                                        print("after adding bank");
+                                                        if (resultsecond ==
+                                                            AuthResult.success) {
+                                                          Navigator.pop(context);
+                                                          updateSuccessDialog();
+
+
+
+                                                        }
+                                                      },
+                                                      secondBtnHandler: () async {
+                                                        if (_timeLeft == 0) {
+                                                          print(
+                                                              'resend function calling');
+                                                          try {
+                                                            setState(() {
+                                                              _isLoadingResend = true;
+                                                            });
+                                                            final result = await Provider
+                                                                .of<AuthProvider>(
+                                                                context,
+                                                                listen: false)
+                                                                .sendOTP(
+                                                                context: context,
+                                                                token:
+                                                                accessToken);
+                                                            setState(() {
+                                                              _isLoadingResend =
+                                                              false;
+                                                            });
+                                                            if (result ==
+                                                                AuthResult.success) {
+                                                              startTimer();
+                                                            }
+                                                          } catch (error) {
+                                                            print("Error: $error");
+                                                            // _showToast('An error occurred'); // Show an error message
+                                                          } finally {
+                                                            setState(() {
+                                                              _isLoadingResend =
+                                                              false;
+                                                            });
+                                                          }
+                                                        } else {}
+                                                      },
+                                                      firstTitle: 'Verify',
+                                                      secondTitle: 'Resend code: ',
+
+                                                      // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
+
+                                                      context: context,
+                                                      isDark: themeNotifier.isDark,
+                                                      isFirstButtonActive:
+                                                      isOtpButtonActive,
+                                                      isSecondButtonActive: false,
+                                                      otp1Controller: otp1Controller,
+                                                      otp2Controller: otp2Controller,
+                                                      otp3Controller: otp3Controller,
+                                                      otp4Controller: otp4Controller,
+                                                      otp5Controller: otp5Controller,
+                                                      otp6Controller: otp6Controller,
+                                                      firstFieldFocusNode:
+                                                      firstFieldFocusNode,
+                                                      secondFieldFocusNode:
+                                                      secondFieldFocusNode,
+                                                      thirdFieldFocusNode:
+                                                      thirdFieldFocusNode,
+                                                      forthFieldFocusNode:
+                                                      forthFieldFocusNode,
+                                                      fifthFieldFocusNode:
+                                                      fifthFieldFocusNode,
+                                                      sixthFieldFocusNode:
+                                                      sixthFieldFocusNode,
+                                                      firstBtnBgColor:
+                                                      AppColors.activeButtonColor,
+                                                      firstBtnTextColor:
+                                                      AppColors.textColorBlack,
+                                                      secondBtnBgColor:
+                                                      Colors.transparent,
+                                                      secondBtnTextColor: _timeLeft !=
+                                                          0
+                                                          ? AppColors.textColorBlack
+                                                          .withOpacity(0.8)
+                                                          : AppColors.textColorWhite,
+                                                      // themeNotifier.isDark
+                                                      //     ? AppColors.textColorWhite
+                                                      //     : AppColors.textColorBlack
+                                                      //         .withOpacity(0.8),
+                                                      isLoading: _isLoading,
+                                                    );
+                                                  }
+                                                }
+                                              },
+                                              isLoading: _isLoading,
+                                              isGradient: true,
+                                              color: Colors.transparent,
+                                              // textColor: AppColors.textColorGreyShade2,
+                                            ),
+                                            // SizedBox(
+                                            //   height: 3.h,
+                                            // ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
                                 ],
                               ),
                             ),
                           ),
-                          if (isEditAble)
-                            Positioned(
-                              left: 0,
-                              right: 0,
-                              bottom: 0,
-                              child: Container(
-                                color: themeNotifier.isDark
-                                    ? AppColors.backgroundColor
-                                    : AppColors.textColorWhite,
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      bottom: 30.sp, left: 20.sp, right: 20.sp),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        width: double.infinity,
-                                        height: 1.5.h,
-                                        color: AppColors.backgroundColor,
-                                      ),
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                EdgeInsets.only(left: 4.sp),
-                                            child: GestureDetector(
-                                              onTap: () => setState(() {
-                                                _isChecked = !_isChecked;
-                                              }),
-                                              child: Container(
-                                                height: 2.4.h,
-                                                width: 2.4.h,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            2)),
-                                                child: AnimatedContainer(
-                                                    duration: Duration(
-                                                        milliseconds: 300),
-                                                    curve: Curves.easeInOut,
-                                                    height: 2.4.h,
-                                                    width: 2.4.h,
-                                                    decoration: BoxDecoration(
-                                                      color: _isChecked
-                                                          ? AppColors.hexaGreen
-                                                          : Colors.transparent,
-                                                      // Animate the color
-                                                      border: Border.all(
-                                                          color: _isChecked
-                                                              ? AppColors
-                                                                  .hexaGreen
-                                                              : AppColors
-                                                                  .textColorWhite,
-                                                          width: 1),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              2),
-                                                    ),
-                                                    child: Checkmark(
-                                                      checked: _isChecked,
-                                                      indeterminate: false,
-                                                      size: 11.sp,
-                                                      color: Colors.black,
-                                                      drawCross: false,
-                                                      drawDash: false,
-                                                    )),
-                                              ),
-                                            ),
-                                          ),
-                                          // SizedBox(
-                                          //   width: 2.w,
-                                          // ),
-                                          Expanded(
-                                            child: Container(
-                                              margin:
-                                                  EdgeInsets.only(bottom: 3.sp),
-                                              child: Column(
-                                                children: [
-                                                  RichText(
-                                                    text: TextSpan(
-                                                      children: [
-                                                        TextSpan(
-                                                            text:
-                                                                'I Agree to the Hesa Wallet '
-                                                                    .tr(),
-                                                            style: TextStyle(
-                                                                color: AppColors
-                                                                    .textColorWhite,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 10.sp,
-                                                                fontFamily:
-                                                                    'Inter')),
-                                                        TextSpan(
-                                                            recognizer:
-                                                                TapGestureRecognizer()
-                                                                  ..onTap = () {
 
-                                                                  },
-                                                            text:
-                                                                'Terms & Conditions'
-                                                                    .tr(),
-                                                            style: TextStyle(
-                                                                color: themeNotifier.isDark
-                                                                    ? AppColors
-                                                                        .textColorToska
-                                                                    : AppColors
-                                                                        .textColorBlack,
-                                                                decoration:
-                                                                    TextDecoration
-                                                                        .underline,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                fontSize: 10.sp,
-                                                                fontFamily:
-                                                                    'Inter')),
-                                                        // TextSpan(
-                                                        //     text: ' of payment receiving.'
-                                                        //         .tr(),
-                                                        //     style: TextStyle(
-                                                        //         color: AppColors
-                                                        //             .textColorGrey,
-                                                        //         fontWeight:
-                                                        //         FontWeight.w400,
-                                                        //         fontSize: 12.sp,
-                                                        //         fontFamily: 'Inter'))
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 2.h,
-                                      ),
-
-                                      // SizedBox(height: 3.h,),
-                                      AppButton(
-                                        title: 'Update'.tr(),
-                                        isactive: isButtonActive && _isChecked
-                                            ? true
-                                            : false,
-                                        handler: () async {
-                                          setState(() {
-                                            isValidating = true;
-                                          });
-                                          if (_ibannumberController
-                                                  .text.isNotEmpty &&
-                                              _accountholdernamerController
-                                                  .text.isNotEmpty &&
-                                              _selectedBank != "") {
-                                            setState(() {
-                                              _isLoading = true;
-                                            });
-                                            final result =
-                                                await Provider.of<BankProvider>(
-                                                        context,
-                                                        listen: false)
-                                                    .updateBankAccountStep1(
-                                              bic: _selectedBankBic,
-                                              context: context,
-                                              token: accessToken,
-                                              isPrimary:
-                                                  widget.isPrimary == "true"
-                                                      ? true
-                                                      : false, accountNumber: _ibannumberController.text, accountTitle: _accountholdernamerController.text,
-                                            );
-                                            setState(() {
-                                              _isLoading = false;
-                                            });
-                                            if (result == AuthResult.success) {
-                                              startTimer();
-                                              otpDialog(
-                                                events: _events,
-                                                firstBtnHandler: () async {
-                                                  setState(() {
-                                                    _isLoading = true;
-                                                  });
-                                                  await Future.delayed(
-                                                      const Duration(
-                                                          milliseconds: 1000));
-                                                  final resultsecond = await Provider
-                                                          .of<BankProvider>(
-                                                              context,
-                                                              listen: false)
-                                                      .updateBankAccountStep2(
-                                                          context: context,
-                                                          token: accessToken,
-                                                          code: Provider.of<
-                                                                      AuthProvider>(
-                                                                  context,
-                                                                  listen: false)
-                                                              .codeFromOtpBoxes);
-                                                  setState(() {
-                                                    _isLoading = false;
-                                                  });
-                                                  print("after adding bank");
-                                                  if (resultsecond ==
-                                                      AuthResult.success) {
-                                                    Navigator.pop(context);
-                                                   updateSuccessDialog();
-
-
-
-                                                  }
-                                                },
-                                                secondBtnHandler: () async {
-                                                  if (_timeLeft == 0) {
-                                                    print(
-                                                        'resend function calling');
-                                                    try {
-                                                      setState(() {
-                                                        _isLoadingResend = true;
-                                                      });
-                                                      final result = await Provider
-                                                              .of<AuthProvider>(
-                                                                  context,
-                                                                  listen: false)
-                                                          .sendOTP(
-                                                              context: context,
-                                                              token:
-                                                                  accessToken);
-                                                      setState(() {
-                                                        _isLoadingResend =
-                                                            false;
-                                                      });
-                                                      if (result ==
-                                                          AuthResult.success) {
-                                                        startTimer();
-                                                      }
-                                                    } catch (error) {
-                                                      print("Error: $error");
-                                                      // _showToast('An error occurred'); // Show an error message
-                                                    } finally {
-                                                      setState(() {
-                                                        _isLoadingResend =
-                                                            false;
-                                                      });
-                                                    }
-                                                  } else {}
-                                                },
-                                                firstTitle: 'Verify',
-                                                secondTitle: 'Resend code: ',
-
-                                                // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
-
-                                                context: context,
-                                                isDark: themeNotifier.isDark,
-                                                isFirstButtonActive:
-                                                    isOtpButtonActive,
-                                                isSecondButtonActive: false,
-                                                otp1Controller: otp1Controller,
-                                                otp2Controller: otp2Controller,
-                                                otp3Controller: otp3Controller,
-                                                otp4Controller: otp4Controller,
-                                                otp5Controller: otp5Controller,
-                                                otp6Controller: otp6Controller,
-                                                firstFieldFocusNode:
-                                                    firstFieldFocusNode,
-                                                secondFieldFocusNode:
-                                                    secondFieldFocusNode,
-                                                thirdFieldFocusNode:
-                                                    thirdFieldFocusNode,
-                                                forthFieldFocusNode:
-                                                    forthFieldFocusNode,
-                                                fifthFieldFocusNode:
-                                                    fifthFieldFocusNode,
-                                                sixthFieldFocusNode:
-                                                    sixthFieldFocusNode,
-                                                firstBtnBgColor:
-                                                    AppColors.activeButtonColor,
-                                                firstBtnTextColor:
-                                                    AppColors.textColorBlack,
-                                                secondBtnBgColor:
-                                                    Colors.transparent,
-                                                secondBtnTextColor: _timeLeft !=
-                                                        0
-                                                    ? AppColors.textColorBlack
-                                                        .withOpacity(0.8)
-                                                    : AppColors.textColorWhite,
-                                                // themeNotifier.isDark
-                                                //     ? AppColors.textColorWhite
-                                                //     : AppColors.textColorBlack
-                                                //         .withOpacity(0.8),
-                                                isLoading: _isLoading,
-                                              );
-                                            }
-                                          }
-                                        },
-                                        isLoading: _isLoading,
-                                        isGradient: true,
-                                        color: Colors.transparent,
-                                        // textColor: AppColors.textColorGreyShade2,
-                                      ),
-                                      // SizedBox(
-                                      //   height: 3.h,
-                                      // ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            )
                         ],
                       ),
                     ),
@@ -1286,6 +1292,7 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
         _ibanfocusNode.requestFocus();
       }),
       child: Container(
+        margin: EdgeInsets.only(top: isFirst ? 40.sp: 0),
         child: Column(
           // mainAxisAlignment: english ? MainAxisAlignment.start : MainAxisAlignment.end,
 
@@ -1383,10 +1390,10 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
         );
       }
 
-      // Future.delayed(
-      //     Duration(
-      //         seconds: 3),
-      //     closeDialogAndNavigate);
+      Future.delayed(
+          Duration(
+              seconds: 3),
+          closeDialogAndNavigate);
       return StatefulBuilder(
           builder: (BuildContext
           context,

@@ -48,7 +48,7 @@ class BankName {
       // bankName: json['beneficiaryBank'],
       id: json['_id'],
       bic: json['bic'],
-      bankName: json['bankName'].toString(),
+      bankName: json['bankName'],
       // beneficiaryName: json['beneficiaryName'],
     );
   }

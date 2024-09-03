@@ -1547,7 +1547,8 @@ class _WalletBankingAndPaymentEmptyState
                         Expanded(child: SizedBox()),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 22),
-                          child: DialogButton(
+                          child:
+                          AppButton(
                             title: 'Delete'.tr(),
                             handler: () async {
                               setState(() {
@@ -1568,10 +1569,13 @@ class _WalletBankingAndPaymentEmptyState
                                 Navigator.pop(context);
                               }
                             },
-                            // isGradient: true,
+                            isGradient: false,
                             isLoading: isDeleteBankLoading,
-                            color: AppColors.appSecondButton.withOpacity(0.10),
-                            textColor: AppColors.errorColor,
+                            color: AppColors.deleteAccountBtnColor
+                                .withOpacity(0.10),
+                            textColor: AppColors.textColorBlack,
+                            buttonWithBorderColor: AppColors.errorColor,
+                            isGradientWithBorder: true,
                           ),
                         ),
                         SizedBox(height: 2.h),
@@ -1581,19 +1585,16 @@ class _WalletBankingAndPaymentEmptyState
                               title: 'Cancel'.tr(),
                               handler: () {
                                 Navigator.pop(context);
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => TermsAndConditions(),
-                                //   ),
-                                // );
                               },
                               isGradient: false,
                               textColor: isDark
                                   ? AppColors.textColorWhite
                                   : AppColors.textColorBlack.withOpacity(0.8),
                               color:
-                                  AppColors.appSecondButton.withOpacity(0.10)),
+                                  AppColors.appSecondButton.withOpacity(0.10),
+                            isGradientWithBorder: true,
+                            secondBtnBorderClr: true,
+                          ),
                         ),
                         Expanded(child: SizedBox())
                       ],
@@ -1757,10 +1758,13 @@ class _WalletBankingAndPaymentEmptyState
                               }
                             },
                             isLoading: isDialogLoading,
-                            isGradient: true,
+                            isGradient: false,
                             // color: Colors.transparent,
-                            color: AppColors.appSecondButton.withOpacity(0.10),
-                            textColor: AppColors.textColorBlack,
+                            color: AppColors.deleteAccountBtnColor
+                                .withOpacity(0.10),
+                            textColor: AppColors.textColorWhite,
+                            buttonWithBorderColor: AppColors.errorColor,
+                            isGradientWithBorder: true,
                           ),
                         ),
                         SizedBox(height: 2.h),
@@ -1771,12 +1775,15 @@ class _WalletBankingAndPaymentEmptyState
                               handler: () {
                                 Navigator.pop(context);
                               },
-                              isGradient: false,
-                              textColor: isDark
-                                  ? AppColors.textColorWhite
-                                  : AppColors.textColorBlack.withOpacity(0.8),
-                              color:
-                                  AppColors.appSecondButton.withOpacity(0.10)),
+                            isGradient: false,
+                            textColor: isDark
+                                ? AppColors.textColorWhite
+                                : AppColors.textColorBlack.withOpacity(0.8),
+                            color:
+                            AppColors.appSecondButton.withOpacity(0.10),
+                            isGradientWithBorder: true,
+                            secondBtnBorderClr: true,
+                          ),
                         ),
                         Expanded(child: SizedBox())
                       ],
