@@ -162,6 +162,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                 child: TextField(
                                     controller: _emailController,
                                     keyboardType: TextInputType.emailAddress,
+                                    textInputAction: TextInputAction.next,
                                     onChanged: (v){
                                       auth.loginErrorResponse=null;
                                     },
@@ -470,6 +471,36 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                 ),
               ),
             ),
+            if (OS.Platform.isIOS)
+              KeyboardVisibilityBuilder(builder: (context, child) {
+                return Visibility(
+                    visible: isKeyboardVisible,
+                    child: Positioned(
+                        bottom: 0,
+                        right: 0,
+                        left: 0,
+                        child: GestureDetector(
+                          onTap: () =>
+                              FocusManager.instance.primaryFocus?.unfocus(),
+                          child: Container(
+                              color: AppColors.textColorWhite,
+                              height: 4.h,
+                              child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20),
+                                    child: Text(
+                                      'Done',
+                                      style: TextStyle(
+                                          color: Colors.blue,
+                                          fontSize: 11.5.sp,
+                                          fontWeight: FontWeight.bold)
+                                          .apply(fontWeightDelta: -1),
+                                    ),
+                                  ))),
+                        )));
+              }),
             if (_isLoading) LoaderBluredScreen(),
           ],
         );

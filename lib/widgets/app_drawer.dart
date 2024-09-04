@@ -47,6 +47,7 @@ class _AppDrawerState extends State<AppDrawer> {
   deleteToken() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove('accessToken');
+    prefs.remove('refreshToken');
   }
 
   String replaceMiddleWithDots(String input) {
@@ -140,33 +141,36 @@ class _AppDrawerState extends State<AppDrawer> {
                           Container(
                             decoration: BoxDecoration(
                               color: AppColors.textColorGrey,
-                              // gradient: LinearGradient(
-                              //   colors: [Color(0xff92B928), Color(0xffC9C317)],
-                              //   begin: Alignment.topLeft,
-                              //   end: Alignment.bottomRight,
-                              // ),
                               borderRadius: BorderRadius.circular(100),
                             ),
                             child: Padding(
                               padding: EdgeInsets.all(1.sp),
                               child: Container(
+                                height: 58.sp,
+                                width: 58.sp,
                                 decoration: BoxDecoration(
                                     color: AppColors.backgroundColor,
                                     borderRadius: BorderRadius.circular(100)),
                                 child: Padding(
                                   padding: EdgeInsets.all(1.sp),
-                                  child:ClipRRect(
+                                  child:
+                                  ClipRRect(
                                     borderRadius: BorderRadius.circular(100),
-                                    child: user.userAvatar != null ? Image.network(
+                                    child:
+                                    user.userAvatar != null ? Image.network(
                                       user.userAvatar!,
-                                      height: 55.sp,
-                                      width: 55.sp,
+                                      // height: 55.sp,
+                                      // width: 55.sp,
                                       fit: BoxFit.cover,
                                     ):
-                                    Image.asset(
-                                      "assets/images/profile.png",
-                                      height: 55.sp,
-                                      width: 55.sp,
+                                    Padding(
+                                      padding:  EdgeInsets.all(4.sp),
+                                      child: Image.asset(
+                                        "assets/images/user_placeholder.png",
+                                        // height: 55.sp,
+                                        // width: 55.sp,
+                                        color: AppColors.textColorGrey,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -637,7 +641,7 @@ class _AppDrawerState extends State<AppDrawer> {
                               });
                               if (resultLogout == AuthResult.success) {
                                 print('printing navigator');
-                                deleteToken();
+                                await deleteToken();
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(

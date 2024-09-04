@@ -212,39 +212,82 @@ print(json.decode(response.body));
   }
 
 
+  // Future<AuthResult> logoutUser({
+  //   required String token,
+  //   required String refreshToken,
+  //   required BuildContext context,
+  // }) async {
+  //   final url = Uri.parse(BASE_URL + '/auth/logout');
+  //   // final body = {
+  //   //
+  //   // };
+  //
+  //   final response = await http.post(
+  //     url,
+  //     // body: body,
+  //     headers: {
+  //       'Authorization': 'Bearer $token',
+  //     },
+  //   );
+  //   fToast = FToast();
+  //   fToast.init(context);
+  //   print('logout response' + response.body);
+  //   print('logout token' + refreshToken.toString());
+  //   final jsonResponse = json.decode(response.body);
+  //   final msg = jsonResponse['message'];
+  //   if (response.statusCode == 201) {
+  //     // final prefs = await SharedPreferences.getInstance();
+  //     // prefs.clear();
+  //
+  //     print(msg); // Print the message
+  //
+  //     return AuthResult.success;
+  //   } else {
+  //     print("Log out failed: ${response.body}");
+  //     return AuthResult.failure;
+  //   }
+  // }
+
   Future<AuthResult> logoutUser({
     required String token,
     required String refreshToken,
     required BuildContext context,
   }) async {
     final url = Uri.parse(BASE_URL + '/auth/logout');
-    final body = {'refreshToken': refreshToken};
+    // final body = {};
 
-    final response = await http.post(
-      url,
-      body: body,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-    );
-    fToast = FToast();
-    fToast.init(context);
-    print('logout response' + response.body);
-    final jsonResponse = json.decode(response.body);
-    final msg = jsonResponse['message'];
-    if (response.statusCode == 201) {
-      final prefs = await SharedPreferences.getInstance();
-      prefs.clear();
+    try {
+      final response = await http.post(
+        url,
+        // body: body,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
 
-      print(msg); // Print the message
-      _showToast(msg); // Show the message in _showToast
-      return AuthResult.success;
-    } else {
-      print("Log out failed: ${response.body}");
-      _showToast(msg);
+      fToast = FToast();
+      fToast.init(context);
+      print('Logout response: ${response.statusCode}');
+      // print('Logout token: $token');
+
+      if (response.statusCode == 204) {
+
+          // final jsonResponse = json.decode(response.body);
+          // final msg = jsonResponse['message'];
+          print('logout success'); // Print the message
+
+
+        return AuthResult.success;
+      } else {
+        print("Logout failed: ${response.body}");
+        return AuthResult.failure;
+      }
+    } catch (e) {
+      print("Error during logout: $e");
       return AuthResult.failure;
     }
   }
+
 
   Future<AuthResult> sendLoginOTP({
     required String mobile,

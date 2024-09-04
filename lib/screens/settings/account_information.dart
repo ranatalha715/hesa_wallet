@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hesa_wallet/constants/colors.dart';
 import 'package:hesa_wallet/constants/configs.dart';
 import 'package:hesa_wallet/providers/user_provider.dart';
@@ -69,6 +70,7 @@ class _AccountInformationState extends State<AccountInformation> {
   late StreamController<int> _events;
   bool isValidating = false;
   bool isButtonActive = false;
+  bool isKeyboardVisible = false;
   bool isEditAble = false;
   var _isLoading = false;
   var accessToken = "";
@@ -147,7 +149,11 @@ class _AccountInformationState extends State<AccountInformation> {
     otp4Controller.addListener(_updateOtpButtonState);
     otp5Controller.addListener(_updateOtpButtonState);
     otp6Controller.addListener(_updateOtpButtonState);
-  }
+    KeyboardVisibilityController().onChange.listen((bool visible) {
+      setState(() {
+        isKeyboardVisible = visible;
+      });
+  });}
 
   void _updateOtpButtonState() {
     setState(() {
@@ -215,925 +221,959 @@ class _AccountInformationState extends State<AccountInformation> {
             backgroundColor: themeNotifier.isDark
                 ? AppColors.backgroundColor
                 : AppColors.textColorWhite,
-            body: Column(
+            body: Stack(
               children: [
-                MainHeader(title: 'Account information'.tr()),
-                // SizedBox(
-                //   height: 2.h,
-                // ),
-                // _isLoading ? CircularProgressIndicator(
-                //   color: AppColors.profileHeaderDark,
-                // ) :
-                Expanded(
-                  child: Container(
-                    // height: 65.h,
-                    // color: Colors.red,
-                    width: double.infinity,
-                    child: Stack(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 20,
-                          ),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Align(
-                                    alignment: Alignment.centerRight,
-                                    child: isEditAble
-                                        ? Padding(
-                                            padding: EdgeInsets.only(
-                                                right: 2.sp,
-                                                top: 18.sp,
-                                                bottom: 10.sp),
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          AccountInformation()),
-                                                );
-                                                setState(() {
-                                                  isEditAble = false;
-                                                });
-                                              },
-                                              child: Text(
-                                                'Cancel',
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w400,
-                                                  decoration:
-                                                      TextDecoration.underline,
+                Column(
+                  children: [
+                    MainHeader(title: 'Account information'.tr()),
+                    // SizedBox(
+                    //   height: 2.h,
+                    // ),
+                    // _isLoading ? CircularProgressIndicator(
+                    //   color: AppColors.profileHeaderDark,
+                    // ) :
+                    Expanded(
+                      child: Container(
+                        // height: 65.h,
+                        // color: Colors.red,
+                        width: double.infinity,
+                        child: Stack(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Align(
+                                        alignment: Alignment.centerRight,
+                                        child: isEditAble
+                                            ? Padding(
+                                                padding: EdgeInsets.only(
+                                                    right: 2.sp,
+                                                    top: 18.sp,
+                                                    bottom: 10.sp),
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              AccountInformation()),
+                                                    );
+                                                    setState(() {
+                                                      isEditAble = false;
+                                                    });
+                                                  },
+                                                  child: Text(
+                                                    'Cancel',
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight: FontWeight.w400,
+                                                      decoration:
+                                                          TextDecoration.underline,
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
-                                          )
-                                        : GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                isEditAble = true;
-                                              });
-                                            },
-                                            child: Image.asset(
-                                              "assets/images/edit_information.png",
-                                              height: 6.h,
-                                              width: 6.w,
-                                            ),
-                                          )),
-                                // SizedBox(
-                                //   height: 4.h,
-                                // ),
-                                // SizedBox(height: 2.h,),
-                                Align(
-                                  alignment: isEnglish
-                                      ? Alignment.centerLeft
-                                      : Alignment.centerRight,
-                                  child: Text(
-                                    'First Name'.tr(),
-                                    style: TextStyle(
-                                        fontSize: 11.7.sp,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w600,
-                                        color: themeNotifier.isDark
-                                            ? AppColors.textColorWhite
-                                            : AppColors.textColorBlack),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 1.h,
-                                ),
-                                TextFieldParent(
-                                  child: TextField(
-                                      readOnly: isEditAble ? false : true,
-                                      controller: _firstnameController,
-                                      keyboardType: TextInputType.name,
-                                      // scrollPadding: EdgeInsets.only(
-                                      //     bottom: MediaQuery.of(context)
-                                      //             .viewInsets
-                                      //             .bottom +
-                                      //         200),
-                                      style: TextStyle(
-                                          fontSize: 10.2.sp,
-                                          color: themeNotifier.isDark
-                                              ? AppColors.textColorWhite
-                                              : AppColors.textColorBlack,
-                                          fontWeight: FontWeight.w400,
-                                          // Off-white color,
-                                          fontFamily: 'Inter'),
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.symmetric(
-                                            vertical: 10.0, horizontal: 16.0),
-                                        // hintText: 'No payment card have been added',
-                                        hintStyle: TextStyle(
-                                            fontSize: 10.2.sp,
-                                            color: AppColors.textColorGrey,
-                                            fontWeight: FontWeight.w400,
-                                            // Off-white color,
-                                            fontFamily: 'Inter'),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            borderSide: BorderSide(
-                                              color: _firstnameController
-                                                          .text.isEmpty &&
-                                                      isValidating &&
-                                                      isEditAble
-                                                  ? AppColors.errorColor
-                                                  : Colors.transparent,
-                                              // Off-white color
-                                              // width: 2.0,
-                                            )),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            borderSide: BorderSide(
-                                              color: isEditAble
-                                                  ? AppColors
-                                                      .focusTextFieldColor
-                                                  : Colors.transparent,
-                                            )),
-                                        // labelText: 'Enter your password',
-                                      ),
-                                      cursorColor: AppColors.textColorGrey),
-                                ),
-                                if (_firstnameController.text.isEmpty &&
-                                    isEditAble &&
-                                    isValidating)
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 7.sp),
-                                    child: Text(
-                                      "*Enter first name",
-                                      style: TextStyle(
-                                          fontSize: 10.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.errorColor),
-                                    ),
-                                  ),
-                                SizedBox(
-                                  height: 2.h,
-                                ),
-                                Align(
-                                  alignment: isEnglish
-                                      ? Alignment.centerLeft
-                                      : Alignment.centerRight,
-                                  child: Text(
-                                    'Last Name'.tr(),
-                                    style: TextStyle(
-                                        fontSize: 11.7.sp,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w600,
-                                        color: themeNotifier.isDark
-                                            ? AppColors.textColorWhite
-                                            : AppColors.textColorBlack),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 1.h,
-                                ),
-                                TextFieldParent(
-                                  child: TextField(
-                                      readOnly: isEditAble ? false : true,
-                                      controller: _lastnameController,
-                                      keyboardType: TextInputType.name,
-                                      scrollPadding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom),
-                                      style: TextStyle(
-                                          fontSize: 10.2.sp,
-                                          color: themeNotifier.isDark
-                                              ? AppColors.textColorWhite
-                                              : AppColors.textColorBlack,
-                                          fontWeight: FontWeight.w400,
-                                          // Off-white color,
-                                          fontFamily: 'Inter'),
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.symmetric(
-                                            vertical: 10.0, horizontal: 16.0),
-                                        // hintText: 'No banking have been added',
-                                        hintStyle: TextStyle(
-                                            fontSize: 10.2.sp,
-                                            color: AppColors.textColorGrey,
-                                            fontWeight: FontWeight.w400,
-                                            // Off-white color,
-                                            fontFamily: 'Inter'),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            borderSide: BorderSide(
-                                              color: _lastnameController
-                                                          .text.isEmpty &&
-                                                      isValidating
-                                                  ? AppColors.errorColor
-                                                  : Colors.transparent,
-                                              // Off-white color
-                                              // width: 2.0,
-                                            )),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            borderSide: BorderSide(
-                                              color: isEditAble
-                                                  ? AppColors
-                                                      .focusTextFieldColor
-                                                  : Colors.transparent,
-                                            )),
-                                        // labelText: 'Enter your password',
-                                      ),
-                                      cursorColor: AppColors.textColorGrey),
-                                ),
-                                if (_lastnameController.text.isEmpty &&
-                                    isValidating)
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 7.sp),
-                                    child: Text(
-                                      "*Enter last name",
-                                      style: TextStyle(
-                                          fontSize: 10.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.errorColor),
-                                    ),
-                                  ),
-                                if (!isEditAble)
-                                  SizedBox(
-                                    height: 2.h,
-                                  ),
-                                if (!isEditAble)
-                                  Align(
-                                    alignment: isEnglish
-                                        ? Alignment.centerLeft
-                                        : Alignment.centerRight,
-                                    child: Text(
-                                      'Username'.tr(),
-                                      style: TextStyle(
-                                          fontSize: 11.7.sp,
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.w600,
-                                          color: themeNotifier.isDark
-                                              ? AppColors.textColorWhite
-                                              : AppColors.textColorBlack),
-                                    ),
-                                  ),
-                                if (!isEditAble)
-                                  SizedBox(
-                                    height: 1.h,
-                                  ),
-                                if (!isEditAble)
-                                  TextFieldParent(
-                                    child: TextField(
-                                        readOnly: true,
-                                        controller: _usernameController,
-                                        keyboardType: TextInputType.name,
-                                        scrollPadding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom),
+                                              )
+                                            : GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    isEditAble = true;
+                                                  });
+                                                },
+                                                child: Image.asset(
+                                                  "assets/images/edit_information.png",
+                                                  height: 6.h,
+                                                  width: 6.w,
+                                                ),
+                                              )),
+                                    // SizedBox(
+                                    //   height: 4.h,
+                                    // ),
+                                    // SizedBox(height: 2.h,),
+                                    Align(
+                                      alignment: isEnglish
+                                          ? Alignment.centerLeft
+                                          : Alignment.centerRight,
+                                      child: Text(
+                                        'First Name'.tr(),
                                         style: TextStyle(
-                                            fontSize: 10.2.sp,
+                                            fontSize: 11.7.sp,
+                                            fontFamily: 'Inter',
+                                            fontWeight: FontWeight.w600,
                                             color: themeNotifier.isDark
                                                 ? AppColors.textColorWhite
-                                                : AppColors.textColorBlack,
-                                            fontWeight: FontWeight.w400,
-                                            // Off-white color,
-                                            fontFamily: 'Inter'),
-                                        decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.symmetric(
-                                              vertical: 10.0, horizontal: 16.0),
-                                          // hintText: 'No banking have been added',
-                                          hintStyle: TextStyle(
-                                              fontSize: 10.2.sp,
-                                              color: AppColors.textColorGrey,
-                                              fontWeight: FontWeight.w400,
-                                              // Off-white color,
-                                              fontFamily: 'Inter'),
-                                          enabledBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                              borderSide: BorderSide(
-                                                color: Colors.transparent,
-                                                // Off-white color
-                                                // width: 2.0,
-                                              )),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                              borderSide: BorderSide(
-                                                color: isEditAble
-                                                    ? AppColors
-                                                        .focusTextFieldColor
-                                                    : Colors.transparent,
-                                              )),
-                                          // labelText: 'Enter your password',
-                                        ),
-                                        cursorColor: AppColors.textColorGrey),
-                                  ),
-
-                                if (_usernameController.text.isEmpty &&
-                                    isValidating &&
-                                    !isEditAble)
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 7.sp),
-                                    child: Text(
-                                      "*Enter username",
-                                      style: TextStyle(
-                                          fontSize: 10.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.errorColor),
-                                    ),
-                                  ),
-                                SizedBox(
-                                  height: 2.h,
-                                ),
-                                Align(
-                                  alignment: isEnglish
-                                      ? Alignment.centerLeft
-                                      : Alignment.centerRight,
-                                  child: Text(
-                                    'Email Address'.tr(),
-                                    style: TextStyle(
-                                        fontSize: 11.7.sp,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w600,
-                                        color: themeNotifier.isDark
-                                            ? AppColors.textColorWhite
-                                            : AppColors.textColorBlack),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 1.h,
-                                ),
-                                TextFieldParent(
-                                  child: TextField(
-                                      readOnly: isEditAble ? false : true,
-                                      controller: _emailController,
-                                      keyboardType: TextInputType.emailAddress,
-                                      scrollPadding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom),
-                                      style: TextStyle(
-                                          fontSize: 10.2.sp,
-                                          color: themeNotifier.isDark
-                                              ? AppColors.textColorWhite
-                                              : AppColors.textColorBlack,
-                                          fontWeight: FontWeight.w400,
-                                          // Off-white color,
-                                          fontFamily: 'Inter'),
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.symmetric(
-                                            vertical: 10.0, horizontal: 16.0),
-                                        // hintText: 'No payment card have been added',
-                                        hintStyle: TextStyle(
-                                            fontSize: 10.2.sp,
-                                            color: AppColors.textColorGrey,
-                                            fontWeight: FontWeight.w400,
-                                            // Off-white color,
-                                            fontFamily: 'Inter'),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            borderSide: BorderSide(
-                                              color: _emailController
-                                                          .text.isEmpty &&
-                                                      isValidating
-                                                  ? AppColors.errorColor
-                                                  : Colors.transparent,
-                                              // Off-white color
-                                              // width: 2.0,
-                                            )),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            borderSide: BorderSide(
-                                              color: isEditAble
-                                                  ? AppColors
-                                                      .focusTextFieldColor
-                                                  : Colors.transparent,
-                                            )),
-                                        // labelText: 'Enter your password',
+                                                : AppColors.textColorBlack),
                                       ),
-                                      cursorColor: AppColors.textColorGrey),
-                                ),
-                                if (_emailController.text.isEmpty &&
-                                    isValidating)
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 7.sp),
-                                    child: Text(
-                                      "*Enter Email",
-                                      style: TextStyle(
-                                          fontSize: 10.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.errorColor),
                                     ),
-                                  ),
-                                SizedBox(
-                                  height: 2.h,
-                                ),
-                                Align(
-                                  alignment: isEnglish
-                                      ? Alignment.centerLeft
-                                      : Alignment.centerRight,
-                                  child: Text(
-                                    'Mobile Number'.tr(),
-                                    style: TextStyle(
-                                        fontSize: 11.7.sp,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w600,
-                                        color: themeNotifier.isDark
-                                            ? AppColors.textColorWhite
-                                            : AppColors.textColorBlack),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 1.h,
-                                ),
-                                TextFieldParent(
-                                  child: TextField(
-                                      readOnly: isEditAble ? false : true,
-                                      controller: _numberController,
-                                      scrollPadding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom),
-                                      keyboardType: TextInputType.number,
-                                      style: TextStyle(
-                                          fontSize: 10.2.sp,
-                                          color: themeNotifier.isDark
-                                              ? AppColors.textColorWhite
-                                              : AppColors.textColorBlack,
-                                          fontWeight: FontWeight.w400,
-                                          // Off-white color,
-                                          fontFamily: 'Inter'),
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.symmetric(
-                                            vertical: 10.0, horizontal: 16.0),
-                                        // hintText: 'Enter your Mobile Number',
-                                        hintStyle: TextStyle(
-                                            fontSize: 10.2.sp,
-                                            color: AppColors.textColorGrey,
-                                            fontWeight: FontWeight.w400,
-                                            // Off-white color,
-                                            fontFamily: 'Inter'),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            borderSide: BorderSide(
-                                              color: _numberController
-                                                          .text.isEmpty &&
-                                                      isValidating
-                                                  ? AppColors.errorColor
-                                                  : Colors.transparent,
-                                            )),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            borderSide: BorderSide(
-                                              color: isEditAble
-                                                  ? AppColors
-                                                      .focusTextFieldColor
-                                                  : Colors.transparent,
-                                            )),
-
-                                        prefixIcon: Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 12.sp,
-                                              top: 12.4.sp,
-                                              right: 12.sp),
-                                          child: Text(
-                                            '+966',
-                                            style: TextStyle(
+                                    SizedBox(
+                                      height: 1.h,
+                                    ),
+                                    TextFieldParent(
+                                      child: TextField(
+                                          readOnly: isEditAble ? false : true,
+                                          controller: _firstnameController,
+                                          keyboardType: TextInputType.name,
+                                          // scrollPadding: EdgeInsets.only(
+                                          //     bottom: MediaQuery.of(context)
+                                          //             .viewInsets
+                                          //             .bottom +
+                                          //         200),
+                                          style: TextStyle(
+                                              fontSize: 10.2.sp,
                                               color: themeNotifier.isDark
                                                   ? AppColors.textColorWhite
                                                   : AppColors.textColorBlack,
                                               fontWeight: FontWeight.w400,
-                                              fontSize: 14,
+                                              // Off-white color,
+                                              fontFamily: 'Inter'),
+                                          decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.symmetric(
+                                                vertical: 10.0, horizontal: 16.0),
+                                            // hintText: 'No payment card have been added',
+                                            hintStyle: TextStyle(
+                                                fontSize: 10.2.sp,
+                                                color: AppColors.textColorGrey,
+                                                fontWeight: FontWeight.w400,
+                                                // Off-white color,
+                                                fontFamily: 'Inter'),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                borderSide: BorderSide(
+                                                  color: _firstnameController
+                                                              .text.isEmpty &&
+                                                          isValidating &&
+                                                          isEditAble
+                                                      ? AppColors.errorColor
+                                                      : Colors.transparent,
+                                                  // Off-white color
+                                                  // width: 2.0,
+                                                )),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                borderSide: BorderSide(
+                                                  color: isEditAble
+                                                      ? AppColors
+                                                          .focusTextFieldColor
+                                                      : Colors.transparent,
+                                                )),
+                                            // labelText: 'Enter your password',
+                                          ),
+                                          cursorColor: AppColors.textColorGrey),
+                                    ),
+                                    if (_firstnameController.text.isEmpty &&
+                                        isEditAble &&
+                                        isValidating)
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 7.sp),
+                                        child: Text(
+                                          "*Enter first name",
+                                          style: TextStyle(
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.errorColor),
+                                        ),
+                                      ),
+                                    SizedBox(
+                                      height: 2.h,
+                                    ),
+                                    Align(
+                                      alignment: isEnglish
+                                          ? Alignment.centerLeft
+                                          : Alignment.centerRight,
+                                      child: Text(
+                                        'Last Name'.tr(),
+                                        style: TextStyle(
+                                            fontSize: 11.7.sp,
+                                            fontFamily: 'Inter',
+                                            fontWeight: FontWeight.w600,
+                                            color: themeNotifier.isDark
+                                                ? AppColors.textColorWhite
+                                                : AppColors.textColorBlack),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 1.h,
+                                    ),
+                                    TextFieldParent(
+                                      child: TextField(
+                                          readOnly: isEditAble ? false : true,
+                                          controller: _lastnameController,
+                                          keyboardType: TextInputType.name,
+                                          scrollPadding: EdgeInsets.only(
+                                              bottom: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom),
+                                          style: TextStyle(
+                                              fontSize: 10.2.sp,
+                                              color: themeNotifier.isDark
+                                                  ? AppColors.textColorWhite
+                                                  : AppColors.textColorBlack,
+                                              fontWeight: FontWeight.w400,
+                                              // Off-white color,
+                                              fontFamily: 'Inter'),
+                                          decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.symmetric(
+                                                vertical: 10.0, horizontal: 16.0),
+                                            // hintText: 'No banking have been added',
+                                            hintStyle: TextStyle(
+                                                fontSize: 10.2.sp,
+                                                color: AppColors.textColorGrey,
+                                                fontWeight: FontWeight.w400,
+                                                // Off-white color,
+                                                fontFamily: 'Inter'),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                borderSide: BorderSide(
+                                                  color: _lastnameController
+                                                              .text.isEmpty &&
+                                                          isValidating
+                                                      ? AppColors.errorColor
+                                                      : Colors.transparent,
+                                                  // Off-white color
+                                                  // width: 2.0,
+                                                )),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                borderSide: BorderSide(
+                                                  color: isEditAble
+                                                      ? AppColors
+                                                          .focusTextFieldColor
+                                                      : Colors.transparent,
+                                                )),
+                                            // labelText: 'Enter your password',
+                                          ),
+                                          cursorColor: AppColors.textColorGrey),
+                                    ),
+                                    if (_lastnameController.text.isEmpty &&
+                                        isValidating)
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 7.sp),
+                                        child: Text(
+                                          "*Enter last name",
+                                          style: TextStyle(
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.errorColor),
+                                        ),
+                                      ),
+                                    if (!isEditAble)
+                                      SizedBox(
+                                        height: 2.h,
+                                      ),
+                                    if (!isEditAble)
+                                      Align(
+                                        alignment: isEnglish
+                                            ? Alignment.centerLeft
+                                            : Alignment.centerRight,
+                                        child: Text(
+                                          'Username'.tr(),
+                                          style: TextStyle(
+                                              fontSize: 11.7.sp,
+                                              fontFamily: 'Inter',
+                                              fontWeight: FontWeight.w600,
+                                              color: themeNotifier.isDark
+                                                  ? AppColors.textColorWhite
+                                                  : AppColors.textColorBlack),
+                                        ),
+                                      ),
+                                    if (!isEditAble)
+                                      SizedBox(
+                                        height: 1.h,
+                                      ),
+                                    if (!isEditAble)
+                                      TextFieldParent(
+                                        child: TextField(
+                                            readOnly: true,
+                                            controller: _usernameController,
+                                            keyboardType: TextInputType.name,
+                                            scrollPadding: EdgeInsets.only(
+                                                bottom: MediaQuery.of(context)
+                                                    .viewInsets
+                                                    .bottom),
+                                            style: TextStyle(
+                                                fontSize: 10.2.sp,
+                                                color: themeNotifier.isDark
+                                                    ? AppColors.textColorWhite
+                                                    : AppColors.textColorBlack,
+                                                fontWeight: FontWeight.w400,
+                                                // Off-white color,
+                                                fontFamily: 'Inter'),
+                                            decoration: InputDecoration(
+                                              contentPadding: EdgeInsets.symmetric(
+                                                  vertical: 10.0, horizontal: 16.0),
+                                              // hintText: 'No banking have been added',
+                                              hintStyle: TextStyle(
+                                                  fontSize: 10.2.sp,
+                                                  color: AppColors.textColorGrey,
+                                                  fontWeight: FontWeight.w400,
+                                                  // Off-white color,
+                                                  fontFamily: 'Inter'),
+                                              enabledBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8.0),
+                                                  borderSide: BorderSide(
+                                                    color: Colors.transparent,
+                                                    // Off-white color
+                                                    // width: 2.0,
+                                                  )),
+                                              focusedBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8.0),
+                                                  borderSide: BorderSide(
+                                                    color: isEditAble
+                                                        ? AppColors
+                                                            .focusTextFieldColor
+                                                        : Colors.transparent,
+                                                  )),
+                                              // labelText: 'Enter your password',
+                                            ),
+                                            cursorColor: AppColors.textColorGrey),
+                                      ),
+
+                                    if (_usernameController.text.isEmpty &&
+                                        isValidating &&
+                                        !isEditAble)
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 7.sp),
+                                        child: Text(
+                                          "*Enter username",
+                                          style: TextStyle(
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.errorColor),
+                                        ),
+                                      ),
+                                    SizedBox(
+                                      height: 2.h,
+                                    ),
+                                    Align(
+                                      alignment: isEnglish
+                                          ? Alignment.centerLeft
+                                          : Alignment.centerRight,
+                                      child: Text(
+                                        'Email Address'.tr(),
+                                        style: TextStyle(
+                                            fontSize: 11.7.sp,
+                                            fontFamily: 'Inter',
+                                            fontWeight: FontWeight.w600,
+                                            color: themeNotifier.isDark
+                                                ? AppColors.textColorWhite
+                                                : AppColors.textColorBlack),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 1.h,
+                                    ),
+                                    TextFieldParent(
+                                      child: TextField(
+                                          readOnly: isEditAble ? false : true,
+                                          controller: _emailController,
+                                          keyboardType: TextInputType.emailAddress,
+                                          scrollPadding: EdgeInsets.only(
+                                              bottom: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom),
+                                          style: TextStyle(
+                                              fontSize: 10.2.sp,
+                                              color: themeNotifier.isDark
+                                                  ? AppColors.textColorWhite
+                                                  : AppColors.textColorBlack,
+                                              fontWeight: FontWeight.w400,
+                                              // Off-white color,
+                                              fontFamily: 'Inter'),
+                                          decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.symmetric(
+                                                vertical: 10.0, horizontal: 16.0),
+                                            // hintText: 'No payment card have been added',
+                                            hintStyle: TextStyle(
+                                                fontSize: 10.2.sp,
+                                                color: AppColors.textColorGrey,
+                                                fontWeight: FontWeight.w400,
+                                                // Off-white color,
+                                                fontFamily: 'Inter'),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                borderSide: BorderSide(
+                                                  color: _emailController
+                                                              .text.isEmpty &&
+                                                          isValidating
+                                                      ? AppColors.errorColor
+                                                      : Colors.transparent,
+                                                  // Off-white color
+                                                  // width: 2.0,
+                                                )),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                borderSide: BorderSide(
+                                                  color: isEditAble
+                                                      ? AppColors
+                                                          .focusTextFieldColor
+                                                      : Colors.transparent,
+                                                )),
+                                            // labelText: 'Enter your password',
+                                          ),
+                                          cursorColor: AppColors.textColorGrey),
+                                    ),
+                                    if (_emailController.text.isEmpty &&
+                                        isValidating)
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 7.sp),
+                                        child: Text(
+                                          "*Enter Email",
+                                          style: TextStyle(
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.errorColor),
+                                        ),
+                                      ),
+                                    SizedBox(
+                                      height: 2.h,
+                                    ),
+                                    Align(
+                                      alignment: isEnglish
+                                          ? Alignment.centerLeft
+                                          : Alignment.centerRight,
+                                      child: Text(
+                                        'Mobile Number'.tr(),
+                                        style: TextStyle(
+                                            fontSize: 11.7.sp,
+                                            fontFamily: 'Inter',
+                                            fontWeight: FontWeight.w600,
+                                            color: themeNotifier.isDark
+                                                ? AppColors.textColorWhite
+                                                : AppColors.textColorBlack),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 1.h,
+                                    ),
+                                    TextFieldParent(
+                                      child: TextField(
+                                          readOnly: isEditAble ? false : true,
+                                          controller: _numberController,
+                                          scrollPadding: EdgeInsets.only(
+                                              bottom: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom),
+                                          keyboardType: TextInputType.number,
+                                          style: TextStyle(
+                                              fontSize: 10.2.sp,
+                                              color: themeNotifier.isDark
+                                                  ? AppColors.textColorWhite
+                                                  : AppColors.textColorBlack,
+                                              fontWeight: FontWeight.w400,
+                                              // Off-white color,
+                                              fontFamily: 'Inter'),
+                                          decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.symmetric(
+                                                vertical: 10.0, horizontal: 16.0),
+                                            // hintText: 'Enter your Mobile Number',
+                                            hintStyle: TextStyle(
+                                                fontSize: 10.2.sp,
+                                                color: AppColors.textColorGrey,
+                                                fontWeight: FontWeight.w400,
+                                                // Off-white color,
+                                                fontFamily: 'Inter'),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                borderSide: BorderSide(
+                                                  color: _numberController
+                                                              .text.isEmpty &&
+                                                          isValidating
+                                                      ? AppColors.errorColor
+                                                      : Colors.transparent,
+                                                )),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                borderSide: BorderSide(
+                                                  color: isEditAble
+                                                      ? AppColors
+                                                          .focusTextFieldColor
+                                                      : Colors.transparent,
+                                                )),
+
+                                            prefixIcon: Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 12.sp,
+                                                  top: 12.4.sp,
+                                                  right: 12.sp),
+                                              child: Text(
+                                                '+966',
+                                                style: TextStyle(
+                                                  color: themeNotifier.isDark
+                                                      ? AppColors.textColorWhite
+                                                      : AppColors.textColorBlack,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
                                             ),
                                           ),
+                                          cursorColor: AppColors.textColorGrey),
+                                    ),
+                                    if (_numberController.text.isEmpty &&
+                                        isValidating)
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 7.sp),
+                                        child: Text(
+                                          "*Enter number",
+                                          style: TextStyle(
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.errorColor),
                                         ),
                                       ),
-                                      cursorColor: AppColors.textColorGrey),
-                                ),
-                                if (_numberController.text.isEmpty &&
-                                    isValidating)
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 7.sp),
-                                    child: Text(
-                                      "*Enter number",
-                                      style: TextStyle(
-                                          fontSize: 10.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.errorColor),
-                                    ),
-                                  ),
-                                if (!isEditAble)
-                                  SizedBox(
-                                    height: 2.h,
-                                  ),
-                                if (!isEditAble)
-                                  Align(
-                                    alignment: isEnglish
-                                        ? Alignment.centerLeft
-                                        : Alignment.centerRight,
-                                    child: Text(
-                                      'Nationality'.tr(),
-                                      style: TextStyle(
-                                          fontSize: 11.7.sp,
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.w600,
-                                          color: themeNotifier.isDark
-                                              ? AppColors.textColorWhite
-                                              : AppColors.textColorBlack),
-                                    ),
-                                  ),
-                                if (!isEditAble)
-                                  SizedBox(
-                                    height: 1.h,
-                                  ),
-                                if (!isEditAble)
-                                  TextFieldParent(
-                                    child: TextField(
-                                        readOnly: true,
-                                        controller: _nationalityController,
-                                        keyboardType: TextInputType.name,
-                                        scrollPadding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom),
-                                        style: TextStyle(
-                                            fontSize: 10.2.sp,
-                                            color: themeNotifier.isDark
-                                                ? AppColors.textColorWhite
-                                                : AppColors.textColorBlack,
-                                            fontWeight: FontWeight.w400,
-                                            // Off-white color,
-                                            fontFamily: 'Inter'),
-                                        decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.symmetric(
-                                              vertical: 10.0, horizontal: 16.0),
-                                          // hintText: 'No banking have been added',
-                                          hintStyle: TextStyle(
-                                              fontSize: 10.2.sp,
-                                              color: AppColors.textColorGrey,
-                                              fontWeight: FontWeight.w400,
-                                              // Off-white color,
-                                              fontFamily: 'Inter'),
-                                          enabledBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                              borderSide: BorderSide(
-                                                color: Colors.transparent,
-                                                // Off-white color
-                                                // width: 2.0,
-                                              )),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                              borderSide: BorderSide(
-                                                color: Colors.transparent,
-                                                // Off-white color
-                                                // width: 2.0,
-                                              )),
-                                          // labelText: 'Enter your password',
-                                        ),
-                                        cursorColor: AppColors.textColorGrey),
-                                  ),
-                                if (_nationalityController.text.isEmpty &&
-                                    isValidating &&
-                                    !isEditAble)
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 7.sp),
-                                    child: Text(
-                                      "*Enter Nationality",
-                                      style: TextStyle(
-                                          fontSize: 10.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.errorColor),
-                                    ),
-                                  ),
-                                SizedBox(
-                                  height: 2.h,
-                                ),
-                                if (!isEditAble)
-                                  Align(
-                                    alignment: isEnglish
-                                        ? Alignment.centerLeft
-                                        : Alignment.centerRight,
-                                    child: Text(
-                                      'Identification Number'.tr(),
-                                      style: TextStyle(
-                                          fontSize: 11.7.sp,
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.w600,
-                                          color: themeNotifier.isDark
-                                              ? AppColors.textColorWhite
-                                              : AppColors.textColorBlack),
-                                    ),
-                                  ),
-                                if (!isEditAble)
-                                  SizedBox(
-                                    height: 1.h,
-                                  ),
-                                if (!isEditAble)
-                                  TextFieldParent(
-                                    child: TextField(
-                                        readOnly: true,
-                                        controller:
-                                            _identificationNumberController,
-                                        keyboardType: TextInputType.name,
-                                        scrollPadding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom),
-                                        style: TextStyle(
-                                            fontSize: 10.2.sp,
-                                            color: themeNotifier.isDark
-                                                ? AppColors.textColorWhite
-                                                : AppColors.textColorBlack,
-                                            fontWeight: FontWeight.w400,
-                                            // Off-white color,
-                                            fontFamily: 'Inter'),
-                                        decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.symmetric(
-                                              vertical: 10.0, horizontal: 16.0),
-                                          // hintText: 'No banking have been added',
-                                          hintStyle: TextStyle(
-                                              fontSize: 10.2.sp,
-                                              color: AppColors.textColorGrey,
-                                              fontWeight: FontWeight.w400,
-                                              // Off-white color,
-                                              fontFamily: 'Inter'),
-                                          enabledBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                              borderSide: BorderSide(
-                                                color: Colors.transparent,
-                                                // Off-white color
-                                                // width: 2.0,
-                                              )),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                              borderSide: BorderSide(
-                                                color: Colors.transparent,
-                                                // Off-white color
-                                                // width: 2.0,
-                                              )),
-                                          // labelText: 'Enter your password',
-                                        ),
-                                        cursorColor: AppColors.textColorGrey),
-                                  ),
-                                if (_identificationNumberController
-                                        .text.isEmpty &&
-                                    isValidating &&
-                                    !isEditAble)
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 7.sp),
-                                    child: Text(
-                                      "*Enter Identification Number",
-                                      style: TextStyle(
-                                          fontSize: 10.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.errorColor),
-                                    ),
-                                  ),
-                                SizedBox(
-                                  height: 19.h,
-                                ),
-                                if (isEditAble)
-                                  Column(
-                                    children: [
-                                      Container(
+                                    if (!isEditAble)
+                                      SizedBox(
                                         height: 2.h,
-                                        width: double.infinity,
-                                        color: AppColors.backgroundColor,
                                       ),
-                                      Container(
-                                        color: AppColors.backgroundColor,
-                                        child: AppButton(
-                                            title: 'Save changes'.tr(),
-                                            isactive:
-                                                isEditAble && isButtonActive
-                                                    ? true
-                                                    : false,
-                                            handler: () async {
-                                              setState(() {
-                                                isValidating = true;
-                                              });
+                                    if (!isEditAble)
+                                      Align(
+                                        alignment: isEnglish
+                                            ? Alignment.centerLeft
+                                            : Alignment.centerRight,
+                                        child: Text(
+                                          'Nationality'.tr(),
+                                          style: TextStyle(
+                                              fontSize: 11.7.sp,
+                                              fontFamily: 'Inter',
+                                              fontWeight: FontWeight.w600,
+                                              color: themeNotifier.isDark
+                                                  ? AppColors.textColorWhite
+                                                  : AppColors.textColorBlack),
+                                        ),
+                                      ),
+                                    if (!isEditAble)
+                                      SizedBox(
+                                        height: 1.h,
+                                      ),
+                                    if (!isEditAble)
+                                      TextFieldParent(
+                                        child: TextField(
+                                            readOnly: true,
+                                            controller: _nationalityController,
+                                            keyboardType: TextInputType.name,
+                                            scrollPadding: EdgeInsets.only(
+                                                bottom: MediaQuery.of(context)
+                                                    .viewInsets
+                                                    .bottom),
+                                            style: TextStyle(
+                                                fontSize: 10.2.sp,
+                                                color: themeNotifier.isDark
+                                                    ? AppColors.textColorWhite
+                                                    : AppColors.textColorBlack,
+                                                fontWeight: FontWeight.w400,
+                                                // Off-white color,
+                                                fontFamily: 'Inter'),
+                                            decoration: InputDecoration(
+                                              contentPadding: EdgeInsets.symmetric(
+                                                  vertical: 10.0, horizontal: 16.0),
+                                              // hintText: 'No banking have been added',
+                                              hintStyle: TextStyle(
+                                                  fontSize: 10.2.sp,
+                                                  color: AppColors.textColorGrey,
+                                                  fontWeight: FontWeight.w400,
+                                                  // Off-white color,
+                                                  fontFamily: 'Inter'),
+                                              enabledBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8.0),
+                                                  borderSide: BorderSide(
+                                                    color: Colors.transparent,
+                                                    // Off-white color
+                                                    // width: 2.0,
+                                                  )),
+                                              focusedBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8.0),
+                                                  borderSide: BorderSide(
+                                                    color: Colors.transparent,
+                                                    // Off-white color
+                                                    // width: 2.0,
+                                                  )),
+                                              // labelText: 'Enter your password',
+                                            ),
+                                            cursorColor: AppColors.textColorGrey),
+                                      ),
+                                    if (_nationalityController.text.isEmpty &&
+                                        isValidating &&
+                                        !isEditAble)
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 7.sp),
+                                        child: Text(
+                                          "*Enter Nationality",
+                                          style: TextStyle(
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.errorColor),
+                                        ),
+                                      ),
+                                    SizedBox(
+                                      height: 2.h,
+                                    ),
+                                    if (!isEditAble)
+                                      Align(
+                                        alignment: isEnglish
+                                            ? Alignment.centerLeft
+                                            : Alignment.centerRight,
+                                        child: Text(
+                                          'Identification Number'.tr(),
+                                          style: TextStyle(
+                                              fontSize: 11.7.sp,
+                                              fontFamily: 'Inter',
+                                              fontWeight: FontWeight.w600,
+                                              color: themeNotifier.isDark
+                                                  ? AppColors.textColorWhite
+                                                  : AppColors.textColorBlack),
+                                        ),
+                                      ),
+                                    if (!isEditAble)
+                                      SizedBox(
+                                        height: 1.h,
+                                      ),
+                                    if (!isEditAble)
+                                      TextFieldParent(
+                                        child: TextField(
+                                            readOnly: true,
+                                            controller:
+                                                _identificationNumberController,
+                                            keyboardType: TextInputType.name,
+                                            scrollPadding: EdgeInsets.only(
+                                                bottom: MediaQuery.of(context)
+                                                    .viewInsets
+                                                    .bottom),
+                                            style: TextStyle(
+                                                fontSize: 10.2.sp,
+                                                color: themeNotifier.isDark
+                                                    ? AppColors.textColorWhite
+                                                    : AppColors.textColorBlack,
+                                                fontWeight: FontWeight.w400,
+                                                // Off-white color,
+                                                fontFamily: 'Inter'),
+                                            decoration: InputDecoration(
+                                              contentPadding: EdgeInsets.symmetric(
+                                                  vertical: 10.0, horizontal: 16.0),
+                                              // hintText: 'No banking have been added',
+                                              hintStyle: TextStyle(
+                                                  fontSize: 10.2.sp,
+                                                  color: AppColors.textColorGrey,
+                                                  fontWeight: FontWeight.w400,
+                                                  // Off-white color,
+                                                  fontFamily: 'Inter'),
+                                              enabledBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8.0),
+                                                  borderSide: BorderSide(
+                                                    color: Colors.transparent,
+                                                    // Off-white color
+                                                    // width: 2.0,
+                                                  )),
+                                              focusedBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8.0),
+                                                  borderSide: BorderSide(
+                                                    color: Colors.transparent,
+                                                    // Off-white color
+                                                    // width: 2.0,
+                                                  )),
+                                              // labelText: 'Enter your password',
+                                            ),
+                                            cursorColor: AppColors.textColorGrey),
+                                      ),
+                                    if (_identificationNumberController
+                                            .text.isEmpty &&
+                                        isValidating &&
+                                        !isEditAble)
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 7.sp),
+                                        child: Text(
+                                          "*Enter Identification Number",
+                                          style: TextStyle(
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.errorColor),
+                                        ),
+                                      ),
+                                    SizedBox(
+                                      height: 19.h,
+                                    ),
+                                    if (isEditAble)
+                                      Column(
+                                        children: [
+                                          Container(
+                                            height: 2.h,
+                                            width: double.infinity,
+                                            color: AppColors.backgroundColor,
+                                          ),
+                                          Container(
+                                            color: AppColors.backgroundColor,
+                                            child: AppButton(
+                                                title: 'Save changes'.tr(),
+                                                isactive:
+                                                    isEditAble && isButtonActive
+                                                        ? true
+                                                        : false,
+                                                handler: () async {
+                                                  setState(() {
+                                                    isValidating = true;
+                                                  });
 
-                                              if (isButtonActive &&
-                                                  isEditAble == true) {
-                                                setState(() {
-                                                  _isLoading = true;
-                                                  if (_isLoading) {
-                                                    FocusManager
-                                                        .instance.primaryFocus
-                                                        ?.unfocus();
-                                                  }
-                                                });
-                                                var result = await Provider
-                                                        .of<UserProvider>(
-                                                            context,
-                                                            listen: false)
-                                                    .userUpdateStep1(
-                                                  firstName:
-                                                      _firstnameController
-                                                          .text,
-                                                  lastName:
-                                                      _lastnameController
-                                                          .text,
-                                                  email:
-                                                      _emailController.text,
-                                                  mobileNumber: '+966' +
-                                                      _numberController.text,
-                                                  context: context,
-                                                  token: accessToken,
-                                                );
-                                                await Future.delayed(
-                                                    Duration(
-                                                        milliseconds: 1000),
-                                                    () {});
-                                                setState(() {
-                                                  _isLoading = false;
-                                                });
-                                                if (result ==
-                                                    AuthResult.success) {
-                                                  print(
-                                                      "Result is successful");
-                                                  startTimer();
-                                                  otpDialog(
-                                                    fromAuth: false,
-                                                    incorrect:
-                                                        auth.otpErrorResponse,
-                                                    // onClose: ()=> removeRoutes(),
-                                                    events: _events,
-                                                    firstBtnHandler:
-                                                        () async {
-                                                      setState(() {
-                                                        _isLoading = true;
-                                                      });
-                                                      await Future.delayed(
-                                                          const Duration(
-                                                              milliseconds:
-                                                                  1000));
-                                                      print('loading popup' +
-                                                          _isLoading
-                                                              .toString());
-                                                      final userUpdateWithOtpStep2 =
-                                                          await Provider.of<
-                                                                      UserProvider>(
-                                                                  context,
-                                                                  listen:
-                                                                      false)
-                                                              .userUpdateStep2(
-                                                        context: context,
-                                                        code: Provider.of<
-                                                                    AuthProvider>(
+                                                  if (isButtonActive &&
+                                                      isEditAble == true) {
+                                                    setState(() {
+                                                      _isLoading = true;
+                                                      if (_isLoading) {
+                                                        FocusManager
+                                                            .instance.primaryFocus
+                                                            ?.unfocus();
+                                                      }
+                                                    });
+                                                    var result = await Provider
+                                                            .of<UserProvider>(
                                                                 context,
                                                                 listen: false)
-                                                            .codeFromOtpBoxes,
-                                                        token: accessToken,
-                                                      );
-                                                      setState(() {
-                                                        _isLoading = false;
-                                                      });
-                                                      print('loading popup 2' +
-                                                          _isLoading
-                                                              .toString());
-                                                      if (userUpdateWithOtpStep2 ==
-                                                          AuthResult
-                                                              .success) {
-                                                        Navigator.pop(
-                                                            context);
-                                                        Navigator
-                                                            .pushReplacement(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder:
-                                                                  (context) =>
-                                                                      AccountInformation()),
-                                                        );
-                                                      }
-                                                    },
-                                                    secondBtnHandler:
-                                                        () async {
-                                                      if (_timeLeft == 0) {
-                                                        print(
-                                                            'resend function calling');
-                                                        try {
+                                                        .userUpdateStep1(
+                                                      firstName:
+                                                          _firstnameController
+                                                              .text,
+                                                      lastName:
+                                                          _lastnameController
+                                                              .text,
+                                                      email:
+                                                          _emailController.text,
+                                                      mobileNumber: '+966' +
+                                                          _numberController.text,
+                                                      context: context,
+                                                      token: accessToken,
+                                                    );
+                                                    await Future.delayed(
+                                                        Duration(
+                                                            milliseconds: 1000),
+                                                        () {});
+                                                    setState(() {
+                                                      _isLoading = false;
+                                                    });
+                                                    if (result ==
+                                                        AuthResult.success) {
+                                                      print(
+                                                          "Result is successful");
+                                                      startTimer();
+                                                      otpDialog(
+                                                        fromAuth: false,
+                                                        incorrect:
+                                                            auth.otpErrorResponse,
+                                                        // onClose: ()=> removeRoutes(),
+                                                        events: _events,
+                                                        firstBtnHandler:
+                                                            () async {
                                                           setState(() {
-                                                            _isLoadingResend =
-                                                                true;
+                                                            _isLoading = true;
                                                           });
-                                                          final result = await Provider.of<
-                                                                      UserProvider>(
-                                                                  context,
-                                                                  listen:
-                                                                      false)
-                                                              .userUpdateResendOtp(
-                                                                  token:
-                                                                      accessToken,
-                                                                  context:
-                                                                      context);
+                                                          await Future.delayed(
+                                                              const Duration(
+                                                                  milliseconds:
+                                                                      1000));
+                                                          print('loading popup' +
+                                                              _isLoading
+                                                                  .toString());
+                                                          final userUpdateWithOtpStep2 =
+                                                              await Provider.of<
+                                                                          UserProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .userUpdateStep2(
+                                                            context: context,
+                                                            code: Provider.of<
+                                                                        AuthProvider>(
+                                                                    context,
+                                                                    listen: false)
+                                                                .codeFromOtpBoxes,
+                                                            token: accessToken,
+                                                          );
                                                           setState(() {
-                                                            _isLoadingResend =
-                                                                false;
+                                                            _isLoading = false;
                                                           });
-                                                          if (result ==
+                                                          print('loading popup 2' +
+                                                              _isLoading
+                                                                  .toString());
+                                                          if (userUpdateWithOtpStep2 ==
                                                               AuthResult
                                                                   .success) {
-                                                            startTimer();
+                                                            Navigator.pop(
+                                                                context);
+                                                            Navigator
+                                                                .pushReplacement(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          AccountInformation()),
+                                                            );
                                                           }
-                                                        } catch (error) {
-                                                          print(
-                                                              "Error: $error");
-                                                          // _showToast('An error occurred'); // Show an error message
-                                                        } finally {
-                                                          setState(() {
-                                                            _isLoadingResend =
-                                                                false;
-                                                          });
-                                                        }
-                                                      } else {}
-                                                    },
-                                                    firstTitle: 'Confirm',
-                                                    secondTitle:
-                                                        'Resend code ',
+                                                        },
+                                                        secondBtnHandler:
+                                                            () async {
+                                                          if (_timeLeft == 0) {
+                                                            print(
+                                                                'resend function calling');
+                                                            try {
+                                                              setState(() {
+                                                                _isLoadingResend =
+                                                                    true;
+                                                              });
+                                                              final result = await Provider.of<
+                                                                          UserProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .userUpdateResendOtp(
+                                                                      token:
+                                                                          accessToken,
+                                                                      context:
+                                                                          context);
+                                                              setState(() {
+                                                                _isLoadingResend =
+                                                                    false;
+                                                              });
+                                                              if (result ==
+                                                                  AuthResult
+                                                                      .success) {
+                                                                startTimer();
+                                                              }
+                                                            } catch (error) {
+                                                              print(
+                                                                  "Error: $error");
+                                                              // _showToast('An error occurred'); // Show an error message
+                                                            } finally {
+                                                              setState(() {
+                                                                _isLoadingResend =
+                                                                    false;
+                                                              });
+                                                            }
+                                                          } else {}
+                                                        },
+                                                        firstTitle: 'Confirm',
+                                                        secondTitle:
+                                                            'Resend code ',
 
-                                                    // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
+                                                        // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
 
-                                                    context: context,
-                                                    isDark:
-                                                        themeNotifier.isDark,
-                                                    isFirstButtonActive:
-                                                        isOtpButtonActive,
-                                                    isSecondButtonActive:
-                                                        false,
-                                                    otp1Controller:
-                                                        otp1Controller,
-                                                    otp2Controller:
-                                                        otp2Controller,
-                                                    otp3Controller:
-                                                        otp3Controller,
-                                                    otp4Controller:
-                                                        otp4Controller,
-                                                    otp5Controller:
-                                                        otp5Controller,
-                                                    otp6Controller:
-                                                        otp6Controller,
-                                                    firstFieldFocusNode:
-                                                        firstFieldFocusNode,
-                                                    secondFieldFocusNode:
-                                                        secondFieldFocusNode,
-                                                    thirdFieldFocusNode:
-                                                        thirdFieldFocusNode,
-                                                    forthFieldFocusNode:
-                                                        forthFieldFocusNode,
-                                                    fifthFieldFocusNode:
-                                                        fifthFieldFocusNode,
-                                                    sixthFieldFocusNode:
-                                                        sixthFieldFocusNode,
-                                                    firstBtnBgColor: AppColors
-                                                        .activeButtonColor,
-                                                    firstBtnTextColor:
-                                                        AppColors
-                                                            .textColorBlack,
-                                                    secondBtnBgColor:
-                                                        Colors.transparent,
-                                                    secondBtnTextColor:
-                                                        _timeLeft != 0
-                                                            ? AppColors
-                                                                .textColorBlack
-                                                                .withOpacity(
-                                                                    0.8)
-                                                            : AppColors
-                                                                .textColorWhite,
-                                                    // themeNotifier.isDark
-                                                    //     ? AppColors.textColorWhite
-                                                    //     : AppColors.textColorBlack
-                                                    //         .withOpacity(0.8),
-                                                    isLoading:
-                                                        _isLoadingResend ||
-                                                            _isLoading,
-                                                  );
-                                                }
-                                              }
-                                            },
-                                            // isLoading: _isLoading,
-                                            isGradient: true,
-                                            color: AppColors.textColorBlack),
+                                                        context: context,
+                                                        isDark:
+                                                            themeNotifier.isDark,
+                                                        isFirstButtonActive:
+                                                            isOtpButtonActive,
+                                                        isSecondButtonActive:
+                                                            false,
+                                                        otp1Controller:
+                                                            otp1Controller,
+                                                        otp2Controller:
+                                                            otp2Controller,
+                                                        otp3Controller:
+                                                            otp3Controller,
+                                                        otp4Controller:
+                                                            otp4Controller,
+                                                        otp5Controller:
+                                                            otp5Controller,
+                                                        otp6Controller:
+                                                            otp6Controller,
+                                                        firstFieldFocusNode:
+                                                            firstFieldFocusNode,
+                                                        secondFieldFocusNode:
+                                                            secondFieldFocusNode,
+                                                        thirdFieldFocusNode:
+                                                            thirdFieldFocusNode,
+                                                        forthFieldFocusNode:
+                                                            forthFieldFocusNode,
+                                                        fifthFieldFocusNode:
+                                                            fifthFieldFocusNode,
+                                                        sixthFieldFocusNode:
+                                                            sixthFieldFocusNode,
+                                                        firstBtnBgColor: AppColors
+                                                            .activeButtonColor,
+                                                        firstBtnTextColor:
+                                                            AppColors
+                                                                .textColorBlack,
+                                                        secondBtnBgColor:
+                                                            Colors.transparent,
+                                                        secondBtnTextColor:
+                                                            _timeLeft != 0
+                                                                ? AppColors
+                                                                    .textColorBlack
+                                                                    .withOpacity(
+                                                                        0.8)
+                                                                : AppColors
+                                                                    .textColorWhite,
+                                                        // themeNotifier.isDark
+                                                        //     ? AppColors.textColorWhite
+                                                        //     : AppColors.textColorBlack
+                                                        //         .withOpacity(0.8),
+                                                        isLoading:
+                                                            _isLoadingResend ||
+                                                                _isLoading,
+                                                      );
+                                                    }
+                                                  }
+                                                },
+                                                // isLoading: _isLoading,
+                                                isGradient: true,
+                                                color: AppColors.textColorBlack),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                              ],
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
+                if (OS.Platform.isIOS)
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: KeyboardVisibilityBuilder(builder: (context, child) {
+                      return Visibility(
+                          visible: isKeyboardVisible,
+                          child: GestureDetector(
+                            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                            child: Container(
+                                height: 3.h,
+                                color: AppColors.profileHeaderDark,
+                                child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Padding(
+                                      padding:
+                                      const EdgeInsets.symmetric(horizontal: 20),
+                                      child: Text(
+                                        'Done',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 11.5.sp,
+                                            fontWeight: FontWeight.bold)
+                                            .apply(fontWeightDelta: -1),
+                                      ),
+                                    ))),
+                          ));
+                    }),
+                  ),
               ],
             ),
           ),

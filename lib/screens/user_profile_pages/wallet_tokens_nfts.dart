@@ -1058,15 +1058,12 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                 Container(
                                   decoration: BoxDecoration(
                                       color: AppColors.textColorGrey,
-                                      //     gradient: LinearGradient(
-                                      //       colors: [Color(0xff92B928), Color(0xffC9C317)],
-                                      //       begin: Alignment.topLeft,
-                                      //       end: Alignment.bottomRight,
-                                      //     ),
                                       borderRadius: BorderRadius.circular(100)),
                                   child: Padding(
                                     padding: EdgeInsets.all(1.sp),
                                     child: Container(
+                                      height: 60.sp,
+                                      width: 60.sp,
                                       decoration: BoxDecoration(
                                           color: AppColors.backgroundColor,
                                           borderRadius:
@@ -1076,29 +1073,36 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(100),
-                                          child: user.userAvatar != null
-                                              ? Image.network(
+                                          child:
+                                          user.userAvatar != null
+                                              ?
+                                          Image.network(
                                                   user.userAvatar!,
-                                                  height: 55.sp,
-                                                  width: 55.sp,
+                                                  // height: 55.sp,
+                                                  // width: 55.sp,
                                                   fit: BoxFit.cover,
                                                   // semanticsLabel: 'A shark?!',
                                                   // placeholderBuilder: (BuildContext context) => Container(
                                                   //     padding: const EdgeInsets.all(30.0),
                                                   //     child: const CircularProgressIndicator()),
                                                 )
-                                              : Image.asset(
-                                                  "assets/images/profile.png",
-                                                  height: 55.sp,
-                                                  width: 55.sp,
-                                                ),
+                                              :
+                                          Padding(
+                                            padding:  EdgeInsets.all(4.sp),
+                                            child: Image.asset(
+                                                    "assets/images/user_placeholder.png",
+                                                    // height: 55.sp,
+                                                    // width: 55.sp,
+                                              color: AppColors.textColorGrey,
+                                                  ),
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
                                 SizedBox(
-                                  height: 2.5.h,
+                                  height: 2.h,
                                 ),
                                 Text(
                                   user.userName != null
@@ -1180,8 +1184,10 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                             color: Colors.transparent,
                                             // Background color of the TabBar
 
-                                            child: TabBar(
+                                            child:
+                                            TabBar(
                                               controller: _tabController,
+                                              // indicatorPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                                               indicatorColor:
                                                   AppColors.activeButtonColor,
                                               unselectedLabelColor:
@@ -1196,8 +1202,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                   fontSize: 11.5.sp,
                                                   fontWeight: FontWeight.w600),
                                               tabs: [
-                                                Tab(text: 'Tokens'.tr()),
-                                                Tab(text: 'NFTs'.tr()),
+                                                Tab(text: "     " + 'Tokens'.tr() +"     "),
+                                                Tab(text: "      " + 'NFTs'.tr() + "       "),
                                               ],
                                             ),
                                           ),
