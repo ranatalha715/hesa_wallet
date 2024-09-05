@@ -11,6 +11,7 @@ import '../../constants/configs.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
+import 'dart:io' as OS;
 import '../../widgets/button.dart';
 import '../../widgets/text_field_parent.dart';
 import '../account_recovery/reset_email.dart';
@@ -181,7 +182,7 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                             decoration: InputDecoration(
                               // fillColor: AppColors.profileHeaderDark,
                               contentPadding: EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 16.0),
+                                  vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
                               hintText: 'Enter your password'.tr(),
                               hintStyle: TextStyle(
                                   fontSize: 10.2.sp,

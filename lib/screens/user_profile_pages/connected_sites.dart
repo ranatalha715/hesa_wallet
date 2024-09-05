@@ -10,6 +10,7 @@ import 'package:hesa_wallet/screens/user_profile_pages/wallet_tokens_nfts.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:hesa_wallet/widgets/button.dart';
 import 'package:hesa_wallet/widgets/dialog_button.dart';
+import 'dart:io' as OS;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
@@ -844,7 +845,7 @@ class _ConnectedSitesState extends State<ConnectedSites> {
                       ),
                     ),
                   ),
-                SizedBox(height: 3.h),
+                SizedBox(height: OS.Platform.isIOS ? 5.h :3.h),
               ],
             ),
           ),

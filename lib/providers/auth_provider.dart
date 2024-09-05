@@ -46,6 +46,7 @@ bool otpSuccessResponse=false;
       if (response.statusCode == 201) {
         // Successful login
         print("User logged in successfully!");
+        // _showToast("message",duration: 6000);
         final jsonResponse = json.decode(response.body);
         final accessToken = jsonResponse['data']['accessToken'];
         final refreshToken = jsonResponse['data']['refreshToken'];
@@ -53,6 +54,7 @@ bool otpSuccessResponse=false;
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('accessToken', accessToken);
         await prefs.setString('refreshToken', refreshToken);
+
         // await prefs.setString('password', password);
         print('true ya false h');
         print(Provider.of<UserProvider>(context, listen: false)
@@ -82,6 +84,7 @@ bool otpSuccessResponse=false;
         }
         otpErrorResponse=false;
         notifyListeners();
+
         return AuthResult.success;
       } else {
         print("Login failed: ${response.body}");

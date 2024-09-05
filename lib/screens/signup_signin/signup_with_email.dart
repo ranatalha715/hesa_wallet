@@ -21,6 +21,7 @@ import 'package:sizer/sizer.dart';
 import '../../constants/colors.dart';
 import '../../constants/configs.dart';
 import '../../providers/theme_provider.dart';
+import 'dart:io' as OS;
 import '../../widgets/button.dart';
 import '../../widgets/main_header.dart';
 import '../../widgets/otp_dialog.dart';
@@ -409,7 +410,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             fontFamily: 'Inter'),
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.symmetric(
-                                              vertical: 10.0, horizontal: 16.0),
+                                              vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
                                           hintText: 'username'.tr(),
                                           hintStyle: TextStyle(
                                               fontSize: 10.2.sp,
@@ -584,7 +585,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                           fontFamily: 'Inter'),
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.symmetric(
-                                            vertical: 10.0, horizontal: 16.0),
+                                            vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
                                         hintText:
                                             'Enter a valid email address'.tr(),
                                         hintStyle: TextStyle(
@@ -702,7 +703,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                           fontFamily: 'Inter'),
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.symmetric(
-                                            vertical: 10.0, horizontal: 16.0),
+                                            vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
                                         hintText: 'Enter your password'.tr(),
                                         hintStyle: TextStyle(
                                             fontSize: 10.2.sp,
@@ -912,7 +913,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                           fontFamily: 'Inter'),
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.symmetric(
-                                            vertical: 10.0, horizontal: 16.0),
+                                            vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
                                         hintText: 'Enter your password'.tr(),
                                         hintStyle: TextStyle(
                                             fontSize: 10.2.sp,

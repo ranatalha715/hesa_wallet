@@ -105,7 +105,7 @@ class UserProvider with ChangeNotifier {
 
       print("User details getting successfully!");
       print(userAvatar);
-      // _showToast('User details getting successfully!');
+      // _showToast('User details getting successfully!', duration: 6000);
       List<dynamic>? sitesJsonList = jsonResponse['connectedSites'];
       _connectedSites.clear(); // Clear the list before adding new items
 
@@ -442,12 +442,15 @@ class UserProvider with ChangeNotifier {
 
   _showToast(String message, {int duration = 1000}) {
     Widget toast = Container(
-      height: 60,
+      height: 7.h,
       // width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.0),
-        color: AppColors.textColorWhite.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(7.sp),
+        color: AppColors.profileHeaderDark,
+        border: Border.all(
+            color: AppColors.hexaGreen,
+            width: 1),
       ),
       child: Row(
         // mainAxisSize: MainAxisSize.min,
@@ -464,7 +467,7 @@ class UserProvider with ChangeNotifier {
                 overflow: TextOverflow.ellipsis,
                 // .toUpperCase(),
                 style: TextStyle(
-                        color: AppColors.backgroundColor,
+                        color: AppColors.hexaGreen,
                         fontSize: 13.sp,
                         fontWeight: FontWeight.bold)
                     .apply(fontWeightDelta: -2),
@@ -483,9 +486,9 @@ class UserProvider with ChangeNotifier {
         positionedToastBuilder: (context, child) {
           return Positioned(
             child: Center(child: child),
-            top: 43.0,
-            left: 20,
-            right: 20,
+            top: 43,
+            left: 15,
+            right: 15,
           );
         });
   }

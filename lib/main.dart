@@ -6,6 +6,7 @@ import 'package:deep_linking/deep_linking.dart';
 // import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hesa_wallet/providers/payment_fees.dart';
 import 'package:hesa_wallet/providers/token_provider.dart';
@@ -73,9 +74,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await localized.EasyLocalization.ensureInitialized();
+  // const AndroidInitializationSettings initializationSettingsAndroid =
+  // AndroidInitializationSettings('@mipmap/ic_launcher');
+  //
+  // final InitializationSettings initializationSettings =
+  // InitializationSettings(android: initializationSettingsAndroid);
+  //
+  // await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
   // WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp();
   // HyperPay.init("", "");
@@ -204,6 +215,27 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
     print('Link stream has been cleared.');
   }
+  void showNotification() async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails(
+      'your_channel_id', // id
+      'your_channel_name', // name
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: false,
+    );
+
+    const NotificationDetails platformChannelSpecifics =
+    NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.show(
+      0, // notification id
+      'Hello', // title
+      'This is a local notification', // body
+      platformChannelSpecifics,
+      payload: 'notification payload', // optional
+    );
+  }
 
   @override
   initState() {
@@ -214,13 +246,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     fToast.init(context);
     this.initUniLinks();
     getAccessToken();
-    // Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 2), () {
+      showNotification();
     //   if(accessToken !='') {
     //     Provider.of<AuthProvider>(context, listen: false)
     //       .updateFCM(FCM: fcmToken, token: accessToken, context: context);
-    //
     //   }
-    // });
+    });
 
     WidgetsBinding.instance.addObserver(this);
 

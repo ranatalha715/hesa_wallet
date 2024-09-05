@@ -521,7 +521,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                           decoration: InputDecoration(
                                             // border: InputBorder.none,
                                             contentPadding: EdgeInsets.symmetric(
-                                                vertical: 10.0, horizontal: 16.0),
+                                                vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
                                             hintText: 'Enter first name'.tr(),
                                             hintStyle: TextStyle(
                                                 fontSize: 10.2.sp,
@@ -618,7 +618,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                               fontFamily: 'Inter'),
                                           decoration: InputDecoration(
                                             contentPadding: EdgeInsets.symmetric(
-                                                vertical: 10.0, horizontal: 16.0),
+                                                vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
                                             hintText: 'Enter last name'.tr(),
                                             hintStyle: TextStyle(
                                                 fontSize: 10.2.sp,
@@ -1301,7 +1301,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                               fontFamily: 'Inter'),
                                           decoration: InputDecoration(
                                             contentPadding: EdgeInsets.symmetric(
-                                                vertical: 10.0, horizontal: 16.0),
+                                                vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
                                             hintText:
                                                 'Enter Identification number'.tr(),
                                             hintStyle: TextStyle(
@@ -1401,7 +1401,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                           ],
                                           decoration: InputDecoration(
                                             contentPadding: EdgeInsets.symmetric(
-                                                vertical: 10.0, horizontal: 16.0),
+                                                vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
                                             hintText:
                                                 'Enter your mobile number'.tr(),
                                             // contentPadding: EdgeInsets.only(left: 10),
@@ -1432,8 +1432,9 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                             prefixIcon: Padding(
                                               padding: EdgeInsets.only(
                                                   left: 10.sp,
-                                                  top: 12.7.sp,
-                                                  right: 11.4.sp),
+                                                  top: OS.Platform.isIOS ? 10.sp :12.7.sp,
+                                                  right: 11.4.sp,
+                                              ),
                                               child: Text(
                                                 '+966',
                                                 style: TextStyle(

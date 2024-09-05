@@ -975,43 +975,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                             ],
                                           ),
                                         ),
-                                        // Container(
-                                        //   decoration: BoxDecoration(
-                                        //     borderRadius: BorderRadius.circular(20.sp),
-                                        //     border: Border.all(
-                                        //       color: AppColors.textColorGrey,
-                                        //       width: 1,
-                                        //     ),
-                                        //   ),
-                                        //   child: Padding(
-                                        //     padding: EdgeInsets.only(
-                                        //         left: 8.sp,
-                                        //         right: 8.sp,
-                                        //         top: 5.sp,
-                                        //         bottom: 5.sp),
-                                        //     child: Row(
-                                        //       children: [
-                                        //         Icon(
-                                        //           Icons.fiber_manual_record,
-                                        //           size: 7.sp,
-                                        //           color: AppColors.textColorGrey,
-                                        //         ),
-                                        //         SizedBox(
-                                        //           width: 2.w,
-                                        //         ),
-                                        //         Text(
-                                        //           'AlMajra B-01'.tr(),
-                                        //           style: TextStyle(
-                                        //               fontSize: 9.8.sp,
-                                        //               fontWeight: FontWeight.w500,
-                                        //               color: themeNotifier.isDark
-                                        //                   ? AppColors.textColorWhite
-                                        //                   : AppColors.textColorBlack),
-                                        //         ),
-                                        //       ],
-                                        //     ),
-                                        //   ),
-                                        // ),
                                         GestureDetector(
                                           onTap: () {
                                             setLockScreenStatus(true);
@@ -1023,17 +986,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                         // handler: () {},
                                                       )),
                                             );
-                                            //     :Navigator.push(
-                                            //   context,
-                                            //   MaterialPageRoute(
-                                            //       builder: (context) =>
-                                            //           SecurityAndPrivacy(
-                                            //
-                                            //       )),
-                                            // );
-                                            // setState(() {
-                                            //   showLockedScreen = true;
-                                            // });
+
                                           },
                                           child: Padding(
                                             padding:
@@ -1078,21 +1031,14 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                               ?
                                           Image.network(
                                                   user.userAvatar!,
-                                                  // height: 55.sp,
-                                                  // width: 55.sp,
                                                   fit: BoxFit.cover,
-                                                  // semanticsLabel: 'A shark?!',
-                                                  // placeholderBuilder: (BuildContext context) => Container(
-                                                  //     padding: const EdgeInsets.all(30.0),
-                                                  //     child: const CircularProgressIndicator()),
+
                                                 )
                                               :
                                           Padding(
                                             padding:  EdgeInsets.all(4.sp),
                                             child: Image.asset(
                                                     "assets/images/user_placeholder.png",
-                                                    // height: 55.sp,
-                                                    // width: 55.sp,
                                               color: AppColors.textColorGrey,
                                                   ),
                                           ),
@@ -1138,14 +1084,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                             fontWeight: FontWeight.w500,
                                             color: AppColors.textColorGrey),
                                       ),
-                                      // SizedBox(
-                                      //   width: 3.sp,
-                                      // ),
-                                      // Icon(
-                                      //   Icons.content_copy,
-                                      //   size: 10.sp,
-                                      //   color: AppColors.textColorGrey,
-                                      // ),
                                     ],
                                   ),
                                 ),
@@ -1241,15 +1179,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                         fontFamily: 'Blogger Sans'),
                                                   ),
                                                 ),
-                                                //show this when data is empty
-                                                // Center(child: Text('You have no NFTs under \nthis wallet ID',
-                                                //   textAlign: TextAlign.center,
-                                                //   style: TextStyle(
-                                                //     color: AppColors.textColorGrey,
-                                                //     fontWeight: FontWeight.w400,
-                                                //     fontSize: 11.5.sp,
-                                                //   ),
-                                                // )),
                                                 Column(
                                                   children: [
                                                     Container(
@@ -1419,13 +1348,13 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
         margin: EdgeInsets.only(right: 10.sp),
         decoration: BoxDecoration(
             color: _isSelected == index
-                ? AppColors.textColorGrey.withOpacity(0.5)
+                ? AppColors.hexaGreen.withOpacity(0.10)
                 : AppColors.profileHeaderDark,
-            // border: Border.all(
-            //     color: _isSelected == index
-            //         ? AppColors.hexaGreen
-            //         : Colors.transparent,
-            //     width: 1),
+            border: Border.all(
+                color: _isSelected == index
+                    ? AppColors.hexaGreen
+                    : Colors.transparent,
+                width: 1),
             borderRadius: BorderRadius.circular(8)),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 13.sp, vertical: 8.sp),
@@ -1441,7 +1370,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                     fontSize: 10.sp,
                     fontWeight: FontWeight.w400,
                     color: _isSelected == index
-                        ? AppColors.textColorWhite
+                        ? AppColors.hexaGreen
                         : AppColors.textColorGreyShade2),
               ),
             ],

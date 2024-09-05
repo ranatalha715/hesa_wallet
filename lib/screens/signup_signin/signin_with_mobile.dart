@@ -257,17 +257,15 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                                 ? AppColors.textColorWhite
                                                 : AppColors.textColorBlack,
                                             fontWeight: FontWeight.w400,
-                                            // Off-white color,
                                             fontFamily: 'Inter'),
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.symmetric(
-                                              vertical: 10.0, horizontal: 16.0),
+                                              vertical:   OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
                                           hintText: 'Enter your mobile number'.tr(),
                                           hintStyle: TextStyle(
                                               fontSize: 10.2.sp,
                                               color: AppColors.textColorGrey,
                                               fontWeight: FontWeight.w400,
-                                              // Off-white color,
                                               fontFamily: 'Inter'),
                                           enabledBorder: OutlineInputBorder(
                                               borderRadius:
