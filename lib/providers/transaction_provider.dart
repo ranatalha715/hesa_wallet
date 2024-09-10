@@ -21,6 +21,7 @@ class TransactionProvider with ChangeNotifier {
   var tokenizedCheckoutId;
   var selectedCardTokenId;
   var selectedCardNum;
+  var selectedCardLast4Digits;
   var selectedCardBrand;
   var selectedPaymentMethod='cards';
   bool showRedDot=false;
@@ -247,6 +248,9 @@ class TransactionProvider with ChangeNotifier {
   var txCreatorRoyalityPercent = '';
   var txCrdNum = '';
   var txCrdBrand = '';
+  var txBankImage = '';
+  var txBankAccNum = '';
+  var receiverBankDetails = '';
 
   clearTxSummaryData(){
      txTimeStamp = '';
@@ -262,6 +266,9 @@ class TransactionProvider with ChangeNotifier {
     txCrdNum = '';
     txCrdBrand = '';
      _transactionFeeses=[];
+      txBankImage = '';
+     txBankAccNum = '';
+     receiverBankDetails = "null";
   }
 
 
@@ -347,7 +354,6 @@ class TransactionProvider with ChangeNotifier {
     if (paymentResultData.paymentResult == PaymentResult.success ||
         paymentResultData.paymentResult == PaymentResult.sync) {
       // print('payment success');
-      _showToast('You have paid with card successfully!', duration: 3000);
       print("Payment Result ");
       print(paymentResultData.toString());
       // getpaymentstatus(checkoutId);
@@ -357,8 +363,7 @@ class TransactionProvider with ChangeNotifier {
 
       // do something
     } else {
-      _showToast('Payment Failed!', duration: 3000);
-      // print('payment failed');
+
       print("Payment Result ");
       print(paymentResultData.errorString);
       return AuthResult.failure;
@@ -404,6 +409,12 @@ class TransactionProvider with ChangeNotifier {
           txCrdBrand = jsonData['cardDetails']['type'].toString() ?? 'N/A';
           txCrdNum =
               jsonData['cardDetails']['maskedNumber'].toString() ?? 'N/A';
+          receiverBankDetails =
+              jsonData['receiverBankDetails'].toString();
+          txBankImage = receiverBankDetails != "null" ?
+              jsonData['receiverBankDetails']['bankLogo'].toString() : "https://tse1.mm.bing.net/th?id=OIP.tUMAs55tjnci6Imc_jVzMwAAAA&pid=Api&P=0&h=180";
+          txBankAccNum =   receiverBankDetails != "null" ?
+              jsonData['receiverBankDetails']['accountNumber'].toString():"***********";
 
           // Fetching fees
 
@@ -468,13 +479,10 @@ class TransactionProvider with ChangeNotifier {
     fToast = FToast();
     fToast.init(context);
     if (response.statusCode == 201) {
-      // Successful login, handle navigation or other actions
-      _showToast('OTP sent successfully!');
       return AuthResult.success;
     } else {
       // Show an error message or handle the response as needed
       print("OTP not sent: ${response.body}");
-      _showToast('OTP not sent');
       return AuthResult.failure;
     }
   }
@@ -538,11 +546,9 @@ class TransactionProvider with ChangeNotifier {
         final Map<String, dynamic> responseBody = json.decode(response.body);
         checkoutURL = responseBody['data']['checkoutURL'];
         checkoutId = responseBody['data']['checkoutId'];
-        _showToast('Payable Transaction Sent!');
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'MintCollection not working',
@@ -554,7 +560,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'MintCollection not working',
@@ -625,13 +630,11 @@ class TransactionProvider with ChangeNotifier {
         final Map<String, dynamic> responseBody = json.decode(response.body);
         checkoutURL = responseBody['data']['checkoutURL'];
         checkoutId = responseBody['data']['checkoutId'];
-        _showToast('Payable Transaction Sent!');
         print("send response " + responseBody.toString());
 
         return AuthResult.success;
       } else {
         print("Minting Error: ${response.body}");
-        _showToast('Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'Mint NFT not working',
@@ -643,7 +646,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Minting Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'Mint NFT not working',
@@ -723,13 +725,11 @@ class TransactionProvider with ChangeNotifier {
         final Map<String, dynamic> responseBody = json.decode(response.body);
         checkoutURL = responseBody['data']['checkoutURL'];
         checkoutId = responseBody['data']['checkoutId'];
-        _showToast('Payable Transaction Sent!');
         print("send response " + responseBody.toString());
 
         return AuthResult.success;
       } else {
         print("MintNFTWithEditions Error: ${response.body}");
-        _showToast('Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'MintNFTWithEditions',
@@ -741,7 +741,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('MintNFTWithEditions Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'MintNFTWithEditions not working',
@@ -811,13 +810,11 @@ class TransactionProvider with ChangeNotifier {
         final Map<String, dynamic> responseBody = json.decode(response.body);
         checkoutURL = responseBody['data']['checkoutURL'];
         checkoutId = responseBody['data']['checkoutId'];
-        _showToast('Payable Transaction Sent!');
         print("send response " + responseBody.toString());
 
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'PurchaseNFT',
@@ -828,7 +825,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context, title: 'PurchaseNFT', description: e.toString());
       functionToNavigateAfterPayable(e.toString(), operation, context);
@@ -891,13 +887,11 @@ class TransactionProvider with ChangeNotifier {
         final Map<String, dynamic> responseBody = json.decode(response.body);
         checkoutURL = responseBody['data']['checkoutURL'];
         checkoutId = responseBody['data']['checkoutId'];
-        _showToast('Payable Transaction Sent!');
         print("send response " + responseBody.toString());
 
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'PurchaseCollection',
@@ -908,7 +902,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'PurchaseCollection',
@@ -975,13 +968,11 @@ class TransactionProvider with ChangeNotifier {
         final Map<String, dynamic> responseBody = json.decode(response.body);
         checkoutURL = responseBody['data']['checkoutURL'];
         checkoutId = responseBody['data']['checkoutId'];
-        _showToast('Payable Transaction Sent!');
         print("send response " + responseBody.toString());
 
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'ListNFT Fixed price not working',
@@ -993,7 +984,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'ListNFT Fixed price not working',
@@ -1059,13 +1049,11 @@ class TransactionProvider with ChangeNotifier {
         final Map<String, dynamic> responseBody = json.decode(response.body);
         checkoutURL = responseBody['data']['checkoutURL'];
         checkoutId = responseBody['data']['checkoutId'];
-        _showToast('Payable Transaction Sent!');
         print("send response " + responseBody.toString());
 
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'ListCollection Fixed price not working',
@@ -2340,8 +2328,8 @@ class TransactionProvider with ChangeNotifier {
         body: json.encode(requestBody),
       );
 
-      fToast = FToast();
-      fToast.init(context);
+      // fToast = FToast();
+      // fToast.init(context);
       print('payload to send bilal');
       print(requestBody.toString());
       print('CancelListing response' + response.body);
@@ -2349,7 +2337,7 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        _showToast('Non Payable Transaction Sent!');
+        // _showToast('Non Payable Transaction Sent!');
         testDialogToCheck(
             context: context,
             title: 'CancelListing',

@@ -20,6 +20,7 @@ class BankProvider with ChangeNotifier{
   }
 
   var selectedBank = "";
+  var selectedBankName = "";
   bool otpErrorResponse=false;
   bool otpSuccessResponse=false;
   var uniqueIdFromStep1;

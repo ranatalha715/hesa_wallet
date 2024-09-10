@@ -962,7 +962,8 @@ init() async {
                                                                   AuthProvider>(
                                                                   context,
                                                                   listen: false)
-                                                                  .codeFromOtpBoxes);
+                                                                  .codeFromOtpBoxes
+                                                          );
                                                           setState(() {
                                                             _isLoading = false;
                                                           });

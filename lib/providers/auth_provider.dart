@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:uni_links/uni_links.dart';
 
 import '../constants/app_deep_linking.dart';
 import '../constants/colors.dart';
@@ -81,6 +82,53 @@ bool otpSuccessResponse=false;
           await Navigator.of(context).pushNamedAndRemoveUntil(
               'nfts-page', (Route d) => false,
               arguments: {});
+          await getLinksStream().firstWhere((String? link) {
+            if (link != null) {
+              Uri uri = Uri.parse(link);
+              String? operation = uri.queryParameters['operation'];
+              print("print operation");
+              print(operation);
+
+              if (operation != null && operation == 'connectWallet') {
+                Provider.of<UserProvider>(context, listen: false)
+                    .navigateToNeoForConnectWallet = true;
+
+                // setState(() {
+                  isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
+                      .navigateToNeoForConnectWallet;  // Set overlay visibility to true
+                // });
+
+                print("check kro" +
+                    Provider.of<UserProvider>(context, listen: false)
+                        .navigateToNeoForConnectWallet
+                        .toString());
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => ConnectDapp()),
+                      (Route<dynamic> route) => false,
+                );
+              } else {
+                Provider.of<UserProvider>(context, listen: false)
+                    .navigateToNeoForConnectWallet = false;
+
+                // setState(() {
+                  isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
+                      .navigateToNeoForConnectWallet;  // Set overlay visibility to false
+                // });
+              }
+              return true; // Exit the loop after processing
+            } else{
+              Provider.of<UserProvider>(context, listen: false)
+                  .navigateToNeoForConnectWallet = false;
+
+              // setState(() {
+                isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
+                    .navigateToNeoForConnectWallet;  // Set overlay visibility to false
+              // });
+
+            }
+
+            return false;
+          });
         }
         otpErrorResponse=false;
         notifyListeners();

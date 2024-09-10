@@ -399,8 +399,8 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                                 listen: false)
                                             .loginWithUsername(
                                                 username: _emailController.text,
-                                                password:
-                                                sha512String,
+                                                password: _passwordController.text,
+                                                // sha512String,
                                                 context: context);
                                     setState(() {
                                       _isLoading = false;

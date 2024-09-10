@@ -76,6 +76,29 @@ class _WalletBankingAndPaymentEmptyState
   }
 
   @override
+  void initState() {
+    // setState(() {
+    //   isLoading = true;
+    // });
+    //  getAccessToken();
+    //
+    //  Provider.of<UserProvider>(context, listen: false)
+    //     .getUserDetails(token: accessToken, context: context);
+    // Future.delayed(const Duration(seconds: 1), () async {
+    //   await  changeSelectedCard(Provider.of<UserProvider>(context,listen: false).paymentCards,0);
+    //
+    // }
+    //
+    //
+    // );
+    // setState(() {
+    //   isLoading = false;
+    // });
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Future<void> didChangeDependencies() async {
     // TODO: implement didChangeDependencies
     if (isInit) {
@@ -86,10 +109,17 @@ class _WalletBankingAndPaymentEmptyState
 
       await Provider.of<UserProvider>(context, listen: false)
           .getUserDetails(token: accessToken, context: context);
-      super.didChangeDependencies();
+      // var paymentCards = Provider.of<UserProvider>(context, listen: false).paymentCards;
+      // if (paymentCards.isNotEmpty) {
+      //   await changeSelectedCard(paymentCards, 0);
+      // } else {
+      //   // Handle null or empty cards list
+      //   print('No payment cards available');
+      // }
       setState(() {
         isLoading = false;
       });
+      super.didChangeDependencies();
     }
     isInit = false;
   }
@@ -141,6 +171,17 @@ class _WalletBankingAndPaymentEmptyState
     setState(() {
       // _isSelectedBank = !_isSelectedBank;
       isLoading = false;
+    });
+  }
+
+  changeSelectedCard(List<PaymentCard> paymentCards, int index) async {
+    final trPro = Provider.of<TransactionProvider>(context, listen: false);
+    setState(() {
+      trPro.selectedCardNum = paymentCards[index].bin;
+      trPro.selectedCardLast4Digits = paymentCards[index].last4Digits;
+      trPro.selectedCardBrand = paymentCards[index].cardBrand;
+      _isSelected = false;
+      trPro.selectedCardTokenId = paymentCards[index].id;
     });
   }
 
@@ -312,9 +353,23 @@ class _WalletBankingAndPaymentEmptyState
       if (trPro.selectedCardNum == null || trPro.selectedCardNum == "") {
         if (paymentCards.isNotEmpty) {
           trPro.selectedCardNum = paymentCards[0].bin;
+          trPro.selectedCardLast4Digits = paymentCards[0].last4Digits;
+          trPro.selectedCardBrand = paymentCards[0].cardBrand;
           // print('testabc');
           // print(trPro.selectedCardNum.toString());
           // print(paymentCards[0].bin);
+        }
+      }
+      for (var bank in banks) {
+        if (bank.isPrimary == "true") {
+          bankpro.selectedBankName = bank.bankName!;
+          break; // Stop the loop once the first primary bank is found
+        }
+      }
+      for (var bank in banks) {
+        if (bank.isPrimary == "true") {
+          bankpro.selectedBank = bank.ibanNumber;
+          break; // Stop the loop once the first primary bank is found
         }
       }
       return Stack(
@@ -436,20 +491,14 @@ class _WalletBankingAndPaymentEmptyState
                             SizedBox(
                               height: 1.h,
                             ),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.textFieldParentDark,
-                                // border: Border.all(
-                                //   color: _isSelected
-                                //       ? AppColors.textColorGrey
-                                //       : Colors.transparent,
-                                //   // width: 1.0,
-                                // ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Column(
-                                children: [
-                                  GestureDetector(
+                            Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: AppColors.textFieldParentDark,
+                                      borderRadius:
+                                          BorderRadius.circular(8.sp)),
+                                  child: GestureDetector(
                                     onTap: () => paymentCards.isNotEmpty
                                         ? setState(() {
                                             _isSelected = !_isSelected;
@@ -466,8 +515,8 @@ class _WalletBankingAndPaymentEmptyState
                                         //           : AppColors.textColorGrey,
                                         //   width: 1.0,
                                         // ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(8.sp)),
                                       ),
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
@@ -478,6 +527,47 @@ class _WalletBankingAndPaymentEmptyState
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
+                                            SizedBox(
+                                              width: 8.sp,
+                                            ),
+                                            trPro.selectedCardBrand == 'VISA'
+                                                ? Image.asset(
+                                                    "assets/images/Visa.png",
+                                                    height: 17.sp,
+                                                    // color: isDark
+                                                    //     ? AppColors.textColorWhite
+                                                    //     : AppColors.textColorBlack,
+                                                    // width: 20.sp,
+                                                  )
+                                                : Container(
+                                              height: 2.7.h,
+                                                    decoration: BoxDecoration(
+                                                      color: AppColors
+                                                          .textColorGreyShade2
+                                                          .withOpacity(0.27),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              3),
+                                                    ),
+                                                    child: Padding(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal:
+                                                                  3.3.sp,
+                                                              vertical: 0.4.sp),
+                                                      child: Image.asset(
+                                                        trPro.selectedCardBrand ==
+                                                                'MASTER'
+                                                            ? "assets/images/master2.png"
+                                                            : "assets/images/mada_pay.png",
+                                                        height: 18.sp,
+                                                        // color: isDark
+                                                        //     ? AppColors.textColorWhite
+                                                        //     : AppColors.textColorBlack,
+                                                        width: 18.sp,
+                                                      ),
+                                                    ),
+                                                  ),
                                             // SizedBox(
                                             //   width: 0.5.h,
                                             // ),
@@ -487,7 +577,13 @@ class _WalletBankingAndPaymentEmptyState
                                                       horizontal: 8.0),
                                               child: paymentCards.isNotEmpty
                                                   ? Text(
-                                                      'Payment Cards'.tr(),
+                                                      trPro.selectedCardNum
+                                                              .toString()
+                                                              .substring(0, 4) +
+                                                          " **** **** " +
+                                                          trPro
+                                                              .selectedCardLast4Digits,
+                                                      // 'Payment Cards'.tr(),
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w500,
@@ -521,14 +617,13 @@ class _WalletBankingAndPaymentEmptyState
                                                     right: 6.sp),
                                                 child: Icon(
                                                   _isSelected
-                                                      ? Icons.keyboard_arrow_up
+                                                      ? Icons
+                                                      .keyboard_arrow_up
                                                       : Icons
-                                                          .keyboard_arrow_down,
-                                                  size: 27.sp,
-                                                  color: themeNotifier.isDark
-                                                      ? AppColors.textColorWhite
-                                                      : AppColors
-                                                          .textColorBlack,
+                                                      .keyboard_arrow_down,
+                                                  size: 22.sp,
+                                                  color:
+                                                  AppColors.textColorGrey,
                                                 ),
                                               ),
                                           ],
@@ -536,8 +631,30 @@ class _WalletBankingAndPaymentEmptyState
                                       ),
                                     ),
                                   ),
-                                  if (_isSelected)
-                                    ListView.builder(
+                                ),
+                                if (_isSelected)
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        color: AppColors.textFieldParentDark,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: _isSelected
+                                                ? Colors.black.withOpacity(0.10)
+                                                : Colors.transparent,
+                                            // Shadow color
+                                            offset: Offset(0, 4),
+                                            // Pushes the shadow down, removes the top shadow
+                                            blurRadius: 3,
+                                            // Adjust the blur radius to change shadow size
+                                            spreadRadius:
+                                                0.5, // Optional: Adjust spread radius if needed
+                                          ),
+                                        ],
+                                        borderRadius:
+                                            BorderRadius.circular(8.sp)),
+                                    // color: Colors.red,
+                                    margin: EdgeInsets.only(top: 4.sp),
+                                    child: ListView.builder(
                                         controller: scrollController,
                                         itemCount: paymentCards.length,
                                         shrinkWrap: true,
@@ -554,6 +671,13 @@ class _WalletBankingAndPaymentEmptyState
                                               setState(() {
                                                 trPro.selectedCardNum =
                                                     paymentCards[index].bin;
+                                                trPro.selectedCardLast4Digits =
+                                                    paymentCards[index]
+                                                        .last4Digits;
+                                                trPro.selectedCardBrand =
+                                                    paymentCards[index]
+                                                        .cardBrand;
+
                                                 _isSelected = false;
                                                 trPro.selectedCardTokenId =
                                                     trPro.selectedCardTokenId =
@@ -597,31 +721,31 @@ class _WalletBankingAndPaymentEmptyState
                                           //     },
                                           //   ));
                                         }),
-                                  // ListView(
-                                  //   padding: EdgeInsets.zero,
-                                  //   shrinkWrap: true,
-                                  //   children: [
-                                  //     paymentCardWidget(
-                                  //       isFirst: true,
-                                  //       isDark:
-                                  //           themeNotifier.isDark ? true : false,
-                                  //       english: isEnglish ? true : false,
-                                  //     ),
-                                  //     paymentCardWidget(
-                                  //       english: isEnglish ? true : false,
-                                  //       isDark:
-                                  //           themeNotifier.isDark ? true : false,
-                                  //     ),
-                                  //     paymentCardWidget(
-                                  //       isLast: true,
-                                  //       english: isEnglish ? true : false,
-                                  //       isDark:
-                                  //           themeNotifier.isDark ? true : false,
-                                  //     ),
-                                  //   ],
-                                  // )
-                                ],
-                              ),
+                                  )
+                                // ListView(
+                                //   padding: EdgeInsets.zero,
+                                //   shrinkWrap: true,
+                                //   children: [
+                                //     paymentCardWidget(
+                                //       isFirst: true,
+                                //       isDark:
+                                //           themeNotifier.isDark ? true : false,
+                                //       english: isEnglish ? true : false,
+                                //     ),
+                                //     paymentCardWidget(
+                                //       english: isEnglish ? true : false,
+                                //       isDark:
+                                //           themeNotifier.isDark ? true : false,
+                                //     ),
+                                //     paymentCardWidget(
+                                //       isLast: true,
+                                //       english: isEnglish ? true : false,
+                                //       isDark:
+                                //           themeNotifier.isDark ? true : false,
+                                //     ),
+                                //   ],
+                                // )
+                              ],
                             ),
                             SizedBox(
                               height: _isSelected ? 10.h : 5.h,
@@ -699,112 +823,139 @@ class _WalletBankingAndPaymentEmptyState
                             //         color: AppColors.activeButtonColor,
                             //       ))
                             //     :
-                            Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.textFieldParentDark,
-                                // border: Border.all(
-                                //   color: _isSelectedBank
-                                //       ? AppColors.textColorGrey
-                                //       : Colors.transparent,
-                                //   width: 1.0,
-                                // ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Column(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () => setState(() {
-                                      _isSelectedBank = !_isSelectedBank;
-                                    }),
-                                    child: Container(
-                                      height: 6.5.h,
-                                      decoration: BoxDecoration(
-                                        // border: Border.all(
-                                        //   color: _isSelectedBank
-                                        //       ? Colors.transparent
-                                        //       : themeNotifier.isDark
-                                        //           ? AppColors.textColorWhite
-                                        //           : AppColors.textColorGrey,
-                                        //   width: 1.0,
-                                        // ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            // SizedBox(
-                                            //   width: 0.5.h,
-                                            // ),
+                            Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () => setState(() {
+                                    _isSelectedBank = !_isSelectedBank;
+                                  }),
+                                  child: Container(
+                                    height: 6.5.h,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.textFieldParentDark,
 
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          SizedBox(
+                                            width: 1.h,
+                                          ),
+
+                                          Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 0.0),
+                                              child: Text(
+                                                bankpro.selectedBankName,
+                                                //       'Banking Details'.tr(),
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w500,
+                                                    fontSize: 10.sp,
+                                                    color: themeNotifier
+                                                            .isDark
+                                                        ? AppColors
+                                                            .textColorWhite
+                                                        : AppColors
+                                                            .textColorBlack),
+                                              )),
+                                          Spacer(),
+                                          Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8.0),
+                                              child: banks.isNotEmpty
+                                                  ? Text(
+                                                      " **** " +
+                                                          bankpro.selectedBank
+                                                              .substring(
+                                                            bankpro.selectedBank
+                                                                    .length -
+                                                                4,
+                                                          ),
+                                                      // 'Banking Details'.tr(),
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 11.sp,
+                                                          color: themeNotifier.isDark
+                                                              ? AppColors
+                                                                  .textColorWhite
+                                                              : AppColors
+                                                                  .textColorBlack),
+                                                    )
+                                                  : Text(
+                                                      'No banking have been added'
+                                                          .tr(),
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize: 11.7.sp,
+                                                          color: themeNotifier.isDark
+                                                              ? AppColors
+                                                                  .textColorGreyShade2
+                                                              : AppColors
+                                                                  .textColorBlack),
+                                                    )),
+                                          // Spacer(),
+                                          if (banks.isNotEmpty)
                                             Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 8.0),
-                                                child: banks.isNotEmpty
-                                                    ? Text(
-                                                        'Banking Details'.tr(),
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontSize: 11.sp,
-                                                            color: themeNotifier.isDark
-                                                                ? AppColors
-                                                                    .textColorWhite
-                                                                : AppColors
-                                                                    .textColorBlack),
-                                                      )
-                                                    : Text(
-                                                        'No banking have been added'
-                                                            .tr(),
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            fontSize: 11.7.sp,
-                                                            color: themeNotifier.isDark
-                                                                ? AppColors
-                                                                    .textColorGreyShade2
-                                                                : AppColors
-                                                                    .textColorBlack),
-                                                      )),
-                                            Spacer(),
-                                            if (banks.isNotEmpty)
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    right: 7.sp),
-                                                child: Icon(
-                                                  _isSelectedBank
-                                                      ? Icons.keyboard_arrow_up
-                                                      : Icons
-                                                          .keyboard_arrow_down,
-                                                  size: 27.sp,
-                                                  color: themeNotifier.isDark
-                                                      ? AppColors.textColorWhite
-                                                      : AppColors
-                                                          .textColorBlack,
-                                                ),
-                                              )
-                                          ],
-                                        ),
+                                              padding: EdgeInsets.only(
+                                                  right: 7.sp),
+                                              child:  Icon(
+                                                _isSelectedBank
+                                                    ? Icons
+                                                    .keyboard_arrow_up
+                                                    : Icons
+                                                    .keyboard_arrow_down,
+                                                size: 22.sp,
+                                                color:
+                                                AppColors.textColorGrey,
+                                              ),
+                                            )
+                                        ],
                                       ),
                                     ),
                                   ),
-                                  _isSelectedBank
-                                      ?
-                                      //     isLoading
-                                      //         ?
-                                      // CircularProgressIndicator(
-                                      //             color:
-                                      //                 AppColors.activeButtonColor,
-                                      //           )
-                                      //         :
-                                      ListView.builder(
+                                ),
+                                _isSelectedBank
+                                    ?
+                                    //     isLoading
+                                    //         ?
+                                    // CircularProgressIndicator(
+                                    //             color:
+                                    //                 AppColors.activeButtonColor,
+                                    //           )
+                                    //         :
+                                    Container(
+                                      margin: EdgeInsets.only(top:4.sp),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.textFieldParentDark,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: _isSelectedBank
+                                                ? Colors.black.withOpacity(0.10)
+                                                : Colors.transparent,
+                                            // Shadow color
+                                            offset: Offset(0, 4),
+                                            // Pushes the shadow down, removes the top shadow
+                                            blurRadius: 3,
+                                            // Adjust the blur radius to change shadow size
+                                            spreadRadius:
+                                            0.5, // Optional: Adjust spread radius if needed
+                                          ),
+                                        ],
+                                        borderRadius: BorderRadius.circular(8.0),
+                                      ),
+                                      child: ListView.builder(
                                           controller: scrollController,
                                           itemCount: banks.length,
                                           shrinkWrap: true,
@@ -824,12 +975,23 @@ class _WalletBankingAndPaymentEmptyState
                                                       4,
                                                 );
                                             // setState(() {
-                                            bankpro.selectedBank =
-                                                banks[index].isPrimary == "true"
-                                                    ? banks[index].ibanNumber
-                                                    : "";
-                                            print("selectedBank");
-                                            print(bankpro.selectedBank);
+                                            bankpro.selectedBank = banks[index]
+                                                        .isPrimary ==
+                                                    "true"
+                                                ? " **** " +
+                                                    banks[index]
+                                                        .ibanNumber
+                                                        .substring(banks[index]
+                                                                .ibanNumber
+                                                                .length -
+                                                            4)
+                                                : "";
+
+                                            // bankpro.selectedBankName = banks[index].isPrimary == "true"
+                                            //     ? banks[index].bankName! : "";
+
+                                            print("Selected Bank Name");
+                                            print(bankpro.selectedBankName);
                                             // });
                                             return bankingDetailsWidget(
                                               accountNumber:
@@ -913,58 +1075,58 @@ class _WalletBankingAndPaymentEmptyState
                                                   : false,
                                               selectedBankName:
                                                   banks[index].bankName!,
-                                              selectedBic:
-                                              banks[index].bic!,
+                                              selectedBic: banks[index].bic!,
                                               selectedAccTitle:
-                                              banks[index].accountTitle ?? 'null',
+                                                  banks[index].accountTitle ??
+                                                      'null',
                                             );
                                           },
-                                        )
-                                      : SizedBox(),
+                                        ),
+                                    )
+                                    : SizedBox(),
 
-                                  // isLoading ? CircularProgressIndicator(color: Colors.red,) :
-                                  //   ListView.builder(
-                                  //       controller: scrollController,
-                                  //       itemCount:
-                                  //       banks.length,
-                                  //       shrinkWrap: true,
-                                  //       padding: EdgeInsets.zero,
-                                  //       itemBuilder:
-                                  //           (context, index) {
-                                  //         bool isFirst = index == 0;
-                                  //
-                                  //         bool isLast = index ==
-                                  //             banks.length - 1;
-                                  //
-                                  //         return  bankingDetailsWidget(
-                                  //           accountNumber: banks[index].ibanNumber,
-                                  //                   isLast:  isLast,
-                                  //                   isFirst:isFirst,
-                                  //                   isPrimary:true,
-                                  //                   english: isEnglish ? true : false,
-                                  //                   isDark: themeNotifier.isDark ? true : false,
-                                  //                 );
-                                  //       }),
-                                  // ListView(
-                                  //   padding: EdgeInsets.zero,
-                                  //   shrinkWrap: true,
-                                  //   children: [
-                                  //     bankingDetailsWidget(
-                                  //         isFirst: true,
-                                  //         english: isEnglish ? true : false,
-                                  //         isDark:
-                                  //             themeNotifier.isDark ? true : false,
-                                  //         isPrimary: true),
-                                  //     // paymentCardWidget(),
-                                  //     bankingDetailsWidget(
-                                  //       isLast: true,
-                                  //       english: isEnglish ? true : false,
-                                  //       isDark: themeNotifier.isDark ? true : false,
-                                  //     ),
-                                  //   ],
-                                  // )
-                                ],
-                              ),
+                                // isLoading ? CircularProgressIndicator(color: Colors.red,) :
+                                //   ListView.builder(
+                                //       controller: scrollController,
+                                //       itemCount:
+                                //       banks.length,
+                                //       shrinkWrap: true,
+                                //       padding: EdgeInsets.zero,
+                                //       itemBuilder:
+                                //           (context, index) {
+                                //         bool isFirst = index == 0;
+                                //
+                                //         bool isLast = index ==
+                                //             banks.length - 1;
+                                //
+                                //         return  bankingDetailsWidget(
+                                //           accountNumber: banks[index].ibanNumber,
+                                //                   isLast:  isLast,
+                                //                   isFirst:isFirst,
+                                //                   isPrimary:true,
+                                //                   english: isEnglish ? true : false,
+                                //                   isDark: themeNotifier.isDark ? true : false,
+                                //                 );
+                                //       }),
+                                // ListView(
+                                //   padding: EdgeInsets.zero,
+                                //   shrinkWrap: true,
+                                //   children: [
+                                //     bankingDetailsWidget(
+                                //         isFirst: true,
+                                //         english: isEnglish ? true : false,
+                                //         isDark:
+                                //             themeNotifier.isDark ? true : false,
+                                //         isPrimary: true),
+                                //     // paymentCardWidget(),
+                                //     bankingDetailsWidget(
+                                //       isLast: true,
+                                //       english: isEnglish ? true : false,
+                                //       isDark: themeNotifier.isDark ? true : false,
+                                //     ),
+                                //   ],
+                                // )
+                              ],
                             ),
                             // Container(
                             //   height: 6.5.h,
@@ -1080,13 +1242,14 @@ class _WalletBankingAndPaymentEmptyState
                   cardBrand == 'VISA'
                       ? Image.asset(
                           "assets/images/Visa.png",
-                          height: 18.sp,
+                          height: 17.sp,
                           // color: isDark
                           //     ? AppColors.textColorWhite
                           //     : AppColors.textColorBlack,
                           // width: 20.sp,
                         )
                       : Container(
+                    height: 2.7.h,
                           decoration: BoxDecoration(
                             color:
                                 AppColors.textColorGreyShade2.withOpacity(0.27),
@@ -1094,10 +1257,10 @@ class _WalletBankingAndPaymentEmptyState
                           ),
                           child: Padding(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 3.2.sp, vertical: 1.sp),
+                                horizontal: 3.3.sp, vertical: 0.sp),
                             child: Image.asset(
                               cardBrand == 'MASTER'
-                                  ? "assets/images/master_card.png"
+                                  ? "assets/images/master2.png"
                                   : "assets/images/mada_pay.png",
                               height: 18.sp,
                               // color: isDark
@@ -1328,47 +1491,45 @@ class _WalletBankingAndPaymentEmptyState
                       if (!isPrimary)
                         PopupMenuItem<String>(
                           value: 'Make Primary '.tr(),
+                          onTap: () async {
+                            // setState(() {
+                            //   isLoading = true;
+                            // });
+                            // Call your handler function
 
-                            onTap: () async {
-                              // setState(() {
-                              //   isLoading = true;
-                              // });
-                              // Call your handler function
+                            // Close the popup menu
+                            // Navigator.pop(context);
+                            // setState(() {
+                            //   _isSelectedBank = !_isSelectedBank;
+                            // });
+                            print('before han');
 
-                              // Close the popup menu
-                              // Navigator.pop(context);
-                              // setState(() {
-                              //   _isSelectedBank = !_isSelectedBank;
-                              // });
-                              print('before han');
+                            handler();
 
-                              handler();
-
-                              print('after han');
-                            },
-                            child: Row(
-                              children: [
-                                Text(
-                                  'Make Primary'.tr(),
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      color: isDark
-                                          ? AppColors.textColorWhite
-                                          : AppColors.textColorBlack,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 13.sp),
-                                ),
-                                Text(
-                                  'Make Prim',
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      color: Colors.transparent,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 13.sp),
-                                ),
-                              ],
-                            ),
-
+                            print('after han');
+                          },
+                          child: Row(
+                            children: [
+                              Text(
+                                'Make Primary'.tr(),
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    color: isDark
+                                        ? AppColors.textColorWhite
+                                        : AppColors.textColorBlack,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 13.sp),
+                              ),
+                              Text(
+                                'Make Prim',
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.transparent,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 13.sp),
+                              ),
+                            ],
+                          ),
                         ),
                       // if (!isPrimary)
                       //   PopupMenuItem<String>(
@@ -1385,47 +1546,45 @@ class _WalletBankingAndPaymentEmptyState
                       // if(!isPrimary)
                       PopupMenuItem<String>(
                         value: 'Delete Account'.tr(),
-                        onTap: ()=> showPopupDeleteBank(
+                        onTap: () => showPopupDeleteBank(
                           isDark,
                           accountNumber,
                           fullAccountNumber,
                           selectedBankName,
                         ),
-                        child:  Text(
-                            'Delete Account'.tr(),
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                color: isDark
-                                    ? AppColors.textColorWhite
-                                    : AppColors.textColorBlack,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 13.sp),
-
+                        child: Text(
+                          'Delete Account'.tr(),
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              color: isDark
+                                  ? AppColors.textColorWhite
+                                  : AppColors.textColorBlack,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 13.sp),
                         ),
                       ),
                       PopupMenuItem<String>(
                         value: 'Update'.tr(),
-                        onTap:()=>Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => WalletUpdateBank(
-                      accountNumber: fullAccountNumber,
-                      isPrimary: isPrimary.toString(),
-
-                      bankName: selectedBankName,
-                      bic: selectedBic,
-                      accountTitle: selectedAccTitle,
-                    )),
-                    ),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WalletUpdateBank(
+                                    accountNumber: fullAccountNumber,
+                                    isPrimary: isPrimary.toString(),
+                                    bankName: selectedBankName,
+                                    bic: selectedBic,
+                                    accountTitle: selectedAccTitle,
+                                  )),
+                        ),
                         child: Text(
-                            'Update'.tr(),
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                color: isDark
-                                    ? AppColors.textColorWhite
-                                    : AppColors.textColorBlack,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 13.sp),
-
+                          'Update'.tr(),
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              color: isDark
+                                  ? AppColors.textColorWhite
+                                  : AppColors.textColorBlack,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 13.sp),
                         ),
                       ),
                       // Add more menu options as needed
@@ -1547,8 +1706,7 @@ class _WalletBankingAndPaymentEmptyState
                         Expanded(child: SizedBox()),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 22),
-                          child:
-                          AppButton(
+                          child: AppButton(
                             title: 'Delete'.tr(),
                             handler: () async {
                               setState(() {
@@ -1582,16 +1740,15 @@ class _WalletBankingAndPaymentEmptyState
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 22),
                           child: AppButton(
-                              title: 'Cancel'.tr(),
-                              handler: () {
-                                Navigator.pop(context);
-                              },
-                              isGradient: false,
-                              textColor: isDark
-                                  ? AppColors.textColorWhite
-                                  : AppColors.textColorBlack.withOpacity(0.8),
-                              color:
-                                  AppColors.appSecondButton.withOpacity(0.10),
+                            title: 'Cancel'.tr(),
+                            handler: () {
+                              Navigator.pop(context);
+                            },
+                            isGradient: false,
+                            textColor: isDark
+                                ? AppColors.textColorWhite
+                                : AppColors.textColorBlack.withOpacity(0.8),
+                            color: AppColors.appSecondButton.withOpacity(0.10),
                             isGradientWithBorder: true,
                             secondBtnBorderClr: true,
                           ),
@@ -1745,7 +1902,8 @@ class _WalletBankingAndPaymentEmptyState
                               });
                               if (result == AuthResult.success) {
                                 await Provider.of<TransactionProvider>(context,
-                                            listen: false).removeSelectedCardNum();
+                                        listen: false)
+                                    .removeSelectedCardNum();
                                 // refreshPage();
                                 await Navigator.pushReplacement(
                                   context,
@@ -1771,16 +1929,15 @@ class _WalletBankingAndPaymentEmptyState
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 22),
                           child: AppButton(
-                              title: 'Cancel'.tr(),
-                              handler: () {
-                                Navigator.pop(context);
-                              },
+                            title: 'Cancel'.tr(),
+                            handler: () {
+                              Navigator.pop(context);
+                            },
                             isGradient: false,
                             textColor: isDark
                                 ? AppColors.textColorWhite
                                 : AppColors.textColorBlack.withOpacity(0.8),
-                            color:
-                            AppColors.appSecondButton.withOpacity(0.10),
+                            color: AppColors.appSecondButton.withOpacity(0.10),
                             isGradientWithBorder: true,
                             secondBtnBorderClr: true,
                           ),

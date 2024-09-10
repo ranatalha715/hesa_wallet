@@ -1340,12 +1340,7 @@ class _TransactionRequestAcceptRejectState
                               otpDialog(
                                 events: _events,
                                 firstBtnHandler: () async {
-                                  if (otp1Controller.text.isNotEmpty &&
-                                      otp2Controller.text.isNotEmpty &&
-                                      otp3Controller.text.isNotEmpty &&
-                                      otp4Controller.text.isNotEmpty &&
-                                      otp5Controller.text.isNotEmpty &&
-                                      otp6Controller.text.isNotEmpty) {
+
                                     setState(() {
                                       isLoading = true;
                                     });
@@ -1685,12 +1680,11 @@ class _TransactionRequestAcceptRejectState
                                         operation,
                                         params:
                                         params,
-                                        code:  otp1Controller.text +
-                                            otp2Controller.text +
-                                            otp3Controller.text +
-                                            otp4Controller.text +
-                                            otp5Controller.text +
-                                            otp6Controller.text,
+                                        code:  Provider.of<
+                                            AuthProvider>(
+                                            context,
+                                            listen: false)
+                                            .codeFromOtpBoxes
                                       );
                                     } else if (operation ==
                                         'CancelCollectionListing') {
@@ -1730,7 +1724,7 @@ class _TransactionRequestAcceptRejectState
                                       isLoading = false;
                                     });
 
-                                  }},
+                                  },
                                 secondBtnHandler: () async {
                                   if (_timeLeft == 0) {
                                     print('resend function calling');

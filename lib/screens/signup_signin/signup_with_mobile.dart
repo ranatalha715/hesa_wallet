@@ -755,7 +755,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                       padding:
                                                           const EdgeInsets.only(
                                                               right: 10),
-                                                      child: Icon(
+                                                      child:
+                                                      Icon(
                                                         _isSelectedNationality
                                                             ? Icons
                                                                 .keyboard_arrow_up

@@ -290,9 +290,9 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          transactionSummary.txAmountType ==
-                                                  'credit'
-                                              ? 'Payment Recieved'
+                                          transactionSummary.receiverBankDetails !=
+                                                  'null'
+                                              ? 'Payout'
                                               : 'Payment Successful'.tr(),
                                           style: TextStyle(
                                             color: themeNotifier.isDark
@@ -312,14 +312,14 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                             borderRadius:
                                                 BorderRadius.circular(20),
                                             border: Border.all(
-                                                color: AppColors.hexaGreen,
+                                                color: AppColors.textColorWhite,
                                                 width: 1.sp),
                                           ),
                                           child: Center(
                                             child: Icon(
                                               Icons.check_rounded,
                                               size: 10.sp,
-                                              color: AppColors.hexaGreen,
+                                              color: AppColors.textColorWhite,
                                             ),
                                           ),
                                         ),
@@ -328,6 +328,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                     SizedBox(
                                       height: 1.h,
                                     ),
+                                    if(!transactionSummary.txType.contains("Cancel"))
                                     Text(
                                       // transactionSummary.txAmountType ==
                                       //         'credit'
@@ -335,8 +336,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                       //         transactionSummary.txTotalAmount +
                                       //         ' SAR'
                                       //     : '-' +
-                                              transactionSummary.txTotalAmount +
-                                              ' SAR',
+                                      transactionSummary.txTotalAmount + ' SAR',
                                       style: TextStyle(
                                         fontSize: 26.5.sp,
                                         fontWeight: FontWeight.w700,
@@ -347,9 +347,22 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                                 : AppColors.hexaGreen,
                                       ),
                                     ),
-                                    SizedBox(
-                                      height: 1.h,
+                                    if(  transactionSummary
+                                        .receiverBankDetails !=
+                                        'null')
+                                    Text(
+                                      "Deposit to",
+                                      style: TextStyle(
+                                        color: themeNotifier.isDark
+                                            ? AppColors.textColorGreyShade2
+                                            : AppColors.textColorBlack,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 8.sp,
+                                      ),
                                     ),
+                                    if(  transactionSummary
+                                        .txCrdBrand !=
+                                        'Unknown')
                                     Padding(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 10.sp, vertical: 5.sp),
@@ -357,43 +370,79 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          transactionSummary.txAmountType ==
-                                              'credit' ?
-                                          Image.asset(
-                                              "assets/images/bank.png",
-                                              height: 23.sp,
-                                              width: 23.sp):
-                                          Image.asset(
-                                              transactionSummary.txCrdBrand ==
+                                          transactionSummary.receiverBankDetails !=
+                                                  "null"
+                                              ?
+                                          Image.network(
+                                            transactionSummary.txBankImage,    // "assets/images/bank.png",
+                                                  height: 23.sp,
+                                                  width: 23.sp,
+                                            errorBuilder: (context, error, stackTrace) {
+                                              return Icon(Icons.error);  // Fallback UI
+                                            },
+                                          )
+                                              : transactionSummary.txCrdBrand ==
                                                       'VISA'
-                                                  ? "assets/images/Visa.png"
-                                                  :  transactionSummary.txCrdBrand ==
-                                                  'Unknown' ? "assets/images/unknown_card.png" : "assets/images/master_card.png",
-                                              height: 23.sp,
-                                              width: 23.sp),
+                                                  ? Image.asset(
+                                                      "assets/images/Visa.png",
+                                                      height: 23.sp,
+                                                      width: 23.sp)
+                                                  : Container(
+                                            height: 2.7.h,
+                                            decoration: BoxDecoration(
+                                              color: AppColors
+                                                  .textColorGreyShade2
+                                                  .withOpacity(0.27),
+                                              borderRadius:
+                                              BorderRadius.circular(
+                                                  3),
+                                            ),
+                                                      child: Padding(
+                                                        padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal:
+                                                            transactionSummary
+                                                                .txCrdBrand == 'MASTER' ?  5.8.sp:3.8.sp,
+                                                            vertical: transactionSummary
+                                                            .txCrdBrand == 'MASTER' ? 4.sp:3.7.sp),
+                                                        child: Image.asset(
+                                                            transactionSummary
+                                                                        .txCrdBrand ==
+                                                                    'Unknown'
+                                                                ? "assets/images/unknown_card.png"
+                                                                :  transactionSummary
+                                                                .txCrdBrand == 'MASTER' ? "assets/images/master2.png":
+                                                            "assets/images/mada_pay.png"
+                                                          ,
+                                                            // height: 18.sp,
+                                                            // width: 18.sp
+                                                        ),
+                                                      ),
+                                                    ),
                                           SizedBox(
                                             width: 3.sp,
                                           ),
-                                          if (transactionSummary.txCrdBrand !=
-                                                  'VISA' &&
-                                              transactionSummary.txCrdBrand !=
-                                                  'MASTER') // MADA missing
-                                            Text(
-                                              transactionSummary.txCrdBrand,
-                                              style: TextStyle(
-                                                  fontSize: 10.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: themeNotifier.isDark
-                                                      ? AppColors.textColorWhite
-                                                      : AppColors
-                                                          .textColorBlack),
-                                            ),
+                                          // if (transactionSummary.txCrdBrand !=
+                                          //         'VISA' &&
+                                          //     transactionSummary.txCrdBrand !=
+                                          //         'MASTER') // MADA missing
+                                          //   Text(
+                                          //     transactionSummary.txCrdBrand,
+                                          //     style: TextStyle(
+                                          //         fontSize: 10.sp,
+                                          //         fontWeight: FontWeight.w400,
+                                          //         color: themeNotifier.isDark
+                                          //             ? AppColors.textColorWhite
+                                          //             : AppColors
+                                          //                 .textColorBlack),
+                                          //   ),
                                           SizedBox(
                                             width: 4.w,
                                           ),
                                           // Spacer(),
                                           Text(
-                                            transactionSummary.txCrdNum,
+                                            transactionSummary.receiverBankDetails!="null" ?
+                                             transactionSummary.txBankAccNum:transactionSummary.txCrdNum  ,
                                             style: TextStyle(
                                                 fontSize: 10.sp,
                                                 fontWeight: FontWeight.w400,
@@ -456,9 +505,11 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                     ),
                                     transactionDetailsWidget(
                                       title: 'Tx ID:'.tr(),
-                                      details: type == 'counter-offer' ?replaceMiddleWithDotstxIdCounter(
-                                          transactionSummary.txId) : replaceMiddleWithDotstxId(
-                                          transactionSummary.txId),
+                                      details: type == 'counter-offer'
+                                          ? replaceMiddleWithDotstxIdCounter(
+                                              transactionSummary.txId)
+                                          : replaceMiddleWithDotstxId(
+                                              transactionSummary.txId),
                                       isDark:
                                           themeNotifier.isDark ? true : false,
                                       color: AppColors.textColorToska,
@@ -473,8 +524,11 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                       title: type == 'collection'
                                           ? "Collection ID:"
                                           : "Token ID:".tr(),
-                                      details: transactionSummary.txTokenId != "" ?replaceMiddleWithDotsTokenId(
-                                          transactionSummary.txTokenId):'N/A',
+                                      details:
+                                          transactionSummary.txTokenId != ""
+                                              ? replaceMiddleWithDotsTokenId(
+                                                  transactionSummary.txTokenId)
+                                              : 'N/A',
                                       isDark:
                                           themeNotifier.isDark ? true : false,
                                       color: AppColors.textColorToska,
@@ -497,8 +551,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                       isDark:
                                           themeNotifier.isDark ? true : false,
                                     ),
-                                    if (transactionSummary.txOfferedBy !=
-                                        'N/A')
+                                    if (transactionSummary.txOfferedBy != 'N/A')
                                       transactionDetailsWidget(
                                         title: 'Offered by:'.tr(),
                                         details: replaceMiddleWithDots(
@@ -509,130 +562,139 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                     SizedBox(
                                       height: 2.h,
                                     ),
-                                  if(  transactionSummary
-                                      .transactionFeeses.length !=0 )
-                                    Container(
-                                      decoration: BoxDecoration(
+                                    if (transactionSummary
+                                            .transactionFeeses.length !=
+                                        0)
+                                      Container(
+                                        decoration: BoxDecoration(
                                           color:
                                               AppColors.transactionFeeContainer,
                                           borderRadius:
                                               BorderRadius.circular(10.sp),
-
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            top: 13.sp,
-                                            left: 13.sp,
-                                            right: 13.sp,
-                                            bottom: 7.sp),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            // SizedBox(
-                                            //   height: 4.h,
-                                            // ),
-                                            Text(
-                                              'Transaction fees'.tr(),
-                                              style: TextStyle(
-                                                  color: themeNotifier.isDark
-                                                      ? AppColors.textColorWhite
-                                                      : AppColors
-                                                          .textColorBlack,
-                                                  fontSize: 12.5.sp,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                            Divider(
-                                              color: AppColors.textColorGrey,
-                                            ),
-                                            SizedBox(
-                                              height: 1.h,
-                                            ),
-                                            ListView.builder(
-                                              itemCount: transactionSummary
-                                                  .transactionFeeses.length,
-                                              controller: scrollController,
-                                              shrinkWrap: true,
-                                              padding: EdgeInsets.zero,
-                                              itemBuilder: (context, index) {
-                                                final feeItem =
-                                                    transactionSummary
-                                                            .transactionFeeses[
-                                                        index];
-                                                final String secondLabel =
-                                                    feeItem.keys.elementAt(1);
-                                                final String secondValue =
-                                                    feeItem[secondLabel]
-                                                        .toString();
-                                                final String label =
-                                                    feeItem.keys.last;
-                                                final String value =
-                                                    transactionSummary.txAmountType ==
-                                                        'credit' ?  feeItem[label].toString() : '- ' + feeItem[label].toString();
-                                                bool lastIndex = index ==
-                                                    transactionSummary
-                                                            .transactionFeeses
-                                                            .length -
-                                                        1;
-
-                                                return Column(
-                                                  children: [
-                                                    if (lastIndex)
-                                                      Divider(
-                                                        color: AppColors
-                                                            .textColorGrey,
-                                                      ),
-                                                    transactionFeesWidget(
-                                                      title: secondValue ?? "",
-                                                      details: value + ' SAR',
-                                                      isDark:
-                                                          themeNotifier.isDark
-                                                              ? true
-                                                              : false,
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            )
-
-                                            // transactionFeesWidget(
-                                            //   title: transactionSummary.assetListingLabel ?? "",
-                                            //   details: transactionSummary.assetListingFee ?? "" + ' SAR',
-                                            //   isDark:
-                                            //       themeNotifier.isDark ? true : false,
-                                            // ),
-                                            // transactionFeesWidget(
-                                            //   title: transactionSummary.networkLabel ?? "",
-                                            //   details: transactionSummary.networkFees ?? "" + ' SAR',
-                                            //   isDark:
-                                            //   themeNotifier.isDark ? true : false,
-                                            // ),
-                                            // transactionFeesWidget(
-                                            //   title: transactionSummary.paymentProcessingLabel ?? "",
-                                            //   details: transactionSummary.paymentProcessingFee ?? ""
-                                            //       + ' SAR',
-                                            //   isDark:
-                                            //   themeNotifier.isDark ? true : false,
-                                            // ),
-                                            //
-                                            // Column(
-                                            //   children: [
-                                            //     Divider(
-                                            //       color: AppColors.textColorGrey,
-                                            //     ),
-                                            //     transactionFeesWidget(
-                                            //       title: transactionSummary.totalLabel ?? "",
-                                            //       details: transactionSummary.totalFees ?? "" + ' SAR',
-                                            //       isDark:
-                                            //       themeNotifier.isDark ? true : false,
-                                            //     ),
-                                            //   ],
-                                            //
-                                            // ),
-                                          ],
                                         ),
-                                      ),
-                                    )
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 13.sp,
+                                              left: 13.sp,
+                                              right: 13.sp,
+                                              bottom: 7.sp),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              // SizedBox(
+                                              //   height: 4.h,
+                                              // ),
+                                              Text(
+                                                'Transaction fees'.tr(),
+                                                style: TextStyle(
+                                                    color: themeNotifier.isDark
+                                                        ? AppColors
+                                                            .textColorWhite
+                                                        : AppColors
+                                                            .textColorBlack,
+                                                    fontSize: 12.5.sp,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                              Divider(
+                                                color: AppColors.textColorGrey,
+                                              ),
+                                              SizedBox(
+                                                height: 1.h,
+                                              ),
+                                              ListView.builder(
+                                                itemCount: transactionSummary
+                                                    .transactionFeeses.length,
+                                                controller: scrollController,
+                                                shrinkWrap: true,
+                                                padding: EdgeInsets.zero,
+                                                itemBuilder: (context, index) {
+                                                  final feeItem =
+                                                      transactionSummary
+                                                              .transactionFeeses[
+                                                          index];
+                                                  final String secondLabel =
+                                                      feeItem.keys.elementAt(1);
+                                                  final String secondValue =
+                                                      feeItem[secondLabel]
+                                                          .toString();
+                                                  final String label =
+                                                      feeItem.keys.last;
+                                                  final String value =
+                                                      transactionSummary
+                                                                  .receiverBankDetails !=
+                                                              'null'
+                                                          ? feeItem[label]
+                                                              .toString()
+                                                          : '- ' +
+                                                              feeItem[label]
+                                                                  .toString();
+                                                  bool lastIndex = index ==
+                                                      transactionSummary
+                                                              .transactionFeeses
+                                                              .length -
+                                                          1;
+
+                                                  return Column(
+                                                    children: [
+                                                      if (lastIndex)
+                                                        Divider(
+                                                          color: AppColors
+                                                              .textColorGrey,
+                                                        ),
+                                                      transactionFeesWidget(
+                                                        title:
+                                                            secondValue ?? "",
+                                                        details: value + ' SAR',
+                                                        isDark:
+                                                            themeNotifier.isDark
+                                                                ? true
+                                                                : false,
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              )
+
+                                              // transactionFeesWidget(
+                                              //   title: transactionSummary.assetListingLabel ?? "",
+                                              //   details: transactionSummary.assetListingFee ?? "" + ' SAR',
+                                              //   isDark:
+                                              //       themeNotifier.isDark ? true : false,
+                                              // ),
+                                              // transactionFeesWidget(
+                                              //   title: transactionSummary.networkLabel ?? "",
+                                              //   details: transactionSummary.networkFees ?? "" + ' SAR',
+                                              //   isDark:
+                                              //   themeNotifier.isDark ? true : false,
+                                              // ),
+                                              // transactionFeesWidget(
+                                              //   title: transactionSummary.paymentProcessingLabel ?? "",
+                                              //   details: transactionSummary.paymentProcessingFee ?? ""
+                                              //       + ' SAR',
+                                              //   isDark:
+                                              //   themeNotifier.isDark ? true : false,
+                                              // ),
+                                              //
+                                              // Column(
+                                              //   children: [
+                                              //     Divider(
+                                              //       color: AppColors.textColorGrey,
+                                              //     ),
+                                              //     transactionFeesWidget(
+                                              //       title: transactionSummary.totalLabel ?? "",
+                                              //       details: transactionSummary.totalFees ?? "" + ' SAR',
+                                              //       isDark:
+                                              //       themeNotifier.isDark ? true : false,
+                                              //     ),
+                                              //   ],
+                                              //
+                                              // ),
+                                            ],
+                                          ),
+                                        ),
+                                      )
                                   ],
                                 ),
                               ),
