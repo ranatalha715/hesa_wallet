@@ -76,6 +76,7 @@ class _ConnectDappState extends State<ConnectDapp> {
   }
 
 
+
   @override
   Widget build(BuildContext context) {
     Locale currentLocale = context.locale;
@@ -386,18 +387,19 @@ class _ConnectDappState extends State<ConnectDapp> {
                                 setState(() {
                                   _isLoading = true;
                                 });
-                                var result = await Provider.of<UserProvider>(
-                                        context,
-                                        listen: false)
-                                    .connectDapps(
-                                        siteUrl: 'https://neonft.com',
-                                        // siteUrl: 'https://instagram.com',
-                                        token: accessToken,
-                                        context: context);
+                                // var result = await Provider.of<UserProvider>(
+                                //         context,
+                                //         listen: false)
+                                //     .connectDapps(
+                                //         siteUrl: 'https://neonft.com',
+                                //         // siteUrl: 'https://instagram.com',
+                                //         token: accessToken,
+                                //         context: context);
+                                await Future.delayed(const Duration(seconds: 1));
                                 setState(() {
                                   _isLoading = false;
                                 });
-                                if (result == AuthResult.success) {
+                                // if (result == AuthResult.success) {
                                   showDialog(
                                     barrierDismissible: false,
                                     context: context,
@@ -441,7 +443,9 @@ class _ConnectDappState extends State<ConnectDapp> {
                                                 'Wallet connected successfully'
                                           },
                                         );
-                                      }
+                                            final prefs = await SharedPreferences.getInstance();
+                                        await prefs.setString('siteUrl','https://neonft.com');
+                                          }
 
                                       Future.delayed(
                                           Duration(milliseconds: 1500),
@@ -619,8 +623,7 @@ class _ConnectDappState extends State<ConnectDapp> {
                                       );
                                     },
                                   );
-                                }
-                                ;
+                                // }
                                 // else{
                                 //
                                 // }

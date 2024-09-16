@@ -156,14 +156,27 @@ class _TransactionRequestState extends State<TransactionRequest> {
               Provider.of<TransactionProvider>(context, listen: false)
                   .checkoutId,
         );
-        await Provider.of<TransactionProvider>(context, listen: false)
-            .payableTransactionProcess(
-                token: accessToken,
-                paymentId:
-                    Provider.of<TransactionProvider>(context, listen: false)
-                        .checkoutId,
-                context: context,
-                operation: operation);
+        Provider.of<TransactionProvider>(context,listen: false).testDialogToCheck(context: context,
+            title: '$operation',
+            description: paymentResultData.paymentResult.toString()
+        );
+        Provider.of<TransactionProvider>(context,listen: false).functionToNavigateAfterPayable(paymentResultData.paymentResult.toString(), operation, context,
+       statusCode: '201');
+        // await  AppDeepLinking().openNftApp(
+        //   {
+        //     "operation": "$operation",
+        //     "data": paymentResultData.toString(),
+        //   },
+        // );
+        // await Provider.of<TransactionProvider>(context, listen: false)
+        //     .
+        // payableTransactionProcess(
+        //         token: accessToken,
+        //         paymentId:
+        //             Provider.of<TransactionProvider>(context, listen: false)
+        //                 .checkoutId,
+        //         context: context,
+        //         operation: operation);
         setState(() {
           isLoading = false;
         });
@@ -178,25 +191,36 @@ class _TransactionRequestState extends State<TransactionRequest> {
         // Handle success
       } else {
         print('Payment failed');
-        AppDeepLinking().openNftApp(
-          {
-            "operation": "$operation",
-            "data": paymentResultData.errorString.toString(),
-          },
+        Provider.of<TransactionProvider>(context,listen: false).testDialogToCheck(context: context,
+            title: '$operation',
+            description: paymentResultData.errorString.toString()
         );
-        _showToast('Payment failed');
-        // Handle failure
+        // AppDeepLinking().openNftApp(
+        //   {
+        //     "operation": "$operation",
+        //     "data": paymentResultData.errorString.toString(),
+        //   },
+        // );
         print('Failure Reason: ${paymentResultData.errorString}');
+        setState(() {
+          isLoading = false;
+        });
       }
     } catch (e) {
       print('Error occurred: $e');
-      AppDeepLinking().openNftApp(
-        {
-          "operation": "$operation",
-          "data": e.toString(),
-        },
+      Provider.of<TransactionProvider>(context,listen: false).testDialogToCheck(context: context,
+          title: '$operation',
+          description: e.toString()
       );
-      _showToast('Payment failed');
+      // AppDeepLinking().openNftApp(
+      //   {
+      //     "operation": "$operation",
+      //     "data": e.toString(),
+      //   },
+      // );
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 

@@ -35,6 +35,7 @@ class _ConnectedSitesState extends State<ConnectedSites> {
   // bool _isFirstVisit = true;
   bool showConnectionPopup = false;
   bool showDisconnectionPopup = false;
+   var siteUrl;
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -47,6 +48,10 @@ class _ConnectedSitesState extends State<ConnectedSites> {
     await getAccessToken();
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
+    final prefs = await SharedPreferences.getInstance();
+    siteUrl= await prefs.getString("siteUrl");
+    print('siteUrl locally');
+    print(prefs.getString("siteUrl"));
   }
 
   Future<void> _checkFirstVisit() async {
@@ -85,7 +90,7 @@ class _ConnectedSitesState extends State<ConnectedSites> {
 
   @override
   void initState() {
-    init();
+    // init();
     _checkFirstVisit();
     super.initState();
   }
@@ -98,8 +103,12 @@ class _ConnectedSitesState extends State<ConnectedSites> {
 
         // showConnectionPopup = true;
       });
-      await Provider.of<UserProvider>(context, listen: false)
-          .getUserDetails(token: accessToken, context: context);
+      await init();
+
+      // await Provider.of<UserProvider>(context, listen: false)
+      //     .getUserDetails(token: accessToken, context: context);
+
+
       setState(() {
         isLoading = false;
       });
@@ -133,335 +142,642 @@ class _ConnectedSitesState extends State<ConnectedSites> {
                 SizedBox(
                   height: 3.h,
                 ),
-                if (connectedSites.isEmpty)
+                // if (connectedSites.isEmpty)
+                //   Padding(
+                //     padding: EdgeInsets.only(top: 20.h),
+                //     child: Text(
+                //       "You are not connected to any apps.",
+                //       style: TextStyle(
+                //           color: themeNotifier.isDark
+                //               ? AppColors.textColorGreyShade2
+                //               : AppColors.textColorBlack,
+                //           fontWeight: FontWeight.w500,
+                //           fontSize: 12.sp,
+                //           fontFamily: 'Blogger Sans'),
+                //     ),
+                //   ),
+                ListView(
+                  shrinkWrap: true,padding: EdgeInsets.zero,
+                  children: [
                   Padding(
-                    padding: EdgeInsets.only(top: 20.h),
-                    child: Text(
-                      "You are not connected to any apps.",
-                      style: TextStyle(
-                          color: themeNotifier.isDark
-                              ? AppColors.textColorGreyShade2
-                              : AppColors.textColorBlack,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12.sp,
-                          fontFamily: 'Blogger Sans'),
-                    ),
-                  ),
-                if (connectedSites.isNotEmpty)
-                  ListView.builder(
-                    shrinkWrap: true,
-                    padding: EdgeInsets.zero,
-                    itemCount: connectedSites.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      lastConnectedSite = connectedSites.isNotEmpty
-                          ? connectedSites.last.urls
-                          : null;
+                    padding: const EdgeInsets.symmetric(horizontal: 25, ),
+                    child:Dismissible(
+                      dismissThresholds: const {DismissDirection.endToStart: 0.1},
+                      key: Key("0"), // Use a unique key for each item
+                      // direction: isEnglish ?  DismissDirection.endToStart : DismissDirection.startToEnd,
+                      direction: DismissDirection.endToStart,
+                      confirmDismiss: (direction) {
+                        return showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            final screenWidth =
+                                MediaQuery.of(context).size.width;
+                            final dialogWidth = screenWidth * 0.85;
+                            return StatefulBuilder(builder:
+                                (BuildContext context,
+                                StateSetter setState) {
+                              return Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                backgroundColor: Colors.transparent,
+                                child: BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                        sigmaX: 7, sigmaY: 7),
+                                    child: Container(
+                                      height: 48.h,
 
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25, ),
-                        child:Dismissible(
-                          dismissThresholds: const {DismissDirection.endToStart: 0.1},
-                          key: Key(index.toString()), // Use a unique key for each item
-                          // direction: isEnglish ?  DismissDirection.endToStart : DismissDirection.startToEnd,
-                          direction: DismissDirection.endToStart,
-                          confirmDismiss: (direction) {
-                            return showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                final screenWidth =
-                                    MediaQuery.of(context).size.width;
-                                final dialogWidth = screenWidth * 0.85;
-                                return StatefulBuilder(builder:
-                                    (BuildContext context,
-                                        StateSetter setState) {
-                                  return Dialog(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    backgroundColor: Colors.transparent,
-                                    child: BackdropFilter(
-                                        filter: ImageFilter.blur(
-                                            sigmaX: 7, sigmaY: 7),
-                                        child: Container(
-                                          height: 48.h,
-
-                                          width: dialogWidth,
-                                          decoration: BoxDecoration(
-                                            color: themeNotifier.isDark
-                                                ? AppColors.showDialogClr
-                                                : AppColors.textColorWhite,
-                                            // border: Border.all(
-                                            //     width: 0.1.h,
-                                            //     color: AppColors.textColorGrey),
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                          ),
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 20.sp),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                SizedBox(
-                                                  height: 5.h,
-                                                ),
-                                                Align(
-                                                  alignment:
-                                                      Alignment.bottomCenter,
-                                                  child: Image.asset(
-                                                    "assets/images/disconnect.png",
-                                                    height: 5.h,
-                                                    color: AppColors
-                                                        .textColorWhite,
-                                                    // width: 104,
-                                                  ),
-                                                ),
-                                                SizedBox(height: 2.5.h),
-                                                Text(
-                                                  'Are you sure you want to disconnect from this App?'
-                                                      .tr(),
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 17.5.sp,
-                                                      color: themeNotifier
-                                                              .isDark
-                                                          ? AppColors
-                                                              .textColorWhite
-                                                          : AppColors
-                                                              .textColorBlack),
-                                                ),
-                                                SizedBox(
-                                                  height: 2.h,
-                                                ),
-                                                Text(
-                                                  connectedSites[index].urls,
-                                                  // 'https://opensea.io',
-                                                  style: TextStyle(
-                                                      color: AppColors
-                                                          .textColorWhite
-                                                          .withOpacity(0.4),
-                                                      fontSize: 10.2.sp,
-                                                      fontWeight:
-                                                          FontWeight.w400),
-                                                ),
-                                                Spacer(),
-                                                DialogButton(
-                                                  title: 'Disconnect'.tr(),
-                                                  textColor:
-                                                      AppColors.errorColor,
-                                                  handler: () async {
-                                                    setState(() {
-                                                      isLoading = true;
-                                                    });
-                                                    var result = await Provider
-                                                            .of<UserProvider>(
-                                                                context,
-                                                                listen: false)
-                                                        .disconnectDapps(
-                                                      siteUrl:
-                                                          connectedSites[index]
-                                                              .urls,
-                                                      token: accessToken,
-                                                      context: context,
-                                                    );
-                                                    setState(() {
-                                                      isLoading = false;
-                                                    });
-                                                    Navigator.of(context)
-                                                        .pop(true);
-                                                    if (result ==
-                                                        AuthResult.success) {
-                                                      // connectedSites.removeAt(index);
-                                                      // lastConnectedSite = connectedSites.isNotEmpty ? connectedSites.last.urls : null;
-                                                      _checkFirstDisconnectionVisit();
-                                                      Timer(Duration(seconds: 2), () {
-
-                                                      });
-                                                      await AppDeepLinking().openNftApp(
-                                                        {
-                                                          "operation": "disconnectWallet",
-                                                          "walletAddress":
-                                                          Provider.of<UserProvider>(
-                                                              context,
-                                                              listen: false)
-                                                              .walletAddress,
-                                                          "userName":
-                                                          Provider.of<UserProvider>(
-                                                              context,
-                                                              listen: false)
-                                                              .userName,
-                                                          "userIcon":
-                                                          Provider.of<UserProvider>(
-                                                              context,
-                                                              listen: false)
-                                                              .userAvatar,
-                                                          "response":
-                                                          'Wallet disconnected successfully'
-                                                        },
-                                                      );
-
-                                                      // Navigator.of(context)
-                                                      //     .pop(true);
-
-                                                      // await Navigator.of(context)
-                                                      //      .pushReplacement(
-                                                      //    MaterialPageRoute(
-                                                      //        builder: (context) =>
-                                                      //            WalletTokensNfts()),
-                                                      //  );
-                                                    }
-                                                  },
-                                                  isLoading: isLoading,
-                                                  // isGradient: true,
-                                                  color: AppColors
-                                                      .appSecondButton
-                                                      .withOpacity(0.10),
-                                                ),
-                                                SizedBox(
-                                                  height: 2.h,
-                                                ),
-                                                AppButton(
-                                                  title: 'Cancel'.tr(),
-                                                  handler: () {
-                                                    Navigator.of(context)
-                                                        .pop(false);
-                                                  },
-                                                  isGradient: false,
-                                                  color: AppColors
-                                                      .appSecondButton
-                                                      .withOpacity(0.10),
-                                                  textColor: themeNotifier
-                                                          .isDark
-                                                      ? AppColors.textColorWhite
-                                                      : AppColors.textColorBlack
-                                                          .withOpacity(0.8),
-                                                ),
-                                                Spacer(),
-                                              ],
+                                      width: dialogWidth,
+                                      decoration: BoxDecoration(
+                                        color: themeNotifier.isDark
+                                            ? AppColors.showDialogClr
+                                            : AppColors.textColorWhite,
+                                        // border: Border.all(
+                                        //     width: 0.1.h,
+                                        //     color: AppColors.textColorGrey),
+                                        borderRadius:
+                                        BorderRadius.circular(15),
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 20.sp),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              height: 5.h,
                                             ),
-                                          ),
-                                        )),
-                                  );
-                                });
-                              },
-                            );
-                          },
-                          onDismissed: (direction) {
-                            setState(() {
-                              // connectedSites.removeAt(index);
+                                            Align(
+                                              alignment:
+                                              Alignment.bottomCenter,
+                                              child: Image.asset(
+                                                "assets/images/disconnect.png",
+                                                height: 5.h,
+                                                color: AppColors
+                                                    .textColorWhite,
+                                                // width: 104,
+                                              ),
+                                            ),
+                                            SizedBox(height: 2.5.h),
+                                            Text(
+                                              'Are you sure you want to disconnect from this App?'
+                                                  .tr(),
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontWeight:
+                                                  FontWeight.w600,
+                                                  fontSize: 17.5.sp,
+                                                  color: themeNotifier
+                                                      .isDark
+                                                      ? AppColors
+                                                      .textColorWhite
+                                                      : AppColors
+                                                      .textColorBlack),
+                                            ),
+                                            SizedBox(
+                                              height: 2.h,
+                                            ),
+                                            Text(
+                                              siteUrl,
+                                              // 'https://opensea.io',
+                                              style: TextStyle(
+                                                  color: AppColors
+                                                      .textColorWhite
+                                                      .withOpacity(0.4),
+                                                  fontSize: 10.2.sp,
+                                                  fontWeight:
+                                                  FontWeight.w400),
+                                            ),
+                                            Spacer(),
+                                            DialogButton(
+                                              title: 'Disconnect'.tr(),
+                                              textColor:
+                                              AppColors.errorColor,
+                                              handler: () async {
+                                                setState(() {
+                                                  isLoading = true;
+                                                });
+                                                // var result = await Provider
+                                                //     .of<UserProvider>(
+                                                //     context,
+                                                //     listen: false)
+                                                //     .disconnectDapps(
+                                                //   siteUrl:
+                                                //   connectedSites[index]
+                                                //       .urls,
+                                                //   token: accessToken,
+                                                //   context: context,
+                                                // );
+                                                setState(() {
+                                                  isLoading = false;
+                                                });
+                                                Navigator.of(context)
+                                                    .pop(true);
+                                                // if (result ==
+                                                //     AuthResult.success) {
+                                                  // connectedSites.removeAt(index);
+                                                  // lastConnectedSite = connectedSites.isNotEmpty ? connectedSites.last.urls : null;
+                                                  _checkFirstDisconnectionVisit();
+                                                  Timer(Duration(seconds: 2), () {
+
+                                                  });
+                                                  await AppDeepLinking().openNftApp(
+                                                    {
+                                                      "operation": "disconnectWallet",
+                                                      "walletAddress":
+                                                      Provider.of<UserProvider>(
+                                                          context,
+                                                          listen: false)
+                                                          .walletAddress,
+                                                      "userName":
+                                                      Provider.of<UserProvider>(
+                                                          context,
+                                                          listen: false)
+                                                          .userName,
+                                                      "userIcon":
+                                                      Provider.of<UserProvider>(
+                                                          context,
+                                                          listen: false)
+                                                          .userAvatar,
+                                                      "response":
+                                                      'Wallet disconnected successfully'
+                                                    },
+                                                  );
+
+                                                  // Navigator.of(context)
+                                                  //     .pop(true);
+
+                                                  // await Navigator.of(context)
+                                                  //      .pushReplacement(
+                                                  //    MaterialPageRoute(
+                                                  //        builder: (context) =>
+                                                  //            WalletTokensNfts()),
+                                                  //  );
+                                                // }
+                                              },
+                                              isLoading: isLoading,
+                                              // isGradient: true,
+                                              color: AppColors
+                                                  .appSecondButton
+                                                  .withOpacity(0.10),
+                                            ),
+                                            SizedBox(
+                                              height: 2.h,
+                                            ),
+                                            AppButton(
+                                              title: 'Cancel'.tr(),
+                                              handler: () {
+                                                Navigator.of(context)
+                                                    .pop(false);
+                                              },
+                                              isGradient: false,
+                                              color: AppColors
+                                                  .appSecondButton
+                                                  .withOpacity(0.10),
+                                              textColor: themeNotifier
+                                                  .isDark
+                                                  ? AppColors.textColorWhite
+                                                  : AppColors.textColorBlack
+                                                  .withOpacity(0.8),
+                                            ),
+                                            Spacer(),
+                                          ],
+                                        ),
+                                      ),
+                                    )),
+                              );
                             });
                           },
-                          background: Container(
+                        );
+                      },
+                      onDismissed: (direction) {
+                        setState(() {
+                          // connectedSites.removeAt(index);
+                        });
+                      },
+                      background: Container(
+                        height: 10.6.h,
+                        margin: EdgeInsets.only(bottom: 10.sp),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: themeNotifier.isDark
+                              ? AppColors.tagFillClrDark
+                          // ? AppColors.textColorWhite.withOpacity(0.05)
+                              : AppColors.textColorGreyShade2
+                              .withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(10),
+                          // border: Border.all(color: AppColors.textColorGrey, width: 1)
+                        ),
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 20),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                "assets/images/disconnect.png",
+                                height: 2.h,
+                                width: 2.h,
+                              ),
+                              SizedBox(
+                                height: 1.h,
+                              ),
+                              Text(
+                                'Disconnect'.tr(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 9.sp,
+                                    color: AppColors.errorColor),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: 10.6.h,
+                            margin: EdgeInsets.only(bottom: 10.sp),
+                            width: double.infinity,
+
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: AppColors.tagFillClrDark,
+                            ),
+                          ),
+                          Container(
+                            // margin: EdgeInsets.only(bottom: 15.sp),
                             height: 10.6.h,
                             margin: EdgeInsets.only(bottom: 10.sp),
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              color: themeNotifier.isDark
-                                  ? AppColors.tagFillClrDark
-                                  // ? AppColors.textColorWhite.withOpacity(0.05)
-                                  : AppColors.textColorGreyShade2
-                                      .withOpacity(0.2),
+                              color: AppColors.connectedSitesPopupsClr,
                               borderRadius: BorderRadius.circular(10),
-                              // border: Border.all(color: AppColors.textColorGrey, width: 1)
+                              // border:
+                              //     Border.all(color: AppColors.textColorGrey, width: 1)
                             ),
-                            alignment: Alignment.centerRight,
                             child: Padding(
-                              padding: const EdgeInsets.only(right: 20),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12),
+                              child: Row(
+                                mainAxisAlignment: isEnglish
+                                    ? MainAxisAlignment.start
+                                    : MainAxisAlignment.end,
                                 children: [
-                                  Image.asset(
-                                    "assets/images/disconnect.png",
-                                    height: 2.h,
-                                    width: 2.h,
-                                  ),
+                                  if (currentLocale.languageCode == 'en')
+                                    Image.asset(
+                                      "assets/images/neo.png",
+                                      height: 5.5.h,
+                                      // width: 104,
+                                    ),
                                   SizedBox(
-                                    height: 1.h,
+                                    width: 15,
                                   ),
-                                  Text(
-                                    'Disconnect'.tr(),
+                                  Text(siteUrl,
+                                    // "connectedSites[index].urls",
+                                    // 'NEO NFT Market',
                                     style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 9.sp,
-                                        color: AppColors.errorColor),
-                                  )
+                                        color: themeNotifier.isDark
+                                            ? AppColors.textColorWhite
+                                            : AppColors.textColorBlack,
+                                        fontSize: 10.5.sp,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  if (currentLocale.languageCode == 'ar')
+                                    SizedBox(
+                                      width: 15,
+                                    ),
+                                  if (currentLocale.languageCode == 'ar')
+                                    Image.asset(
+                                      "assets/images/neo.png",
+                                      height: 5.5.h,
+                                      // width: 104,
+                                    ),
                                 ],
                               ),
                             ),
                           ),
-                          child: Stack(
-                            children: [
-                              Container(
-                                  height: 10.6.h,
-                                  margin: EdgeInsets.only(bottom: 10.sp),
-                                  width: double.infinity,
-
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: AppColors.tagFillClrDark,
-                                ),
-                              ),
-                              Container(
-                                // margin: EdgeInsets.only(bottom: 15.sp),
-                                height: 10.6.h,
-                                margin: EdgeInsets.only(bottom: 10.sp),
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: AppColors.connectedSitesPopupsClr,
-                                  borderRadius: BorderRadius.circular(10),
-                                  // border:
-                                  //     Border.all(color: AppColors.textColorGrey, width: 1)
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12),
-                                  child: Row(
-                                    mainAxisAlignment: isEnglish
-                                        ? MainAxisAlignment.start
-                                        : MainAxisAlignment.end,
-                                    children: [
-                                      if (currentLocale.languageCode == 'en')
-                                        Image.asset(
-                                          "assets/images/neo.png",
-                                          height: 5.5.h,
-                                          // width: 104,
-                                        ),
-                                      SizedBox(
-                                        width: 15,
-                                      ),
-                                      Text(
-                                        connectedSites[index].urls,
-                                        // 'NEO NFT Market',
-                                        style: TextStyle(
-                                            color: themeNotifier.isDark
-                                                ? AppColors.textColorWhite
-                                                : AppColors.textColorBlack,
-                                            fontSize: 10.5.sp,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      if (currentLocale.languageCode == 'ar')
-                                        SizedBox(
-                                          width: 15,
-                                        ),
-                                      if (currentLocale.languageCode == 'ar')
-                                        Image.asset(
-                                          "assets/images/neo.png",
-                                          height: 5.5.h,
-                                          // width: 104,
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],),
+                // if (connectedSites.isNotEmpty)
+                //   ListView.builder(
+                //     shrinkWrap: true,
+                //     padding: EdgeInsets.zero,
+                //     itemCount: connectedSites.length,
+                //     itemBuilder: (BuildContext context, int index) {
+                //       lastConnectedSite = connectedSites.isNotEmpty
+                //           ? connectedSites.last.urls
+                //           : null;
+                //
+                //       return Padding(
+                //         padding: const EdgeInsets.symmetric(horizontal: 25, ),
+                //         child:Dismissible(
+                //           dismissThresholds: const {DismissDirection.endToStart: 0.1},
+                //           key: Key(index.toString()), // Use a unique key for each item
+                //           // direction: isEnglish ?  DismissDirection.endToStart : DismissDirection.startToEnd,
+                //           direction: DismissDirection.endToStart,
+                //           confirmDismiss: (direction) {
+                //             return showDialog(
+                //               context: context,
+                //               builder: (BuildContext context) {
+                //                 final screenWidth =
+                //                     MediaQuery.of(context).size.width;
+                //                 final dialogWidth = screenWidth * 0.85;
+                //                 return StatefulBuilder(builder:
+                //                     (BuildContext context,
+                //                         StateSetter setState) {
+                //                   return Dialog(
+                //                     shape: RoundedRectangleBorder(
+                //                       borderRadius: BorderRadius.circular(8.0),
+                //                     ),
+                //                     backgroundColor: Colors.transparent,
+                //                     child: BackdropFilter(
+                //                         filter: ImageFilter.blur(
+                //                             sigmaX: 7, sigmaY: 7),
+                //                         child: Container(
+                //                           height: 48.h,
+                //
+                //                           width: dialogWidth,
+                //                           decoration: BoxDecoration(
+                //                             color: themeNotifier.isDark
+                //                                 ? AppColors.showDialogClr
+                //                                 : AppColors.textColorWhite,
+                //                             // border: Border.all(
+                //                             //     width: 0.1.h,
+                //                             //     color: AppColors.textColorGrey),
+                //                             borderRadius:
+                //                                 BorderRadius.circular(15),
+                //                           ),
+                //                           child: Padding(
+                //                             padding: EdgeInsets.symmetric(
+                //                                 horizontal: 20.sp),
+                //                             child: Column(
+                //                               crossAxisAlignment:
+                //                                   CrossAxisAlignment.center,
+                //                               children: [
+                //                                 SizedBox(
+                //                                   height: 5.h,
+                //                                 ),
+                //                                 Align(
+                //                                   alignment:
+                //                                       Alignment.bottomCenter,
+                //                                   child: Image.asset(
+                //                                     "assets/images/disconnect.png",
+                //                                     height: 5.h,
+                //                                     color: AppColors
+                //                                         .textColorWhite,
+                //                                     // width: 104,
+                //                                   ),
+                //                                 ),
+                //                                 SizedBox(height: 2.5.h),
+                //                                 Text(
+                //                                   'Are you sure you want to disconnect from this App?'
+                //                                       .tr(),
+                //                                   textAlign: TextAlign.center,
+                //                                   style: TextStyle(
+                //                                       fontWeight:
+                //                                           FontWeight.w600,
+                //                                       fontSize: 17.5.sp,
+                //                                       color: themeNotifier
+                //                                               .isDark
+                //                                           ? AppColors
+                //                                               .textColorWhite
+                //                                           : AppColors
+                //                                               .textColorBlack),
+                //                                 ),
+                //                                 SizedBox(
+                //                                   height: 2.h,
+                //                                 ),
+                //                                 Text(
+                //                                   connectedSites[index].urls,
+                //                                   // 'https://opensea.io',
+                //                                   style: TextStyle(
+                //                                       color: AppColors
+                //                                           .textColorWhite
+                //                                           .withOpacity(0.4),
+                //                                       fontSize: 10.2.sp,
+                //                                       fontWeight:
+                //                                           FontWeight.w400),
+                //                                 ),
+                //                                 Spacer(),
+                //                                 DialogButton(
+                //                                   title: 'Disconnect'.tr(),
+                //                                   textColor:
+                //                                       AppColors.errorColor,
+                //                                   handler: () async {
+                //                                     setState(() {
+                //                                       isLoading = true;
+                //                                     });
+                //                                     var result = await Provider
+                //                                             .of<UserProvider>(
+                //                                                 context,
+                //                                                 listen: false)
+                //                                         .disconnectDapps(
+                //                                       siteUrl:
+                //                                           connectedSites[index]
+                //                                               .urls,
+                //                                       token: accessToken,
+                //                                       context: context,
+                //                                     );
+                //                                     setState(() {
+                //                                       isLoading = false;
+                //                                     });
+                //                                     Navigator.of(context)
+                //                                         .pop(true);
+                //                                     if (result ==
+                //                                         AuthResult.success) {
+                //                                       // connectedSites.removeAt(index);
+                //                                       // lastConnectedSite = connectedSites.isNotEmpty ? connectedSites.last.urls : null;
+                //                                       _checkFirstDisconnectionVisit();
+                //                                       Timer(Duration(seconds: 2), () {
+                //
+                //                                       });
+                //                                       await AppDeepLinking().openNftApp(
+                //                                         {
+                //                                           "operation": "disconnectWallet",
+                //                                           "walletAddress":
+                //                                           Provider.of<UserProvider>(
+                //                                               context,
+                //                                               listen: false)
+                //                                               .walletAddress,
+                //                                           "userName":
+                //                                           Provider.of<UserProvider>(
+                //                                               context,
+                //                                               listen: false)
+                //                                               .userName,
+                //                                           "userIcon":
+                //                                           Provider.of<UserProvider>(
+                //                                               context,
+                //                                               listen: false)
+                //                                               .userAvatar,
+                //                                           "response":
+                //                                           'Wallet disconnected successfully'
+                //                                         },
+                //                                       );
+                //
+                //                                       // Navigator.of(context)
+                //                                       //     .pop(true);
+                //
+                //                                       // await Navigator.of(context)
+                //                                       //      .pushReplacement(
+                //                                       //    MaterialPageRoute(
+                //                                       //        builder: (context) =>
+                //                                       //            WalletTokensNfts()),
+                //                                       //  );
+                //                                     }
+                //                                   },
+                //                                   isLoading: isLoading,
+                //                                   // isGradient: true,
+                //                                   color: AppColors
+                //                                       .appSecondButton
+                //                                       .withOpacity(0.10),
+                //                                 ),
+                //                                 SizedBox(
+                //                                   height: 2.h,
+                //                                 ),
+                //                                 AppButton(
+                //                                   title: 'Cancel'.tr(),
+                //                                   handler: () {
+                //                                     Navigator.of(context)
+                //                                         .pop(false);
+                //                                   },
+                //                                   isGradient: false,
+                //                                   color: AppColors
+                //                                       .appSecondButton
+                //                                       .withOpacity(0.10),
+                //                                   textColor: themeNotifier
+                //                                           .isDark
+                //                                       ? AppColors.textColorWhite
+                //                                       : AppColors.textColorBlack
+                //                                           .withOpacity(0.8),
+                //                                 ),
+                //                                 Spacer(),
+                //                               ],
+                //                             ),
+                //                           ),
+                //                         )),
+                //                   );
+                //                 });
+                //               },
+                //             );
+                //           },
+                //           onDismissed: (direction) {
+                //             setState(() {
+                //               // connectedSites.removeAt(index);
+                //             });
+                //           },
+                //           background: Container(
+                //             height: 10.6.h,
+                //             margin: EdgeInsets.only(bottom: 10.sp),
+                //             width: double.infinity,
+                //             decoration: BoxDecoration(
+                //               color: themeNotifier.isDark
+                //                   ? AppColors.tagFillClrDark
+                //                   // ? AppColors.textColorWhite.withOpacity(0.05)
+                //                   : AppColors.textColorGreyShade2
+                //                       .withOpacity(0.2),
+                //               borderRadius: BorderRadius.circular(10),
+                //               // border: Border.all(color: AppColors.textColorGrey, width: 1)
+                //             ),
+                //             alignment: Alignment.centerRight,
+                //             child: Padding(
+                //               padding: const EdgeInsets.only(right: 20),
+                //               child: Column(
+                //                 mainAxisAlignment: MainAxisAlignment.center,
+                //                 children: [
+                //                   Image.asset(
+                //                     "assets/images/disconnect.png",
+                //                     height: 2.h,
+                //                     width: 2.h,
+                //                   ),
+                //                   SizedBox(
+                //                     height: 1.h,
+                //                   ),
+                //                   Text(
+                //                     'Disconnect'.tr(),
+                //                     style: TextStyle(
+                //                         fontWeight: FontWeight.w500,
+                //                         fontSize: 9.sp,
+                //                         color: AppColors.errorColor),
+                //                   )
+                //                 ],
+                //               ),
+                //             ),
+                //           ),
+                //           child: Stack(
+                //             children: [
+                //               Container(
+                //                   height: 10.6.h,
+                //                   margin: EdgeInsets.only(bottom: 10.sp),
+                //                   width: double.infinity,
+                //
+                //                 decoration: BoxDecoration(
+                //                   borderRadius: BorderRadius.circular(10),
+                //                   color: AppColors.tagFillClrDark,
+                //                 ),
+                //               ),
+                //               Container(
+                //                 // margin: EdgeInsets.only(bottom: 15.sp),
+                //                 height: 10.6.h,
+                //                 margin: EdgeInsets.only(bottom: 10.sp),
+                //                 width: double.infinity,
+                //                 decoration: BoxDecoration(
+                //                   color: AppColors.connectedSitesPopupsClr,
+                //                   borderRadius: BorderRadius.circular(10),
+                //                   // border:
+                //                   //     Border.all(color: AppColors.textColorGrey, width: 1)
+                //                 ),
+                //                 child: Padding(
+                //                   padding: const EdgeInsets.symmetric(
+                //                       horizontal: 12),
+                //                   child: Row(
+                //                     mainAxisAlignment: isEnglish
+                //                         ? MainAxisAlignment.start
+                //                         : MainAxisAlignment.end,
+                //                     children: [
+                //                       if (currentLocale.languageCode == 'en')
+                //                         Image.asset(
+                //                           "assets/images/neo.png",
+                //                           height: 5.5.h,
+                //                           // width: 104,
+                //                         ),
+                //                       SizedBox(
+                //                         width: 15,
+                //                       ),
+                //                       Text(
+                //                         connectedSites[index].urls,
+                //                         // 'NEO NFT Market',
+                //                         style: TextStyle(
+                //                             color: themeNotifier.isDark
+                //                                 ? AppColors.textColorWhite
+                //                                 : AppColors.textColorBlack,
+                //                             fontSize: 10.5.sp,
+                //                             fontWeight: FontWeight.w600),
+                //                       ),
+                //                       if (currentLocale.languageCode == 'ar')
+                //                         SizedBox(
+                //                           width: 15,
+                //                         ),
+                //                       if (currentLocale.languageCode == 'ar')
+                //                         Image.asset(
+                //                           "assets/images/neo.png",
+                //                           height: 5.5.h,
+                //                           // width: 104,
+                //                         ),
+                //                     ],
+                //                   ),
+                //                 ),
+                //               ),
+                //             ],
+                //           ),
+                //         ),
+                //       );
+                //     },
+                //   ),
 
                 //icko dynamic krna h
                 // SizedBox(

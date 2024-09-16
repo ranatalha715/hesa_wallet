@@ -2531,7 +2531,7 @@ class TransactionProvider with ChangeNotifier {
   functionToNavigateAfterPayable(
       String response, String operation, BuildContext context,
       {String statusCode = ''}) {
-    Future.delayed(Duration(seconds: 1), () async {
+    Future.delayed(Duration(seconds: 2), () async {
       //reme later
       print('statusCode' + statusCode.toString());
       AppDeepLinking().openNftApp(
