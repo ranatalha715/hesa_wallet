@@ -25,6 +25,8 @@ class _WalletActivityState extends State<WalletActivity> {
   var _isLoading = false;
   var _isinit = true;
   var accessToken;
+  var siteUrl;
+  var connectionTime;
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -46,12 +48,44 @@ class _WalletActivityState extends State<WalletActivity> {
           .getUserDetails(token: accessToken, context: context);
       await Provider.of<TransactionProvider>(context, listen: false)
           .getWalletActivities(accessToken: accessToken, context: context);
+      final prefs = await SharedPreferences.getInstance();
+      siteUrl = await prefs.getString("siteUrl");
+      connectionTime = await prefs.getString("connectionTime");
       setState(() {
         _isLoading = false;
       });
     }
     _isinit = false;
     super.didChangeDependencies();
+  }
+  String calculateTimeDifference(String createdAtStr) {
+    // Parse the createdAt timestamp and ensure it's in UTC
+    DateTime createdAt = DateTime.parse(createdAtStr).toUtc();
+    // Get the current time in UTC
+    DateTime now = DateTime.now().toUtc();
+    // Calculate the difference
+    Duration difference = now.difference(createdAt);
+
+    // Debug prints
+    print('Created at: $createdAt');
+    print('Now: $now');
+    print('Difference: $difference');
+
+    if (difference.inSeconds < 60) {
+      return '${difference.inSeconds}s';
+    } else if (difference.inMinutes < 60) {
+      return '${difference.inMinutes}m';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours}h';
+    } else if (difference.inDays < 30) {
+      return '${difference.inDays}d';
+    } else if (difference.inDays < 365) {
+      int months = (difference.inDays / 30).floor();
+      return '$months m';
+    } else {
+      int years = (difference.inDays / 365).floor();
+      return '$years y';
+    }
   }
 
   @override
@@ -85,7 +119,7 @@ class _WalletActivityState extends State<WalletActivity> {
                           ),
                         )
                       : RefreshIndicator(
-                    color: AppColors.hexaGreen,
+                          color: AppColors.hexaGreen,
                           onRefresh: () async {
                             await Provider.of<TransactionProvider>(context,
                                     listen: false)
@@ -99,41 +133,66 @@ class _WalletActivityState extends State<WalletActivity> {
                             itemCount: activities.length,
                             shrinkWrap: true,
                             itemBuilder: (BuildContext context, int index) {
-                              return WalletActivityWidget(
-                                isPending: activities[index].tokenName ==
-                                            'Site Connected' ||
-                                        activities[index].tokenName ==
-                                            'Site Disconnected'
-                                    ? true
-                                    : false,
-                                title: activities[index].tokenName,
-                                subTitle: activities[index].transactionType,
-                                // image: 'assets/images/nft.png',
-                                image: activities[index].image,
-                                time: activities[index].time,
-                                priceDown:
-                                    activities[index].amountType == 'debit'
-                                        ? activities[index].transactionAmount
-                                        : null,
-                                priceUp:
-                                    activities[index].amountType == 'credit'
-                                        ? activities[index].transactionAmount
-                                        : null,
-                                siteURL: activities[index].siteURL,
-                                handler: () {
-                                  if (activities[index].tokenName !=
-                                          'Site Connected' &&
-                                      activities[index].tokenName !=
-                                          'Site Disconnected')
-                                    Navigator.of(context).pushNamed(
-                                        TransactionSummary.routeName,
-                                        arguments: {
-                                          'id': activities[index].id,
-                                          'type': activities[index].type,
-                                          'site': activities[index].siteURL,
-                                        });
-                                },
-                              );
+                              // DateTime connectionDateTime = DateTime.parse(connectionTime);
+                              // DateTime activityTime = DateTime.parse(activities[index].time);
+
+                              if (index == 0) {
+                                // Custom container with siteUrl, connectionTime, and empty price
+                                return connectionTime != null && siteUrl != null ? WalletActivityWidget(
+                                  title:"Site Connection",
+                                  // Use siteUrl as the title
+                                  subTitle: "Connect Success",
+                                  // Empty subtitle
+                                  image: 'https://images.pexels.com/photos/14354112/pexels-photo-14354112.jpeg?auto=compress&cs=tinysrgb&w=800',
+                                  // No image
+                                  time: calculateTimeDifference(connectionTime),
+                                  // Use connectionTime
+                                  priceUp: null,
+                                  // No price
+                                  priceDown: null,
+                                  // No price
+                                  handler: () {
+                                    // Optional: Handle tap if necessary
+                                  },
+                                  siteURL: siteUrl,
+                                ): SizedBox();
+                              } else {
+                                return WalletActivityWidget(
+                                  isPending: activities[index].tokenName ==
+                                              'Site Connected' ||
+                                          activities[index].tokenName ==
+                                              'Site Disconnected'
+                                      ? true
+                                      : false,
+                                  title: activities[index].tokenName,
+                                  subTitle: activities[index].transactionType,
+                                  // image: 'assets/images/nft.png',
+                                  image: activities[index].image,
+                                  time: activities[index].time,
+                                  priceDown:
+                                      activities[index].amountType == 'debit'
+                                          ? activities[index].transactionAmount
+                                          : null,
+                                  priceUp:
+                                      activities[index].amountType == 'credit'
+                                          ? activities[index].transactionAmount
+                                          : null,
+                                  siteURL: activities[index].siteURL,
+                                  handler: () {
+                                    if (activities[index].tokenName !=
+                                            'Site Connected' &&
+                                        activities[index].tokenName !=
+                                            'Site Disconnected')
+                                      Navigator.of(context).pushNamed(
+                                          TransactionSummary.routeName,
+                                          arguments: {
+                                            'id': activities[index].id,
+                                            'type': activities[index].type,
+                                            'site': activities[index].siteURL,
+                                          });
+                                  },
+                                );
+                              }
                             },
                           ),
                         ),

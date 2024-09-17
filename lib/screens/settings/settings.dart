@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../constants/app_deep_linking.dart';
 import '../../constants/colors.dart';
 import '../../constants/configs.dart';
 import '../../providers/auth_provider.dart';
@@ -47,6 +48,8 @@ class _SettingsState extends State<Settings> {
   deleteToken() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove('accessToken');
+    prefs.remove('refreshToken');
+    prefs.remove('siteUrl');
   }
 
   init() async {
@@ -150,6 +153,28 @@ class _SettingsState extends State<Settings> {
                                   ),
                                       (route) =>
                                   false, // This predicate ensures that all previous routes are removed.
+                                );
+                                await AppDeepLinking().openNftApp(
+                                  {
+                                    "operation": "disconnectWallet",
+                                    "walletAddress":
+                                    Provider.of<UserProvider>(
+                                        context,
+                                        listen: false)
+                                        .walletAddress,
+                                    "userName":
+                                    Provider.of<UserProvider>(
+                                        context,
+                                        listen: false)
+                                        .userName,
+                                    "userIcon":
+                                    Provider.of<UserProvider>(
+                                        context,
+                                        listen: false)
+                                        .userAvatar,
+                                    "response":
+                                    'Wallet disconnected successfully'
+                                  },
                                 );
                               } else{
                                 print('Logout Failed');

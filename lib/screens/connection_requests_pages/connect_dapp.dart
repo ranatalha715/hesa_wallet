@@ -445,6 +445,7 @@ class _ConnectDappState extends State<ConnectDapp> {
                                         );
                                             final prefs = await SharedPreferences.getInstance();
                                         await prefs.setString('siteUrl','https://neonft.com');
+                                        await prefs.setString('connectionTime', DateTime.now().toString());
                                           }
 
                                       Future.delayed(
