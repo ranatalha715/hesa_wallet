@@ -292,8 +292,10 @@ class _ConnectedSitesState extends State<ConnectedSites> {
                                                         final prefs =
                                                         await SharedPreferences
                                                             .getInstance();
-                                                        await prefs.remove(
-                                                            'siteUrl');
+                                                        // await prefs.remove(
+                                                        //     'siteUrl');
+
+                                                        await prefs.setString('disconnectionTime', DateTime.now().toString());
                                                         Navigator.pop(
                                                             context);
                                                         Navigator

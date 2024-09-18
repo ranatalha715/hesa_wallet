@@ -142,7 +142,10 @@ class TransactionProvider with ChangeNotifier {
             transactionAmount: prodData['amount']['value'].toString(),
             tokenName: prodData['name'].toString(),
             image: prodData['image'].toString(),
-            time: calculateTimeDifference(prodData['timestamp'].toString()),
+            time:
+            // calculateTimeDifference(
+                prodData['timestamp'].toString(),
+            // ),
             // time: calculateTimeDifference(DateTime.parse(prodData['timestamp'].toString())),
             siteURL: prodData['siteURL'].toString(),
             amountType: prodData['amount']['type'].toString(),
