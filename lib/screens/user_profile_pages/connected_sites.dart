@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,9 @@ class _ConnectedSitesState extends State<ConnectedSites> {
   bool showConnectionPopup = false;
   bool showDisconnectionPopup = false;
   var siteUrl;
+  var logoFromNeo;
+  bool isConnected=false;
+  late Uint8List bytes;
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -54,6 +58,11 @@ class _ConnectedSitesState extends State<ConnectedSites> {
         .getUserDetails(token: accessToken, context: context);
     final prefs = await SharedPreferences.getInstance();
     siteUrl = await prefs.getString("siteUrl");
+    logoFromNeo = await prefs.getString("logoFromNeo");
+
+
+     bytes = base64Decode(logoFromNeo);
+    isConnected = await prefs.getBool("isConnected") ?? false;
     print('siteUrl locally');
     print(prefs.getString("siteUrl"));
     setState(() {
@@ -177,7 +186,7 @@ class _ConnectedSitesState extends State<ConnectedSites> {
                 //     ),
                 //   ),
 
-                siteUrl != null
+                isConnected
                     ? ListView(
                         shrinkWrap: true,
                         padding: EdgeInsets.zero,
@@ -292,10 +301,10 @@ class _ConnectedSitesState extends State<ConnectedSites> {
                                                         final prefs =
                                                         await SharedPreferences
                                                             .getInstance();
-                                                        // await prefs.remove(
-                                                        //     'siteUrl');
+
 
                                                         await prefs.setString('disconnectionTime', DateTime.now().toString());
+                                                        await  prefs.setBool('isConnected', false);
                                                         Navigator.pop(
                                                             context);
                                                         Navigator
@@ -478,24 +487,29 @@ class _ConnectedSitesState extends State<ConnectedSites> {
                                         children: [
                                           if (currentLocale.languageCode ==
                                               'en')
-                                            Image.asset(
-                                              "assets/images/neo.png",
-                                              height: 5.5.h,
-                                              // width: 104,
+                                            Image.memory(
+                                              bytes,
+                                              height: 5.h,
+                                              width: 30.w,
                                             ),
                                           SizedBox(
                                             width: 15,
                                           ),
-                                          Text(
-                                            siteUrl,
-                                            // "connectedSites[index].urls",
-                                            // 'NEO NFT Market',
-                                            style: TextStyle(
-                                                color: themeNotifier.isDark
-                                                    ? AppColors.textColorWhite
-                                                    : AppColors.textColorBlack,
-                                                fontSize: 10.5.sp,
-                                                fontWeight: FontWeight.w600),
+                                          Container(
+                                            width:40.w,
+                                            child: Text(
+                                              siteUrl,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              // "connectedSites[index].urls",
+                                              // 'NEO NFT Market',
+                                              style: TextStyle(
+                                                  color: themeNotifier.isDark
+                                                      ? AppColors.textColorWhite
+                                                      : AppColors.textColorBlack,
+                                                  fontSize: 10.5.sp,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
                                           ),
                                           if (currentLocale.languageCode ==
                                               'ar')

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hesa_wallet/constants/colors.dart';
@@ -26,6 +28,8 @@ class _WalletActivityState extends State<WalletActivity> {
   var _isinit = true;
   var accessToken;
   var siteUrl;
+  var logoFromNeo;
+  var bytes;
   var connectionTime;
   var disconnectionTime;
 
@@ -51,6 +55,9 @@ class _WalletActivityState extends State<WalletActivity> {
           .getWalletActivities(accessToken: accessToken, context: context);
       final prefs = await SharedPreferences.getInstance();
       siteUrl = await prefs.getString("siteUrl");
+      //
+      logoFromNeo = await prefs.getString("logoFromNeo");
+      bytes = base64Decode(logoFromNeo);
       connectionTime = await prefs.getString("connectionTime");
       disconnectionTime = await prefs.getString("disconnectionTime");
       setState(() {
@@ -97,12 +104,14 @@ class _WalletActivityState extends State<WalletActivity> {
 
     // Print to check if activities and connectionTime exist
 
+
     // Add the site connection data if it exists
     if (connectionTime != null && siteUrl != null) {
       sortedActivities.add({
         'type': 'site_connection',
         'siteURL': siteUrl,
         'time': connectionTime, // The timestamp for the connection
+        'bytes':bytes,
       });
     }
     if (disconnectionTime != null) {
@@ -110,6 +119,7 @@ class _WalletActivityState extends State<WalletActivity> {
         'type': 'site_disconnection',
         'siteURL': siteUrl,
         'time': disconnectionTime, // Timestamp for the disconnection
+        'bytes':bytes,
         // 'event': 'disconnect',  // Indicate this is a disconnection event
       });
     }
@@ -208,10 +218,11 @@ class _WalletActivityState extends State<WalletActivity> {
                                     if (activity['type'] == 'site_connection') {
                                       // Custom container for the site connection
                                       return WalletActivityWidget(
-                                        title: "Site Connection",
+                                        title: "Site Connected",
                                         subTitle: "Connect Success",
                                         image:
                                             'https://images.pexels.com/photos/14354112/pexels-photo-14354112.jpeg?auto=compress&cs=tinysrgb&w=800',
+                                        bytes: bytes,
                                         time: calculateTimeDifference(
                                             activity['time']),
                                         priceUp: null,
@@ -225,10 +236,11 @@ class _WalletActivityState extends State<WalletActivity> {
                                         'site_disconnection') {
                                       // Custom widget for site disconnection
                                       return WalletActivityWidget(
-                                        title: "Site Disconnection",
+                                        title: "Site Disconnected",
                                         subTitle: "Disconnect Success",
                                         image:
                                             'https://images.pexels.com/photos/14354112/pexels-photo-14354112.jpeg?auto=compress&cs=tinysrgb&w=800',
+                                        bytes: bytes,
                                         time: calculateTimeDifference(
                                             activity['time']),
                                         priceUp: null,

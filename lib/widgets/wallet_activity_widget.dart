@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hesa_wallet/constants/colors.dart';
@@ -15,6 +17,7 @@ class WalletActivityWidget extends StatefulWidget {
   final String? priceDown;
   final bool isPending;
   final Function handler;
+  final Uint8List? bytes;
 
   const WalletActivityWidget(
       {Key? key,
@@ -26,6 +29,7 @@ class WalletActivityWidget extends StatefulWidget {
       this.priceDown,
       this.priceNormal,
       this.priceUp,
+      this.bytes,
       required this.time,
       required this.handler})
       : super(key: key);
@@ -80,6 +84,7 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
 
   @override
   Widget build(BuildContext context) {
+
     final activities =
         Provider.of<TransactionProvider>(context, listen: false).activities;
     Locale currentLocale = context.locale;
@@ -113,11 +118,25 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(5.sp),
-                  child: Image.network(
-                    widget.title == "Site Connected" ||
-                            widget.title == "Site Disconnected"
-                        ? 'https://images.pexels.com/photos/14354112/pexels-photo-14354112.jpeg?auto=compress&cs=tinysrgb&w=800'
-                        : widget.image,
+                  child: widget.title == "Site Connected" ||
+                      widget.title == "Site Disconnected"
+                      ?
+                  Container(
+                    // color: AppColors.profileHeaderDark,
+                    height: 40.sp,
+                    width: 40.sp,
+                    child: Padding(
+                      padding:  EdgeInsets.all(1.sp),
+                      child: Image.memory(
+                        widget.bytes!,
+                        // 'https://images.pexels.com/photos/14354112/pexels-photo-14354112.jpeg?auto=compress&cs=tinysrgb&w=800',
+                        // fit: BoxFit.cover,
+
+                      ),
+                    ),
+                  ):
+                  Image.network(
+                    widget.image,
                     // 'https://images.pexels.com/photos/14354112/pexels-photo-14354112.jpeg?auto=compress&cs=tinysrgb&w=800',
                     fit: BoxFit.cover,
                     height: 40.sp,

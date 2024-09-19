@@ -23,6 +23,8 @@ class TransactionProvider with ChangeNotifier {
   var selectedCardNum;
   var selectedCardLast4Digits;
   var selectedCardBrand;
+  var logoFromNeo;
+  var siteUrl;
   var selectedPaymentMethod='cards';
   bool showRedDot=false;
 

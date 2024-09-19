@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hesa_wallet/constants/configs.dart';
@@ -9,10 +11,12 @@ import 'package:hesa_wallet/screens/user_profile_pages/wallet_tokens_nfts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/app_deep_linking.dart';
 import '../../constants/colors.dart';
 import '../../providers/theme_provider.dart';
+import '../../providers/transaction_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../widgets/animated_loader/animated_loader.dart';
 import '../../widgets/app_header.dart';
@@ -66,20 +70,30 @@ class _ConnectDappState extends State<ConnectDapp> {
   @override
   void initState() {
     setState(() {
-      _isLoading=true;
+      _isLoading = true;
     });
     init();
     setState(() {
-      _isLoading=false;
+      _isLoading = false;
     });
     super.initState();
   }
 
-
+  void _launchURL(String url) async {
+    Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      throw 'Could not launch $url';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     Locale currentLocale = context.locale;
+    final String base64String =
+        Provider.of<TransactionProvider>(context, listen: false).logoFromNeo;
+    final String siteUrl =
+        Provider.of<TransactionProvider>(context, listen: false).siteUrl;
+    Uint8List bytes = base64Decode(base64String);
     return Consumer<UserProvider>(builder: (context, user, child) {
       return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
         return Stack(
@@ -147,11 +161,16 @@ class _ConnectDappState extends State<ConnectDapp> {
                                             : MainAxisAlignment.end,
                                     children: [
                                       if (currentLocale.languageCode == 'en')
-                                        Image.asset(
-                                          "assets/images/neo.png",
-                                          height: 5.5.h,
-                                          // width: 104,
+                                        Image.memory(
+                                          bytes,
+                                          height: 5.h,
+                                          width: 30.w,
                                         ),
+                                      // Image.asset(
+                                      //   "assets/images/neo.png",
+                                      //   height: 5.5.h,
+                                      //   // width: 104,
+                                      // ),
                                       if (currentLocale.languageCode == 'en')
                                         SizedBox(
                                           width: 15,
@@ -164,14 +183,22 @@ class _ConnectDappState extends State<ConnectDapp> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          Text(
-                                            'https://neonft.com',
-                                            style: TextStyle(
-                                                color: themeNotifier.isDark
-                                                    ? AppColors.bluishClr
-                                                    : AppColors.textColorBlack,
-                                                fontSize: 12.5.sp,
-                                                fontWeight: FontWeight.w600),
+                                          GestureDetector(
+                                            onTap:()=>_launchURL(siteUrl),
+                                            child: Container(
+                                              width:40.w,
+                                              child: Text(
+                                                siteUrl,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    color: themeNotifier.isDark
+                                                        ? AppColors.bluishClr
+                                                        : AppColors.textColorBlack,
+                                                    fontSize: 12.sp,
+                                                    fontWeight: FontWeight.w600),
+                                              ),
+                                            ),
                                           ),
                                           SizedBox(
                                             height: 0.5.h,
@@ -208,10 +235,10 @@ class _ConnectDappState extends State<ConnectDapp> {
                                           width: 15,
                                         ),
                                       if (currentLocale.languageCode == 'ar')
-                                        Image.asset(
-                                          "assets/images/neo.png",
-                                          height: 5.5.h,
-                                          // width: 104,
+                                        Image.memory(
+                                          bytes,
+                                          height: 5.h,
+                                          width: 30.w,
                                         ),
                                       // SizedBox(
                                       //   width: 15,
@@ -355,9 +382,11 @@ class _ConnectDappState extends State<ConnectDapp> {
                                   _isLoading = true;
                                 });
 
-                                Provider.of<UserProvider>(context, listen: false)
-                                    .navigateToNeoForConnectWallet=false;
-                                await Future.delayed(const Duration(seconds: 1));
+                                Provider.of<UserProvider>(context,
+                                        listen: false)
+                                    .navigateToNeoForConnectWallet = false;
+                                await Future.delayed(
+                                    const Duration(seconds: 1));
                                 setState(() {
                                   _isLoading = false;
                                 });
@@ -378,7 +407,6 @@ class _ConnectDappState extends State<ConnectDapp> {
                               textColor: themeNotifier.isDark
                                   ? AppColors.textColorWhite
                                   : AppColors.textColorBlack.withOpacity(0.8),
-
                             ),
                             SizedBox(height: 2.h),
                             AppButton(
@@ -395,235 +423,242 @@ class _ConnectDappState extends State<ConnectDapp> {
                                 //         // siteUrl: 'https://instagram.com',
                                 //         token: accessToken,
                                 //         context: context);
-                                await Future.delayed(const Duration(seconds: 1));
+                                await Future.delayed(
+                                    const Duration(seconds: 1));
                                 setState(() {
                                   _isLoading = false;
                                 });
                                 // if (result == AuthResult.success) {
-                                  showDialog(
-                                    barrierDismissible: false,
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      final screenWidth =
-                                          MediaQuery.of(context).size.width;
-                                      final dialogWidth = screenWidth * 0.85;
-                                      Future<void> closeDialogAndNavigate() async {
-                                        // Pop the dialog
-                                        // Navigator.of(context).pop();
-                                        // Add a short delay before the next pop
-                                        await Future.delayed(Duration(milliseconds: 100));
-                                        // Pop the previous screen
-                                        Navigator.of(context).pop();
-                                        // Add another short delay before pushing the new route
-                                        await Future.delayed(Duration(milliseconds: 100));
-                                        // Push the new route
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => WalletTokensNfts()),
-                                        );
-                                        await AppDeepLinking().openNftApp(
-                                          {
-                                            "operation": "connectWallet",
-                                            "walletAddress":
-                                                Provider.of<UserProvider>(
-                                                        context,
-                                                        listen: false)
-                                                    .walletAddress,
-                                            "userName":
-                                                Provider.of<UserProvider>(
-                                                        context,
-                                                        listen: false)
-                                                    .userName,
-                                            "userIcon":
-                                                Provider.of<UserProvider>(
-                                                        context,
-                                                        listen: false)
-                                                    .userAvatar,
-                                            "response":
-                                                'Wallet connected successfully'
-                                          },
-                                        );
-                                            final prefs = await SharedPreferences.getInstance();
-                                        await prefs.setString('siteUrl','https://neonft.com');
-                                        await prefs.setString('connectionTime', DateTime.now().toString());
-                                          }
+                                showDialog(
+                                  barrierDismissible: false,
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    final screenWidth =
+                                        MediaQuery.of(context).size.width;
+                                    final dialogWidth = screenWidth * 0.85;
+                                    Future<void>
+                                        closeDialogAndNavigate() async {
+                                      // Pop the dialog
+                                      // Navigator.of(context).pop();
+                                      // Add a short delay before the next pop
+                                      await Future.delayed(
+                                          Duration(milliseconds: 100));
+                                      // Pop the previous screen
+                                      Navigator.of(context).pop();
+                                      // Add another short delay before pushing the new route
+                                      await Future.delayed(
+                                          Duration(milliseconds: 100));
+                                      // Push the new route
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                WalletTokensNfts()),
+                                      );
+                                      await AppDeepLinking().openNftApp(
+                                        {
+                                          "operation": "connectWallet",
+                                          "walletAddress":
+                                              Provider.of<UserProvider>(context,
+                                                      listen: false)
+                                                  .walletAddress,
+                                          "userName": Provider.of<UserProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .userName,
+                                          "userIcon": Provider.of<UserProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .userAvatar,
+                                          "response":
+                                              'Wallet connected successfully'
+                                        },
+                                      );
+                                      final prefs =
+                                          await SharedPreferences.getInstance();
+                                      await prefs.setString(
+                                          'siteUrl',  Provider.of<TransactionProvider>(context,listen: false).siteUrl);
+                                      await prefs.setString(
+                                          'logoFromNeo',  Provider.of<TransactionProvider>(context,listen: false).logoFromNeo);
+                                      await prefs.setString('connectionTime',
+                                          DateTime.now().toString());
+                                      await  prefs.setBool('isConnected', true);
+                                    }
 
-                                      Future.delayed(
-                                          Duration(milliseconds: 1500),
-                                          closeDialogAndNavigate);
-                                      return Dialog(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        backgroundColor: Colors.transparent,
-                                        child: BackdropFilter(
-                                            filter: ImageFilter.blur(
-                                                sigmaX: 7, sigmaY: 7),
-                                            child: Container(
-                                              height:
-                                                  currentLocale.languageCode ==
-                                                          'en'
-                                                      ? 35.h
-                                                      : 35.h,
-                                              width: dialogWidth,
-                                              decoration: BoxDecoration(
-                                                color: themeNotifier.isDark
-                                                    ? AppColors.showDialogClr
-                                                    : AppColors.textColorWhite,
-                                                // border: Border.all(
-                                                //     width: 0.1.h,
-                                                //     color: AppColors
-                                                //         .textColorGrey
-                                                // ),
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  SizedBox(
+                                    Future.delayed(Duration(milliseconds: 1500),
+                                        closeDialogAndNavigate);
+                                    return Dialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                      backgroundColor: Colors.transparent,
+                                      child: BackdropFilter(
+                                          filter: ImageFilter.blur(
+                                              sigmaX: 7, sigmaY: 7),
+                                          child: Container(
+                                            height:
+                                                currentLocale.languageCode ==
+                                                        'en'
+                                                    ? 35.h
+                                                    : 35.h,
+                                            width: dialogWidth,
+                                            decoration: BoxDecoration(
+                                              color: themeNotifier.isDark
+                                                  ? AppColors.showDialogClr
+                                                  : AppColors.textColorWhite,
+                                              // border: Border.all(
+                                              //     width: 0.1.h,
+                                              //     color: AppColors
+                                              //         .textColorGrey
+                                              // ),
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                SizedBox(
+                                                  height: 5.h,
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      Alignment.bottomCenter,
+                                                  child:  Image.memory(
+                                                    bytes,
                                                     height: 5.h,
+                                                    width: 30.w,
                                                   ),
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.bottomCenter,
-                                                    child: Image.asset(
-                                                      "assets/images/neo.png",
-                                                      height: 6.h,
-                                                      // width: 104,
-                                                    ),
+                                                ),
+                                                SizedBox(height: 2.h),
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 50),
+                                                  child: Text(
+                                                    'Connected to NEO NFT Market'
+                                                        .tr(),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 17.5.sp,
+                                                        color: themeNotifier
+                                                                .isDark
+                                                            ? AppColors
+                                                                .textColorWhite
+                                                            : AppColors
+                                                                .textColorBlack),
+                                                    textAlign: TextAlign.center,
                                                   ),
-                                                  SizedBox(height: 2.h),
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 50),
+                                                ),
+                                                SizedBox(
+                                                  height: 1.5.h,
+                                                ),
+                                                  Container(
+                                                    width:40.w,
                                                     child: Text(
-                                                      'Connected to NEO NFT Market'
-                                                          .tr(),
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontSize: 17.5.sp,
-                                                          color: themeNotifier
-                                                                  .isDark
-                                                              ? AppColors
-                                                                  .textColorWhite
-                                                              : AppColors
-                                                                  .textColorBlack),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 1.5.h,
-                                                  ),
-                                                  Text(
-                                                    'http://neonft.com',
+                                                      siteUrl,
+                                                      maxLines: 1,
+                                                      overflow: TextOverflow.ellipsis,
                                                     style: TextStyle(
                                                         color: themeNotifier
                                                                 .isDark
                                                             ? AppColors
                                                                 .textColorWhite
-                                                                .withOpacity(
-                                                                    0.4)
+                                                                .withOpacity(0.4)
                                                             : AppColors
                                                                 .textColorBlack
-                                                                .withOpacity(
-                                                                    0.4),
+                                                                .withOpacity(0.4),
                                                         fontSize: 10.2.sp,
                                                         fontWeight:
                                                             FontWeight.w400),
+                                                                                                    ),
                                                   ),
-                                                  SizedBox(
-                                                    height: 2.h,
-                                                  ),
+                                                SizedBox(
+                                                  height: 2.h,
+                                                ),
 
-                                                  // Row(
-                                                  //   crossAxisAlignment: CrossAxisAlignment
-                                                  //       .center,
-                                                  //   mainAxisAlignment: MainAxisAlignment
-                                                  //       .center,
-                                                  //   children: [
-                                                  //     Icon(
-                                                  //       Icons
-                                                  //           .fiber_manual_record,
-                                                  //       size: 5.sp,
-                                                  //       color: AppColors
-                                                  //           .textColorGreen,
-                                                  //     ),
-                                                  //     SizedBox(width: 1.w,),
-                                                  //     Text(
-                                                  //       'MJRA-B01'.tr(),
-                                                  //       style: TextStyle(
-                                                  //           color: themeNotifier
-                                                  //               .isDark
-                                                  //               ? AppColors
-                                                  //               .textColorWhite
-                                                  //               .withOpacity(
-                                                  //               0.4)
-                                                  //               : AppColors
-                                                  //               .textColorBlack
-                                                  //               .withOpacity(
-                                                  //               0.4),
-                                                  //           fontSize: 10.sp,
-                                                  //           fontWeight: FontWeight
-                                                  //               .w400),
-                                                  //     ),
-                                                  //   ],
-                                                  // ),
-                                                  // SizedBox(height: 2.h,),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Container(
-                                                        width: 2.h,
-                                                        height: 2.h,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(20),
-                                                          border: Border.all(
-                                                              color: AppColors
-                                                                  .textColorGreen),
-                                                        ),
-                                                        child: Icon(
-                                                          Icons.check_rounded,
-                                                          size: 10,
-                                                          color: AppColors
-                                                              .textColorGreen,
-                                                        ),
+                                                // Row(
+                                                //   crossAxisAlignment: CrossAxisAlignment
+                                                //       .center,
+                                                //   mainAxisAlignment: MainAxisAlignment
+                                                //       .center,
+                                                //   children: [
+                                                //     Icon(
+                                                //       Icons
+                                                //           .fiber_manual_record,
+                                                //       size: 5.sp,
+                                                //       color: AppColors
+                                                //           .textColorGreen,
+                                                //     ),
+                                                //     SizedBox(width: 1.w,),
+                                                //     Text(
+                                                //       'MJRA-B01'.tr(),
+                                                //       style: TextStyle(
+                                                //           color: themeNotifier
+                                                //               .isDark
+                                                //               ? AppColors
+                                                //               .textColorWhite
+                                                //               .withOpacity(
+                                                //               0.4)
+                                                //               : AppColors
+                                                //               .textColorBlack
+                                                //               .withOpacity(
+                                                //               0.4),
+                                                //           fontSize: 10.sp,
+                                                //           fontWeight: FontWeight
+                                                //               .w400),
+                                                //     ),
+                                                //   ],
+                                                // ),
+                                                // SizedBox(height: 2.h,),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                      width: 2.h,
+                                                      height: 2.h,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                        border: Border.all(
+                                                            color: AppColors
+                                                                .textColorGreen),
                                                       ),
-                                                      SizedBox(
-                                                        width: 2.w,
+                                                      child: Icon(
+                                                        Icons.check_rounded,
+                                                        size: 10,
+                                                        color: AppColors
+                                                            .textColorGreen,
                                                       ),
-                                                      Text(
-                                                        'Connected'.tr(),
-                                                        style: TextStyle(
-                                                          color: AppColors
-                                                              .textColorGreen,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          fontSize: 14,
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 2.w,
+                                                    ),
+                                                    Text(
+                                                      'Connected'.tr(),
+                                                      style: TextStyle(
+                                                        color: AppColors
+                                                            .textColorGreen,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        fontSize: 14,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
 
-                                                  SizedBox(
-                                                    height: 2.h,
-                                                  ),
-                                                ],
-                                              ),
-                                            )),
-                                      );
-                                    },
-                                  );
+                                                SizedBox(
+                                                  height: 2.h,
+                                                ),
+                                              ],
+                                            ),
+                                          )),
+                                    );
+                                  },
+                                );
                                 // }
                                 // else{
                                 //

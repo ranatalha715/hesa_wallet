@@ -346,6 +346,63 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   //     Provider.of<UserProvider>(context, listen: false).navigateToNeoForConnectWallet = false;
   //   }
   // }
+
+  void handleDisconnection() async {
+    final prefs =
+    await SharedPreferences.getInstance();
+    await prefs.setString('disconnectionTime', DateTime.now().toString());
+    await  prefs.setBool('isConnected', false);
+    setState(() {
+
+    });
+    await Future.delayed(Duration(seconds: 2), () {});
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Alert!'),
+          content: Text('Disconnected Successfully'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+
+    // await AppDeepLinking()
+    //     .openNftApp(
+    //   {
+    //     "operation":
+    //     "disconnectWallet",
+    //     "walletAddress":
+    //     Provider.of<UserProvider>(
+    //         context,
+    //         listen:
+    //         false)
+    //         .walletAddress,
+    //     "userName": Provider.of<
+    //         UserProvider>(
+    //         context,
+    //         listen:
+    //         false)
+    //         .userName,
+    //     "userIcon": Provider.of<
+    //         UserProvider>(
+    //         context,
+    //         listen:
+    //         false)
+    //         .userAvatar,
+    //     "response":
+    //     'Wallet disconnected successfully'
+    //   },
+    // );
+
+  }
   Future<void> initUniLinks() async {
     try {
       print('trying');
@@ -353,6 +410,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         if (link != null) {
           Uri uri = Uri.parse(link);
           String? operation = uri.queryParameters['operation'];
+          String? logoFromNeo = uri.queryParameters['logo'];
+          String? siteUrl = uri.queryParameters['siteUrl'];
           print("print operation");
           print(operation);
 
@@ -360,6 +419,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             Provider.of<UserProvider>(context, listen: false)
                 .navigateToNeoForConnectWallet = true;
 
+
+            Provider.of<TransactionProvider>(context,listen: false).logoFromNeo=logoFromNeo;
+            Provider.of<TransactionProvider>(context,listen: false).siteUrl=siteUrl;
             setState(() {
               isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
                   .navigateToNeoForConnectWallet;  // Set overlay visibility to true
@@ -369,7 +431,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 Provider.of<UserProvider>(context, listen: false)
                     .navigateToNeoForConnectWallet
                     .toString());
-          } else {
+          }
+          else if(operation != null && operation == 'DisconnectWallet') {
+handleDisconnection();
+
+
+          }
+          else {
             Provider.of<UserProvider>(context, listen: false)
                 .navigateToNeoForConnectWallet = false;
 
