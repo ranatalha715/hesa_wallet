@@ -3,7 +3,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hesa_wallet/constants/configs.dart';
 import 'package:hesa_wallet/providers/user_provider.dart';
-import 'package:hesa_wallet/screens/user_profile_pages/wallet_tokens_nfts.dart';
 import 'package:hesa_wallet/widgets/text_field_parent.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,10 +11,8 @@ import 'package:sizer/sizer.dart';
 import '../../constants/colors.dart';
 import '../../providers/theme_provider.dart';
 import '../../widgets/animated_loader/animated_loader.dart';
-import '../../widgets/app_header.dart';
 import '../../widgets/button.dart';
 import '../../widgets/main_header.dart';
-import '../account_recovery/reset_password.dart';
 
 class OnboardingAddEmail extends StatefulWidget {
   const OnboardingAddEmail({Key? key}) : super(key: key);
@@ -35,7 +32,6 @@ class _OnboardingAddEmailState extends State<OnboardingAddEmail> {
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
-    // print(accessToken);
     print(accessToken);
   }
 
@@ -43,7 +39,6 @@ class _OnboardingAddEmailState extends State<OnboardingAddEmail> {
  initState() {
     super.initState();
     init();
-    // Listen for changes in the text fields and update the button state
      _emailController.addListener(_updateButtonState);
   }
 
@@ -62,7 +57,6 @@ class _OnboardingAddEmailState extends State<OnboardingAddEmail> {
 
   @override
   void dispose() {
-    // Clean up the controllers when they are no longer needed
     _emailController.dispose();
     super.dispose();
   }
@@ -85,7 +79,6 @@ class _OnboardingAddEmailState extends State<OnboardingAddEmail> {
                   child: Container(
                     height: 85.h,
                     width: double.infinity,
-                    // color: Colors.red,
                     child: Stack(
                       children: [
                         Padding(
@@ -98,19 +91,6 @@ class _OnboardingAddEmailState extends State<OnboardingAddEmail> {
                               SizedBox(
                                 height: 4.h,
                               ),
-                              // Text(
-                              //   "Please add a valid email".tr(),
-                              //   style: TextStyle(
-                              //       color: themeNotifier.isDark
-                              //           ? AppColors.textColorWhite
-                              //           : AppColors.textColorBlack,
-                              //       fontWeight: FontWeight.w600,
-                              //       fontSize: 17.5.sp,
-                              //       fontFamily: 'Inter'),
-                              // ),
-                              // SizedBox(
-                              //   height: 1.h,
-                              // ),
                               Text(
                                 "An email address will ensure you are able to recover your account and receive updates."
                                     .tr(),
@@ -198,10 +178,6 @@ class _OnboardingAddEmailState extends State<OnboardingAddEmail> {
                                   ),
                                 ),
                               Expanded(child: SizedBox()),
-
-                              // SizedBox(
-                              //   height: 6.h,
-                              // )
                             ],
                           ),
                         ),
@@ -228,7 +204,6 @@ class _OnboardingAddEmailState extends State<OnboardingAddEmail> {
                                 });
 
                                 try {
-                                  // Assuming verifyEmail is an asynchronous function
                                   var result = await Provider.of<UserProvider>(context, listen: false)
                                       .verifyEmail(
                                     email: _emailController.text,
@@ -268,9 +243,6 @@ class _OnboardingAddEmailState extends State<OnboardingAddEmail> {
                                                 height: 30.h,
                                                 width: dialogWidth,
                                                 decoration: BoxDecoration(
-                                                  // border: Border.all(
-                                                  //     width: 0.1.h,
-                                                  //     color: AppColors.textColorGrey),
                                                   color: themeNotifier.isDark
                                                       ? AppColors.showDialogClr
                                                       : AppColors.textColorWhite,
@@ -328,9 +300,6 @@ class _OnboardingAddEmailState extends State<OnboardingAddEmail> {
                                                                 .textColorGrey),
                                                       ),
                                                     ),
-                                                    // SizedBox(
-                                                    //   height: 4.h,
-                                                    // ),
                                                   ],
                                                 ),
                                               )),
@@ -339,12 +308,10 @@ class _OnboardingAddEmailState extends State<OnboardingAddEmail> {
                                     );
                                   }
                                 } catch (error) {
-                                  // Error occurred during verification
                                   print("Error during email verification: $error");
                                   setState(() {
                                     _isLoading = false;
                                   });
-                                  // Handle error, show a snackbar, or display an error message
                                 }
                               }
                             },

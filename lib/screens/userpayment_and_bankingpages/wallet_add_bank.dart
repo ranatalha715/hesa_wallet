@@ -118,9 +118,6 @@ class _WalletAddBankState extends State<WalletAddBank> {
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
-    // accessToken = prefs.getString('accessToken')!;
-    // print(accessToken);
-    // print(accessToken);
   }
   List<BankName> allBanks=[];
   List<BankName> _filteredBanks = [];
@@ -129,18 +126,10 @@ class _WalletAddBankState extends State<WalletAddBank> {
     if (query.isNotEmpty) {
       List<BankName> filteredList = allBanks.where((bank) {
         String bankNameLower = bank.bankName.trim().toLowerCase();
-        // String bankNameArLower = bank.bankNameAr.trim().toLowerCase();
         String queryLower = query.trim().toLowerCase();
-
-        // Match either the English or Arabic bank name
         return bankNameLower.contains(queryLower);
-            // ||
-            // bankNameArLower.contains(queryLower);
+
       }).toList();
-      // List<BankName> filteredList = allBanks
-      //     .where((bank) =>
-      //     bank.bankName.toLowerCase().contains(query.toLowerCase()))
-      //     .toList();
       print("Filtered List Length: ${filteredList.length}");
       setState(() {
         _filteredBanks = filteredList;
@@ -186,9 +175,6 @@ init() async {
       .getAllBanks(accessToken);
 
   allBanks =  Provider.of<BankProvider>(context, listen: false).banks;
-  // await Future.delayed(
-  //     const Duration(
-  //         milliseconds: 1000));
   _filteredBanks = allBanks;
 }
 
@@ -196,7 +182,6 @@ init() async {
     setState(() {
       isButtonActive = _ibannumberController.text.isNotEmpty &&
           _accountholdernamerController.text.isNotEmpty &&
-          // _isChecked &&
           _selectedBank != "";
     });
   }
@@ -210,16 +195,11 @@ init() async {
       });
 
       await init();
-      // await Provider.of<BankProvider>(context, listen: false)
-      //     .getAllBanks(accessToken);
-      // allBanks = await Provider.of<BankProvider>(context, listen: false).banks;
-      // _filteredBanks = allBanks;
       setState(() {
         _isLoading = false;
       });
     }
     _isInit = false;
-    // fetchBanks();
     super.didChangeDependencies();
   }
 
@@ -229,9 +209,7 @@ init() async {
     print(_filteredBanks);
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
-     // allBanks = Provider.of<BankProvider>(context, listen: false).banks;
     final bank = Provider.of<BankProvider>(context, listen: false);
-    // print("testing" + _selectedBank);
     print("testing bic" + _selectedBankBic);
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return GestureDetector(
@@ -251,12 +229,8 @@ init() async {
                   children: [
                     Column(children: [
                       MainHeader(title: 'Add Bank Account'.tr()),
-                      // SizedBox(
-                      //   height: 4.h,
-                      // ),
                       Expanded(
                         child: Container(
-                          // color: Colors.red,
                           width: double.infinity,
                           height: 85.h,
                           child: Stack(
@@ -297,8 +271,6 @@ init() async {
                                             GestureDetector(
                                               onTap: () => setState(() {
                                                 _isSelected = !_isSelected;
-
-
                                                 !_isSelected? _filterSearchResults(""):null;
                                               }),
                                               child: Container(
@@ -311,7 +283,6 @@ init() async {
                                                     topRight: Radius.circular(8.0),
                                                     bottomLeft: Radius.circular(
                                                         _isSelected ? 8.0 : 8.0),
-                                                    // Adjust as needed
                                                     bottomRight: Radius.circular(
                                                         _isSelected
                                                             ? 8.0
@@ -328,15 +299,11 @@ init() async {
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment.center,
                                                     children: [
-                                                      // SizedBox(
-                                                      //   width: 0.5.h,
-                                                      // ),
                                                       Padding(
                                                         padding: const EdgeInsets
                                                             .symmetric(
                                                             horizontal: 8.0),
                                                         child: Container(
-                                                          // color: Colors.blue,
                                                           width: 65.w,
                                                           child: Text(
                                                             _selectedBank == ""
@@ -407,16 +374,12 @@ init() async {
                                                           BoxShadow(
                                                             color: Colors.black
                                                                 .withOpacity(0.10),
-                                                            // Shadow color
                                                             offset: Offset(0, 4),
-                                                            // Pushes the shadow down, removes the top shadow
                                                             blurRadius: 3,
-                                                            // Adjust the blur radius to change shadow size
                                                             spreadRadius:
-                                                                0.5, // Optional: Adjust spread radius if needed
+                                                                0.5,
                                                           ),
                                                         ],
-                                                        // color: AppColors.errorColor,
                                                         color: AppColors
                                                             .textFieldParentDark,
                                                         borderRadius:
@@ -474,7 +437,6 @@ init() async {
                                                     right: 1,
                                                     child:
                                                     Container(
-                                                      // padding: EdgeInsets.symmetric(horizontal: 10.0),
                                                       height: 6.5.h,
                                                       decoration: BoxDecoration(
                                                         color: AppColors
@@ -483,13 +445,12 @@ init() async {
                                                         BorderRadius.only(
                                                           topLeft:
                                                           Radius.circular(8.0),
-                                                          // Radius for top-left corner
                                                           topRight:
                                                           Radius.circular(8.0),
                                                           bottomLeft:
                                                           Radius.circular(8.0),
                                                           bottomRight: Radius.circular(
-                                                              8.0), // Radius for top-right corner
+                                                              8.0),
                                                         ),
                                                       ),
                                                       child:
@@ -507,7 +468,6 @@ init() async {
                                                                 .textColorWhite,
                                                             fontWeight:
                                                             FontWeight.w400,
-                                                            // Off-white color,
                                                             fontFamily: 'Inter'),
                                                         decoration: InputDecoration(
                                                           contentPadding:
@@ -521,15 +481,12 @@ init() async {
                                                                   .textColorGrey,
                                                               fontWeight:
                                                               FontWeight.w400,
-                                                              // Off-white color,
                                                               fontFamily: 'Inter'),
                                                           suffixIcon: Padding(
                                                             padding: EdgeInsets.all(
                                                                 13.sp),
                                                             child: Image.asset(
                                                               "assets/images/search.png",
-                                                              // height: 10.sp,
-                                                              // width: 10.sp,
                                                             ),
                                                           ),
                                                           enabledBorder:
@@ -542,8 +499,6 @@ init() async {
                                                               BorderSide(
                                                                 color: Colors
                                                                     .transparent,
-                                                                // Off-white color
-                                                                // width: 2.0,
                                                               )),
                                                           focusedBorder:
                                                           OutlineInputBorder(
@@ -556,7 +511,7 @@ init() async {
                                                                 color: AppColors
                                                                     .focusTextFieldColor,
                                                               )),
-                                                          // labelText: 'Enter your password',
+
                                                         ),
                                                       ),
                                                     ),
@@ -604,11 +559,6 @@ init() async {
                                             focusNode: _ibanfocusNode,
                                             keyboardType: TextInputType.number,
                                             textInputAction: TextInputAction.next,
-                                            // scrollPadding: EdgeInsets.only(
-                                            //     bottom: MediaQuery.of(context)
-                                            //             .viewInsets
-                                            //             .bottom +
-                                            //         200),
                                             onEditingComplete: () {
                                               _beneficaryNamefocusNode.requestFocus();
                                             },
@@ -659,7 +609,6 @@ init() async {
                                                     color: AppColors
                                                         .focusTextFieldColor,
                                                   )),
-                                              // labelText: 'Enter your password',
                                             ),
                                             cursorColor: AppColors.textColorGrey),
                                       ),
@@ -668,7 +617,6 @@ init() async {
                                         Padding(
                                           padding: EdgeInsets.only(top: 7.sp),
                                           child: Text(
-                                            // "*Please enter a valid email address".tr(),
                                             "*IBAN number should not be empty",
                                             style: TextStyle(
                                                 fontSize: 10.sp,
@@ -721,17 +669,12 @@ init() async {
                                                 _accountholdernamerController,
                                             focusNode: _beneficaryNamefocusNode,
                                             textInputAction: TextInputAction.done,
-                                            // scrollPadding: EdgeInsets.only(
-                                            //     bottom: MediaQuery.of(context)
-                                            //             .viewInsets
-                                            //             .bottom-100),
                                             style: TextStyle(
                                                 fontSize: 10.2.sp,
                                                 color: themeNotifier.isDark
                                                     ? AppColors.textColorWhite
                                                     : AppColors.textColorBlack,
                                                 fontWeight: FontWeight.w400,
-                                                // Off-white color,
                                                 fontFamily: 'Inter'),
                                             decoration: InputDecoration(
                                               contentPadding: EdgeInsets.symmetric(
@@ -741,7 +684,6 @@ init() async {
                                                   fontSize: 10.2.sp,
                                                   color: AppColors.textColorGrey,
                                                   fontWeight: FontWeight.w400,
-                                                  // Off-white color,
                                                   fontFamily: 'Inter'),
                                               enabledBorder: OutlineInputBorder(
                                                   borderRadius:
@@ -761,7 +703,6 @@ init() async {
                                                     color: AppColors
                                                         .focusTextFieldColor,
                                                   )),
-                                              // labelText: 'Enter your password',
                                             ),
                                             cursorColor: AppColors.textColorGrey),
                                       ),
@@ -771,7 +712,6 @@ init() async {
                                         Padding(
                                           padding: EdgeInsets.only(top: 7.sp),
                                           child: Text(
-                                            // "*Please enter a valid email address".tr(),
                                             "*Name should not be empty",
                                             style: TextStyle(
                                                 fontSize: 10.sp,
@@ -823,7 +763,6 @@ init() async {
                                                               color: _isChecked
                                                                   ? AppColors.hexaGreen
                                                                   : Colors.transparent,
-                                                              // Animate the color
                                                               border: Border.all(
                                                                   color: _isChecked
                                                                       ? AppColors
@@ -904,8 +843,6 @@ init() async {
                                               SizedBox(
                                                 height: 2.h,
                                               ),
-
-                                              // SizedBox(height: 3.h,),
                                               AppButton(
                                                 title: 'Add Bank Account'.tr(),
                                                 isactive: isButtonActive && _isChecked
@@ -1025,10 +962,6 @@ init() async {
                                                                               dialogWidth,
                                                                               decoration:
                                                                               BoxDecoration(
-                                                                                // border: Border.all(
-                                                                                //     width:
-                                                                                //         0.1.h,
-                                                                                //     color: AppColors.textColorGrey),
                                                                                 color: themeNotifier.isDark
                                                                                     ? AppColors
                                                                                     .showDialogClr
@@ -1118,7 +1051,6 @@ init() async {
                                                               }
                                                             } catch (error) {
                                                               print("Error: $error");
-                                                              // _showToast('An error occurred'); // Show an error message
                                                             } finally {
                                                               setState(() {
                                                                 _isLoadingResend = false;
@@ -1128,9 +1060,6 @@ init() async {
                                                         },
                                                         firstTitle: 'Verify',
                                                         secondTitle: 'Resend code: ',
-
-                                                        // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
-
                                                         context: context,
                                                         isDark: themeNotifier.isDark,
                                                         isFirstButtonActive:
@@ -1164,10 +1093,6 @@ init() async {
                                                             ? AppColors.textColorBlack
                                                             .withOpacity(0.8)
                                                             : AppColors.textColorWhite,
-                                                        // themeNotifier.isDark
-                                                        //     ? AppColors.textColorWhite
-                                                        //     : AppColors.textColorBlack
-                                                        //         .withOpacity(0.8),
                                                         isLoading: _isLoading,
                                                       );
                                                     }
@@ -1176,7 +1101,6 @@ init() async {
                                                 isLoading: _isLoading,
                                                 isGradient: true,
                                                 color: Colors.transparent,
-                                                // textColor: AppColors.textColorGreyShade2,
                                               ),
                                               // SizedBox(
                                               //   height: 3.h,
@@ -1256,33 +1180,19 @@ init() async {
       child: Container(
         margin: EdgeInsets.only(top: isFirst ? 40.sp: 0),
         child: Column(
-          // mainAxisAlignment: english ? MainAxisAlignment.start : MainAxisAlignment.end,
-
           children: [
-            // if (isFirst)
-            //   Divider(
-            //     color: AppColors.textColorGrey,
-            //   ),
             Container(
               height: 5.5.h,
               decoration: BoxDecoration(
                 color: AppColors.textFieldParentDark,
-                // border: Border.all(
-                //   color: _isSelected
-                //       ? Colors.transparent
-                //       : AppColors.textColorGrey,
-                //   width: 1.0,
-                // ),
-                // borderRadius: BorderRadius.circular(8.0),
                 borderRadius: BorderRadius.only(
                   bottomLeft:
                       Radius.circular(_isSelected && !isLast ? 0.0 : 8.0),
-                  // Radius for top-left corner
                   bottomRight:
                       Radius.circular(_isSelected && !isLast ? 0.0 : 8.0),
                   topLeft: Radius.circular(_isSelected ? 0.0 : 8.0),
                   topRight: Radius.circular(
-                      _isSelected ? 0.0 : 8.0), // Radius for top-right corner
+                      _isSelected ? 0.0 : 8.0),
                 ),
               ),
               child: Padding(
@@ -1293,11 +1203,9 @@ init() async {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      // color: Colors.red,
                       width: 70.w,
                       child: Text(
                         bankName,
-                        // "SNB (Saudi National Bank)".tr(),
                         style: TextStyle(
                           fontSize: 10.2.sp,
                           fontFamily: 'Inter',
@@ -1313,14 +1221,6 @@ init() async {
                 ),
               ),
             ),
-            // if (!isLast)
-            //   Divider(
-            //     color: AppColors.textColorGrey,
-            //   ),
-            // if (isLast)
-            //   SizedBox(
-            //     height: 1.h,
-            //   ),
           ],
         ),
       ),

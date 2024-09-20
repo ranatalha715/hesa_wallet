@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
-import 'dart:io';
 import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,12 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hesa_wallet/constants/configs.dart';
 import 'package:hesa_wallet/providers/auth_provider.dart';
-import 'package:hesa_wallet/screens/signup_signin/signin_with_email.dart';
-import 'package:hesa_wallet/screens/signup_signin/signup_with_mobile.dart';
-import 'package:hesa_wallet/screens/signup_signin/terms_conditions.dart';
-import 'package:hesa_wallet/screens/signup_signin/wallet.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
-import 'package:hesa_wallet/widgets/app_header.dart';
 import 'package:hesa_wallet/widgets/otp_dialog.dart';
 import 'dart:io' as OS;
 import 'package:hesa_wallet/widgets/text_field_parent.dart';
@@ -24,7 +17,6 @@ import 'package:sizer/sizer.dart';
 import '../../constants/colors.dart';
 import '../../providers/theme_provider.dart';
 import '../../widgets/button.dart';
-import '../../widgets/dialog_button.dart';
 import '../../widgets/main_header.dart';
 import '../user_profile_pages/wallet_tokens_nfts.dart';
 
@@ -57,8 +49,6 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
   }
 
   bool _isValidMobileNumber(String value) {
-    // Custom logic to validate the mobile number
-    // You can replace this with your own validation rules
     return value.startsWith('+966') && value.length == 13;
   }
 
@@ -93,9 +83,6 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
     getTokenizedUserPayLoad();
     _events = new StreamController<int>();
     _events.add(60);
-    // startTimer();
-
-    // Listen for changes in the text fields and update the button state
     _numberController.addListener(_updateButtonState);
     otp1Controller.addListener(_updateOtpButtonState);
     otp2Controller.addListener(_updateOtpButtonState);
@@ -151,17 +138,11 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
   }
 
   removeRoutes(){
-    // Navigator.pop(context);
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => SigninWithEmail(),
-    //   ),
-    // );
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => WalletTokensNfts()),
-          (Route<dynamic> route) => false, // This predicate always returns false, so all previous routes are removed
+          (Route<dynamic> route) => false,
+
     );
 
   }
@@ -190,7 +171,6 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                       MainHeader(title: 'Login'.tr()),
                       Expanded(
                         child: Container(
-                          // color: Colors.red,
                           height: 85.h,
                           width: double.infinity,
                           child: Padding(
@@ -244,7 +224,6 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                           LengthLimitingTextInputFormatter(10),
                                           FilteringTextInputFormatter.digitsOnly,
                                         ],
-                                        // validator: (v)=>_validateMobileNumber(_numberController.text),
                                         scrollPadding: EdgeInsets.only(
                                             bottom: MediaQuery.of(context)
                                                     .viewInsets
@@ -274,8 +253,6 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                                 color:  (isValidating && _numberController.text.isEmpty) || (_numberController.text.length < 9 &&
                                                     _numberController.text.isNotEmpty  && isValidating)|| auth.loginErrorResponse.toString().contains('mobile number')
                                                     ? AppColors.errorColor : Colors.transparent,
-                                                // Off-white color
-                                                // width: 2.0,
                                               )),
                                           focusedBorder: OutlineInputBorder(
                                               borderRadius:
@@ -305,7 +282,6 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                     Padding(
                                       padding: EdgeInsets.only(top: 7.sp),
                                       child: Text(
-                                        // "*Mobile number not recognized",
                                         "*Mobile number should not be empty",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
@@ -318,7 +294,6 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                     Padding(
                                       padding: EdgeInsets.only(top: 7.sp),
                                       child: Text(
-                                        // "*This mobile number is registered",
                                         "*Mobile Number should be minimum 9 Characters",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
@@ -339,26 +314,6 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                       ),
                                     ),
                                   Expanded(child: SizedBox()),
-                                  // AppButton(
-                                  //     title: 'Sign in with password'.tr(),
-                                  //     handler: () {
-                                  //       Navigator.push(
-                                  //         context,
-                                  //         SlideRightPageRoute(page: SigninWithEmail()),
-                                  //       );
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => SigninWithEmail(),
-                                  //   ),
-                                  // );
-                                  //     },
-                                  //     isGradient: false,
-                                  //     textColor: themeNotifier.isDark
-                                  //         ? AppColors.textColorWhite
-                                  //         : AppColors.textColorBlack,
-                                  //     color: Colors.transparent),
-                                  // SizedBox(height: 2.h),
                                   AppButton(
                                     title: 'Log in'.tr(),
                                     isactive: isButtonActive ? true : false,
@@ -389,7 +344,6 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
 
                                           otpDialog(
                                             incorrect: auth.otpErrorResponse,
-                                            // onClose: ()=> removeRoutes(),
                                             events: _events,
                                             firstBtnHandler: () async {
                                                 setState(() {
@@ -398,7 +352,6 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                                 await Future.delayed(const Duration(milliseconds: 1000));
                                                 print('loading popup' +
                                                     _isLoading.toString());
-                                                // final loginResult =
                                                 final loginWithMobile= await Provider.of<AuthProvider>(
                                                         context,
                                                         listen: false)
@@ -440,7 +393,6 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                                   }
                                                 } catch (error) {
                                                   print("Error: $error");
-                                                  // _showToast('An error occurred'); // Show an error message
                                                 } finally {
                                                   setState(() {
                                                     _isLoadingResend = false;
@@ -450,9 +402,6 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                             },
                                             firstTitle: 'Confirm',
                                             secondTitle: 'Resend code ',
-
-                                            // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
-
                                             context: context,
                                             isDark: themeNotifier.isDark,
                                             isFirstButtonActive: isOtpButtonActive,
@@ -484,16 +433,11 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                                 ? AppColors.textColorBlack
                                                     .withOpacity(0.8)
                                                 : AppColors.textColorWhite,
-                                            // themeNotifier.isDark
-                                            //     ? AppColors.textColorWhite
-                                            //     : AppColors.textColorBlack
-                                            //         .withOpacity(0.8),
                                             isLoading: _isLoadingResend || _isLoading,
                                           );
                                         }
                                       }
                                     },
-                                    // _isLoading: _isLoading,
                                     isGradient: true,
                                     color: Colors.transparent,
                                     textColor: AppColors.textColorBlack,
@@ -503,14 +447,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                     onTap: () => Navigator.pushNamed(
                                         context, '/SigninWithEmail',
                                         arguments: {'comingFromWallet': true}),
-                                    //     Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) =>  SigninWithEmail(), // Replace YourNewPage with your desired widget/page
-                                    //   ),
-                                    // ),
                                     child: Container(
-                                      // color: Colors.red,
                                       width: double.infinity,
                                       height: 4.h,
                                       child: Align(

@@ -8,23 +8,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hesa_wallet/providers/auth_provider.dart';
 import 'package:hesa_wallet/screens/onboarding_notifications/verify_email.dart';
-import 'package:hesa_wallet/screens/signup_signin/signin_with_email.dart';
-import 'package:hesa_wallet/screens/signup_signin/terms_conditions.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
-import 'package:hesa_wallet/widgets/app_header.dart';
-import 'package:hesa_wallet/widgets/dialog_button.dart';
 import 'package:hesa_wallet/widgets/text_field_parent.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../constants/colors.dart';
 import '../../constants/configs.dart';
 import '../../providers/theme_provider.dart';
 import 'dart:io' as OS;
 import '../../widgets/button.dart';
 import '../../widgets/main_header.dart';
-import '../../widgets/otp_dialog.dart';
 
 class SignUpWithEmail extends StatefulWidget {
   const SignUpWithEmail({Key? key}) : super(key: key);
@@ -97,7 +91,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
   }
 
   generateFcmToken() async {
-    // await Firebase.initializeApp();
     await FirebaseMessaging.instance.getToken().then((newToken) {
       print("fcm===" + newToken!);
       setState(() {
@@ -167,7 +160,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
     generateFcmToken();
     _events = new StreamController<int>();
     _events.add(60);
-    // Listen for changes in the text fields and update the button state
     _passwordController.addListener(_updateButtonState);
     _confirmPasswordController.addListener(_updateButtonState);
     _usernameController.addListener(_updateButtonState);
@@ -211,8 +203,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
         final screenWidth = MediaQuery.of(context).size.width;
         final dialogWidth = screenWidth * 0.85;
         void closeDialogAndNavigate() {
-          // Navigator.of(context).pop(); // Close the dialog
-          // Navigator.of(context).pop(); // Close the dialog
         }
 
         Future.delayed(Duration(seconds: 3), closeDialogAndNavigate);
@@ -227,8 +217,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                 height: 40.h,
                 width: dialogWidth,
                 decoration: BoxDecoration(
-                  // border:
-                  //     Border.all(width: 0.1.h, color: AppColors.textColorGrey),
                   color: isDark
                       ? AppColors.showDialogClr
                       : AppColors.textColorWhite,
@@ -317,7 +305,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                 Expanded(
                   child: Container(
                     height: 85.h,
-                    // color: Colors.yellow,
                     width: double.infinity,
                     child: Stack(
                       children: [
@@ -332,28 +319,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                 SizedBox(
                                   height: 4.h,
                                 ),
-                                // Text(
-                                //   "Web3 Identity".tr(),
-                                //   style: TextStyle(
-                                //       color: themeNotifier.isDark
-                                //           ? AppColors.textColorWhite
-                                //           : AppColors.textColorBlack,
-                                //       fontWeight: FontWeight.w600,
-                                //       fontSize: 17.5.sp,
-                                //       fontFamily: 'Inter'),
-                                // ),
-                                // SizedBox(
-                                //   height: 1.h,
-                                // ),
-                                // Text(
-                                //   "Please add a unique username and your mobile number to receive verification codes."
-                                //       .tr(),
-                                //   style: TextStyle(
-                                //       color: AppColors.textColorGrey,
-                                //       fontWeight: FontWeight.w400,
-                                //       fontSize: 11.7.sp,
-                                //       fontFamily: 'Inter'),
-                                // ),
                                 Align(
                                   alignment: isEnglish
                                       ? Alignment.centerLeft
@@ -431,8 +396,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                                 .isNotEmpty)
                                                     ? AppColors.errorColor
                                                     : Colors.transparent,
-                                                // Off-white color
-                                                // width: 2.0,
                                               )),
                                           focusedBorder: OutlineInputBorder(
                                               borderRadius:
@@ -565,10 +528,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                       onChanged: (v){
                                         auth.registerUserErrorResponse=null;
                                       },
-                                      // scrollPadding: EdgeInsets.only(
-                                      //     bottom: MediaQuery.of(context)
-                                      //         .viewInsets
-                                      //         .bottom),
                                       focusNode: emailFocusNode,
                                       textInputAction: TextInputAction.next,
                                       onEditingComplete: () {
@@ -602,8 +561,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                               || ((!_emailController.text.contains('@') || !_emailController.text.contains('.com')) && _emailController.text.isNotEmpty)
                                                   ? AppColors.errorColor
                                                   : Colors.transparent,
-                                              // Off-white color
-                                              // width: 2.0,
                                             )),
                                         focusedBorder: OutlineInputBorder(
                                             borderRadius:
@@ -646,7 +603,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                   Padding(
                                     padding: EdgeInsets.only(top: 7.sp),
                                     child: Text(
-                                      // "*Please enter a valid email address".tr(),
                                       "*Email address should not be empty",
                                       style: TextStyle(
                                           fontSize: 10.sp,
@@ -722,8 +678,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                   !_hasMinLength) && _passwordController.text.isNotEmpty)
                                                   ? AppColors.errorColor
                                                   : Colors.transparent,
-                                              // Off-white color
-                                              // width: 2.0,
                                             )),
                                         focusedBorder: OutlineInputBorder(
                                             borderRadius:
@@ -767,20 +721,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                           color: AppColors.errorColor),
                                     ),
                                   ),
-
-                                // if (!_isPasswordValid &&
-                                //     isValidating &&
-                                //     _passwordController.text.isNotEmpty)
-                                //   Padding(
-                                //     padding: EdgeInsets.only(top: 7.sp),
-                                //     child: Text(
-                                //       "*Password must meet requirements",
-                                //       style: TextStyle(
-                                //           fontWeight: FontWeight.w400,
-                                //           fontSize: 10.sp,
-                                //           color: AppColors.errorColor),
-                                //     ),
-                                //   ),
                                 SizedBox(height: 2.h),
                                 Text(
                                   "Password must contain".tr(),
@@ -900,16 +840,12 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                               .bottom),
                                       controller: _confirmPasswordController,
                                       obscureText: _obscurePassword,
-                                      // onChanged: (password) {
-                                      //   _validatePassword(password);
-                                      // },
                                       style: TextStyle(
                                           fontSize: 10.2.sp,
                                           color: themeNotifier.isDark
                                               ? AppColors.textColorWhite
                                               : AppColors.textColorBlack,
                                           fontWeight: FontWeight.w400,
-                                          // Off-white color,
                                           fontFamily: 'Inter'),
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.symmetric(
@@ -934,8 +870,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                       _passwordController.text
                                                   ? AppColors.errorColor
                                                   : Colors.transparent,
-                                              // Off-white color
-                                              // width: 2.0,
                                             )),
                                         focusedBorder: OutlineInputBorder(
                                             borderRadius:
@@ -948,7 +882,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                   _confirmPasswordController.text !=
                                                       _passwordController.text ? AppColors.errorColor : AppColors.focusTextFieldColor,
                                             )),
-                                        // labelText: 'Enter your password',
                                         suffixIcon: IconButton(
                                           icon: Icon(
                                               _obscurePassword
@@ -1009,14 +942,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                               isValidating = true;
                                             });
                                             if (isButtonActive
-                                                // _usernameController
-                                                //     .text.isNotEmpty &&
-                                                //     _emailController
-                                                //         .text.isNotEmpty &&
-                                                //     _passwordController
-                                                //         .text.isNotEmpty &&
-                                                //     _confirmPasswordController
-                                                //         .text.isNotEmpty
 
                                                 ) {
                                               final String password =
@@ -1060,15 +985,9 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                               }
                                             }
                                           },
-                                          // isLoading: _isLoading,
                                           isGradient: true,
                                           color: Colors.transparent,
                                           textColor: AppColors.textColorBlack),
-                                      // Container(
-                                      //   height: 4.h,
-                                      //   width: double.infinity,
-                                      //   color: AppColors.errorColor,
-                                      // ),
                                     ],
                                   ),
                                 ),
@@ -1076,16 +995,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                             ),
                           ),
                         ),
-                        // Positioned(
-                        //   left: 0,
-                        //   right: 0,
-                        //   bottom: 0,
-                        //   child: Container(
-                        //     height: 2.h,
-                        //     width: double.infinity,
-                        //     color: AppColors.backgroundColor,
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),

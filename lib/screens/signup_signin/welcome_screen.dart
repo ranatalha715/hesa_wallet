@@ -1,21 +1,10 @@
 import 'dart:async';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:hesa_wallet/constants/footer_text.dart';
-import 'package:hesa_wallet/constants/styles.dart';
 import 'package:hesa_wallet/constants/colors.dart';
-import 'package:hesa_wallet/screens/account_recovery/reset_email.dart';
-import 'package:hesa_wallet/screens/signup_signin/wallet.dart';
 import 'package:hesa_wallet/screens/unlock/set_pin_screen.dart';
-import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
-import 'package:hesa_wallet/widgets/button.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-
-import '../../providers/theme_provider.dart';
-import '../../widgets/text_field_parent.dart';
 import '../user_profile_pages/wallet_tokens_nfts.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -61,7 +50,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     super.initState();
     _timer = Timer.periodic(Duration(milliseconds: 500), (timer) {
       setState(() {
-        // Convert entered digits to asterisks
+
         for (int i = 0; i < numbers.length; i++) {
           if (numbers[i].isNotEmpty) {
             numbers[i] = '*';
@@ -124,7 +113,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         children: [
           Container(
             height: 20.h,
-            // color: Colors.redAccent
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Text(
@@ -143,7 +131,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           ),
           Container(
             height: 15.h,
-            // color: Colors.blue,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.sp),
               child: Row(
@@ -162,7 +149,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           ),
           Container(
             height: 65.h,
-            // color: Colors.yellow,
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 10.sp),
               child: Column(
@@ -216,8 +202,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         ),
                       ),
                       child: Container(
-                        // color: Colors.yellow,
-                        // height: 5.h,
                         width: 10.h,
                         child: Center(
                           child: Text(
@@ -252,29 +236,26 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       onTap: () {
         imagePath == null
             ? setState(() async {
-                // Create a variable to store the six values
                 String result = '';
                 String resultToSave = '';
-
-                // Append the pressed digit to the pin boxes
                 for (int i = 0; i < numbers.length; i++) {
                   if (numbers[i].isEmpty) {
                     numbers[i] = number;
-                    result += number; // Append the digit to the result
-                    break; // Stop after adding the digit to the first empty box
+                    result += number;
+                    break;
                   } else {
                     result +=
-                        numbers[i]; // Append the existing number to the result
+                        numbers[i];
                   }
                 }
                 for (int i = 0; i < numbersToSave.length; i++) {
                   if (numbersToSave[i].isEmpty) {
                     numbersToSave[i] = number;
-                    resultToSave += number; // Append the digit to the result
-                    break; // Stop after adding the digit to the first empty box
+                    resultToSave += number;
+                    break;
                   } else {
                     resultToSave += numbersToSave[
-                        i]; // Append the existing number to the result
+                        i];
                   }
                 }
                 print("passcode" + resultToSave);
@@ -295,12 +276,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     );
                   });
                   setLockScreenStatus(false);
-                  // savePasscode(resultToSave);
-                  // Navigator.of(context).pushReplacementNamed(
-                  //     SetConfirmPinScreen.routeName,
-                  //     arguments: {
-                  //       'passcode': resultToSave,
-                  //     });
                 } else if (resultToSave.length == 6 &&
                     resultToSave != _savedPassCode) {
                   setState(() {
@@ -315,11 +290,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     isMatched = false;
                   });
                 }
-
-                // Print the result after the loop breaks
               })
             : setState(() {
-                // Remove the last entered digit
+
                 for (int i = numbers.length - 1; i >= 0; i--) {
                   if (numbers[i].isNotEmpty) {
                     numbers[i] = '';
@@ -338,7 +311,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         height: 10.h,
         width: 10.h,
         decoration: BoxDecoration(
-            // color: Colors.red
             ),
         child: Center(
           child: imagePath == null
@@ -357,11 +329,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   width: 21.sp,
                   color: AppColors.textColorWhite,
                 ),
-          // Image.asset(
-          //         imagePath,
-          //         height: 13.sp,
-          //         width: 13.sp,
-          //       ),
         ),
       ),
     );

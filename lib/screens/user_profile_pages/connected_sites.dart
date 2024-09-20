@@ -5,7 +5,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hesa_wallet/constants/colors.dart';
-import 'package:hesa_wallet/constants/configs.dart';
 import 'package:hesa_wallet/providers/user_provider.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/wallet_tokens_nfts.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
@@ -62,6 +61,8 @@ class _ConnectedSitesState extends State<ConnectedSites> {
 
 
      bytes = base64Decode(logoFromNeo);
+     print('logo');
+     print(logoFromNeo);
     isConnected = await prefs.getBool("isConnected") ?? false;
     print('siteUrl locally');
     print(prefs.getString("siteUrl"));

@@ -6,11 +6,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hesa_wallet/screens/signup_signin/signin_with_mobile.dart';
-import 'package:hesa_wallet/screens/signup_signin/terms_conditions.dart';
-import 'package:hesa_wallet/screens/user_profile_pages/wallet_tokens_nfts.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'dart:io' as OS;
-import 'package:hesa_wallet/widgets/app_header.dart';
 import 'package:hesa_wallet/widgets/text_field_parent.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -43,8 +40,6 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
   @override
   void initState() {
     super.initState();
-
-    // Listen for changes in the text fields and update the button state
     _emailController.addListener(_updateButtonState);
     _passwordController.addListener(_updateButtonState);
 
@@ -64,7 +59,6 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
 
   @override
   void dispose() {
-    // Clean up the controllers when they are no longer needed
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -166,18 +160,12 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                     onChanged: (v){
                                       auth.loginErrorResponse=null;
                                     },
-                                    // scrollPadding: EdgeInsets.only(
-                                    //     bottom: MediaQuery.of(context)
-                                    //             .viewInsets
-                                    //             .bottom +
-                                    //         140),
                                     style: TextStyle(
                                         fontSize: 10.2.sp,
                                         color: themeNotifier.isDark
                                             ? AppColors.textColorWhite
                                             : AppColors.textColorBlack,
                                         fontWeight: FontWeight.w400,
-                                        // Off-white color,
                                         fontFamily: 'Inter'),
                                     decoration: InputDecoration(
                                       contentPadding: EdgeInsets.symmetric(
@@ -196,8 +184,6 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                           borderSide: BorderSide(
                                             color: (isValidating && _emailController.text.isEmpty) || auth.loginErrorResponse.toString().contains('username')
                                                 ? AppColors.errorColor : Colors.transparent,
-                                            // Off-white color
-                                            // width: 2.0,
                                           )),
                                       focusedBorder: OutlineInputBorder(
                                           borderRadius:
@@ -205,7 +191,6 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                           borderSide: BorderSide(
                                             color: AppColors.focusTextFieldColor,
                                           )),
-                                      // labelText: 'Enter your password',
                                     ),
                                     cursorColor: AppColors.textColorGrey),
                               ),
@@ -213,7 +198,6 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                 Padding(
                                   padding: EdgeInsets.only(top: 7.sp),
                                   child: Text(
-                                    // "*Email Address or username not recognized",
                                     "*Email Address or username should not be empty",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
@@ -290,8 +274,6 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                               BorderRadius.circular(8.0),
                                           borderSide: BorderSide(
                                             color: (isValidating && _passwordController.text.isEmpty) || auth.loginErrorResponse.toString().contains('password') ? AppColors.errorColor : Colors.transparent,
-                                            // Off-white color
-                                            // width: 2.0,
                                           )),
                                       focusedBorder: OutlineInputBorder(
                                           borderRadius:
@@ -299,7 +281,6 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                           borderSide: BorderSide(
                                             color: AppColors.focusTextFieldColor,
                                           )),
-                                      // labelText: 'Enter your password',
                                       suffixIcon: IconButton(
                                         icon: Icon(
                                             _obscurePassword
@@ -335,8 +316,6 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                       color: themeNotifier.isDark
                                           ? AppColors.textColorWhite
                                           : AppColors.textColorBlack,
-                                      // decoration: TextDecoration.underline,
-
                                     ),
                                   ),
                                 ),
@@ -346,7 +325,6 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                 Padding(
                                   padding: EdgeInsets.only(top: 7.sp),
                                   child: Text(
-                                    // "*Password incorrect",
                                     "*Password should not be empty",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
@@ -371,10 +349,6 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                               AppButton(
                                 title: 'Log in'.tr(),
                                 isactive: isButtonActive,
-                                // isactive: _emailController.text.isNotEmpty &&
-                                //         _passwordController.text.isNotEmpty
-                                //     ? true
-                                //     : false,
                                 handler: () async {
                                   setState(() {
                                     isValidating = true;
@@ -406,25 +380,14 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                       _isLoading = false;
                                     });
                                     if (result == AuthResult.success) {
-                                      // await Navigator.pushReplacement(
-                                      //   context,
-                                      //   MaterialPageRoute(
-                                      //     builder: (context) =>
-                                      //         WalletTokensNfts(),
-                                      //   ),
-                                      // );
                                       await Navigator.of(context)
                                           .pushNamedAndRemoveUntil(
                                               'nfts-page', (Route d) => false,
                                               arguments: {});
-                                      // runApp(MyApp());
                                     }
-                                    // Navigator.popUntil(context, (route) => route.isActive
-                                    // );
                                   }
                                 },
                                 isGradient: true,
-                                // isLoading: _isLoading,
                                 color: Colors.transparent,
                                 textColor: AppColors.textColorBlack,
                               ),

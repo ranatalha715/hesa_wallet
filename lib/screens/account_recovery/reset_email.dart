@@ -4,9 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hesa_wallet/constants/configs.dart';
-import 'package:hesa_wallet/providers/auth_provider.dart';
 import 'package:hesa_wallet/providers/user_provider.dart';
-import 'package:hesa_wallet/screens/account_recovery/reset_password.dart';
 import 'package:hesa_wallet/widgets/text_field_parent.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,7 +13,6 @@ import 'dart:io' as OS;
 import '../../constants/colors.dart';
 import '../../providers/theme_provider.dart';
 import '../../widgets/animated_loader/animated_loader.dart';
-import '../../widgets/app_header.dart';
 import '../../widgets/button.dart';
 import '../../widgets/main_header.dart';
 import '../signup_signin/signin_with_email.dart';
@@ -51,7 +48,6 @@ class _ResetEmailState extends State<ResetEmail> {
   void initState() {
     super.initState();
     init();
-    // Listen for changes in the text fields and update the button state
     _emailController.addListener(_updateButtonState);
     KeyboardVisibilityController().onChange.listen((bool visible) {
       setState(() {
@@ -68,7 +64,6 @@ class _ResetEmailState extends State<ResetEmail> {
 
   @override
   void dispose() {
-    // Clean up the controllers when they are no longer needed
     _emailController.dispose();
     super.dispose();
   }
@@ -105,19 +100,6 @@ class _ResetEmailState extends State<ResetEmail> {
                                 SizedBox(
                                   height: 4.h,
                                 ),
-                                // Text(
-                                //   "Reset Password".tr(),
-                                //   style: TextStyle(
-                                //       color: themeNotifier.isDark
-                                //           ? AppColors.textColorWhite
-                                //           : AppColors.textColorBlack,
-                                //       fontWeight: FontWeight.w600,
-                                //       fontSize: 17.5.sp,
-                                //       fontFamily: 'Inter'),
-                                // ),
-                                // SizedBox(
-                                //   height: 1.h,
-                                // ),
                                 Text(
                                   "Please enter your registered email address to receive a reset link."
                                       .tr(),
@@ -185,8 +167,6 @@ class _ResetEmailState extends State<ResetEmail> {
                                               color: (isValidating && _emailController.text.isEmpty) || user.emailErrorResponse.toString().contains('Email')
                                                   ? AppColors.errorColor
                                                   : Colors.transparent,
-                                              // Off-white color
-                                              // width: 2.0,
                                             )),
                                         focusedBorder: OutlineInputBorder(
                                             borderRadius:
@@ -222,8 +202,6 @@ class _ResetEmailState extends State<ResetEmail> {
                                           color: AppColors.errorColor),
                                     ),
                                   ),
-                                // Expanded(child: SizedBox()),
-
                                 SizedBox(
                                   height: 6.h,
                                 )
@@ -293,9 +271,6 @@ class _ResetEmailState extends State<ResetEmail> {
                                               height: 30.h,
                                               width: dialogWidth,
                                               decoration: BoxDecoration(
-                                                // border: Border.all(
-                                                //     width: 0.1.h,
-                                                //     color: AppColors.textColorGrey),
                                                 color: themeNotifier.isDark
                                                     ? AppColors.showDialogClr
                                                     : AppColors.textColorWhite,
@@ -354,9 +329,6 @@ class _ResetEmailState extends State<ResetEmail> {
                                                               .textColorGrey),
                                                     ),
                                                   ),
-                                                  // SizedBox(
-                                                  //   height: 4.h,
-                                                  // ),
                                                 ],
                                               ),
                                             )),

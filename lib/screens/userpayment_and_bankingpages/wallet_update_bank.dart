@@ -397,7 +397,6 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                                     fontSize: 10.2.sp,
                                                     color: AppColors.textColorGrey,
                                                     fontWeight: FontWeight.w400,
-                                                    // Off-white color,
                                                     fontFamily: 'Inter'),
                                                 enabledBorder: OutlineInputBorder(
                                                     borderRadius:

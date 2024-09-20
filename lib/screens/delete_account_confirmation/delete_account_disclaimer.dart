@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:ui';
-
 import 'package:animated_checkmark/animated_checkmark.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
@@ -12,17 +11,12 @@ import 'package:hesa_wallet/widgets/text_field_parent.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../constants/configs.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
-import '../../widgets/app_header.dart';
 import '../../widgets/button.dart';
-import '../../widgets/dialog_button.dart';
 import '../../widgets/main_header.dart';
 import '../../widgets/otp_dialog.dart';
-import '../signup_signin/terms_conditions.dart';
-import '../signup_signin/wallet.dart';
 
 class DeleteAccountDisclaimer extends StatefulWidget {
   const DeleteAccountDisclaimer({Key? key}) : super(key: key);
@@ -92,12 +86,10 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
   }
 
   void restartCountdown() {
-    // Reset the countdown to 60 seconds
     _events.add(60);
     Timer.periodic(Duration(seconds: 1), (timer) async {
       var events;
       if (events.hasListener) {
-        // Await the last value of the stream before comparing
         final currentTime = await events.stream.first;
         if (currentTime > 0) {
           events.add(currentTime - 1);
@@ -264,17 +256,7 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
                                             color: Colors.black,
                                             drawCross: false,
                                             drawDash: false,
-                                          )
-                                          // _isChecked
-                                          //     ? Align(
-                                          //   alignment: Alignment.center,
-                                          //   child: Icon(
-                                          //     Icons.check_rounded,
-                                          //     size: 12.sp,
-                                          //     color: AppColors.textColorBlack,
-                                          //   ),
-                                          // )
-                                          //     : SizedBox(),
+                                          ),
                                           ),
                                     ),
                                   ),
@@ -339,9 +321,6 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
                                     setState(() {
                                       _isLoading = true;
                                     });
-
-                                    // await Future.delayed(
-                                    //     Duration(milliseconds: 1500), () {});
                                     final result = await Provider.of<
                                         AuthProvider>(context,
                                         listen: false)
@@ -369,7 +348,6 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
                                               print('loading popup' +
                                                   _isLoadingOtpDialoge
                                                       .toString());
-                                              // Navigator.pop(context);
                                               final result = await Provider
                                                   .of<AuthProvider>(
                                                   context,
@@ -398,7 +376,6 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
                                                 _isLoadingOtpDialoge =
                                                 false;
                                               });
-                                              // _showToast('An error occurred'); // Show an error message
                                             } finally {
                                               setState(() {
                                                 _isLoadingOtpDialoge =
@@ -492,12 +469,7 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
                                             .withOpacity(0.8)
                                             : AppColors
                                             .textColorWhite,
-                                        // themeNotifier.isDark
-                                        //     ? AppColors.textColorWhite
-                                        //     : AppColors.textColorBlack
-                                        //         .withOpacity(0.8),
                                         isLoading: _isLoading,
-                                        // isLoading: _isLoadingResend,
                                       );
                                     }
                                   }
@@ -524,11 +496,7 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
                                 color: AppColors.deleteAccWarningClr
                                     .withOpacity(0.10),
                                 textColor: AppColors.textColorBlack,
-                                // buttonWithBorderColor: AppColors.errorColor,
                               ),
-                              // SizedBox(
-                              //   height: 3.h,
-                              // ),
                             ],
                           ),
                         ))
@@ -541,59 +509,5 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
         ],
       );
     });
-  }
-
-  Widget otpContainer({
-    required FocusNode focusNode,
-    required Function handler,
-  }) {
-    return TextFieldParent(
-      width: 9.8.w,
-      otpHeight: 8.h,
-      child: TextField(
-        focusNode: focusNode,
-        onChanged: (value) => handler(),
-        keyboardType: TextInputType.number,
-        cursorColor: AppColors.textColorGrey,
-        // obscureText: true,
-        maxLength: 1,
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(1),
-        ],
-        // Hide the entered OTP digits
-        textAlign: TextAlign.center,
-        textAlignVertical: TextAlignVertical.bottom,
-        style: TextStyle(
-          color: AppColors.textColorGrey,
-          fontSize: 17.5.sp,
-          // fontWeight: FontWeight.bold,
-          letterSpacing: 16,
-        ),
-        decoration: InputDecoration(
-          counterText: '', // Hide the default character counter
-          contentPadding: EdgeInsets.only(left: 11, top: 16, bottom: 16),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(
-              color: AppColors.textColorGrey,
-              width: 1,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(
-              color: AppColors.textColorGrey,
-              width: 1,
-            ),
-          ),
-        ),
-      ),
-      // height: 8.h,
-      // width: 10.w,
-      // decoration: BoxDecoration(
-      //   color: Colors.transparent,
-      //   borderRadius: BorderRadius.circular(10),
-      // ),
-    );
   }
 }

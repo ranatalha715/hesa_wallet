@@ -1,11 +1,9 @@
 import 'dart:convert';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../constants/colors.dart';
 import '../../constants/configs.dart';
 import '../../providers/auth_provider.dart';
@@ -92,7 +90,6 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
               Container(
                   height: 55.h,
                   width: 100.w,
-                  // color: Colors.brown,
                   child: Column(
                     children: [
                       Spacer(
@@ -119,27 +116,19 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                             ? AppColors.textColorWhite
                             : AppColors.textColorBlack,
                       ),
-                      // Spacer(
-                      //   flex: 1,
-                      // ),
                     ],
                   )),
               Container(
                 height: 45.h,
-                // color: Colors.grey,
                 child: Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: 18.sp,
                   ),
                   child: Column(
                     children: [
-                      // Expanded(
-                      //   child:
                       SizedBox(
                         height: 5.h,
                       ),
-                      // ),
-
                       Align(
                         alignment: isEnglish
                             ? Alignment.centerLeft
@@ -164,7 +153,6 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                             onChanged: (v) {
                               auth.loginErrorResponse = null;
                             },
-                            // maxLength: 6,
                             scrollPadding: EdgeInsets.only(
                                 bottom:
                                     MediaQuery.of(context).viewInsets.bottom /
@@ -177,10 +165,9 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                                     ? AppColors.textColorWhite
                                     : AppColors.textColorBlack,
                                 fontWeight: FontWeight.w400,
-                                // Off-white color,
                                 fontFamily: 'Inter'),
                             decoration: InputDecoration(
-                              // fillColor: AppColors.profileHeaderDark,
+
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
                               hintText: 'Enter your password'.tr(),
@@ -188,7 +175,6 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                                   fontSize: 10.2.sp,
                                   color: AppColors.textColorGrey,
                                   fontWeight: FontWeight.w400,
-                                  // Off-white color,
                                   fontFamily: 'Inter'),
                               enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8.0),
@@ -201,8 +187,6 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                                                 .contains('password')
                                         ? AppColors.errorColor
                                         : Colors.transparent,
-                                    // Off-white color
-                                    // width: 2.0,
                                   )),
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8.0),
@@ -215,10 +199,7 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                                                 .contains('password')
                                         ? AppColors.errorColor
                                         : AppColors.focusTextFieldColor,
-                                    // Off-white color
-                                    // width: 2.0,
                                   )),
-                              // labelText: 'Enter your password',
                               suffixIcon: IconButton(
                                 icon: Icon(
                                   _obscurePassword
@@ -294,9 +275,6 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                           ),
                         ),
                       ),
-                      // Expanded(child: SizedBox()),
-                      // Spacer(flex: 1,),
-
                       SizedBox(
                         height: 6.h,
                       ),
@@ -333,21 +311,8 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                               });
                               if (result == AuthResult.success) {
                                 setLockScreenStatus(false);
-                                // await Navigator.pushReplacement(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) =>
-                                //         WalletTokensNfts(),
-                                //   ),
-                                // );
-                                // await Navigator.of(context)
-                                //     .pushNamedAndRemoveUntil(
-                                //     'nfts-page', (Route d) => false,
-                                //     arguments: {});
-                                // runApp(MyApp());
                               }
-                              // Navigator.popUntil(context, (route) => route.isActive
-                              // );
+
                             }
                           },
                           isGradient: true,
@@ -356,12 +321,6 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                       SizedBox(
                         height: 9.h,
                       ),
-                      // Spacer(flex: 2,),
-
-                      // FooterText(),
-                      //   SizedBox(
-                      //     height: 2.h,
-                      //   )
                     ],
                   ),
                 ),

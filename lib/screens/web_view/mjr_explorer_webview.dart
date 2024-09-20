@@ -9,7 +9,6 @@ import '../../constants/colors.dart';
 class MjrWebviewExplored extends StatefulWidget {
   final String url;
   MjrWebviewExplored({required this.url});
-  // const MjrWebviewExplored({super.key});
 
   @override
   State<MjrWebviewExplored> createState() => _MjrWebviewExploredState();

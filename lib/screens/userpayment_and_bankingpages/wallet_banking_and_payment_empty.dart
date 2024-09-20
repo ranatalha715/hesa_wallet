@@ -18,9 +18,7 @@ import '../../providers/card_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/transaction_provider.dart';
 import '../../providers/user_provider.dart';
-import '../../widgets/app_header.dart';
 import '../../widgets/button.dart';
-import '../../widgets/dialog_button.dart';
 import '../../widgets/main_header.dart';
 
 class WalletBankingAndPaymentEmpty extends StatefulWidget {
@@ -72,28 +70,11 @@ class _WalletBankingAndPaymentEmptyState
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
-    // print(accessToken);
   }
 
   @override
   void initState() {
-    // setState(() {
-    //   isLoading = true;
-    // });
-    //  getAccessToken();
-    //
-    //  Provider.of<UserProvider>(context, listen: false)
-    //     .getUserDetails(token: accessToken, context: context);
-    // Future.delayed(const Duration(seconds: 1), () async {
-    //   await  changeSelectedCard(Provider.of<UserProvider>(context,listen: false).paymentCards,0);
-    //
-    // }
-    //
-    //
-    // );
-    // setState(() {
-    //   isLoading = false;
-    // });
+
     // TODO: implement initState
     super.initState();
   }
@@ -109,13 +90,6 @@ class _WalletBankingAndPaymentEmptyState
 
       await Provider.of<UserProvider>(context, listen: false)
           .getUserDetails(token: accessToken, context: context);
-      // var paymentCards = Provider.of<UserProvider>(context, listen: false).paymentCards;
-      // if (paymentCards.isNotEmpty) {
-      //   await changeSelectedCard(paymentCards, 0);
-      // } else {
-      //   // Handle null or empty cards list
-      //   print('No payment cards available');
-      // }
       setState(() {
         isLoading = false;
       });
@@ -145,7 +119,6 @@ class _WalletBankingAndPaymentEmptyState
     var result = await Provider.of<BankProvider>(context, listen: false)
         .updateBankAccount(
       isPrimary: true,
-      // Set isPrimary to true after updating the bank account
       index: index,
       accountNumber: ibanNumber,
       bic: bic,
@@ -161,15 +134,10 @@ class _WalletBankingAndPaymentEmptyState
           builder: (context) => WalletBankingAndPaymentEmpty(),
         ),
       );
-      // await Provider.of<UserProvider>(context, listen: false)
-      //     .getUserDetails(token: accessToken, context: context);
-
-      // await refreshUserDetails(accessToken, context); // Fetch user details after successful bank update
       print('updated success!');
     }
 
     setState(() {
-      // _isSelectedBank = !_isSelectedBank;
       isLoading = false;
     });
   }
@@ -185,44 +153,10 @@ class _WalletBankingAndPaymentEmptyState
     });
   }
 
-  // Future<void> updateBankAccountAndRefreshDetails(int index, String accessToken,
-  //     String ibanNumber, String bic, BuildContext context) async {
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-  //
-  //   var result = await Provider.of<BankProvider>(context, listen: false)
-  //       .updateBankAccount(
-  //     isPrimary: true,
-  //     index: index,
-  //     accountNumber: ibanNumber,
-  //     bic: bic,
-  //     token: accessToken,
-  //     context: context,
-  //   );
-  //
-  //   if (result == AuthResult.success) {
-  //     await refreshUserDetails(accessToken, context);
-  //   }
-  //
-  //   setState(() {
-  //     isLoading = false;
-  //   });
-  // }
-
   Future<void> refreshUserDetails(
       String accessToken, BuildContext context) async {
-    // setState(() {
-    //   isLoading = true;
-    // });
-
-    // await getAccessToken();
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
-
-    // setState(() {
-    //   isLoading = false;
-    // });
   }
 
   void confirmBrandDialogue(Function onCloseHandler,
@@ -230,12 +164,6 @@ class _WalletBankingAndPaymentEmptyState
     if (showPopup) {
       showDialog(
         context: context,
-        // barrierDismissible:
-        //     Provider.of<TransactionProvider>(context, listen: false)
-        //                 .selectedCardBrand ==
-        //             null
-        //         ? false
-        //         : true,
         builder: (BuildContext context) {
           final screenWidth = MediaQuery.of(context).size.width;
           final dialogWidth = screenWidth * 0.85;
@@ -252,10 +180,6 @@ class _WalletBankingAndPaymentEmptyState
                     height: 23.h,
                     width: dialogWidth,
                     decoration: BoxDecoration(
-                      // border: Border.all(
-                      //     width:
-                      //         0.1.h,
-                      //     color: AppColors.textColorGrey),
                       color: AppColors.showDialogClr,
                       borderRadius: BorderRadius.circular(15),
                     ),
@@ -299,7 +223,6 @@ class _WalletBankingAndPaymentEmptyState
                                 Provider.of<TransactionProvider>(context,
                                         listen: false)
                                     .selectedCardBrand = 'MASTER';
-                                // Navigator.pop(context);
                                 navigateToAddCard();
                               },
                               child: Image.asset(
@@ -313,7 +236,6 @@ class _WalletBankingAndPaymentEmptyState
                                 Provider.of<TransactionProvider>(context,
                                         listen: false)
                                     .selectedCardBrand = 'MADA';
-                                // Navigator.pop(context);
                                 navigateToAddCard();
                               },
                               child: Image.asset(
@@ -355,21 +277,18 @@ class _WalletBankingAndPaymentEmptyState
           trPro.selectedCardNum = paymentCards[0].bin;
           trPro.selectedCardLast4Digits = paymentCards[0].last4Digits;
           trPro.selectedCardBrand = paymentCards[0].cardBrand;
-          // print('testabc');
-          // print(trPro.selectedCardNum.toString());
-          // print(paymentCards[0].bin);
         }
       }
       for (var bank in banks) {
         if (bank.isPrimary == "true") {
           bankpro.selectedBankName = bank.bankName!;
-          break; // Stop the loop once the first primary bank is found
+          break;
         }
       }
       for (var bank in banks) {
         if (bank.isPrimary == "true") {
           bankpro.selectedBank = bank.ibanNumber;
-          break; // Stop the loop once the first primary bank is found
+          break;
         }
       }
       return Stack(
@@ -419,33 +338,7 @@ class _WalletBankingAndPaymentEmptyState
                                     onTap: () async {
                                       confirmBrandDialogue(
                                         () async {
-                                          // var result = await Provider.of<
-                                          //             TransactionProvider>(
-                                          //         context,
-                                          //         listen: false)
-                                          //     .tokenizeCardRequest(
-                                          //         token: accessToken,
-                                          //         brand: Provider.of<
-                                          //                     TransactionProvider>(
-                                          //                 context,
-                                          //                 listen: false)
-                                          //             .selectedCardBrand,
-                                          //         context: context);
-                                          // if (result == AuthResult.success) {
-                                          //   Navigator.pushReplacement(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //       builder: (context) =>
-                                          //           WalletAddCard(
-                                          //         tokenizedCheckoutId: Provider
-                                          //                 .of<TransactionProvider>(
-                                          //                     context,
-                                          //                     listen: false)
-                                          //             .tokenizedCheckoutId,
-                                          //       ),
-                                          //     ),
-                                          //   );
-                                          // }
+
                                         },
                                         showPopup: true,
                                       );
@@ -507,14 +400,6 @@ class _WalletBankingAndPaymentEmptyState
                                     child: Container(
                                       height: 6.5.h,
                                       decoration: BoxDecoration(
-                                        // border: Border.all(
-                                        //   color: _isSelected
-                                        //       ? Colors.transparent
-                                        //       : themeNotifier.isDark
-                                        //           ? AppColors.textColorWhite
-                                        //           : AppColors.textColorGrey,
-                                        //   width: 1.0,
-                                        // ),
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(8.sp)),
                                       ),
@@ -534,10 +419,6 @@ class _WalletBankingAndPaymentEmptyState
                                                 ? Image.asset(
                                                     "assets/images/Visa.png",
                                                     height: 17.sp,
-                                                    // color: isDark
-                                                    //     ? AppColors.textColorWhite
-                                                    //     : AppColors.textColorBlack,
-                                                    // width: 20.sp,
                                                   )
                                                 : Container(
                                               height: 2.7.h,
@@ -561,16 +442,10 @@ class _WalletBankingAndPaymentEmptyState
                                                             ? "assets/images/master2.png"
                                                             : "assets/images/mada_pay.png",
                                                         height: 18.sp,
-                                                        // color: isDark
-                                                        //     ? AppColors.textColorWhite
-                                                        //     : AppColors.textColorBlack,
                                                         width: 18.sp,
                                                       ),
                                                     ),
                                                   ),
-                                            // SizedBox(
-                                            //   width: 0.5.h,
-                                            // ),
                                             Padding(
                                               padding:
                                                   const EdgeInsets.symmetric(
@@ -652,7 +527,6 @@ class _WalletBankingAndPaymentEmptyState
                                         ],
                                         borderRadius:
                                             BorderRadius.circular(8.sp)),
-                                    // color: Colors.red,
                                     margin: EdgeInsets.only(top: 4.sp),
                                     child: ListView.builder(
                                         controller: scrollController,
@@ -698,53 +572,10 @@ class _WalletBankingAndPaymentEmptyState
                                                   .last4Digits,
                                               cardBrand:
                                                   paymentCards[index].cardBrand,
-                                              // isCardSelected: trPro
-                                              //     .selectedCardNum ==
-                                              //     paymentCards[
-                                              //     index]
-                                              //         .bin
-                                              //     ? true
-                                              //     : false
                                             ),
                                           );
-                                          // Card(
-                                          //   margin: EdgeInsets.all(8.0),
-                                          //   child: ListTile(
-                                          //     title: Text('Card ${index + 1}'),
-                                          //     subtitle: Text(
-                                          //       'BIN: ${paymentCards[index].bin}',
-                                          //       style: TextStyle(
-                                          //           color: Colors.red),
-                                          //     ),
-                                          //     onTap: () {
-                                          //       // Handle card tap if needed
-                                          //     },
-                                          //   ));
                                         }),
                                   )
-                                // ListView(
-                                //   padding: EdgeInsets.zero,
-                                //   shrinkWrap: true,
-                                //   children: [
-                                //     paymentCardWidget(
-                                //       isFirst: true,
-                                //       isDark:
-                                //           themeNotifier.isDark ? true : false,
-                                //       english: isEnglish ? true : false,
-                                //     ),
-                                //     paymentCardWidget(
-                                //       english: isEnglish ? true : false,
-                                //       isDark:
-                                //           themeNotifier.isDark ? true : false,
-                                //     ),
-                                //     paymentCardWidget(
-                                //       isLast: true,
-                                //       english: isEnglish ? true : false,
-                                //       isDark:
-                                //           themeNotifier.isDark ? true : false,
-                                //     ),
-                                //   ],
-                                // )
                               ],
                             ),
                             SizedBox(
@@ -817,12 +648,6 @@ class _WalletBankingAndPaymentEmptyState
                             SizedBox(
                               height: 1.h,
                             ),
-                            // isLoading
-                            // //     ? Center(
-                            //         child: CircularProgressIndicator(
-                            //         color: AppColors.activeButtonColor,
-                            //       ))
-                            //     :
                             Column(
                               children: [
                                 GestureDetector(
@@ -928,13 +753,6 @@ class _WalletBankingAndPaymentEmptyState
                                 ),
                                 _isSelectedBank
                                     ?
-                                    //     isLoading
-                                    //         ?
-                                    // CircularProgressIndicator(
-                                    //             color:
-                                    //                 AppColors.activeButtonColor,
-                                    //           )
-                                    //         :
                                     Container(
                                       margin: EdgeInsets.only(top:4.sp),
                                       decoration: BoxDecoration(
@@ -944,13 +762,10 @@ class _WalletBankingAndPaymentEmptyState
                                             color: _isSelectedBank
                                                 ? Colors.black.withOpacity(0.10)
                                                 : Colors.transparent,
-                                            // Shadow color
                                             offset: Offset(0, 4),
-                                            // Pushes the shadow down, removes the top shadow
                                             blurRadius: 3,
-                                            // Adjust the blur radius to change shadow size
                                             spreadRadius:
-                                            0.5, // Optional: Adjust spread radius if needed
+                                            0.5,
                                           ),
                                         ],
                                         borderRadius: BorderRadius.circular(8.0),
@@ -964,8 +779,6 @@ class _WalletBankingAndPaymentEmptyState
                                             bool isFirst = index == 0;
                                             bool isLast =
                                                 index == banks.length - 1;
-
-                                            // Extracting the last four characters of the IBAN
                                             String lastFourDigits = banks[index]
                                                 .ibanNumber
                                                 .substring(
@@ -974,7 +787,6 @@ class _WalletBankingAndPaymentEmptyState
                                                           .length -
                                                       4,
                                                 );
-                                            // setState(() {
                                             bankpro.selectedBank = banks[index]
                                                         .isPrimary ==
                                                     "true"
@@ -986,13 +798,8 @@ class _WalletBankingAndPaymentEmptyState
                                                                 .length -
                                                             4)
                                                 : "";
-
-                                            // bankpro.selectedBankName = banks[index].isPrimary == "true"
-                                            //     ? banks[index].bankName! : "";
-
                                             print("Selected Bank Name");
                                             print(bankpro.selectedBankName);
-                                            // });
                                             return bankingDetailsWidget(
                                               accountNumber:
                                                   "**** " + lastFourDigits,
@@ -1004,7 +811,6 @@ class _WalletBankingAndPaymentEmptyState
                                                 setState(() {
                                                   isLoading = true;
                                                 });
-                                                // Navigator.pop(context);
                                                 await updateBankAccountAndRefreshDetails(
                                                   index,
                                                   accessToken,
@@ -1084,110 +890,8 @@ class _WalletBankingAndPaymentEmptyState
                                         ),
                                     )
                                     : SizedBox(),
-
-                                // isLoading ? CircularProgressIndicator(color: Colors.red,) :
-                                //   ListView.builder(
-                                //       controller: scrollController,
-                                //       itemCount:
-                                //       banks.length,
-                                //       shrinkWrap: true,
-                                //       padding: EdgeInsets.zero,
-                                //       itemBuilder:
-                                //           (context, index) {
-                                //         bool isFirst = index == 0;
-                                //
-                                //         bool isLast = index ==
-                                //             banks.length - 1;
-                                //
-                                //         return  bankingDetailsWidget(
-                                //           accountNumber: banks[index].ibanNumber,
-                                //                   isLast:  isLast,
-                                //                   isFirst:isFirst,
-                                //                   isPrimary:true,
-                                //                   english: isEnglish ? true : false,
-                                //                   isDark: themeNotifier.isDark ? true : false,
-                                //                 );
-                                //       }),
-                                // ListView(
-                                //   padding: EdgeInsets.zero,
-                                //   shrinkWrap: true,
-                                //   children: [
-                                //     bankingDetailsWidget(
-                                //         isFirst: true,
-                                //         english: isEnglish ? true : false,
-                                //         isDark:
-                                //             themeNotifier.isDark ? true : false,
-                                //         isPrimary: true),
-                                //     // paymentCardWidget(),
-                                //     bankingDetailsWidget(
-                                //       isLast: true,
-                                //       english: isEnglish ? true : false,
-                                //       isDark: themeNotifier.isDark ? true : false,
-                                //     ),
-                                //   ],
-                                // )
                               ],
                             ),
-                            // Container(
-                            //   height: 6.5.h,
-                            //   child: TextField(
-                            //       readOnly: true,
-                            //       scrollPadding: EdgeInsets.only(
-                            //           bottom: MediaQuery.of(context).viewInsets.bottom),
-                            //       style: TextStyle(
-                            //           fontSize: 10.2.sp,
-                            //           color: AppColors.textColorWhite,
-                            //           fontWeight: FontWeight.w400, // Off-white color,
-                            //           fontFamily: 'Inter'),
-                            //       decoration: InputDecoration(
-                            //           contentPadding: EdgeInsets.symmetric(
-                            //               vertical: 10.0, horizontal: 16.0),
-                            //           hintText: 'Banking Details',
-                            //           // hintText: 'No banking have been added',
-                            //           hintStyle: TextStyle(
-                            //               fontSize: 10.2.sp,
-                            //               color: AppColors.textColorWhite,
-                            //               // color: AppColors.textColorGrey,
-                            //               fontWeight: FontWeight.w400,
-                            //               // Off-white color,
-                            //               fontFamily: 'Inter'),
-                            //           enabledBorder: OutlineInputBorder(
-                            //               borderRadius: BorderRadius.circular(8.0),
-                            //               borderSide: BorderSide(
-                            //                 color: AppColors.textColorWhite,
-                            //                 // color: AppColors.textColorGrey,
-                            //                 // Off-white color
-                            //                 width: 1.0,
-                            //               )),
-                            //           focusedBorder: OutlineInputBorder(
-                            //               borderRadius: BorderRadius.circular(8.0),
-                            //               borderSide: BorderSide(
-                            //                 color: AppColors.textColorWhite,
-                            //                 // Off-white color
-                            //                 width: 1.0,
-                            //               )),
-                            //           // labelText: 'Enter your password',
-                            //           suffixIcon: GestureDetector(
-                            //             onTap: () => setState(() {
-                            //               _selectedBankDetails = !_selectedBankDetails;
-                            //             } n),
-                            //             child: Padding(
-                            //                 padding: const EdgeInsets.only(right: 10),
-                            //                 child: _selectedBankDetails
-                            //                     ? Icon(
-                            //                         Icons.keyboard_arrow_up,
-                            //                         size: 21.sp,
-                            //                         color: AppColors.textColorWhite,
-                            //                       )
-                            //                     : Icon(
-                            //                         Icons.keyboard_arrow_down,
-                            //                         size: 21.sp,
-                            //                         color: AppColors.textColorWhite,
-                            //                       ),
-                            //             ),
-                            //           )),
-                            //       cursorColor: AppColors.textColorGrey),
-                            // ),
                             SizedBox(
                               height: 2.h,
                             ),
@@ -1219,10 +923,6 @@ class _WalletBankingAndPaymentEmptyState
   }) {
     return Column(
       children: [
-        // if (isFirst)
-        //   Divider(
-        //     color: AppColors.textColorGrey,
-        //   ),
         Container(
           height: 6.5.h,
           decoration: BoxDecoration(
@@ -1243,10 +943,6 @@ class _WalletBankingAndPaymentEmptyState
                       ? Image.asset(
                           "assets/images/Visa.png",
                           height: 17.sp,
-                          // color: isDark
-                          //     ? AppColors.textColorWhite
-                          //     : AppColors.textColorBlack,
-                          // width: 20.sp,
                         )
                       : Container(
                     height: 2.7.h,
@@ -1263,9 +959,6 @@ class _WalletBankingAndPaymentEmptyState
                                   ? "assets/images/master2.png"
                                   : "assets/images/mada_pay.png",
                               height: 18.sp,
-                              // color: isDark
-                              //     ? AppColors.textColorWhite
-                              //     : AppColors.textColorBlack,
                               width: 18.sp,
                             ),
                           ),
@@ -1280,7 +973,6 @@ class _WalletBankingAndPaymentEmptyState
                       color: isDark
                           ? AppColors.textColorWhite
                           : AppColors.textColorBlack,
-                      // width: 20.sp,
                     ),
                   ),
                 if (!english) Spacer(),
@@ -1311,7 +1003,6 @@ class _WalletBankingAndPaymentEmptyState
                     child: Image.asset(
                       "assets/images/cancel.png",
                       height: 16.sp,
-                      // width: 20.sp,
                     ),
                   ),
                 if (!english)
@@ -1319,10 +1010,6 @@ class _WalletBankingAndPaymentEmptyState
                       ? Image.asset(
                           "assets/images/Visa.png",
                           height: 18.sp,
-                          // color: isDark
-                          //     ? AppColors.textColorWhite
-                          //     : AppColors.textColorBlack,
-                          // width: 20.sp,
                         )
                       : Container(
                           decoration: BoxDecoration(
@@ -1338,10 +1025,6 @@ class _WalletBankingAndPaymentEmptyState
                                   ? "assets/images/master_card.png"
                                   : "assets/images/mada_pay.png",
                               height: 16.sp,
-                              // color: isDark
-                              //     ? AppColors.textColorWhite
-                              //     : AppColors.textColorBlack,
-                              // width: 20.sp,
                             ),
                           ),
                         ),
@@ -1372,10 +1055,6 @@ class _WalletBankingAndPaymentEmptyState
   }) {
     return Column(
       children: [
-        // if (isFirst)
-        //   Divider(
-        //     color: AppColors.textColorGrey,
-        //   ),
         Container(
           height: 6.5.h,
           decoration: BoxDecoration(
@@ -1394,14 +1073,6 @@ class _WalletBankingAndPaymentEmptyState
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // SizedBox(width: 1.h),
-                // if (isPrimary)
-                // Image.asset(
-                //   "assets/images/check_circle.png",
-                //   height: 4.h,
-                //   width: 3.h,
-                // ),
-                // if (isPrimary) SizedBox(width: 1.h),
                 Text(
                   selectedBankName,
                   style: TextStyle(
@@ -1428,14 +1099,6 @@ class _WalletBankingAndPaymentEmptyState
                         ),
                       )
                     : SizedBox(height: 3.sp),
-                // SizedBox(
-                //   width: 0.5.h,
-                // ),
-                // if (!english)
-                //   SizedBox(
-                //     width: 3.w,
-                //   ),
-                // if (english)
                 Spacer(),
                 Text(
                   accountNumber,
@@ -1447,12 +1110,6 @@ class _WalletBankingAndPaymentEmptyState
                           ? AppColors.textColorWhite
                           : AppColors.textColorBlack),
                 ),
-                // if (english) Spacer(),
-                // if (!english) Spacer(),
-                // SizedBox(
-                //   width: 3.w,
-                // ),
-
                 PopupMenuButton<String>(
                   color: isDark
                       ? AppColors.textFieldParentDark
@@ -1479,11 +1136,11 @@ class _WalletBankingAndPaymentEmptyState
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
-                        20), // Add your preferred radius here
+                        20),
                   ),
                   elevation: 0,
                   onSelected: (value) {
-                    // Handle the selected item here
+
                     print("Selected: $value");
                   },
                   itemBuilder: (BuildContext context) {
@@ -1492,16 +1149,6 @@ class _WalletBankingAndPaymentEmptyState
                         PopupMenuItem<String>(
                           value: 'Make Primary '.tr(),
                           onTap: () async {
-                            // setState(() {
-                            //   isLoading = true;
-                            // });
-                            // Call your handler function
-
-                            // Close the popup menu
-                            // Navigator.pop(context);
-                            // setState(() {
-                            //   _isSelectedBank = !_isSelectedBank;
-                            // });
                             print('before han');
 
                             handler();
@@ -1531,19 +1178,6 @@ class _WalletBankingAndPaymentEmptyState
                             ],
                           ),
                         ),
-                      // if (!isPrimary)
-                      //   PopupMenuItem<String>(
-                      //     height: 0.1,
-                      //     child: Divider(
-                      //       // height: 2,
-                      //       color: AppColors
-                      //           .textColorGreyShade3, // Set the desired color for the divider
-                      //       // thickness: 2.0, // Set the thickness of the divider
-                      //     ),
-                      //     enabled: false,
-                      //   ),
-                      // PopupMenuDivider(),
-                      // if(!isPrimary)
                       PopupMenuItem<String>(
                         value: 'Delete Account'.tr(),
                         onTap: () => showPopupDeleteBank(
@@ -1587,24 +1221,14 @@ class _WalletBankingAndPaymentEmptyState
                               fontSize: 13.sp),
                         ),
                       ),
-                      // Add more menu options as needed
                     ];
                   },
                   offset: Offset(0, 40),
                 ),
               ],
             ),
-            // Image.asset(
-            //   "assets/images/more_vert.png",
-            //   height: 16.sp,
-            //   // width: 20.sp,
-            // ),
           ),
         ),
-        // if (!isLast)
-        //   Divider(
-        //     color: AppColors.textColorGrey,
-        //   )
       ],
     );
   }
@@ -1636,9 +1260,6 @@ class _WalletBankingAndPaymentEmptyState
                       color: isDark
                           ? AppColors.showDialogClr
                           : AppColors.textColorWhite,
-                      // border: Border.all(
-                      //     width: 0.1.h, color: AppColors.textColorGrey),
-                      // color: AppColors.backgroundColor,
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: Column(
@@ -1664,10 +1285,6 @@ class _WalletBankingAndPaymentEmptyState
                           height: 6.5.h,
                           decoration: BoxDecoration(
                             color: AppColors.textColorGrey.withOpacity(0.10),
-                            // border: Border.all(
-                            //   color: AppColors.textColorGrey,
-                            //   width: 1.0,
-                            // ),
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           child: Padding(
@@ -1790,9 +1407,6 @@ class _WalletBankingAndPaymentEmptyState
                       color: isDark
                           ? AppColors.showDialogClr
                           : AppColors.textColorWhite,
-                      // border: Border.all(
-                      //     width: 0.1.h, color: AppColors.textColorGrey),
-                      // color: AppColors.backgroundColor,
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: Column(
@@ -1818,10 +1432,6 @@ class _WalletBankingAndPaymentEmptyState
                           height: 6.5.h,
                           decoration: BoxDecoration(
                             color: AppColors.textColorGrey.withOpacity(0.10),
-                            //   border: Border.all(
-                            //     color: AppColors.textColorGrey,
-                            //     width: 1.0,
-                            //   ),
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           child: Padding(
@@ -1849,10 +1459,6 @@ class _WalletBankingAndPaymentEmptyState
                                     ? Image.asset(
                                         "assets/images/Visa.png",
                                         height: 18.sp,
-                                        // color: isDark
-                                        //     ? AppColors.textColorWhite
-                                        //     : AppColors.textColorBlack,
-                                        // width: 20.sp,
                                       )
                                     : Container(
                                         decoration: BoxDecoration(
@@ -1870,10 +1476,6 @@ class _WalletBankingAndPaymentEmptyState
                                                 ? "assets/images/master_card.png"
                                                 : "assets/images/mada_pay.png",
                                             height: 16.sp,
-                                            // color: isDark
-                                            //     ? AppColors.textColorWhite
-                                            //     : AppColors.textColorBlack,
-                                            // width: 20.sp,
                                           ),
                                         ),
                                       ),
@@ -1911,13 +1513,11 @@ class _WalletBankingAndPaymentEmptyState
                                       builder: (context) =>
                                           WalletBankingAndPaymentEmpty()),
                                 );
-
-                                // refreshPage();
                               }
                             },
                             isLoading: isDialogLoading,
                             isGradient: false,
-                            // color: Colors.transparent,
+
                             color: AppColors.deleteAccountBtnColor
                                 .withOpacity(0.10),
                             textColor: AppColors.textColorWhite,

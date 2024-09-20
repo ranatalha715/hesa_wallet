@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hesa_wallet/constants/colors.dart';
-import 'package:hesa_wallet/screens/account_recovery/reset_password.dart';
 import 'package:hesa_wallet/screens/settings/change_password.dart';
 import 'package:hesa_wallet/screens/unlock/set_pin_screen.dart';
 import 'package:local_auth/local_auth.dart';
@@ -13,9 +12,8 @@ import 'package:local_auth/error_codes.dart' as local_auth_error;
 import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../widgets/animated_loader/animated_loader.dart';
-import '../../widgets/app_header.dart';
 import '../../widgets/main_header.dart';
-import '../onboarding_notifications/onboarding_add_email.dart';
+
 
 class SecurityAndPrivacy extends StatefulWidget {
   const SecurityAndPrivacy({Key? key}) : super(key: key);
@@ -64,7 +62,6 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
 
   getAuthStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // prefs.setBool('fingerPrint', _isUserAuthorized);
     _isUserAuthorized = prefs.getBool("fingerPrint") ?? false;
   }
 
@@ -85,8 +82,6 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
     getAuthStatus();
     getPasscode();
     super.initState();
-
-    // Some method to fetch initial data
   }
 
 
@@ -99,14 +94,11 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
           stickyAuth: true,
           biometricOnly: true,
         ),
-        // useErrorDialogs: true,
-        // stickyAuth: false,
       );
     } on PlatformException catch (exception) {
       if (exception.code == local_auth_error.notAvailable ||
           exception.code == local_auth_error.passcodeNotSet ||
           exception.code == local_auth_error.notEnrolled) {
-        // Handle this exception here.
       }
     }
 
@@ -152,20 +144,10 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //       builder: (context) =>
-                                //           OnboardingAddEmail()),
-                                // );
                               },
                               child: Container(
                                 // height: 10.7.h,
                                 decoration: BoxDecoration(
-                                  // border: Border.all(
-                                  //   color: AppColors.textColorGrey,
-                                  //   width: 1.0,
-                                  // ),
                                   color: AppColors.textFieldParentDark,
                                   borderRadius: BorderRadius.circular(8.0),
                                 ),
@@ -192,7 +174,6 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                             isEmailVerified == 'true'
                                                 ? "assets/images/secure.png"
                                                 : "assets/images/privacyrisk.png",
-                                            // "assets/images/AElanguage.png",
                                             height: 3.h,
                                             width: 3.h,
                                           ),
@@ -236,15 +217,12 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                           ),
                                           if (isEmailVerified != "true")
                                             Container(
-                                              // color: AppColors.emailNotVerifiedContainer,
-                                              // height: 3.h,
                                               decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           10.sp),
                                                   color: AppColors.errorColor
                                                       .withOpacity(0.07)),
-                                              // width: double.infinity,
                                               child: Padding(
                                                 padding: EdgeInsets.symmetric(
                                                     horizontal: 9.sp,
@@ -271,13 +249,6 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                             ),
                             Container(
                               decoration: BoxDecoration(
-                                // border: Border.all(
-                                //   color: _isSelected
-                                //       ? AppColors.textColorGrey
-                                //       : Colors.transparent,
-                                //   width: 1.0,
-                                // ),
-                                // color: AppColors.textColorGrey.withOpacity(0.10),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Column(
@@ -289,13 +260,6 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                     child: Container(
                                       height: 6.5.h,
                                       decoration: BoxDecoration(
-                                        // color: AppColors.errorColor,
-                                        // border: Border.all(
-                                        //   color: _isSelected
-                                        //       ? Colors.transparent
-                                        //       : AppColors.textColorGrey,
-                                        //   width: 1.0,
-                                        // ),
                                         color:
                                         AppColors.textFieldParentDark,
                                         borderRadius: BorderRadius.only(
@@ -465,10 +429,6 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                 height: 6.5.h,
                                 decoration: BoxDecoration(
                                   color: AppColors.textFieldParentDark,
-                                  // border: Border.all(
-                                  //   color: AppColors.textColorGrey,
-                                  //   width: 1.0,
-                                  // ),
                                   borderRadius: BorderRadius.circular(8.0),
                                 ),
                                 child: Padding(
@@ -488,9 +448,6 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                               : AppColors.textColorBlack,
                                         ),
                                       ),
-                                      // SizedBox(
-                                      //   width: 0.5.h,
-                                      // ),
                                       Text(
                                         'Change password'.tr(),
                                         style: TextStyle(
@@ -637,10 +594,6 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
         Container(
           height: 8.5.h,
           decoration: BoxDecoration(
-            // border: Border.all(
-            //   // color : _isSelected ? Colors.transparent: AppColors.textColorGrey,
-            //   width: 1.0,
-            // ),
             borderRadius: BorderRadius.circular(8.0),
           ),
           child: Padding(
@@ -667,9 +620,6 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                     ),
                   ),
                 ),
-                // SizedBox(
-                //   width: 0.5.h,
-                // ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -716,10 +666,6 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
       bool isDark = true}) {
     return Column(
       children: [
-        // if (isFirst)
-        //   Divider(
-        //     color: AppColors.textColorGrey,
-        //   ),
         Container(
           height: 8.5.h,
           decoration: BoxDecoration(
@@ -752,16 +698,12 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                       padding: const EdgeInsets.all(8),
                       child: Image.asset(
                         imageUrl,
-                        // "assets/images/AElanguage.png",
                         height: 3.h,
                         width: 3.h,
                       ),
                     ),
                   ),
                 ),
-                // SizedBox(
-                //   width: 0.5.h,
-                // ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -820,10 +762,6 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
             ),
           ),
         ),
-        // if (!isLast)
-        //   Divider(
-        //     color: AppColors.textColorGrey,
-        //   ),
       ],
     );
   }

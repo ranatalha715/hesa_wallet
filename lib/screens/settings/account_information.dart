@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:ui';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,14 +14,10 @@ import 'package:hesa_wallet/widgets/text_field_parent.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
-import '../../widgets/app_header.dart';
 import '../../widgets/main_header.dart';
 import '../../widgets/otp_dialog.dart';
-import '../userpayment_and_bankingpages/wallet_add_bank.dart';
-import '../userpayment_and_bankingpages/wallet_add_card.dart';
 
 class AccountInformation extends StatefulWidget {
   const AccountInformation({Key? key}) : super(key: key);
@@ -63,7 +58,7 @@ class _AccountInformationState extends State<AccountInformation> {
   String username = '';
   String email = '';
   String nationality = '';
-  int _timeLeft = 100;
+  int _timeLeft = 60;
   Timer? _timer;
   bool _isTimerActive = false;
   var _isLoadingResend = false;
@@ -104,25 +99,25 @@ class _AccountInformationState extends State<AccountInformation> {
     });
     setState(() {
       mobileNum = userDetails
-          .mobileNum!; // Assuming 'mobileNum' is a field in userDetails
+          .mobileNum!;
       _numberController.text = mobileNum.substring(4);
       firstName = userDetails
-          .firstName!; // Assuming 'firstName' is a field in userDetails
+          .firstName!;
       _firstnameController.text = firstName;
       lastName = userDetails
-          .lastName!; // Assuming 'firstName' is a field in userDetails
+          .lastName!;
       _lastnameController.text = lastName;
       idNumber = userDetails
-          .idNumber!; // Assuming 'firstName' is a field in userDetails
+          .idNumber!;
       _identificationNumberController.text = idNumber;
       username = userDetails
-          .userName!; // Assuming 'firstName' is a field in userDetails
+          .userName!;
       _usernameController.text = username;
       email = userDetails
-          .verifiedEmail!; // Assuming 'firstName' is a field in userDetails
+          .verifiedEmail!;
       _emailController.text = email;
       nationality = userDetails
-          .userNationality!; // Assuming 'firstName' is a field in userDetails
+          .userNationality!;
       _nationalityController.text = nationality;
     });
   }
@@ -132,10 +127,8 @@ class _AccountInformationState extends State<AccountInformation> {
     super.initState();
     init();
     _events = new StreamController<int>();
-    _events.add(300);
+    _events.add(60);
     // getAccessToken();
-
-    // Listen for changes in the text fields and update the button state
     _firstnameController.addListener(_updateButtonState);
     _usernameController.addListener(_updateButtonState);
     _numberController.addListener(_updateButtonState);
@@ -169,7 +162,6 @@ class _AccountInformationState extends State<AccountInformation> {
   void _updateButtonState() {
     setState(() {
       isButtonActive = _firstnameController.text.isNotEmpty &&
-          // _usernameController.text.isNotEmpty &&
           _lastnameController.text.isNotEmpty &&
           _emailController.text.isNotEmpty &&
           _numberController.text.isNotEmpty;
@@ -226,16 +218,8 @@ class _AccountInformationState extends State<AccountInformation> {
                 Column(
                   children: [
                     MainHeader(title: 'Account information'.tr()),
-                    // SizedBox(
-                    //   height: 2.h,
-                    // ),
-                    // _isLoading ? CircularProgressIndicator(
-                    //   color: AppColors.profileHeaderDark,
-                    // ) :
                     Expanded(
                       child: Container(
-                        // height: 65.h,
-                        // color: Colors.red,
                         width: double.infinity,
                         child: Stack(
                           children: [
@@ -290,10 +274,6 @@ class _AccountInformationState extends State<AccountInformation> {
                                                   width: 6.w,
                                                 ),
                                               )),
-                                    // SizedBox(
-                                    //   height: 4.h,
-                                    // ),
-                                    // SizedBox(height: 2.h,),
                                     Align(
                                       alignment: isEnglish
                                           ? Alignment.centerLeft
@@ -328,7 +308,6 @@ class _AccountInformationState extends State<AccountInformation> {
                                                   ? AppColors.textColorWhite
                                                   : AppColors.textColorBlack,
                                               fontWeight: FontWeight.w400,
-                                              // Off-white color,
                                               fontFamily: 'Inter'),
                                           decoration: InputDecoration(
                                             contentPadding: EdgeInsets.symmetric(
@@ -350,8 +329,6 @@ class _AccountInformationState extends State<AccountInformation> {
                                                           isEditAble
                                                       ? AppColors.errorColor
                                                       : Colors.transparent,
-                                                  // Off-white color
-                                                  // width: 2.0,
                                                 )),
                                             focusedBorder: OutlineInputBorder(
                                                 borderRadius:
@@ -362,7 +339,6 @@ class _AccountInformationState extends State<AccountInformation> {
                                                           .focusTextFieldColor
                                                       : Colors.transparent,
                                                 )),
-                                            // labelText: 'Enter your password',
                                           ),
                                           cursorColor: AppColors.textColorGrey),
                                     ),
@@ -420,12 +396,10 @@ class _AccountInformationState extends State<AccountInformation> {
                                           decoration: InputDecoration(
                                             contentPadding: EdgeInsets.symmetric(
                                                 vertical: OS.Platform.isIOS ? 13.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
-                                            // hintText: 'No banking have been added',
                                             hintStyle: TextStyle(
                                                 fontSize: 10.2.sp,
                                                 color: AppColors.textColorGrey,
                                                 fontWeight: FontWeight.w400,
-                                                // Off-white color,
                                                 fontFamily: 'Inter'),
                                             enabledBorder: OutlineInputBorder(
                                                 borderRadius:
@@ -448,7 +422,6 @@ class _AccountInformationState extends State<AccountInformation> {
                                                           .focusTextFieldColor
                                                       : Colors.transparent,
                                                 )),
-                                            // labelText: 'Enter your password',
                                           ),
                                           cursorColor: AppColors.textColorGrey),
                                     ),
@@ -509,7 +482,6 @@ class _AccountInformationState extends State<AccountInformation> {
                                             decoration: InputDecoration(
                                               contentPadding: EdgeInsets.symmetric(
                                                   vertical: OS.Platform.isIOS ? 13.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
-                                              // hintText: 'No banking have been added',
                                               hintStyle: TextStyle(
                                                   fontSize: 10.2.sp,
                                                   color: AppColors.textColorGrey,
@@ -592,12 +564,10 @@ class _AccountInformationState extends State<AccountInformation> {
                                           decoration: InputDecoration(
                                             contentPadding: EdgeInsets.symmetric(
                                                 vertical: OS.Platform.isIOS ? 13.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
-                                            // hintText: 'No payment card have been added',
                                             hintStyle: TextStyle(
                                                 fontSize: 10.2.sp,
                                                 color: AppColors.textColorGrey,
                                                 fontWeight: FontWeight.w400,
-                                                // Off-white color,
                                                 fontFamily: 'Inter'),
                                             enabledBorder: OutlineInputBorder(
                                                 borderRadius:
@@ -608,8 +578,6 @@ class _AccountInformationState extends State<AccountInformation> {
                                                           isValidating
                                                       ? AppColors.errorColor
                                                       : Colors.transparent,
-                                                  // Off-white color
-                                                  // width: 2.0,
                                                 )),
                                             focusedBorder: OutlineInputBorder(
                                                 borderRadius:
@@ -620,7 +588,6 @@ class _AccountInformationState extends State<AccountInformation> {
                                                           .focusTextFieldColor
                                                       : Colors.transparent,
                                                 )),
-                                            // labelText: 'Enter your password',
                                           ),
                                           cursorColor: AppColors.textColorGrey),
                                     ),
@@ -775,7 +742,6 @@ class _AccountInformationState extends State<AccountInformation> {
                                                     ? AppColors.textColorWhite
                                                     : AppColors.textColorBlack,
                                                 fontWeight: FontWeight.w400,
-                                                // Off-white color,
                                                 fontFamily: 'Inter'),
                                             decoration: InputDecoration(
                                               contentPadding: EdgeInsets.symmetric(
@@ -785,25 +751,19 @@ class _AccountInformationState extends State<AccountInformation> {
                                                   fontSize: 10.2.sp,
                                                   color: AppColors.textColorGrey,
                                                   fontWeight: FontWeight.w400,
-                                                  // Off-white color,
                                                   fontFamily: 'Inter'),
                                               enabledBorder: OutlineInputBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(8.0),
                                                   borderSide: BorderSide(
                                                     color: Colors.transparent,
-                                                    // Off-white color
-                                                    // width: 2.0,
                                                   )),
                                               focusedBorder: OutlineInputBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(8.0),
                                                   borderSide: BorderSide(
                                                     color: Colors.transparent,
-                                                    // Off-white color
-                                                    // width: 2.0,
                                                   )),
-                                              // labelText: 'Enter your password',
                                             ),
                                             cursorColor: AppColors.textColorGrey),
                                       ),
@@ -870,25 +830,19 @@ class _AccountInformationState extends State<AccountInformation> {
                                                   fontSize: 10.2.sp,
                                                   color: AppColors.textColorGrey,
                                                   fontWeight: FontWeight.w400,
-                                                  // Off-white color,
                                                   fontFamily: 'Inter'),
                                               enabledBorder: OutlineInputBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(8.0),
                                                   borderSide: BorderSide(
                                                     color: Colors.transparent,
-                                                    // Off-white color
-                                                    // width: 2.0,
                                                   )),
                                               focusedBorder: OutlineInputBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(8.0),
                                                   borderSide: BorderSide(
                                                     color: Colors.transparent,
-                                                    // Off-white color
-                                                    // width: 2.0,
                                                   )),
-                                              // labelText: 'Enter your password',
                                             ),
                                             cursorColor: AppColors.textColorGrey),
                                       ),
@@ -1056,7 +1010,6 @@ class _AccountInformationState extends State<AccountInformation> {
                                                             } catch (error) {
                                                               print(
                                                                   "Error: $error");
-                                                              // _showToast('An error occurred'); // Show an error message
                                                             } finally {
                                                               setState(() {
                                                                 _isLoadingResend =
@@ -1068,8 +1021,6 @@ class _AccountInformationState extends State<AccountInformation> {
                                                         firstTitle: 'Confirm',
                                                         secondTitle:
                                                             'Resend code ',
-
-                                                        // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
 
                                                         context: context,
                                                         isDark:
@@ -1117,10 +1068,6 @@ class _AccountInformationState extends State<AccountInformation> {
                                                                         0.8)
                                                                 : AppColors
                                                                     .textColorWhite,
-                                                        // themeNotifier.isDark
-                                                        //     ? AppColors.textColorWhite
-                                                        //     : AppColors.textColorBlack
-                                                        //         .withOpacity(0.8),
                                                         isLoading:
                                                             _isLoadingResend ||
                                                                 _isLoading,
@@ -1128,7 +1075,7 @@ class _AccountInformationState extends State<AccountInformation> {
                                                     }
                                                   }
                                                 },
-                                                // isLoading: _isLoading,
+
                                                 isGradient: true,
                                                 color: AppColors.textColorBlack),
                                           ),

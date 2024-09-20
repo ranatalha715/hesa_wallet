@@ -1,21 +1,16 @@
 import 'dart:ui';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hesa_wallet/providers/auth_provider.dart';
 import 'package:hesa_wallet/widgets/text_field_parent.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../constants/colors.dart';
 import '../../constants/configs.dart';
 import '../../providers/theme_provider.dart';
 import '../../widgets/animated_loader/animated_loader.dart';
-import '../../widgets/app_header.dart';
 import '../../widgets/button.dart';
 import '../../widgets/main_header.dart';
-import '../signup_signin/signin_with_email.dart';
-import '../signup_signin/terms_conditions.dart';
 
 class ResetPassword extends StatefulWidget {
   const ResetPassword({Key? key}) : super(key: key);
@@ -85,8 +80,6 @@ class _ResetPasswordState extends State<ResetPassword> {
   @override
   void initState() {
     super.initState();
-
-    // Listen for changes in the text fields and update the button state
     _newPasswordController.addListener(_updateButtonState);
     _confirmPasswordController.addListener(_updateButtonState);
   }
@@ -116,7 +109,6 @@ class _ResetPasswordState extends State<ResetPassword> {
                   child: Container(
                     height: 85.h,
                     width: double.infinity,
-                    // color: Colors.red,
                     child: Stack(
                       children: [
                         Padding(
@@ -130,31 +122,6 @@ class _ResetPasswordState extends State<ResetPassword> {
                                 SizedBox(
                                   height: 4.h,
                                 ),
-                                // Text(
-                                //   "Reset password".tr(),
-                                //   style: TextStyle(
-                                //       color: themeNotifier.isDark
-                                //           ? AppColors.textColorWhite
-                                //           : AppColors.textColorBlack,
-                                //       fontWeight: FontWeight.w600,
-                                //       fontSize: 17.5.sp,
-                                //       fontFamily: 'Inter'),
-                                // ),
-                                // SizedBox(
-                                //   height: 1.h,
-                                // ),
-                                // Text(
-                                //   "Please create a new unique password to secure your account."
-                                //       .tr(),
-                                //   style: TextStyle(
-                                //       color: AppColors.textColorGrey,
-                                //       fontWeight: FontWeight.w400,
-                                //       fontSize: 11.7.sp,
-                                //       fontFamily: 'Inter'),
-                                // ),
-                                // SizedBox(
-                                //   height: 2.h,
-                                // ),
                                 Align(
                                   alignment: currentLocale.languageCode == 'en'
                                       ? Alignment.centerLeft
@@ -426,8 +393,6 @@ class _ResetPasswordState extends State<ResetPassword> {
                                         color: AppColors.errorColor),
                                   ),
                                 ),
-                                // Expanded(child: SizedBox()),
-
                                 SizedBox(
                                   height: 25.h,
                                 ),
@@ -494,9 +459,6 @@ class _ResetPasswordState extends State<ResetPassword> {
                                               height: 30.h,
                                               width: dialogWidth,
                                               decoration: BoxDecoration(
-                                                // border: Border.all(
-                                                //     width: 0.1.h,
-                                                //     color: AppColors.textColorGrey),
                                                 color: themeNotifier.isDark
                                                     ? AppColors.showDialogClr
                                                     : AppColors.textColorWhite,
@@ -572,7 +534,6 @@ class _ResetPasswordState extends State<ResetPassword> {
                                 }
                               }
                             },
-                            // isLoading: isLoading,
                             isGradient: true,
                             color: Colors.transparent,
                             textColor: AppColors.textColorBlack,

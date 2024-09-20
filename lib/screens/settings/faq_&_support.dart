@@ -6,7 +6,6 @@ import 'package:sizer/sizer.dart';
 
 import '../../providers/theme_provider.dart';
 import '../../widgets/animated_loader/animated_loader.dart';
-import '../../widgets/app_header.dart';
 import '../../widgets/faq_widget.dart';
 import '../../widgets/main_header.dart';
 
@@ -66,19 +65,6 @@ class _FAQAndSupportState extends State<FAQAndSupport> {
                           SizedBox(
                             height: 4.h,
                           ),
-                          // Text(
-                          //   "Frequently Asked\nQuestions",
-                          //   style: TextStyle(
-                          //       color: themeNotifier.isDark
-                          //           ? AppColors.textColorWhite
-                          //           : AppColors.textColorBlack,
-                          //       fontWeight: FontWeight.w600,
-                          //       fontSize: 17.5.sp,
-                          //       fontFamily: 'Inter'),
-                          // ),
-                          // SizedBox(
-                          //   height: 1.h,
-                          // ),
                           Text(
                             "Hesa Wallet FAQ’s".tr(),
                             style: TextStyle(

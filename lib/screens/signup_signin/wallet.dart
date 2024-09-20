@@ -1,14 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hesa_wallet/constants/colors.dart';
-import 'package:hesa_wallet/constants/footer_text.dart';
 import 'package:hesa_wallet/screens/signup_signin/signin_with_mobile.dart';
 import 'package:hesa_wallet/screens/signup_signin/signup_with_mobile.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-
-import '../../constants/app_deep_linking.dart';
 import '../../providers/theme_provider.dart';
 import '../../widgets/button.dart';
 
@@ -60,8 +57,6 @@ class _WalletState extends State<Wallet> {
                             "assets/images/wallet_logo2.png",
                             fit: BoxFit.cover,
                             width: double.infinity,
-                            // height: 13.8.h,
-                            // width: 13.8.h,
 
                         ),
                       ),
@@ -105,14 +100,6 @@ class _WalletState extends State<Wallet> {
                           AppButton(
                               title: 'Create a Wallet'.tr(),
                               handler: () async {
-                                // setState(() {
-                                //   _isLoading = true;
-                                // });
-                                // await Future.delayed(Duration(milliseconds: 1500),
-                                //         (){});
-                                // setState(() {
-                                //   _isLoading = false;
-                                // });
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -126,14 +113,6 @@ class _WalletState extends State<Wallet> {
                           AppButton(
                             title: 'I already have an account'.tr(),
                             handler: () async {
-                              // setState(() {
-                              //   _isLoading = true;
-                              // });
-                              // await Future.delayed(Duration(milliseconds: 1500),
-                              //         (){});
-                              // setState(() {
-                              //   _isLoading = false;
-                              // });
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -149,39 +128,7 @@ class _WalletState extends State<Wallet> {
                                 : AppColors.textColorBlack.withOpacity(0.8),
                           ),
                           SizedBox(height: isEnglish ? 1.h : 2.h),
-                          // AppButton(
-                          //     title: 'Navigate to Neo'.tr(),
-                          //     textColor: AppColors.textColorWhite,
-                          //     handler: () async {
-                          //       setState(() {
-                          //         _isLoading = true;
-                          //       });
-                          //       await Future.delayed(Duration(milliseconds: 1500),
-                          //               (){});
-                          //       setState(() {
-                          //         _isLoading = false;
-                          //       });
-                          //       await AppDeepLinking().openNftApp(
-                          //         {
-                          //           "operation": "connectWallet testing",
-                          //         },
-                          //       );
-                          //     },
-                          //     isGradient: false,
-                          //     color: Colors.transparent),
-                          // Expanded(
-                          //   child: SizedBox(
-                          //     // height: 4.h,
-                          //   ),
-                          // ),
-                          // Text(
-                          //   'Powered by'.tr(),
-                          //   style: TextStyle(
-                          //       color: AppColors.textColorGrey,
-                          //       fontSize: 8.7.sp,
-                          //       fontWeight: FontWeight.w400),
-                          // ),
-                          // FooterText(),
+
                           SizedBox(
                             height: isEnglish ? 2.h : 3.h,
                           )
@@ -199,7 +146,5 @@ class _WalletState extends State<Wallet> {
       );
     });
   }
-
-
 
 }

@@ -9,17 +9,14 @@ import 'package:hesa_wallet/constants/colors.dart';
 import 'package:hesa_wallet/constants/configs.dart';
 import 'dart:io' as OS;
 import 'package:hesa_wallet/providers/auth_provider.dart';
-import 'package:hesa_wallet/screens/settings/account_information.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/wallet_tokens_nfts.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:hesa_wallet/widgets/text_field_parent.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
-import '../../widgets/app_header.dart';
 import '../../widgets/button.dart';
 import '../../widgets/main_header.dart';
 import '../../widgets/otp_dialog.dart';
@@ -167,7 +164,6 @@ class _ChangePasswordState extends State<ChangePassword> {
     Timer.periodic(Duration(seconds: 1), (timer) async {
       var events;
       if (events.hasListener) {
-        // Await the last value of the stream before comparing
         final currentTime = await events.stream.first;
         if (currentTime > 0) {
           events.add(currentTime - 1);
@@ -245,19 +241,6 @@ class _ChangePasswordState extends State<ChangePassword> {
                                 SizedBox(
                                   height: 4.h,
                                 ),
-                                // Text(
-                                //   "Enter password".tr(),
-                                //   style: TextStyle(
-                                //       color: themeNotifier.isDark
-                                //           ? AppColors.textColorWhite
-                                //           : AppColors.textColorBlack,
-                                //       fontWeight: FontWeight.w600,
-                                //       fontSize: 17.5.sp,
-                                //       fontFamily: 'Inter'),
-                                // ),
-                                // SizedBox(
-                                //   height: 1.h,
-                                // ),
                                 Text(
                                   "Please start by entering your current password."
                                       .tr(),
@@ -493,16 +476,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                                             color: AppColors.errorColor),
                                       ),
                                     ),
-                                  // Padding(
-                                  //   padding: EdgeInsets.only(top: 7.sp),
-                                  //   child: Text(
-                                  //     "*Password must meet requirements".tr(),
-                                  //     style: TextStyle(
-                                  //         fontSize: 10.sp,
-                                  //         fontWeight: FontWeight.w400,
-                                  //         color: AppColors.errorColor),
-                                  //   ),
-                                  // ),
+
                                 SizedBox(height: 4.h),
                                 Text(
                                   "Password must contain".tr(),
@@ -629,8 +603,6 @@ class _ChangePasswordState extends State<ChangePassword> {
                                               color: (isValidating && _confirmPasswordController.text.isEmpty) || auth.changePasswordError.toString().contains('match')
                                                   ? AppColors.errorColor
                                                   : Colors.transparent,
-                                              // Off-white color
-                                              // width: 2.0,
                                             )),
                                         focusedBorder: OutlineInputBorder(
                                             borderRadius:
@@ -638,7 +610,6 @@ class _ChangePasswordState extends State<ChangePassword> {
                                             borderSide: BorderSide(
                                               color: AppColors.focusTextFieldColor,
                                             )),
-                                        // labelText: 'Enter your password',
                                         suffixIcon: IconButton(
                                           icon: Icon(
                                               _obscurePasswordConfirm
@@ -820,7 +791,6 @@ class _ChangePasswordState extends State<ChangePassword> {
                                                       }
                                                     } catch (error) {
                                                       print("Error: $error");
-                                                      // _showToast('An error occurred'); // Show an error message
                                                     } finally {
                                                       setState(() {
                                                         _isLoadingResend =
@@ -878,7 +848,6 @@ class _ChangePasswordState extends State<ChangePassword> {
                                                     .textColorWhite,
                                                 isLoading:
                                                 _isLoadingOtpDialoge,
-                                                // isLoading: _isLoadingResend,
                                               );
                                             }
                                           }
@@ -977,8 +946,6 @@ class _ChangePasswordState extends State<ChangePassword> {
                     SizedBox(
                       height: 4.h,
                     ),
-
-                    // SizedBox(height: 2.h),
                     Row(
                       mainAxisAlignment:
                       MainAxisAlignment
@@ -1040,9 +1007,6 @@ class _ChangePasswordState extends State<ChangePassword> {
                             AppColors.textColorGrey),
                       ),
                     ),
-                    // SizedBox(
-                    //   height: 4.h,
-                    // ),
                   ],
                 ),
               )

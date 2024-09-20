@@ -83,7 +83,6 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
           ),
           Container(
             height: 15.h,
-            // color: Colors.blue,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.sp),
               child: Row(
@@ -102,7 +101,6 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
           ),
           Container(
             height: 65.h,
-            // color: Colors.yellow,
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 10.sp),
               child: Column(
@@ -143,19 +141,6 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
                       ),
                     ],
                   ),
-                  // SizedBox(height: 2.h,)
-                  // Align(
-                  //   alignment: Alignment.bottomCenter,
-                  //   child:
-                  //   Text(
-                  //     'I Forget My Pin',
-                  //     style: TextStyle(
-                  //         fontSize: 13.sp,
-                  //         color: AppColors.textColorGreen,
-                  //         fontWeight: FontWeight.w500,
-                  //         fontFamily: 'Blogger Sans'),
-                  //   ),
-                  // ),
                 ],
               ),
             ),
@@ -228,29 +213,26 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
       onTap: () {
         imagePath == null
             ? setState(() {
-          // Create a variable to store the six values
           String result = '';
           String resultToSave = '';
-
-          // Append the pressed digit to the pin boxes
           for (int i = 0; i < numbers.length; i++) {
             if (numbers[i].isEmpty) {
               numbers[i] = number;
-              result += number; // Append the digit to the result
-              break; // Stop after adding the digit to the first empty box
+              result += number;
+              break;
             } else {
               result +=
-              numbers[i]; // Append the existing number to the result
+              numbers[i];
             }
           }
           for (int i = 0; i < numbersToSave.length; i++) {
             if (numbersToSave[i].isEmpty) {
               numbersToSave[i] = number;
-              resultToSave += number; // Append the digit to the result
-              break; // Stop after adding the digit to the first empty box
+              resultToSave += number;
+              break;
             } else {
               resultToSave +=
-              numbersToSave[i]; // Append the existing number to the result
+              numbersToSave[i];
             }
           }
           print("confirm passcode" + resultToSave);
@@ -273,14 +255,9 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
               });
             }
           }
-
-          // Print the result after the loop breaks
         })
             : setState(() {
-
             isMatched=false;
-
-          // Remove the last entered digit
           for (int i = numbers.length - 1; i >= 0; i--) {
             if (numbers[i].isNotEmpty) {
               numbers[i] = '';
@@ -318,11 +295,6 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
             color:
             AppColors.textColorWhite,
           ),
-          // Image.asset(
-          //   imagePath,
-          //   height: 13.sp,
-          //   width: 13.sp,
-          // ),
         ),
       ),
     );

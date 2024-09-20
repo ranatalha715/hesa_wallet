@@ -1,16 +1,13 @@
 import 'dart:async';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hesa_wallet/constants/colors.dart';
 import 'package:hesa_wallet/screens/signup_signin/signup_with_email.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
-import 'package:hesa_wallet/widgets/app_header.dart';
 import 'package:hesa_wallet/widgets/button.dart';
 import 'package:hesa_wallet/widgets/main_header.dart';
 import 'package:hesa_wallet/widgets/text_field_parent.dart';
-import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
@@ -60,9 +57,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
   FocusNode idTypeFocusNode = FocusNode();
   FocusNode idNumFocusNode = FocusNode();
   FocusNode mobileNumFocusNode = FocusNode();
-
-// Create more FocusNode instances as needed for other fieldsident
-
   bool _isSelected = false;
   bool _isSelectedNationality = false;
   bool _isChecked = false;
@@ -75,7 +69,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
   Timer? _timer;
   StreamController<int> _events = StreamController<int>.broadcast();
 
-  // late StreamController<int> _events;
   bool _isTimerActive = false;
   var _selectedIDType = '';
   var accessToken = "";
@@ -314,7 +307,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
     getAccessToken();
     _events = new StreamController<int>();
     _events.add(60);
-    // Listen for changes in the text fields and update the button state
     _firstnameController.addListener(_updateButtonState);
     _lastnameController.addListener(_updateButtonState);
     _identificationnumberController.addListener(_updateButtonState);
@@ -362,7 +354,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
     Timer.periodic(Duration(seconds: 1), (timer) async {
       var events;
       if (events.hasListener) {
-        // Await the last value of the stream before comparing
         final currentTime = await events.stream.first;
         if (currentTime > 0) {
           events.add(currentTime - 1);
@@ -389,9 +380,9 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
     Timer.periodic(Duration(seconds: 1), (timer) {
       if (_timeLeft > 0) {
         _timeLeft--;
-        _events.add(_timeLeft); // Add updated time to the stream
+        _events.add(_timeLeft);
       } else {
-        timer.cancel(); // Cancel the timer when timeLeft is 0
+        timer.cancel();
       }
     });
   }
@@ -401,16 +392,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
       isOtpButtonActive = true;
     });
   }
-
-  // void startTimer() {
-  //   _isTimerActive = true;
-  //   Timer.periodic(Duration(seconds: 1), (timer) {
-  //     (_timeLeft > 0) ? _timeLeft-- : _timer?.cancel();
-  //     print("_timeLeft");
-  //     print(_timeLeft);
-  //     _events.add(_timeLeft);
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -429,13 +410,9 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                 Column(
                   children: [
                     MainHeader(title: 'Create a Wallet'.tr()),
-                    // SizedBox(
-                    //   height: 2.h,
-                    // ),
+
                     Expanded(
                       child: Container(
-                        // height: 85.h,
-                        // color: AppColors.gradientColor1,
                         width: double.infinity,
                         child: Stack(
                           children: [
@@ -447,32 +424,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    // SizedBox(
-                                    //   height: 3.h,
-                                    // ),
-                                    // Text(
-                                    //   "Let's get started".tr(),
-                                    //   style: TextStyle(
-                                    //       color: themeNotifier.isDark
-                                    //           ? AppColors.textColorWhite
-                                    //           : AppColors.textColorBlack,
-                                    //       fontWeight: FontWeight.w600,
-                                    //       fontSize: 17.5.sp,
-                                    //       fontFamily: 'Inter'),
-                                    // ),
-                                    // SizedBox(
-                                    //   height: 1.h,
-                                    // ),
-                                    // Text(
-                                    //   "Please fill in your identity information to authentic your identity."
-                                    //       .tr(),
-                                    //   style: TextStyle(
-                                    //       // height: 1.4,
-                                    //       color: AppColors.textColorGrey,
-                                    //       fontWeight: FontWeight.w400,
-                                    //       fontSize: 11.7.sp,
-                                    //       fontFamily: 'Inter'),
-                                    // ),
                                     SizedBox(
                                       height: 4.h,
                                     ),
@@ -516,10 +467,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                   ? AppColors.textColorWhite
                                                   : AppColors.textColorBlack,
                                               fontWeight: FontWeight.w400,
-                                              // Off-white color,
                                               fontFamily: 'Inter'),
                                           decoration: InputDecoration(
-                                            // border: InputBorder.none,
                                             contentPadding: EdgeInsets.symmetric(
                                                 vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
                                             hintText: 'Enter first name'.tr(),
@@ -527,7 +476,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                 fontSize: 10.2.sp,
                                                 color: AppColors.textColorGrey,
                                                 fontWeight: FontWeight.w400,
-                                                // Off-white color,
+
                                                 fontFamily: 'Inter'),
                                             enabledBorder: OutlineInputBorder(
                                                 borderRadius:
@@ -538,8 +487,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                           isValidating
                                                       ? AppColors.errorColor
                                                       : Colors.transparent,
-                                                  // Off-white color
-                                                  // width: 2.0,
                                                 )),
                                             focusedBorder: OutlineInputBorder(
                                                 gapPadding: 0.0,
@@ -548,10 +495,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                 borderSide: BorderSide(
                                                   color:
                                                       AppColors.focusTextFieldColor,
-                                                  // Off-white color
-                                                  // width: 2.0,
                                                 )),
-                                            // labelText: 'Enter your password',
                                           ),
                                           cursorColor: AppColors.textColorGrey),
                                     ),
@@ -603,18 +547,12 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                           },
                                           controller: _lastnameController,
                                           keyboardType: TextInputType.text,
-                                          // scrollPadding: EdgeInsets.only(
-                                          //     bottom: MediaQuery.of(context)
-                                          //             .viewInsets
-                                          //             .bottom /
-                                          //         1.5),
                                           style: TextStyle(
                                               fontSize: 10.2.sp,
                                               color: themeNotifier.isDark
                                                   ? AppColors.textColorWhite
                                                   : AppColors.textColorBlack,
                                               fontWeight: FontWeight.w400,
-                                              // Off-white color,
                                               fontFamily: 'Inter'),
                                           decoration: InputDecoration(
                                             contentPadding: EdgeInsets.symmetric(
@@ -624,7 +562,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                 fontSize: 10.2.sp,
                                                 color: AppColors.textColorGrey,
                                                 fontWeight: FontWeight.w400,
-                                                // Off-white color,
                                                 fontFamily: 'Inter'),
                                             enabledBorder: OutlineInputBorder(
                                                 borderRadius:
@@ -635,9 +572,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                           isValidating
                                                       ? AppColors.errorColor
                                                       : Colors.transparent,
-
-                                                  // Off-white color
-                                                  // width: 2.0,
                                                 )),
                                             focusedBorder: OutlineInputBorder(
                                                 borderRadius:
@@ -645,10 +579,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                 borderSide: BorderSide(
                                                   color:
                                                       AppColors.focusTextFieldColor,
-                                                  // Off-white color
-                                                  // width: 2.0,
                                                 )),
-                                            // labelText: 'Enter your password',
                                           ),
                                           cursorColor: AppColors.textColorGrey),
                                     ),
@@ -667,9 +598,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                     SizedBox(
                                       height: 2.h,
                                     ),
-                                    // SizedBox(
-                                    //   height: 1.h,
-                                    // ),
                                     Align(
                                       alignment: isEnglish
                                           ? Alignment.centerLeft
@@ -711,11 +639,10 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                       _isSelectedNationality
                                                           ? 8.0
                                                           : 8.0),
-                                                  // Adjust as needed
                                                   bottomRight: Radius.circular(
                                                       _isSelectedNationality
                                                           ? 8.0
-                                                          : 8.0), // Adjust as needed
+                                                          : 8.0),
                                                 ),
                                               ),
                                               child: Padding(
@@ -1022,35 +949,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                     ),
                                                   ],
                                                 )
-                                                // yha lgy gi
-                                                // ListView(
-                                                //   controller: _scrollController,
-                                                //   padding:
-                                                //       EdgeInsets.only(top: 0.4.h),
-                                                //   shrinkWrap: true,
-                                                //   children: [
-                                                //     nationalityWidget(
-                                                //       isFirst: true,
-                                                //       name: 'Pakistani'.tr(),
-                                                //       isDark: themeNotifier.isDark
-                                                //           ? true
-                                                //           : false,
-                                                //     ),
-                                                //     nationalityWidget(
-                                                //       name: 'Saudi'.tr(),
-                                                //       isDark: themeNotifier.isDark
-                                                //           ? true
-                                                //           : false,
-                                                //     ),
-                                                //     nationalityWidget(
-                                                //       isLast: true,
-                                                //       name: 'Indian'.tr(),
-                                                //       isDark: themeNotifier.isDark
-                                                //           ? true
-                                                //           : false,
-                                                //     ),
-                                                //   ],
-                                                // ),
                                                 ),
                                         ],
                                       ),
@@ -1093,12 +991,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                     ),
                                     Container(
                                       decoration: BoxDecoration(
-                                        // border: Border.all(
-                                        //   color: _isSelected
-                                        //       ? AppColors.textColorGrey
-                                        //       : Colors.transparent,
-                                        //   width: 1.0,
-                                        // ),
                                         borderRadius: BorderRadius.circular(8.0),
                                       ),
                                       child: Column(
@@ -1121,11 +1013,10 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                       _isSelectedNationality
                                                           ? 8.0
                                                           : 8.0),
-                                                  // Adjust as needed
                                                   bottomRight: Radius.circular(
                                                       _isSelectedNationality
                                                           ? 8.0
-                                                          : 8.0), // Adjust as needed
+                                                          : 8.0),
                                                 ),
                                               ),
                                               child: Padding(
@@ -1137,9 +1028,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.center,
                                                   children: [
-                                                    // SizedBox(
-                                                    //   width: 0.5.h,
-                                                    // ),
                                                     Padding(
                                                       padding: const EdgeInsets
                                                           .symmetric(
@@ -1199,13 +1087,10 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                   BoxShadow(
                                                     color: Colors.black
                                                         .withOpacity(0.10),
-                                                    // Shadow color
                                                     offset: Offset(0, 4),
-                                                    // Pushes the shadow down, removes the top shadow
                                                     blurRadius: 3,
-                                                    // Adjust the blur radius to change shadow size
                                                     spreadRadius:
-                                                        0.5, // Optional: Adjust spread radius if needed
+                                                        0.5,
                                                   ),
                                                 ],
                                               ),
@@ -1253,11 +1138,9 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                               color: AppColors.errorColor),
                                         ),
                                       ),
-                                    // if (_isSelected)
                                     SizedBox(
                                       height: 2.h,
                                     ),
-                                    // // if (_isSelected)
                                     Align(
                                       alignment: isEnglish
                                           ? Alignment.centerLeft
@@ -1273,18 +1156,13 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                 : AppColors.textColorBlack),
                                       ),
                                     ),
-                                    // if (_isSelected)
                                     SizedBox(
                                       height: 1.h,
                                     ),
-
-                                    // if (_isSelected)
                                     TextFieldParent(
                                       child: TextField(
                                           focusNode: idNumFocusNode,
                                           textInputAction: TextInputAction.next,
-                                          // onEditingComplete: () {
-                                          // },
                                           controller:
                                               _identificationnumberController,
                                           keyboardType: TextInputType.number,
@@ -1309,7 +1187,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                 fontSize: 10.2.sp,
                                                 color: AppColors.textColorGrey,
                                                 fontWeight: FontWeight.w400,
-                                                // Off-white color,
                                                 fontFamily: 'Inter'),
                                             enabledBorder: OutlineInputBorder(
                                                 borderRadius:
@@ -1321,8 +1198,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                               isValidating
                                                           ? AppColors.errorColor
                                                           : Colors.transparent,
-                                                  // Off-white color
-                                                  // width: 2.0,
                                                 )),
                                             focusedBorder: OutlineInputBorder(
                                                 borderRadius:
@@ -1331,7 +1206,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                   color:
                                                       AppColors.focusTextFieldColor,
                                                 )),
-                                            // labelText: 'Enter your password',
                                           ),
                                           cursorColor: AppColors.textColorGrey),
                                     ),
@@ -1341,7 +1215,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 7.sp),
                                         child: Text(
-                                          // "*This ID number is previously registered",
                                           "*Identification number should not be empty",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
@@ -1379,7 +1252,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                             auth.registerUserErrorResponse=null;
                                           },
                                           onEditingComplete: () {
-                                            // passwordFocusNode.requestFocus();
                                             FocusScope.of(context).unfocus();
                                           },
                                           controller: _numberController,
@@ -1394,7 +1266,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                   ? AppColors.textColorWhite
                                                   : AppColors.textColorBlack,
                                               fontWeight: FontWeight.w400,
-                                              // Off-white color,
                                               fontFamily: 'Inter'),
                                           inputFormatters: [
                                             LengthLimitingTextInputFormatter(10),
@@ -1405,12 +1276,10 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                 vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
                                             hintText:
                                                 'Enter your mobile number'.tr(),
-                                            // contentPadding: EdgeInsets.only(left: 10),
                                             hintStyle: TextStyle(
                                                 fontSize: 10.2.sp,
                                                 color: AppColors.textColorGrey,
                                                 fontWeight: FontWeight.w400,
-                                                // Off-white color,
                                                 fontFamily: 'Inter'),
                                             enabledBorder: OutlineInputBorder(
                                                 borderRadius:
@@ -1420,8 +1289,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                       _numberController.text.isNotEmpty  && isValidating) || auth.registerUserErrorResponse.toString().contains('Mobile number')
                                                            ? AppColors.errorColor
                                                       : Colors.transparent,
-                                                  // Off-white color
-                                                  // width: 2.0,
                                                 )),
                                             focusedBorder: OutlineInputBorder(
                                                 borderRadius:
@@ -1455,7 +1322,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 7.sp),
                                         child: Text(
-                                          // "*This mobile number is registered",
                                           "*Mobile number should not be empty",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
@@ -1468,7 +1334,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 7.sp),
                                         child: Text(
-                                          // "*This mobile number is registered",
                                           "*Mobile Number should be minimum 9 Characters",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
@@ -1488,16 +1353,10 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                               color: AppColors.errorColor),
                                         ),
                                       ),
-
-                                    // Container(color: AppColors.gradientColor1, height: 200,)
                                     SizedBox(
                                       height: 5.h,
                                     ),
-
                                     Container(
-                                      // margin: EdgeInsets.symmetric(
-                                      //   horizontal: 20,
-                                      // ),
                                       color: themeNotifier.isDark
                                           ? AppColors.backgroundColor
                                           : AppColors.textColorWhite,
@@ -1547,16 +1406,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                           drawCross: false,
                                                           drawDash: false,
                                                         )
-                                                        // _isChecked
-                                                        //     ? Align(
-                                                        //   alignment: Alignment.center,
-                                                        //   child: Icon(
-                                                        //     Icons.check_rounded,
-                                                        //     size: 12.sp,
-                                                        //     color: AppColors.textColorBlack,
-                                                        //   ),
-                                                        // )
-                                                        //     : SizedBox(),
                                                         ),
                                                   )),
                                               SizedBox(
@@ -1582,14 +1431,10 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                           SizedBox(
                                             height: 2.h,
                                           ),
-                                          // Expanded(child: SizedBox()),
                                           AppButton(
                                               title: 'Continue'.tr(),
                                               isactive: isButtonActive
-                                                      // _firstnameController.text.isNotEmpty &&
-                                                      //         _lastnameController.text.isNotEmpty &&
-                                                      //         _identificationnumberController
-                                                      //             .text.isNotEmpty
+
                                                       &&
                                                       _isChecked
                                                   ? true
@@ -1599,12 +1444,9 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                   isValidating = true;
                                                 });
                                                 if (
-                                                    // _firstnameController.text.isNotEmpty &&
-                                                    //     _lastnameController.text.isNotEmpty &&
-                                                    //     _identificationnumberController.text.isNotEmpty &&
-                                                    //     _selectedNationalityType !="" && _numberController.text.isNotEmpty &&_selectedIDType!=""
+
                                                     isButtonActive && _isChecked
-                                                    // _identificationtypeController.text.isNotEmpty
+
                                                     ) {
                                                   setState(() {
                                                     _isLoading = true;
@@ -1634,21 +1476,9 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                         _numberController.text,
                                                     context: context,
                                                   );
-                                                  // await Future.delayed(
-                                                  //     Duration(milliseconds: 1500), () {});
                                                   setState(() {
                                                     _isLoading = false;
                                                   });
-                                                  // if(registerStep1result==AuthResult.success){
-                                                  //   Navigator.of(context).pushNamed(
-                                                  //       SignUpWithEmail.routeName,
-                                                  //       arguments: {
-                                                  //         'firstName': _firstnameController.text,
-                                                  //         'lastName': _lastnameController.text,
-                                                  //         'id': _identificationnumberController.text,
-                                                  //         'idType': _selectedIDType,
-                                                  //       });
-                                                  // }
                                                   if (registerStep1result ==
                                                       AuthResult.success) {
                                                     startTimer();
@@ -1668,7 +1498,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                           print('loading popup' +
                                                               _isLoadingOtpDialoge
                                                                   .toString());
-                                                          // Navigator.pop(context);
                                                           final result = await Provider
                                                                   .of<AuthProvider>(
                                                                       context,
@@ -1691,11 +1520,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                                 const Duration(
                                                                     milliseconds:
                                                                         1000));
-                                                            // Navigator.of(context)
-                                                            //     .pushNamedAndRemoveUntil(
-                                                            //     '/TermsAndConditions',
-                                                            //         (Route d) =>
-                                                            //     false);
                                                             Navigator.of(context)
                                                                 .pushNamed(
                                                                     SignUpWithEmail
@@ -1720,7 +1544,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                             _isLoadingOtpDialoge =
                                                                 false;
                                                           });
-                                                          // _showToast('An error occurred'); // Show an error message
+
                                                         } finally {
                                                           setState(() {
                                                             _isLoadingOtpDialoge =
@@ -1764,7 +1588,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                             }
                                                           } catch (error) {
                                                             print("Error: $error");
-                                                            // _showToast('An error occurred'); // Show an error message
+
                                                           } finally {
                                                             setState(() {
                                                               _isLoadingResend =
@@ -1820,22 +1644,14 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                                   .withOpacity(0.8)
                                                               : AppColors
                                                                   .textColorWhite,
-                                                      // themeNotifier.isDark
-                                                      //     ? AppColors.textColorWhite
-                                                      //     : AppColors.textColorBlack
-                                                      //         .withOpacity(0.8),
                                                       isLoading:
                                                           _isLoadingOtpDialoge,
-                                                      // isLoading: _isLoadingResend,
                                                     );
                                                   }
                                                 }
                                               },
                                               isGradient: true,
                                               color: Colors.transparent),
-                                          // SizedBox(
-                                          //   height: 1.h,
-                                          // )
                                         ],
                                       ),
                                     ),
@@ -1850,9 +1666,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                         ),
                       ),
                     ),
-                    // SizedBox(
-                    //   height: 22.h,
-                    // ),
                   ],
                 ),
                 if (OS.Platform.isIOS)
@@ -1935,12 +1748,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
             Container(
               height: 5.h,
               decoration: BoxDecoration(
-                // border: Border.all(
-                //   color: _isSelected
-                //       ? Colors.transparent
-                //       : AppColors.textColorGrey,
-                //   width: 1.0,
-                // ),
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: Padding(
@@ -1966,11 +1773,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                 ),
               ),
             ),
-            // if (!isLast)
-            //   Divider(
-            //     color: AppColors.textColorGrey,
-            //   ),
-            // if (isLast)
             SizedBox(
               height: 1.h,
             ),
@@ -1998,7 +1800,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
             bottomLeft: Radius.circular(isLast ? 8.0 : 0.0), // Adjust as needed
             bottomRight: Radius.circular(
               isLast ? 8.0 : 0.0,
-            ), // Adjust as needed
+            ),
             topRight: Radius.circular(
               isFirst ? 8.0 : 0.0,
             ),
@@ -2006,7 +1808,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
               isFirst ? 8.0 : 0.0,
             ),
           ),
-          // Your desired background color
           color: AppColors.textFieldParentDark, // Your desired background color
         ),
         child: Column(
@@ -2040,11 +1841,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                 ),
               ),
             ),
-            // if (!isLast)
-            //   Divider(
-            //     color: AppColors.textColorGrey,
-            //   ),
-            // if (isLast)
             SizedBox(
               height: 1.h,
             ),

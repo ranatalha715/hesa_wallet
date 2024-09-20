@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,14 +6,10 @@ import 'package:hesa_wallet/screens/unlock/unlock_with_password.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../constants/colors.dart';
 import '../../providers/theme_provider.dart';
 import '../../widgets/animated_loader/animated_loader.dart';
 import '../../widgets/button.dart';
-import '../../widgets/text_field_parent.dart';
-import '../account_recovery/reset_email.dart';
-import '../signup_signin/wallet.dart';
 import '../signup_signin/welcome_screen.dart';
 
 class Unlock extends StatefulWidget {
@@ -121,9 +116,6 @@ class _UnlockState extends State<Unlock> {
                                 ? AppColors.textColorWhite
                                 : AppColors.textColorBlack,
                           ),
-                          // Spacer(
-                          //   flex: 1,
-                          // ),
                         ],
                       )),
 
@@ -152,25 +144,6 @@ class _UnlockState extends State<Unlock> {
                                     context,
                                     MaterialPageRoute(builder: (context) => WelcomeScreen(handler: (){})),
                                   );
-                                  // setState(() {
-                                  //   isValidating = true;
-                                  // });
-                                  // if(_passwordController.text.isNotEmpty) {
-                                  //   setState(() {
-                                  //     _isLoading = true;
-                                  //   });
-                                  //   await Future.delayed(
-                                  //       Duration(milliseconds: 1500),
-                                  //           () {});
-                                  //   if (_passwordController.text ==
-                                  //       _savedPassCode) {
-                                  //     // widget.handler();
-                                  //   }
-                                  //
-                                  //   setState(() {
-                                  //     _isLoading = false;
-                                  //   });
-                                  // }
                                 },
                                 isGradient: false,
                                 color: Colors.transparent),

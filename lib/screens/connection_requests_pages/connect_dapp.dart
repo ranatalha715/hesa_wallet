@@ -1,29 +1,22 @@
 import 'dart:convert';
 import 'dart:ui';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hesa_wallet/constants/configs.dart';
-import 'package:hesa_wallet/screens/user_profile_pages/connected_sites.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/wallet_tokens_nfts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../constants/app_deep_linking.dart';
 import '../../constants/colors.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/transaction_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../widgets/animated_loader/animated_loader.dart';
-import '../../widgets/app_header.dart';
 import '../../widgets/button.dart';
 import '../../widgets/main_header.dart';
-import '../signup_signin/signin_with_email.dart';
-import '../signup_signin/terms_conditions.dart';
 
 class ConnectDapp extends StatefulWidget {
   static const routeName = 'connection-request';
@@ -55,9 +48,7 @@ class _ConnectDappState extends State<ConnectDapp> {
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
-    // wstoken = prefs.getString('wsToken')!;
     accessToken = prefs.getString('accessToken')!;
-    // print(wstoken);
     print(accessToken);
   }
 
@@ -127,18 +118,6 @@ class _ConnectDappState extends State<ConnectDapp> {
                             SizedBox(
                               height: 4.h,
                             ),
-                            // Text(
-                            //   "Connect to this site?".tr(),
-                            //   style: TextStyle(
-                            //       color: themeNotifier.isDark ? AppColors.textColorWhite : AppColors.textColorBlack
-                            //       ,
-                            //       fontWeight: FontWeight.w600,
-                            //       fontSize: 17.5.sp,
-                            //       fontFamily: 'Inter'),
-                            // ),
-                            // SizedBox(
-                            //   height: 1.h,
-                            // ),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 4.5.sp),
                               child: Container(
@@ -148,9 +127,6 @@ class _ConnectDappState extends State<ConnectDapp> {
                                 decoration: BoxDecoration(
                                   color: AppColors.connectedSitesDialog,
                                   borderRadius: BorderRadius.circular(10),
-                                  // border: Border.all(
-                                  //     color: AppColors.textColorGrey,
-                                  //     width: 1)
                                 ),
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 12),
@@ -166,11 +142,6 @@ class _ConnectDappState extends State<ConnectDapp> {
                                           height: 5.h,
                                           width: 30.w,
                                         ),
-                                      // Image.asset(
-                                      //   "assets/images/neo.png",
-                                      //   height: 5.5.h,
-                                      //   // width: 104,
-                                      // ),
                                       if (currentLocale.languageCode == 'en')
                                         SizedBox(
                                           width: 15,
@@ -207,13 +178,6 @@ class _ConnectDappState extends State<ConnectDapp> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
-                                              // Icon(
-                                              //   Icons.fiber_manual_record,
-                                              //   size: 7.sp,
-                                              //   color: AppColors
-                                              //       .textColorGreen,
-                                              // ),
-                                              // SizedBox(width: 1.w,),
                                               Text(
                                                 'Chain: MJR-B01'.tr(),
                                                 style: TextStyle(
@@ -415,20 +379,11 @@ class _ConnectDappState extends State<ConnectDapp> {
                                 setState(() {
                                   _isLoading = true;
                                 });
-                                // var result = await Provider.of<UserProvider>(
-                                //         context,
-                                //         listen: false)
-                                //     .connectDapps(
-                                //         siteUrl: 'https://neonft.com',
-                                //         // siteUrl: 'https://instagram.com',
-                                //         token: accessToken,
-                                //         context: context);
                                 await Future.delayed(
                                     const Duration(seconds: 1));
                                 setState(() {
                                   _isLoading = false;
                                 });
-                                // if (result == AuthResult.success) {
                                 showDialog(
                                   barrierDismissible: false,
                                   context: context,
@@ -438,17 +393,11 @@ class _ConnectDappState extends State<ConnectDapp> {
                                     final dialogWidth = screenWidth * 0.85;
                                     Future<void>
                                         closeDialogAndNavigate() async {
-                                      // Pop the dialog
-                                      // Navigator.of(context).pop();
-                                      // Add a short delay before the next pop
                                       await Future.delayed(
                                           Duration(milliseconds: 100));
-                                      // Pop the previous screen
                                       Navigator.of(context).pop();
-                                      // Add another short delay before pushing the new route
                                       await Future.delayed(
                                           Duration(milliseconds: 100));
-                                      // Push the new route
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
@@ -507,11 +456,6 @@ class _ConnectDappState extends State<ConnectDapp> {
                                               color: themeNotifier.isDark
                                                   ? AppColors.showDialogClr
                                                   : AppColors.textColorWhite,
-                                              // border: Border.all(
-                                              //     width: 0.1.h,
-                                              //     color: AppColors
-                                              //         .textColorGrey
-                                              // ),
                                               borderRadius:
                                                   BorderRadius.circular(15),
                                             ),
@@ -578,40 +522,6 @@ class _ConnectDappState extends State<ConnectDapp> {
                                                   height: 2.h,
                                                 ),
 
-                                                // Row(
-                                                //   crossAxisAlignment: CrossAxisAlignment
-                                                //       .center,
-                                                //   mainAxisAlignment: MainAxisAlignment
-                                                //       .center,
-                                                //   children: [
-                                                //     Icon(
-                                                //       Icons
-                                                //           .fiber_manual_record,
-                                                //       size: 5.sp,
-                                                //       color: AppColors
-                                                //           .textColorGreen,
-                                                //     ),
-                                                //     SizedBox(width: 1.w,),
-                                                //     Text(
-                                                //       'MJRA-B01'.tr(),
-                                                //       style: TextStyle(
-                                                //           color: themeNotifier
-                                                //               .isDark
-                                                //               ? AppColors
-                                                //               .textColorWhite
-                                                //               .withOpacity(
-                                                //               0.4)
-                                                //               : AppColors
-                                                //               .textColorBlack
-                                                //               .withOpacity(
-                                                //               0.4),
-                                                //           fontSize: 10.sp,
-                                                //           fontWeight: FontWeight
-                                                //               .w400),
-                                                //     ),
-                                                //   ],
-                                                // ),
-                                                // SizedBox(height: 2.h,),
                                                 Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
@@ -659,20 +569,12 @@ class _ConnectDappState extends State<ConnectDapp> {
                                     );
                                   },
                                 );
-                                // }
-                                // else{
-                                //
-                                // }
                               },
                               // isLoading:_isLoading,
                               isGradient: true,
                               color: Colors.transparent,
                               textColor: AppColors.textColorBlack,
                             ),
-
-                            // SizedBox(
-                            //   height: 3.h,
-                            // )
                           ],
                         ),
                       ),

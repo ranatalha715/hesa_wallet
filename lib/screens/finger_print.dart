@@ -27,14 +27,11 @@ class _BiometricAuthenticationState extends State<BiometricAuthentication> {
           stickyAuth: true,
           biometricOnly: true,
         ),
-        // useErrorDialogs: true,
-        // stickyAuth: false,
       );
     } on PlatformException catch (exception) {
       if (exception.code == local_auth_error.notAvailable ||
           exception.code == local_auth_error.passcodeNotSet ||
           exception.code == local_auth_error.notEnrolled) {
-        // Handle this exception here.
       }
     }
 

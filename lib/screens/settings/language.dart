@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hesa_wallet/constants/colors.dart';
@@ -8,8 +6,6 @@ import 'package:sizer/sizer.dart';
 
 import '../../providers/theme_provider.dart';
 import '../../widgets/animated_loader/animated_loader.dart';
-import '../../widgets/app_header.dart';
-import '../../widgets/button.dart';
 import '../../widgets/main_header.dart';
 
 class Language extends StatefulWidget {
@@ -20,22 +16,13 @@ class Language extends StatefulWidget {
 }
 
 class _LanguageState extends State<Language> {
-  // var _isSelected = 0;
+
   var _isLoading = false;
   var _isinit= true;
   @override
   Future<void> didChangeDependencies() async {
     // TODO: implement didChangeDependencies
     if(_isinit){
-      // setState(() {
-      //   _isLoading=true;
-      // });
-      // await Future.delayed(Duration(milliseconds: 900), () {
-      //   print('This code will be executed after 2 seconds');
-      // });
-      // setState(() {
-      //   _isLoading=false;
-      // });
     }
     _isinit=false;
     super.didChangeDependencies();
@@ -56,7 +43,6 @@ class _LanguageState extends State<Language> {
                 MainHeader(title: 'Languages'.tr()),
                 Container(
                   height: 85.h,
-                  // color: Colors.red,
                   width: double.infinity,
                   child: Padding(
                     padding: EdgeInsets.symmetric(
@@ -68,7 +54,6 @@ class _LanguageState extends State<Language> {
                         SizedBox(
                           height: 4.h,
                         ),
-                        // SizedBox(height: 2.h,),
                         Align(
                           alignment: isEnglish
                               ? Alignment.centerLeft
@@ -91,55 +76,10 @@ class _LanguageState extends State<Language> {
                             "assets/images/USlanguage.png", 'English', 0, 'ENG',
                             () {
                           context.locale = Locale('en', 'US');
-
-                          // });
-                          // exit(0);
                         },
                             selected: isEnglish ? true : false,
                             isChecked: isEnglish ? true : false,
                             isDark: themeNotifier.isDark ? true : false),
-                        // Container(
-                        //   height: 5.5.h,
-                        //   decoration: BoxDecoration(
-                        //     border: Border.all(
-                        //       color: AppColors.textColorGrey,
-                        //       width: 1.0,
-                        //     ),
-                        //     borderRadius: BorderRadius.circular(8.0),
-                        //   ),
-                        //   child: Padding(
-                        //     padding: const EdgeInsets.symmetric(horizontal: 15),
-                        //     child: Row(
-                        //       mainAxisAlignment: MainAxisAlignment.start,
-                        //       children: [
-                        //         Image.asset(
-                        //           "assets/images/USlanguage.png",
-                        //           height: 4.h,
-                        //           width: 4.h,
-                        //         ),
-                        //         SizedBox(
-                        //           width: 1.h,
-                        //         ),
-                        //         Text(
-                        //           'English',
-                        //           style: TextStyle(
-                        //               fontWeight: FontWeight.w500,
-                        //               fontSize: 11.7.sp,
-                        //               color: AppColors.textColorWhite),
-                        //         ),
-                        //         Spacer(),
-                        //         Text(
-                        //           'Used',
-                        //           style: TextStyle(
-                        //               fontWeight: FontWeight.w500,
-                        //               fontSize: 10.sp,
-                        //               color: AppColors.textColorGrey),
-                        //         ),
-                        //
-                        //       ],
-                        //     ),
-                        //   ),
-                        // ),
                         SizedBox(
                           height: 1.h,
                         ),
@@ -152,48 +92,6 @@ class _LanguageState extends State<Language> {
                             selected: isEnglish ? false : true,
                             isChecked: isEnglish ? false : true,
                             isDark: themeNotifier.isDark ? true : false),
-                        // Container(
-                        //   height: 5.5.h,
-                        //   decoration: BoxDecoration(
-                        //     border: Border.all(
-                        //       color: AppColors.textColorGrey,
-                        //       width: 1.0,
-                        //     ),
-                        //     borderRadius: BorderRadius.circular(8.0),
-                        //   ),
-                        //   child: Padding(
-                        //     padding: const EdgeInsets.symmetric(horizontal: 15),
-                        //     child: Row(
-                        //       mainAxisAlignment: MainAxisAlignment.start,
-                        //       children: [
-                        //         Image.asset(
-                        //           "assets/images/AElanguage.png",
-                        //           height: 4.h,
-                        //           width: 4.h,
-                        //         ),
-                        //         SizedBox(
-                        //           width: 1.h,
-                        //         ),
-                        //         Text(
-                        //           'Arabic',
-                        //           style: TextStyle(
-                        //               fontWeight: FontWeight.w500,
-                        //               fontSize: 11.7.sp,
-                        //               color: AppColors.textColorWhite),
-                        //         ),
-                        //         Spacer(),
-                        //         Text(
-                        //           'Used',
-                        //           style: TextStyle(
-                        //               fontWeight: FontWeight.w500,
-                        //               fontSize: 10.sp,
-                        //               color: AppColors.textColorGrey),
-                        //         ),
-                        //
-                        //       ],
-                        //     ),
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
@@ -213,9 +111,6 @@ class _LanguageState extends State<Language> {
       {bool selected = false, bool isChecked = false, bool isDark = true}) {
     return GestureDetector(
       onTap: () {
-        //   setState(() {
-        //   _isSelected= index;
-        // });
         handler!();
       },
       child: Container(
@@ -233,17 +128,7 @@ class _LanguageState extends State<Language> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              // Image.asset(
-              //   image,
-              //   // "assets/images/AElanguage.png",
-              //   height: 4.h,
-              //   width: 4.h,
-              // ),
-              // SizedBox(
-              //   width: 1.h,
-              // ),
               Container(
-                // color: Colors.red,
                 width: 12.w,
                 child: Text(
                   subTitle,
@@ -283,13 +168,6 @@ class _LanguageState extends State<Language> {
                   width: 3.h,
                   color: AppColors.selectedLanguageBorder,
                 ),
-              // Text(
-              //   selected ?   'Used'.tr():"",
-              //   style: TextStyle(
-              //       fontWeight: FontWeight.w500,
-              //       fontSize: 10.sp,
-              //       color: AppColors.textColorGrey),
-              // ),
             ],
           ),
         ),

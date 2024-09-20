@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hesa_wallet/providers/theme_provider.dart';
@@ -10,7 +9,6 @@ import 'package:hesa_wallet/screens/signup_signin/terms_conditions.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../constants/app_deep_linking.dart';
 import '../../constants/colors.dart';
 import '../../constants/configs.dart';
@@ -77,8 +75,6 @@ class _SettingsState extends State<Settings> {
                   height: 33.h,
                   width: dialogWidth,
                   decoration: BoxDecoration(
-                    // border: Border.all(
-                    //     width: 0.1.h, color: AppColors.textColorGrey),
                     color: isDark
                         ? AppColors.showDialogClr
                         : AppColors.textColorWhite,
@@ -129,8 +125,6 @@ class _SettingsState extends State<Settings> {
                         child: DialogButton(
                           title: 'Log out'.tr(),
                           handler: () async {
-                            // if (isLoading) return;
-
                             try {
                               setState(() {
                                 isLoading = true;
@@ -181,7 +175,6 @@ class _SettingsState extends State<Settings> {
                               }
                             } catch (error) {
                               print("Error: $error");
-                              // _showToast('An error occurred'); // Show an error message
                             } finally {
                               setState(() {
                                 isLoading = false;
@@ -189,7 +182,6 @@ class _SettingsState extends State<Settings> {
                             }
                           },
                           isLoading: isLoading,
-                          // isGradient: true,
                           color: AppColors.appSecondButton.withOpacity(0.10),
                           textColor: AppColors.errorColor,
                         ),
@@ -209,15 +201,6 @@ class _SettingsState extends State<Settings> {
     // TODO: implement didChangeDependencies
     if(_isinit){
       getAccessToken();
-      // setState(() {
-      //   _isLoading=true;
-      // });
-      // await Future.delayed(Duration(milliseconds: 900), () {
-      //   print('This code will be executed after 2 seconds');
-      // });
-      // setState(() {
-      //   _isLoading=false;
-      // });
     }
     _isinit=false;
     super.didChangeDependencies();
@@ -239,88 +222,6 @@ class _SettingsState extends State<Settings> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   MainHeader(title: 'Settings'.tr()),
-                  // Column(
-                  //   children: [
-                  //     // Container(
-                  //     //   height: 10.h,
-                  //     //   width: double.infinity,
-                  //     //   margin: EdgeInsets.only(left: 20.sp, right: 20.sp, top: 20.sp),
-                  //     //   decoration: BoxDecoration(
-                  //     //     color: AppColors.accountAtRisk,
-                  //     //     // borderRadius: BorderRadius.circular(5.sp),
-                  //     //     border: Border(
-                  //     //         left: BorderSide(
-                  //     //           color: AppColors.verifyAccount, // Left border color
-                  //     //           width: 3.0,          // Left border width
-                  //     //         ),
-                  //     //     )
-                  //     //   ),
-                  //     //   child: Padding(
-                  //     //     padding:  EdgeInsets.symmetric(horizontal: 10.sp),
-                  //     //     child: Row(
-                  //     //       // crossAxisAlignment: CrossAxisAlignment.start,
-                  //     //       children: [
-                  //     //         Align(
-                  //     //           alignment: Alignment.topCenter,
-                  //     //           child: Padding(
-                  //     //             padding:  EdgeInsets.only(top: 14.sp),
-                  //     //             child: Image.asset(
-                  //     //               "assets/images/accoun_trisk.png",
-                  //     //               height: 18.sp,
-                  //     //               width: 18.sp,
-                  //     //             ),
-                  //     //           ),
-                  //     //         ),
-                  //     //         SizedBox(
-                  //     //           width: 2.w,
-                  //     //         ),
-                  //     //         Container(
-                  //     //           width: 45.w,
-                  //     //           color: Colors.transparent,
-                  //     //           child:
-                  //     //           Column(
-                  //     //             mainAxisAlignment: MainAxisAlignment.center,
-                  //     //             crossAxisAlignment: CrossAxisAlignment.start,
-                  //     //             children: [
-                  //     //               Text(
-                  //     //                 'Account at risk!',
-                  //     //                 style: TextStyle(
-                  //     //                   fontWeight: FontWeight.w600,
-                  //     //                   color: AppColors.blackColour,
-                  //     //                   fontSize: 10.sp,
-                  //     //                 ),
-                  //     //               ),
-                  //     //               SizedBox(height: 0.5.h,),
-                  //     //               Text(
-                  //     //                 'Email is not verified yet, tap the \nbutton to verify your information',
-                  //     //                 maxLines: 2,
-                  //     //                 style: TextStyle(
-                  //     //                   fontWeight: FontWeight.w400,
-                  //     //                   color: AppColors.verifyAccount,
-                  //     //                   fontSize: 7.3.sp,
-                  //     //
-                  //     //                 ),
-                  //     //               )
-                  //     //             ],
-                  //     //           ),
-                  //     //         ),
-                  //     //         Spacer(),
-                  //     //         Text(
-                  //     //           'Verify Account',
-                  //     //           style: TextStyle(
-                  //     //             fontWeight: FontWeight.w600,
-                  //     //             color: AppColors.verifyAccount,
-                  //     //             fontSize: 8.8.sp,
-                  //     //             // height: 18,
-                  //     //           ),
-                  //     //         ),
-                  //     //       ],
-                  //     //     ),
-                  //     //   ),
-                  //     // ),
-                  //   ],
-                  // ),
-                  // SizedBox(height: 2.h,),
                   Container(
                     height: 77.h,
                     // color: Colors.red,
@@ -349,7 +250,6 @@ class _SettingsState extends State<Settings> {
                                           builder: (context) =>
                                               AccountInformation()),
                                     )),
-                            // Divider(color: AppColors.textColorWhite, height: 2.h,),
                             SettingsWidget(
                                 title: 'Security & privacy'.tr(),
                                 imagePath: "assets/images/privacyrisk.png",
@@ -376,117 +276,6 @@ class _SettingsState extends State<Settings> {
                                       MaterialPageRoute(
                                           builder: (context) => Language()),
                                     )),
-                            // Stack(
-                            //   children: [
-                            //     SettingsWidget(
-                            //         title: 'Appearance'.tr(),
-                            //         imagePath: "assets/images/appearance.png",
-                            //         imageHeight: 2.7.h,
-                            //         imageWidth: 2.7.h,
-                            //         index: 4,
-                            //         isDark: themeNotifier.isDark ? true : false,
-                            //         handler: () => Navigator.push(
-                            //               context,
-                            //               MaterialPageRoute(
-                            //                   builder: (context) =>
-                            //                       DeleteAccountDisclaimer()),
-                            //             )),
-                            //     Positioned(
-                            //       right: isEnglish ? 10 : null,
-                            //       left: isEnglish ? null : 10,
-                            //       bottom: 20,
-                            //       child: Container(
-                            //         // height: 3.h,
-                            //         // width: 3.h,
-                            //         decoration: BoxDecoration(
-                            //             // color: AppColors.errorColor,
-                            //             // color: AppColors.gradientColor1,
-                            //             borderRadius: BorderRadius.circular(20),
-                            //             border: Border.all(
-                            //                 color: AppColors.textColorGrey)),
-                            //         child: Padding(
-                            //           padding: EdgeInsets.symmetric(
-                            //               vertical: 3.sp, horizontal: 4.sp),
-                            //           child: Row(
-                            //             crossAxisAlignment:
-                            //                 CrossAxisAlignment.center,
-                            //             children: [
-                            //               GestureDetector(
-                            //                 onTap: () {
-                            //                   themeNotifier.isDark
-                            //                       ? themeNotifier.isDark = false
-                            //                       : themeNotifier.isDark = true;
-                            //                   // Provider.of<ThemeProvider>(
-                            //                   //     context, listen: false)
-                            //                   //     .toggleTheme();
-                            //                   // setState(() {
-                            //                   //   _selectedTheme =
-                            //                   //   'darkTheme';
-                            //                   // });
-                            //                 },
-                            //                 child: Container(
-                            //                   decoration: BoxDecoration(
-                            //                       color: themeNotifier.isDark
-                            //                           ? AppColors.textColorWhite
-                            //                           : Colors.transparent,
-                            //                       borderRadius:
-                            //                           BorderRadius.circular(30)),
-                            //                   child: Padding(
-                            //                     padding: EdgeInsets.all(4.sp),
-                            //                     child: Image.asset(
-                            //                       "assets/images/dark.png",
-                            //                       color: themeNotifier.isDark
-                            //                           ? Colors.black
-                            //                           : AppColors.tabColorlightMode,
-                            //                       height: 2.h,
-                            //                       width: 2.h,
-                            //                     ),
-                            //                   ),
-                            //                 ),
-                            //               ),
-                            //               SizedBox(
-                            //                 width: 0.5.h,
-                            //               ),
-                            //               GestureDetector(
-                            //                 onTap: () {
-                            //                   themeNotifier.isDark
-                            //                       ? themeNotifier.isDark = false
-                            //                       : themeNotifier.isDark = true;
-                            //                   // Provider.of<ThemeProvider>(
-                            //                   //     context, listen: false)
-                            //                   //     .toggleTheme();
-                            //                   // setState(() {
-                            //                   //   _selectedTheme =
-                            //                   //   'lightTheme';
-                            //                   // });
-                            //                 },
-                            //                 child: Container(
-                            //                   decoration: BoxDecoration(
-                            //                       color: themeNotifier.isDark
-                            //                           ? Colors.transparent
-                            //                           : AppColors.tabColorlightMode,
-                            //                       borderRadius:
-                            //                           BorderRadius.circular(30)),
-                            //                   child: Padding(
-                            //                     padding: EdgeInsets.all(4.sp),
-                            //                     child: Image.asset(
-                            //                       "assets/images/light.png",
-                            //                       color: themeNotifier.isDark
-                            //                           ? AppColors.textColorGrey
-                            //                           : AppColors.textColorWhite,
-                            //                       height: 2.h,
-                            //                       width: 2.h,
-                            //                     ),
-                            //                   ),
-                            //                 ),
-                            //               ),
-                            //             ],
-                            //           ),
-                            //         ),
-                            //       ),
-                            //     )
-                            //   ],
-                            // ),
                             SettingsWidget(
                                 title: 'Term and conditions'.tr(),
                                 imagePath: "assets/images/termandcondition.png",
@@ -555,9 +344,8 @@ class _SettingsState extends State<Settings> {
         margin: EdgeInsets.only(bottom: 1.sp),
         height: 7.5.h,
         decoration: BoxDecoration(
-            // color: AppColors.gradientColor1,
+
             ),
-        // color: index == selectedIndex ? Colors.yellow:AppColors.textColorWhite.withOpacity(0.05),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 4.sp),
           child: Column(
@@ -580,9 +368,6 @@ class _SettingsState extends State<Settings> {
                                 ? AppColors.textColorWhite
                                 : AppColors.tabColorlightMode,
                         fit: BoxFit.cover,
-                        // AppColors.backgroundColor,
-                        // height: imageHeight,
-                        // width: imageWidth,
                       ),
                     ),
                   ),
@@ -595,7 +380,6 @@ class _SettingsState extends State<Settings> {
                         color: isDark
                             ? AppColors.textColorWhite
                             : AppColors.tabColorlightMode,
-                        // AppColors.textColorBlack,
                         fontWeight: FontWeight.w600,
                         fontSize: 11.7.sp,
                         fontFamily: 'Inter'),
@@ -605,11 +389,6 @@ class _SettingsState extends State<Settings> {
               SizedBox(
                 height: 1.5.h,
               ),
-              // Divider(
-              //   color: isDark
-              //       ? AppColors.transactionSummNeoBorder
-              //       : AppColors.backgroundColor,
-              // ),
             ],
           ),
         ),

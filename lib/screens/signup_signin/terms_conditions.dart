@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -9,10 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:animated_checkmark/animated_checkmark.dart';
 import 'package:hesa_wallet/constants/configs.dart';
 import 'package:hesa_wallet/providers/auth_provider.dart';
-import 'package:hesa_wallet/screens/signup_signin/signin_with_email.dart';
-import 'package:hesa_wallet/screens/user_profile_pages/wallet_tokens_nfts.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
-import 'package:hesa_wallet/widgets/app_header.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'dart:io' as OS;
@@ -68,10 +64,7 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
   void initState() {
     generateFcmToken();
     // TODO: implement initState
-    // _updateButtonState();
     Timer.periodic(Duration(seconds: 1), (timer) async {
-    //   await Provider.of<AuthProvider>(context, listen: false)
-    //       .updateFCM(FCM: fcmToken, token: accessToken, context: context);
 
     });
     super.initState();
@@ -80,18 +73,6 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
   @override
   Future<void> didChangeDependencies() async {
     // TODO: implement didChangeDependencies
-    // if(_isinit){
-    //   setState(() {
-    //     _isLoading=true;
-    //   });
-    //   await Future.delayed(Duration(milliseconds: 900), () {
-    //     print('This code will be executed after 2 seconds');
-    //   });
-    //   setState(() {
-    //     _isLoading=false;
-    //   });
-    // }
-    // _isinit=false;
     super.didChangeDependencies();
   }
 
@@ -104,7 +85,6 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
           WillPopScope(
               onWillPop: () async {
                 exit(0);
-                return false;
               },
             child: Scaffold(
               backgroundColor: themeNotifier.isDark
@@ -120,7 +100,6 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                   Expanded(
                     child: Container(
                       height: 85.h,
-                      // color: Colors.yellow,
                       width: double.infinity,
                       child: Stack(
                         children: [
@@ -135,19 +114,6 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                   SizedBox(
                                     height: 4.h,
                                   ),
-                                  // Text(
-                                  //   "Wallet user T&C".tr(),
-                                  //   style: TextStyle(
-                                  //       color: themeNotifier.isDark
-                                  //           ? AppColors.textColorWhite
-                                  //           : AppColors.textColorBlack,
-                                  //       fontWeight: FontWeight.w600,
-                                  //       fontSize: 17.5.sp,
-                                  //       fontFamily: 'Inter'),
-                                  // ),
-                                  // SizedBox(
-                                  //   height: 1.h,
-                                  // ),
                                   Text(
                                     "Last updated: October 05, 2022.".tr(),
                                     style: TextStyle(
@@ -171,7 +137,6 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                   ),
                                   ListView.builder(
                                     shrinkWrap: true,
-                                    // itemCount: 20,
                                     controller: scrollController,
                                     itemCount: accountDefinitions.length,
                                     itemBuilder: (BuildContext context, int index) {
@@ -265,16 +230,6 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                                     drawCross: false,
                                                     drawDash: false,
                                                   )
-                                                // _isChecked
-                                                //     ? Align(
-                                                //   alignment: Alignment.center,
-                                                //   child: Icon(
-                                                //     Icons.check_rounded,
-                                                //     size: 12.sp,
-                                                //     color: AppColors.textColorBlack,
-                                                //   ),
-                                                // )
-                                                //     : SizedBox(),
                                               ),
                                             ),
                                           ),
@@ -285,7 +240,6 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                         Expanded(
                                           child:
                                           Container(
-                                            // color: Colors.red,
                                             child: Text(
                                               'I understand the general terms and statements mentioned in this disclaimer and agree to continue'
                                                   .tr(),
@@ -308,12 +262,9 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                       isactive:
                                       _isChecked,
                                       handler: () async {
-                                        // if(_isChecked){
                                           setState(() {
                                             _isLoading = true;
                                           });
-                                          // await Future.delayed(Duration(milliseconds: 1500),
-                                          //         (){});
                                           final  finalResult = await Provider.of<AuthProvider>(context, listen: false).registerUserStep5(
                                               termsAndConditions: _isChecked.toString(), deviceToken: fcmToken, context: context);
                                           setState(() {
@@ -326,8 +277,7 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                                builder: (BuildContext context) {
                                                  void closeDialogAndNavigate() {
                                                    Navigator.of(context)
-                                                       .pop(); // Close the dialog
-                                                   // Navigator.of(context).pop(); // Close the dialog
+                                                       .pop();
                                                    Navigator.of(context)
                                                        .pushNamedAndRemoveUntil('/SigninWithEmail', (Route d) => false,
                                                        arguments: {
@@ -363,9 +313,6 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                                          children: [
                                                            Container(
                                                              height: 40.h,
-                                                             // color: themeNotifier.isDark
-                                                             //     ? AppColors.backgroundColor
-                                                             //     : AppColors.textColorBlack.withOpacity(0.5),
                                                              child: Padding(
                                                                padding: EdgeInsets.only(
                                                                    left: 2.sp,
@@ -433,19 +380,6 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                                            SizedBox(
                                                              height: 2.h,
                                                            ),
-                                                           // Text(
-                                                           //   "Show your support by following us & interact with a growing Community."
-                                                           //       .tr(),
-                                                           //   textAlign: TextAlign.center,
-                                                           //   style: TextStyle(
-                                                           //       height: 1.4,
-                                                           //       color:
-                                                           //       AppColors.textColorGrey,
-                                                           //       fontWeight: FontWeight.w400,
-                                                           //       fontSize: 11.7.sp,
-                                                           //       fontFamily: 'Inter'),
-                                                           // ),
-                                                           // Expanded(child: SizedBox()),
                                                            Row(
                                                              mainAxisAlignment:
                                                              MainAxisAlignment.center,

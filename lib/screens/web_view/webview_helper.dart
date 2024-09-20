@@ -38,7 +38,6 @@ class _WebviewHelperState extends State<WebviewHelper> {
 
   Future<String> _loadHtmlFromAssets(String filePath) async {
     String fileHtmlContents = await rootBundle.loadString(filePath);
-    // Replace the existing checkoutId with the new one
     String updatedHtml = fileHtmlContents.replaceAll(
       'checkoutId=55CCB91132C12F2C6BF6D75E28026CD1.uat01-vm-tx01',
       'checkoutId=${widget.checkoutId}',
@@ -86,15 +85,6 @@ class _WebviewHelperState extends State<WebviewHelper> {
           builder: (context) =>
               WalletBankingAndPaymentEmpty()),
     ).then((value) => print('after going'));
-    // widget.fromTransactionReq ?
-    // Navigator.pop(context) :
-    // Navigator.pushReplacement(
-    //   context,
-    //   MaterialPageRoute(
-    //       builder: (context) =>
-    //           WalletBankingAndPaymentEmpty()),
-    // ).then((value) => print('after going'));
-    //bilal ka function call hoga (3rd api)
   }
 
   @override
@@ -109,7 +99,7 @@ class _WebviewHelperState extends State<WebviewHelper> {
     return WillPopScope(
       onWillPop: () async {
         checkFormFilledStatus(
-            widget.checkoutId); // Action to perform on back pressed
+            widget.checkoutId);
         return true;
       },
       child: FutureBuilder<String>(

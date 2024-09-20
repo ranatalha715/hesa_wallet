@@ -1,9 +1,4 @@
-
-
-
 import 'dart:async';
-
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +35,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
-    // print(accessToken);
   }
 
   FocusNode firstFieldFocusNode = FocusNode();
@@ -118,7 +112,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
               _isLoadingOtpDialoge =
               false;
             });
-            // _showToast('An error occurred'); // Show an error message
           } finally {
             setState(() {
               _isLoadingOtpDialoge =
@@ -157,7 +150,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
             }
           } catch (error) {
             print("Error: $error");
-            // _showToast('An error occurred'); // Show an error message
+
           } finally {
             setState(() {
               _isLoadingResend =
@@ -168,9 +161,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
       },
       firstTitle: 'Verify',
       secondTitle: 'Resend code: ',
-
-      // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
-
       context: context,
       isDark: true,
       isFirstButtonActive:
@@ -213,12 +203,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
           .withOpacity(0.8)
           : AppColors
           .textColorWhite,
-      // themeNotifier.isDark
-      //     ? AppColors.textColorWhite
-      //     : AppColors.textColorBlack
-      //         .withOpacity(0.8),
       isLoading: _isLoading,
-      // isLoading: _isLoadingResend,
     );
   }
 
@@ -268,9 +253,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
       child: Column(
           children: [
       MainHeader(title: 'Verify Email'),
-      // SizedBox(
-      //   height: 2.h,
-      // ),
       ])
     ));
 
