@@ -256,12 +256,12 @@ class _WalletAddCardState extends State<WalletAddCard> {
   checkFormFilledStatus(String checkoutID) async {
 
     print('Now you should run the add card function');
-    Provider.of<CardProvider>(context, listen:false).tokenizeCardVerify(token: accessToken, context: context,
-        checkoutId: checkoutID,  brand: Provider.of<
-          TransactionProvider>(
-          context,
-          listen: false)
-          .selectedCardBrand,);
+    // Provider.of<CardProvider>(context, listen:false).tokenizeCardVerify(token: accessToken, context: context,
+    //     checkoutId: checkoutID,  brand: Provider.of<
+    //       TransactionProvider>(
+    //       context,
+    //       listen: false)
+    //       .selectedCardBrand,);
     //bilal ka function call hoga (3rd api)
 
 

@@ -40,26 +40,31 @@ class _WalletActivityState extends State<WalletActivity> {
 
   @override
   Future<void> didChangeDependencies() async {
-    // TODO: implement didChangeDependencies
     if (_isinit) {
       setState(() {
         _isLoading = true;
       });
-      // await Future.delayed(Duration(milliseconds: 2), () {
-      //   print('Delayed action');
-      // });
+
       await getAccessToken();
+
       await Provider.of<UserProvider>(context, listen: false)
           .getUserDetails(token: accessToken, context: context);
       await Provider.of<TransactionProvider>(context, listen: false)
           .getWalletActivities(accessToken: accessToken, context: context);
+
       final prefs = await SharedPreferences.getInstance();
-      siteUrl = await prefs.getString("siteUrl");
-      //
-      logoFromNeo = await prefs.getString("logoFromNeo");
-      bytes = base64Decode(logoFromNeo);
-      connectionTime = await prefs.getString("connectionTime");
-      disconnectionTime = await prefs.getString("disconnectionTime");
+
+      // Null checks for siteUrl, logoFromNeo, connectionTime, and disconnectionTime
+      siteUrl = prefs.getString("siteUrl") ?? null;  // Fallback to an empty string if null
+      logoFromNeo = prefs.getString("logoFromNeo");
+
+      if (logoFromNeo != null && logoFromNeo.isNotEmpty) {
+        bytes = base64Decode(logoFromNeo);
+      }
+
+      connectionTime = prefs.getString("connectionTime") ?? null;
+      disconnectionTime = prefs.getString("disconnectionTime") ?? null;
+
       setState(() {
         _isLoading = false;
       });
@@ -67,6 +72,7 @@ class _WalletActivityState extends State<WalletActivity> {
     _isinit = false;
     super.didChangeDependencies();
   }
+
 
   String calculateTimeDifference(String createdAtStr) {
     // Parse the createdAt timestamp and ensure it's in UTC

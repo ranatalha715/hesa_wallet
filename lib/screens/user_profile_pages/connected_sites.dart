@@ -51,28 +51,30 @@ class _ConnectedSitesState extends State<ConnectedSites> {
     setState(() {
       isLoading = true;
     });
+
     Future.delayed(Duration(seconds: 3), () {});
+
     await getAccessToken();
+
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
+
     final prefs = await SharedPreferences.getInstance();
-    siteUrl = await prefs.getString("siteUrl");
-    logoFromNeo = await prefs.getString("logoFromNeo");
+    siteUrl = prefs.getString("siteUrl") ?? "";
+    logoFromNeo = prefs.getString("logoFromNeo");
 
+    if (logoFromNeo != null && logoFromNeo.isNotEmpty) {
+      bytes = base64Decode(logoFromNeo);
+    }
 
-     bytes = base64Decode(logoFromNeo);
-     print('logo');
-     print(logoFromNeo);
-    isConnected = await prefs.getBool("isConnected") ?? false;
-    print('siteUrl locally');
-    print(prefs.getString("siteUrl"));
+    isConnected = prefs.getBool("isConnected") ?? false;
+
     setState(() {
-      lastConnectedSite = siteUrl;
-    });
-    setState(() {
+      lastConnectedSite = siteUrl.isNotEmpty ? siteUrl : "No site connected";
       isLoading = false;
     });
   }
+
 
   Future<void> _checkFirstVisit() async {
     print('checking popup');
@@ -80,7 +82,7 @@ class _ConnectedSitesState extends State<ConnectedSites> {
     bool hasVisited = prefs.getBool('hasVisited') ?? false;
 
     if (!hasVisited
-        && lastConnectedSite != null
+        && lastConnectedSite != "No site connected"
         ) {
       showConnectionPopup = true;
       print('showConnectionPopup' + showConnectionPopup.toString());
@@ -101,7 +103,7 @@ class _ConnectedSitesState extends State<ConnectedSites> {
     bool hasVisitedDisconnection =
         prefs.getBool('hasVisitedDisconnection') ?? false;
 
-    if (!hasVisitedDisconnection) {
+    if (!hasVisitedDisconnection  && lastConnectedSite != "No site connected" && !isConnected) {
       setState(() {
         showDisconnectionPopup = true;
       });

@@ -71,12 +71,12 @@ class _WebviewHelperState extends State<WebviewHelper> {
 
   checkFormFilledStatus(String checkoutID) async {
     print('Now you should run the add card function');
-    await Provider.of<CardProvider>(context, listen: false).tokenizeCardVerify(
-        token: accessToken, context: context, checkoutId: checkoutID,  brand: Provider.of<
-        TransactionProvider>(
-        context,
-        listen: false)
-        .selectedCardBrand,);
+    // await Provider.of<CardProvider>(context, listen: false).tokenizeCardVerify(
+    //     token: accessToken, context: context, checkoutId: checkoutID,  brand: Provider.of<
+    //     TransactionProvider>(
+    //     context,
+    //     listen: false)
+    //     .selectedCardBrand,);
     // Navigator.pop(context);
     Navigator.pop(context);
     await Navigator.pushReplacement(
