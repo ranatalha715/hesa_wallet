@@ -55,15 +55,15 @@ class _WalletActivityState extends State<WalletActivity> {
       final prefs = await SharedPreferences.getInstance();
 
       // Null checks for siteUrl, logoFromNeo, connectionTime, and disconnectionTime
-      siteUrl = prefs.getString("siteUrl") ?? null;  // Fallback to an empty string if null
-      logoFromNeo = prefs.getString("logoFromNeo");
+      siteUrl = prefs.getString("siteUrl") ?? "";  // Fallback to an empty string if null
+      logoFromNeo = prefs.getString("logoFromNeo") ?? "";
 
       if (logoFromNeo != null && logoFromNeo.isNotEmpty) {
         bytes = base64Decode(logoFromNeo);
       }
 
-      connectionTime = prefs.getString("connectionTime") ?? null;
-      disconnectionTime = prefs.getString("disconnectionTime") ?? null;
+      connectionTime = prefs.getString("connectionTime") ?? "";
+      disconnectionTime = prefs.getString("disconnectionTime") ?? "";
 
       setState(() {
         _isLoading = false;
@@ -112,7 +112,7 @@ class _WalletActivityState extends State<WalletActivity> {
 
 
     // Add the site connection data if it exists
-    if (connectionTime != null && siteUrl != null) {
+    if (connectionTime != "" && siteUrl != "") {
       sortedActivities.add({
         'type': 'site_connection',
         'siteURL': siteUrl,
@@ -120,7 +120,7 @@ class _WalletActivityState extends State<WalletActivity> {
         'bytes':bytes,
       });
     }
-    if (disconnectionTime != null) {
+    if (disconnectionTime != "") {
       sortedActivities.add({
         'type': 'site_disconnection',
         'siteURL': siteUrl,

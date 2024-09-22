@@ -82,6 +82,27 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
   //   super.didChangeDependencies();
   // }
 
+  String formatCurrency(String? numberString) {
+    // Check if the string is null or empty
+    if (numberString == null || numberString.isEmpty) {
+      return "0"; // Return a default value if input is invalid
+    }
+
+    try {
+      // Convert the string to a number (num handles both int and double)
+      num number = num.parse(numberString);
+
+      // Create a NumberFormat object for Saudi currency style
+      final formatter = NumberFormat("#,##0.##", "en_US");
+
+      // Format the number with commas
+      return formatter.format(number);
+    } catch (e) {
+      // Handle any format exceptions and return a fallback
+      return "Invalid Number";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -278,12 +299,12 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                           //             ? AppColors.textColorWhite
                           //             : AppColors.textColorGreyShade2),
                           //   ),
-                          if (!widget.isPending && widget.priceUp != null
+                          if (!widget.isPending && widget.priceUp != null && widget.priceUp !='0'
                               // &&
                               // widget.priceNormal == null
                               )
                             Text(
-                              "${widget.priceUp} SAR",
+                              "${formatCurrency(widget.priceUp)} SAR",
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 10.2.sp,
@@ -293,12 +314,12 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                           if (!widget.isPending &&
                               // widget.priceNormal == null &&
                               widget.priceUp == null &&
-                              widget.priceDown != null)
+                              widget.priceDown != null  && widget.priceDown !='0')
                             Container(
                               // color: Colors.blue,
                               width: 23.w,
                               child: Text(
-                                "${widget.priceDown} SAR",
+                                "${formatCurrency(widget.priceDown)} SAR",
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.right,

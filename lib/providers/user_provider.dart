@@ -104,7 +104,7 @@ class UserProvider with ChangeNotifier {
       userNationality = jsonResponse['nationality'].toString();
 
       print("User details getting successfully!");
-      print(userAvatar);
+      print(response.body);
       // _showToast('User details getting successfully!', duration: 6000);
       List<dynamic>? sitesJsonList = jsonResponse['connectedSites'];
       _connectedSites.clear(); // Clear the list before adding new items

@@ -515,6 +515,27 @@ class _TransactionRequestState extends State<TransactionRequest> {
     }
   }
 
+  String formatCurrency(String? numberString) {
+    // Check if the string is null or empty
+    if (numberString == null || numberString.isEmpty) {
+      return "0"; // Return a default value if input is invalid
+    }
+
+    try {
+      // Convert the string to a number (num handles both int and double)
+      num number = num.parse(numberString);
+
+      // Create a NumberFormat object for Saudi currency style
+      final formatter = NumberFormat("#,##0.##", "en_US");
+
+      // Format the number with commas
+      return formatter.format(number);
+    } catch (e) {
+      // Handle any format exceptions and return a fallback
+      return "Invalid Number";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final args =
@@ -862,7 +883,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   transactionFeesWidget(
                                                     title: feeLabel,
                                                     // details: isDebit ? '- '+ feeValue : '' + feeValue,
-                                                    details: feeValue,
+                                                    details: formatCurrency(feeValue),
                                                     showCurrency: true,
                                                     isDark: themeNotifier.isDark
                                                         ? true
@@ -2976,7 +2997,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
         children: [
           Container(
             // color: Colors.yellow,
-            width: 45.w,
+            width: title == "Total" ? 25.w:45.w,
             child: Text(
               title,
               style: TextStyle(
@@ -2990,7 +3011,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
           ),
           Container(
             // color: Colors.red,
-            width: 25.w,
+            width: title == "Total" ? 45.w: 25.w,
             child: Align(
               alignment: Alignment.centerRight,
               child: Text(

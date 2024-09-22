@@ -157,6 +157,32 @@ class _TransactionSummaryState extends State<TransactionSummary> {
     return result;
   }
 
+
+
+
+
+  String formatCurrency(String? numberString) {
+    // Check if the string is null or empty
+    if (numberString == null || numberString.isEmpty) {
+      return "0"; // Return a default value if input is invalid
+    }
+
+    try {
+      // Convert the string to a number (num handles both int and double)
+      num number = num.parse(numberString);
+
+      // Create a NumberFormat object for Saudi currency style
+      final formatter = NumberFormat("#,##0.##", "en_US");
+
+      // Format the number with commas
+      return formatter.format(number);
+    } catch (e) {
+      // Handle any format exceptions and return a fallback
+      return "Invalid Number";
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     Locale currentLocale = context.locale;
@@ -293,7 +319,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                           transactionSummary.receiverBankDetails !=
                                                   'null'
                                               ? 'Payout'
-                                              : 'Payment Successful'.tr(),
+                                              : txSummary.txType == 'Cancel Auction Listing' ? 'Transaction Successful': 'Payment Successful'.tr(),
                                           style: TextStyle(
                                             color: themeNotifier.isDark
                                                 ? AppColors.textColorWhite
@@ -328,6 +354,20 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                     SizedBox(
                                       height: 1.h,
                                     ),
+                                    if(txSummary.txType== 'Cancel Auction Listing')
+                                    Padding(
+                                      padding:  EdgeInsets.only(bottom: 2.h),
+                                      child: Text(
+                                        replaceMiddleWithDotstxId(transactionSummary.txId) ,
+                                             style: TextStyle(
+                                          color: themeNotifier.isDark
+                                              ? AppColors.textColorGreyShade2
+                                              : AppColors.textColorBlack,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 10.sp,
+                                        ),
+                                      ),
+                                    ),
                                     if(!transactionSummary.txType.contains("Cancel"))
                                     Text(
                                       // transactionSummary.txAmountType ==
@@ -336,7 +376,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                       //         transactionSummary.txTotalAmount +
                                       //         ' SAR'
                                       //     : '-' +
-                                      transactionSummary.txTotalAmount + ' SAR',
+                                      formatCurrency(transactionSummary.txTotalAmount) + ' SAR',
                                       style: TextStyle(
                                         fontSize: 26.5.sp,
                                         fontWeight: FontWeight.w700,
@@ -461,8 +501,10 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                               ),
                             ),
                             Container(
+                              height: txSummary.txType == 'Cancel Auction Listing' ? 64.h :null,
                               decoration: BoxDecoration(
                                   color: AppColors.transactionReqBorderWhole,
+                                  // color: AppColors.errorColor,
                                   borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(15.sp),
                                     // Adjust the radius as needed
@@ -625,11 +667,11 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                                       transactionSummary
                                                                   .receiverBankDetails !=
                                                               'null'
-                                                          ? feeItem[label]
-                                                              .toString()
+                                                          ? formatCurrency(feeItem[label]
+                                                          .toString())
                                                           : '- ' +
-                                                              feeItem[label]
-                                                                  .toString();
+                                                              formatCurrency(feeItem[label]
+                                                                  .toString());
                                                   bool lastIndex = index ==
                                                       transactionSummary
                                                               .transactionFeeses
@@ -656,41 +698,6 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                                   );
                                                 },
                                               )
-
-                                              // transactionFeesWidget(
-                                              //   title: transactionSummary.assetListingLabel ?? "",
-                                              //   details: transactionSummary.assetListingFee ?? "" + ' SAR',
-                                              //   isDark:
-                                              //       themeNotifier.isDark ? true : false,
-                                              // ),
-                                              // transactionFeesWidget(
-                                              //   title: transactionSummary.networkLabel ?? "",
-                                              //   details: transactionSummary.networkFees ?? "" + ' SAR',
-                                              //   isDark:
-                                              //   themeNotifier.isDark ? true : false,
-                                              // ),
-                                              // transactionFeesWidget(
-                                              //   title: transactionSummary.paymentProcessingLabel ?? "",
-                                              //   details: transactionSummary.paymentProcessingFee ?? ""
-                                              //       + ' SAR',
-                                              //   isDark:
-                                              //   themeNotifier.isDark ? true : false,
-                                              // ),
-                                              //
-                                              // Column(
-                                              //   children: [
-                                              //     Divider(
-                                              //       color: AppColors.textColorGrey,
-                                              //     ),
-                                              //     transactionFeesWidget(
-                                              //       title: transactionSummary.totalLabel ?? "",
-                                              //       details: transactionSummary.totalFees ?? "" + ' SAR',
-                                              //       isDark:
-                                              //       themeNotifier.isDark ? true : false,
-                                              //     ),
-                                              //   ],
-                                              //
-                                              // ),
                                             ],
                                           ),
                                         ),
@@ -797,7 +804,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
             child: Text(
               details,
               maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              // overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.right,
               style: TextStyle(
                   color: isDark
