@@ -14,10 +14,12 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sizer/sizer.dart';
+import '../../constants/app_deep_linking.dart';
 import '../../providers/assets_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../widgets/app_drawer.dart';
+import '../connection_requests_pages/connect_dapp.dart';
 import '../signup_signin/welcome_screen.dart';
 import '../unlock/unlock.dart';
 import '../user_transaction_summaries_with_payment/transaction_req_acceptreject.dart';
@@ -145,6 +147,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     super.initState();
     getPasscode();
     initUniLinks();
+    initUniLinks1();
     print('recieved data' + _receivedData);
 
     _tabController = TabController(length: 2, vsync: this);
@@ -185,6 +188,99 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       selectedCategoryIndex = index;
     });
   }
+  void handleDisconnection() async {
+    final prefs =
+    await SharedPreferences.getInstance();
+    await prefs.setString('disconnectionTime', DateTime.now().toString());
+    await  prefs.setBool('isConnected', false);
+    setState(() {
+
+    });
+    await Future.delayed(Duration(seconds: 2), () {});
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Alert!'),
+          content: Text('Disconnected Successfully'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  Future<void> initUniLinks1() async {
+    try {
+      print('trying');
+      await getLinksStream().firstWhere((String? link) {
+        if (link != null) {
+          Uri uri = Uri.parse(link);
+          String? operation = uri.queryParameters['operation'];
+          String? logoFromNeo = uri.queryParameters['logo'];
+          String? siteUrl = uri.queryParameters['siteUrl'];
+          print("print operation");
+          print(operation);
+
+          if (operation != null && operation == 'connectWallet') {
+            Provider.of<UserProvider>(context, listen: false)
+                .navigateToNeoForConnectWallet = true;
+
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => ConnectDapp()),
+                  (Route<dynamic> route) => false,
+            );
+            Provider.of<TransactionProvider>(context,listen: false).logoFromNeo=logoFromNeo;
+            Provider.of<TransactionProvider>(context,listen: false).siteUrl=siteUrl;
+            // setState(() {
+            //   isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
+            //       .navigateToNeoForConnectWallet;  // Set overlay visibility to true
+            // });
+
+            print("check kro" +
+                Provider.of<UserProvider>(context, listen: false)
+                    .navigateToNeoForConnectWallet
+                    .toString());
+          }
+          else if(operation != null && operation == 'DisconnectWallet') {
+            handleDisconnection();
+          }
+          else {
+            Provider.of<UserProvider>(context, listen: false)
+                .navigateToNeoForConnectWallet = false;
+
+            // setState(() {
+            //   isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
+            //       .navigateToNeoForConnectWallet;  // Set overlay visibility to false
+            // });
+          }
+          return true; // Exit the loop after processing
+        } else{
+          Provider.of<UserProvider>(context, listen: false)
+              .navigateToNeoForConnectWallet = false;
+
+          // setState(() {
+          //   isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
+          //       .navigateToNeoForConnectWallet;  // Set overlay visibility to false
+          // });
+
+        }
+
+        return false;
+      });
+
+      print('trying end');
+      // clearLinkStream();
+    } catch (e) {
+      print('Error initializing UniLinks: $e');
+      print('trying error');
+    }
+  }
 
   // uniilink
 
@@ -194,7 +290,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     // Initialize UniLinks
     // await initPlatformState();
     // Listen for incoming links
-    // AppDeepLinking().initDeeplink(); muzamil recommended
+    // AppDeepLinking().initDeeplink();
     getLinksStream().listen((String? link) {
       print(link.toString() + " before");
       if (link != null) {
@@ -203,11 +299,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
         });
         Uri uri = Uri.parse(link);
         String? operation = uri.queryParameters['operation'];
-        print(
-          'operation mint' + operation.toString(),
-        );
         if (operation != null && operation == 'MintNFT') {
-          // Navigate to page for MintNFT operation
           navigateToTransactionRequestWithMint(
               uri.queryParameters, operation, context);
         } else if (operation != null && operation == 'MintCollection') {

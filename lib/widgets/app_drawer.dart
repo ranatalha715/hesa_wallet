@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:hesa_wallet/constants/colors.dart';
 import 'package:hesa_wallet/constants/footer_text.dart';
 import 'package:hesa_wallet/screens/connection_requests_pages/connect_dapp.dart';
@@ -652,6 +653,8 @@ class _AppDrawerState extends State<AppDrawer> {
                                       (route) =>
                                   false, // This predicate ensures that all previous routes are removed.
                                 );
+
+
                                 await AppDeepLinking().openNftApp(
                                   {
                                     "operation": "disconnectWallet",

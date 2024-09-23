@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hesa_wallet/providers/payment_fees.dart';
 import 'package:hesa_wallet/providers/token_provider.dart';
@@ -49,7 +50,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await localized.EasyLocalization.ensureInitialized();
@@ -218,7 +219,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     AppDeepLinking().initDeeplink();
     fToast = FToast();
     fToast.init(context);
-    this.initUniLinks();
+    // this.initUniLinks();
     getAccessToken();
     Future.delayed(Duration(seconds: 2), () {
       showNotification();
@@ -233,7 +234,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       checkWifiStatus();
     }); // 31 jan
-    // initUniLinks();
+    initUniLinks();
     // startPeriodicChecking();
     print('recieved data' + _receivedData);
     Timer.periodic(Duration(seconds: 3), (timer) async {
@@ -379,8 +380,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           }
           else if(operation != null && operation == 'DisconnectWallet') {
 handleDisconnection();
-
-
           }
           else {
             Provider.of<UserProvider>(context, listen: false)
@@ -545,6 +544,7 @@ handleDisconnection();
       return Consumer<ThemeProvider>(
           builder: (context, ThemeProvider themeProvider, _) {
         return MaterialApp(
+          navigatorKey: navigatorKey,
           locale: context.locale,
           supportedLocales: context.supportedLocales,
           localizationsDelegates: context.localizationDelegates,
@@ -562,8 +562,19 @@ handleDisconnection();
                 ),
           debugShowCheckedModeBanner: false,
           home:
+          // accessToken.isEmpty ?
+          //  Stack(
+          //   children: [
+          //     Wallet(),
+          //     if (!isWifiOn)
+          //       LoaderBluredScreen(
+          //         isWifiOn: false,
+          //       ),
+          //   ],
+          // ): WalletTokensNfts(),
 
-          _buildContent(),
+
+        _buildContent(),
               // Provider.of<TokenProvider>(
               //   context,
               //   context,devic
@@ -824,7 +835,7 @@ handleDisconnection();
       },
     );
   }
-
+  //// transactions
 }
 
 bool isTokenExpired(String token) {

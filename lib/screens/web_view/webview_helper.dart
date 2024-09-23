@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,6 +43,7 @@ class _WebviewHelperState extends State<WebviewHelper> {
       'checkoutId=55CCB91132C12F2C6BF6D75E28026CD1.uat01-vm-tx01',
       'checkoutId=${widget.checkoutId}',
     );
+
     updatedHtml = updatedHtml.replaceAll(
       'data-brands="VISA MASTER AMEX"',
       Provider.of<
@@ -110,7 +112,7 @@ class _WebviewHelperState extends State<WebviewHelper> {
               backgroundColor: AppColors.backgroundColor,
               body: Column(
                 children: [
-                  MainHeader(title: 'Add Card',
+                  MainHeader(title: 'Add Card'.tr(),
                       handler: (){ checkFormFilledStatus(widget.checkoutId);
 
                       }

@@ -361,7 +361,11 @@ class _ConnectDappState extends State<ConnectDapp> {
                                     "response": 'Connection request rejected.'
                                   },
                                 );
-                                SystemNavigator.pop();
+                                Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(builder: (context) => WalletTokensNfts()),
+                                      (Route<dynamic> route) => false,
+                                );
+                                // SystemNavigator.pop();
                               },
                               isGradientWithBorder: true,
                               buttonWithBorderColor: AppColors.errorColor,

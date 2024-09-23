@@ -284,14 +284,15 @@ class _TransactionRequestState extends State<TransactionRequest> {
     // }
     // );
     init();
-
+    // Locale currentLocale = context.locale;
+    // bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
     fToast = FToast();
     fToast.init(context);
-    flutterHyperPay = FlutterHyperPay(
-      shopperResultUrl: InAppPaymentSetting.shopperResultUrl,
-      paymentMode: PaymentMode.test,
-      lang: 'eng',
-    );
+    // flutterHyperPay = FlutterHyperPay(
+    //   shopperResultUrl: InAppPaymentSetting.shopperResultUrl,
+    //   paymentMode: PaymentMode.test,
+    //   lang: isEnglish ? "en_US" : 'ar_AR',
+    // );
 
     super.initState();
   }
@@ -313,6 +314,15 @@ class _TransactionRequestState extends State<TransactionRequest> {
       });
     }
     isInit = false;
+    Locale currentLocale = context.locale;
+    bool isEnglish = currentLocale.languageCode == 'en';
+
+    flutterHyperPay = FlutterHyperPay(
+      shopperResultUrl: InAppPaymentSetting.shopperResultUrl,
+      paymentMode: PaymentMode.test,
+      lang: isEnglish ? "en_US" : 'ar_AR',
+    );
+
     super.didChangeDependencies();
   }
 
@@ -404,110 +414,125 @@ class _TransactionRequestState extends State<TransactionRequest> {
     });
   }
 
+  navigateToAddCard() async {
+    print('card brand');
+    print(Provider.of<TransactionProvider>(context, listen: false)
+        .selectedCardBrand);
+    var result = await Provider.of<TransactionProvider>(context, listen: false)
+        .tokenizeCardRequest(
+        token: accessToken,
+        brand: Provider.of<TransactionProvider>(context, listen: false)
+            .selectedCardBrand,
+        context: context);
+    if (result == AuthResult.success) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => WalletAddCard(
+            tokenizedCheckoutId:
+            Provider.of<TransactionProvider>(context, listen: false)
+                .tokenizedCheckoutId,
+          ),
+        ),
+      );
+    }
+  }
+
   void confirmBrandDialogue(Function onCloseHandler,
       {required bool showPopup}) {
     if (showPopup) {
       showDialog(
         context: context,
-        barrierDismissible:
-            Provider.of<TransactionProvider>(context, listen: false)
-                        .selectedCardBrand ==
-                    null
-                ? false
-                : true,
         builder: (BuildContext context) {
           final screenWidth = MediaQuery.of(context).size.width;
           final dialogWidth = screenWidth * 0.85;
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
-            return Dialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              backgroundColor: Colors.transparent,
-              child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
-                  child: Container(
-                    height: 23.h,
-                    width: dialogWidth,
-                    decoration: BoxDecoration(
-                      // border: Border.all(
-                      //     width:
-                      //         0.1.h,
-                      //     color: AppColors.textColorGrey),
-                      color: AppColors.showDialogClr,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 4.h,
+                return Dialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  backgroundColor: Colors.transparent,
+                  child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+                      child: Container(
+                        height: 23.h,
+                        width: dialogWidth,
+                        decoration: BoxDecoration(
+                          color: AppColors.showDialogClr,
+                          borderRadius: BorderRadius.circular(15),
                         ),
-                        Text(
-                          'Please select your card type'.tr(),
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 15.sp,
-                              color: AppColors.textColorWhite),
-                        ),
-                        SizedBox(
-                          height: 4.h,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            GestureDetector(
-                              onTap: () {
-                                Provider.of<TransactionProvider>(context,
-                                        listen: false)
-                                    .selectedCardBrand = 'VISA';
-                                Navigator.pop(context);
-                              },
-                              child: Image.asset(
-                                "assets/images/VisaPopup.png",
-                                height: 40.sp,
-                                width: 40.sp,
-                              ),
+                            SizedBox(
+                              height: 4.h,
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                Provider.of<TransactionProvider>(context,
-                                        listen: false)
-                                    .selectedCardBrand = 'MASTER';
-                                Navigator.pop(context);
-                              },
-                              child: Image.asset(
-                                "assets/images/MastercardPopup.png",
-                                height: 40.sp,
-                                width: 40.sp,
-                              ),
+                            Text(
+                              'Please select your card type'.tr(),
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14.sp,
+                                  color: AppColors.textColorWhite),
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                Provider.of<TransactionProvider>(context,
+                            SizedBox(
+                              height: 4.h,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                GestureDetector(
+                                  onTap: () async {
+                                    Provider.of<TransactionProvider>(context,
                                         listen: false)
-                                    .selectedCardBrand = 'MADA';
-                                Navigator.pop(context);
-                              },
-                              child: Image.asset(
-                                "assets/images/MadaPayPopup.png",
-                                height: 45.sp,
-                                width: 44.sp,
-                              ),
+                                        .selectedCardBrand = 'VISA';
+                                    // Navigator.pop(context);
+                                    navigateToAddCard();
+                                  },
+                                  child: Image.asset(
+                                    "assets/images/VisaPopup.png",
+                                    height: 40.sp,
+                                    width: 40.sp,
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Provider.of<TransactionProvider>(context,
+                                        listen: false)
+                                        .selectedCardBrand = 'MASTER';
+                                    navigateToAddCard();
+                                  },
+                                  child: Image.asset(
+                                    "assets/images/MastercardPopup.png",
+                                    height: 40.sp,
+                                    width: 40.sp,
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Provider.of<TransactionProvider>(context,
+                                        listen: false)
+                                        .selectedCardBrand = 'MADA';
+                                    navigateToAddCard();
+                                  },
+                                  child: Image.asset(
+                                    "assets/images/MadaPayPopup.png",
+                                    height: 45.sp,
+                                    width: 44.sp,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 2.h,
                             ),
                           ],
                         ),
-                        SizedBox(
-                          height: 2.h,
-                        ),
-                      ],
-                    ),
-                  )),
-            );
-          });
+                      )),
+                );
+              });
         },
       ).then((value) => onCloseHandler());
     } else {
@@ -946,43 +971,48 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                         Spacer(),
                                         GestureDetector(
                                           onTap: () async {
-
                                             confirmBrandDialogue(
-                                              () async {
-                                                var result = await Provider.of<
-                                                            TransactionProvider>(
-                                                        context,
-                                                        listen: false)
-                                                    .tokenizeCardRequest(
-                                                        token: accessToken,
-                                                        brand: Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .selectedCardBrand,
-                                                        context: context);
-                                                if (result ==
-                                                    AuthResult.success) {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          WalletAddCard(
-                                                        fromTransactionReq:
-                                                            true,
-                                                        tokenizedCheckoutId: Provider
-                                                                .of<TransactionProvider>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                            .tokenizedCheckoutId,
-                                                      ),
-                                                    ),
-                                                  );
-                                                }
+                                                  () async {
+
                                               },
                                               showPopup: true,
                                             );
+                                            // confirmBrandDialogue(
+                                            //   () async {
+                                            //     var result = await Provider.of<
+                                            //                 TransactionProvider>(
+                                            //             context,
+                                            //             listen: false)
+                                            //         .tokenizeCardRequest(
+                                            //             token: accessToken,
+                                            //             brand: Provider.of<
+                                            //                         TransactionProvider>(
+                                            //                     context,
+                                            //                     listen: false)
+                                            //                 .selectedCardBrand,
+                                            //             context: context);
+                                            //     if (result ==
+                                            //         AuthResult.success) {
+                                            //       Navigator.push(
+                                            //         context,
+                                            //         MaterialPageRoute(
+                                            //           builder: (context) =>
+                                            //               WalletAddCard(
+                                            //             fromTransactionReq:
+                                            //                 true,
+                                            //             tokenizedCheckoutId: Provider
+                                            //                     .of<TransactionProvider>(
+                                            //                         context,
+                                            //                         listen:
+                                            //                             false)
+                                            //                 .tokenizedCheckoutId,
+                                            //           ),
+                                            //         ),
+                                            //       );
+                                            //     }
+                                            //   },
+                                            //   showPopup: true,
+                                            // );
 
                                             // return showDialog(
                                             //   context: context,
