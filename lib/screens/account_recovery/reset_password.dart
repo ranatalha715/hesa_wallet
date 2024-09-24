@@ -479,6 +479,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                                                       "assets/images/check_circle.png",
                                                       height: 6.h,
                                                       width: 5.8.h,
+                                                      color: AppColors.hexaGreen,
                                                     ),
                                                   ),
                                                   SizedBox(height: 2.h),

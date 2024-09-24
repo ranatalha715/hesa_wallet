@@ -980,6 +980,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                           4.h,
                           width:
                           4.h,
+                          color: AppColors.textColorWhite,
                         ),
                       ],
                     ),

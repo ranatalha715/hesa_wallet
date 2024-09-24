@@ -1071,13 +1071,12 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                           onTap: () {
                                             setLockScreenStatus(true);
                                             // _isPasscodeSet ?
-                                            Navigator.pushReplacement(
+                                            Navigator.pushAndRemoveUntil(
                                               context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => Unlock(
-                                                        // handler: () {},
-                                                      )),
+                                              MaterialPageRoute(builder: (context) => Unlock()),
+                                                  (Route<dynamic> route) => false, // This predicate removes all previous routes
                                             );
+
 
                                           },
                                           child: Padding(

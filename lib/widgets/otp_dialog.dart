@@ -82,6 +82,14 @@ void otpDialog({
                                     ? AppColors.showDialogClr
                                     : AppColors.textColorWhite,
                                 borderRadius: BorderRadius.circular(15),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.textColorBlack.withOpacity(0.95), // Dark shadow color
+                                    offset: Offset(0, 0), // No offset, shadow will appear equally on all sides
+                                    blurRadius: 10, // Adjust blur for softer shadow
+                                    spreadRadius: 0.4, // Spread the shadow slightly
+                                  ),
+                                ],
                               ),
                               child: Column(
                                 children: [

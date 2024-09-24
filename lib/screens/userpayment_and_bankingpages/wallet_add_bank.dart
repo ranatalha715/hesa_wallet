@@ -992,6 +992,7 @@ init() async {
                                                                                       6.h,
                                                                                       width:
                                                                                       5.8.h,
+                                                                                      color: AppColors.hexaGreen,
                                                                                     ),
                                                                                   ),
                                                                                   SizedBox(

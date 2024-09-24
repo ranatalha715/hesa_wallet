@@ -209,8 +209,8 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                 Padding(
                                   padding: EdgeInsets.only(top: 7.sp),
                                   child: Text(
-
-                                    "*${auth.loginErrorResponse}",
+        auth.loginErrorResponse == "This username is unavailable" ? "*Email Address or username not recognized":"",
+                                    // "*${auth.loginErrorResponse}",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 10.sp,
@@ -299,31 +299,10 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                               SizedBox(
                                 height: 1.5.h,
                               ),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: GestureDetector(
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ResetEmail(),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    'Forgot password?'.tr(),
-                                    style: TextStyle(
-                                      fontSize: 11.7.sp,
-                                      fontWeight: FontWeight.w600,
-                                      color: themeNotifier.isDark
-                                          ? AppColors.textColorWhite
-                                          : AppColors.textColorBlack,
-                                    ),
-                                  ),
-                                ),
-                              ),
                               if (_passwordController.text.isEmpty &&
                                   isValidating)
                                 Padding(
-                                  padding: EdgeInsets.only(top: 7.sp),
+                                  padding: EdgeInsets.only(bottom: 7.sp),
                                   child: Text(
                                     "*Password should not be empty",
                                     style: TextStyle(
@@ -334,17 +313,41 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                 ),
                               if (auth.loginErrorResponse != null && _passwordController.text.isNotEmpty && isValidating && auth.loginErrorResponse.toString().contains('password'))
                                 Padding(
-                                  padding: EdgeInsets.only(top: 7.sp),
+                                  padding: EdgeInsets.only(bottom: 7.sp),
                                   child: Text(
-
-                                    "*${auth.loginErrorResponse}",
+                                    auth.loginErrorResponse == "You have entered an invalid password" ? "*Password incorrect":"",
+                                    // "*${auth.loginErrorResponse}",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 10.sp,
                                         color: AppColors.errorColor),
                                   ),
                                 ),
-                              SizedBox(height: 3.h,),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: GestureDetector(
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ResetEmail(),
+                                    ),
+                                  ),
+                                  child: Container(
+                                    child: Text(
+                                      'Forgot password?'.tr(),
+                                      style: TextStyle(
+                                        fontSize: 11.7.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: themeNotifier.isDark
+                                            ? AppColors.textColorWhite
+                                            : AppColors.textColorBlack,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              // SizedBox(height: 3.h,),
                               Expanded(child: SizedBox()),
                               AppButton(
                                 title: 'Log in'.tr(),
@@ -399,7 +402,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        SigninWithMobile(), // Replace YourNewPage with your desired widget/page
+                                        SigninWithMobile(),
                                   ),
                                 ),
                                 child: Container(

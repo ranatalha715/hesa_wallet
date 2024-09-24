@@ -291,6 +291,7 @@ class _ResetEmailState extends State<ResetEmail> {
                                                       "assets/images/email.png",
                                                       height: 5.9.h,
                                                       width: 5.6.h,
+                                                      color: AppColors.hexaGreen,
                                                     ),
                                                   ),
                                                   SizedBox(height: 2.h),

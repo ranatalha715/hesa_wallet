@@ -398,7 +398,7 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                                       ? "Have been set up".tr()
                                                       :
                                                   "Have not been set up".tr(),
-                                              setUpHandler: () => Navigator.push(
+                                              setUpHandler: () => Navigator.pushReplacement(
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>

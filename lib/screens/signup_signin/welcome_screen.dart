@@ -5,6 +5,7 @@ import 'package:hesa_wallet/constants/colors.dart';
 import 'package:hesa_wallet/screens/unlock/set_pin_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import '../unlock/unlock_with_password.dart';
 import '../user_profile_pages/wallet_tokens_nfts.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -198,14 +199,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       onTap: () => Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PinScreen(),
+                          builder: (context) => UnlockWithPassword(),
                         ),
                       ),
                       child: Container(
-                        width: 10.h,
+                        width: 40.w,
+                        // color: Colors.red,
                         child: Center(
                           child: Text(
                             'Forgot PIN',
+                            maxLines: 1,
                             style: TextStyle(
                                 fontSize: 13.sp,
                                 color: AppColors.hexaGreen,

@@ -626,6 +626,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                             onTap: () => setState(() {
                                               _isSelectedNationality =
                                                   !_isSelectedNationality;
+                                              lastNameFocusNode.unfocus();
                                             }),
                                             child: Container(
                                               height: 6.5.h,
