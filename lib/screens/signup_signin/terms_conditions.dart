@@ -20,8 +20,8 @@ import '../../widgets/main_header.dart';
 class TermsAndConditions extends StatefulWidget {
 
   static const routeName = '/TermsAndConditions';
-
-  const TermsAndConditions({Key? key}) : super(key: key);
+  bool? fromSignup;
+    TermsAndConditions({Key? key,  this.fromSignup=true}) : super(key: key);
 
   @override
   State<TermsAndConditions> createState() => _TermsAndConditionsState();
@@ -84,7 +84,8 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
         children: [
           WillPopScope(
               onWillPop: () async {
-                exit(0);
+                widget.fromSignup==true ? exit(0) : Navigator.pop(context);
+                return true;
               },
             child: Scaffold(
               backgroundColor: themeNotifier.isDark
@@ -94,7 +95,8 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                 children: [
                   MainHeader(title: 'Terms & Conditions'.tr(),
                   handler: (){
-                    exit(0);
+                    widget.fromSignup==true ? exit(0) : Navigator.pop(context);
+
                   },
                   ),
                   Expanded(
@@ -178,6 +180,7 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                               ),
                             ),
                           ),
+                          if(widget.fromSignup == true)
                           Positioned(
                             left: 0,
                             bottom: 30,
@@ -258,10 +261,10 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                       height: 3.h,
                                     ),
                                     AppButton(
-                                      title: 'Accept'.tr(),
-                                      isactive:
-                                      _isChecked,
-                                      handler: () async {
+                                        title: 'Accept'.tr(),
+                                        isactive:
+                                        _isChecked,
+                                        handler: () async {
                                           setState(() {
                                             _isLoading = true;
                                           });
@@ -270,196 +273,196 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                           setState(() {
                                             _isLoading = false;
                                           });
-                                         if(finalResult == AuthResult.success)
-                                           {
-                                             showDialog(
-                                               context: context,
-                                               builder: (BuildContext context) {
-                                                 void closeDialogAndNavigate() {
-                                                   Navigator.of(context)
-                                                       .pop();
-                                                   Navigator.of(context)
-                                                       .pushNamedAndRemoveUntil('/SigninWithEmail', (Route d) => false,
-                                                       arguments: {
-                                                         'comingFromWallet':false
-                                                       }
-                                                   );
-                                                 }
+                                          if(finalResult == AuthResult.success)
+                                          {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                void closeDialogAndNavigate() {
+                                                  Navigator.of(context)
+                                                      .pop();
+                                                  Navigator.of(context)
+                                                      .pushNamedAndRemoveUntil('/SigninWithEmail', (Route d) => false,
+                                                      arguments: {
+                                                        'comingFromWallet':false
+                                                      }
+                                                  );
+                                                }
 
-                                                 Future.delayed(Duration(seconds: 2),
-                                                     closeDialogAndNavigate);
-                                                 return Dialog(
-                                                   shape: RoundedRectangleBorder(
-                                                     borderRadius: BorderRadius.circular(8.0),
-                                                   ),
-                                                   backgroundColor: Colors.transparent,
-                                                   child: BackdropFilter(
-                                                     filter: ImageFilter.blur(
-                                                         sigmaX: 7, sigmaY: 7),
-                                                     child: Container(
-                                                       height: 70.h,
-                                                       decoration: BoxDecoration(
-                                                         color: themeNotifier.isDark
-                                                             ? AppColors.showDialogClr
-                                                             : AppColors.textColorWhite,
-                                                         borderRadius:
-                                                         BorderRadius.circular(15),
-                                                       ),
-                                                       padding: EdgeInsets.all(16.0),
-                                                       child: Column(
-                                                         mainAxisAlignment:
-                                                         MainAxisAlignment.start,
-                                                         mainAxisSize: MainAxisSize.min,
-                                                         children: [
-                                                           Container(
-                                                             height: 40.h,
-                                                             child: Padding(
-                                                               padding: EdgeInsets.only(
-                                                                   left: 2.sp,
-                                                                   right: 2.sp,
-                                                                   bottom: 15.sp,
-                                                                   top: 5.sp),
-                                                               child: Container(
-                                                                 decoration: BoxDecoration(
-                                                                     color: themeNotifier
-                                                                         .isDark
-                                                                         ? AppColors
-                                                                         .whiteColorWithOpacity
-                                                                         .withOpacity(0.05)
-                                                                         : AppColors
-                                                                         .backgroundColor
-                                                                         .withOpacity(0.1),
-                                                                     borderRadius:
-                                                                     BorderRadius.circular(
-                                                                         15)),
-                                                                 child:     Align(
-                                                                   alignment: Alignment.center,
-                                                                   child: ClipRRect(
-                                                                     borderRadius: BorderRadius.circular(15),
-                                                                     child: Image.asset(
-                                                                       "assets/images/terms_logo.png",
-                                                                       fit: BoxFit.cover,
-                                                                       width: double.infinity,
-                                                                       // height: 13.8.h,
-                                                                       // width: 13.8.h,
-                                                                     ),
-                                                                   ),
-                                                                 ),
-                                                               ),
-                                                             ),
-                                                           ),
-                                                           Text(
-                                                             "Welcome to KSA’s Web3 Gateway "
-                                                                 .tr(),
-                                                             textAlign: TextAlign.center,
-                                                             style: TextStyle(
-                                                                 height: 1.3,
-                                                                 color: themeNotifier.isDark
-                                                                     ? AppColors.textColorWhite
-                                                                     : AppColors
-                                                                     .textColorBlack,
-                                                                 fontWeight: FontWeight.w600,
-                                                                 fontSize: 17.5.sp,
-                                                                 fontFamily: 'Blogger Sans'),
-                                                           ),
-                                                           SizedBox(
-                                                             height: 15,
-                                                           ),
-                                                           Text(
-                                                             "This is the beginning for so much more to come!"
-                                                                 .tr(),
-                                                             textAlign: TextAlign.center,
-                                                             style: TextStyle(
-                                                                 height: 1.4,
-                                                                 color:
-                                                                 AppColors.textColorGrey,
-                                                                 fontWeight: FontWeight.w400,
-                                                                 fontSize: 11.7.sp,
-                                                                 fontFamily: 'Inter'),
-                                                           ),
-                                                           SizedBox(
-                                                             height: 2.h,
-                                                           ),
-                                                           Row(
-                                                             mainAxisAlignment:
-                                                             MainAxisAlignment.center,
-                                                             crossAxisAlignment:
-                                                             CrossAxisAlignment.end,
-                                                             children: [
-                                                               Image.asset(
-                                                                 "assets/images/twitter.png",
-                                                                 height: 2.h,
-                                                                 width: 2.h,
-                                                                 color: themeNotifier.isDark
-                                                                     ? AppColors.textColorWhite
-                                                                     : AppColors
-                                                                     .textColorBlack,
-                                                               ),
-                                                               SizedBox(
-                                                                 width: 3.w,
-                                                               ),
-                                                               Image.asset(
-                                                                 "assets/images/instagram.png",
-                                                                 height: 2.h,
-                                                                 width: 2.h,
-                                                                 color: themeNotifier.isDark
-                                                                     ? AppColors.textColorWhite
-                                                                     : AppColors
-                                                                     .textColorBlack,
-                                                               ),
-                                                               SizedBox(
-                                                                 width: 3.w,
-                                                               ),
-                                                               Image.asset(
-                                                                 "assets/images/discord.png",
-                                                                 height: 2.h,
-                                                                 width: 2.h,
-                                                                 color: themeNotifier.isDark
-                                                                     ? AppColors.textColorWhite
-                                                                     : AppColors
-                                                                     .textColorBlack,
-                                                               ),
-                                                               SizedBox(
-                                                                 width: 3.w,
-                                                               ),
-                                                               Image.asset(
-                                                                 "assets/images/telegram.png",
-                                                                 height: 2.h,
-                                                                 width: 2.h,
-                                                                 color: themeNotifier.isDark
-                                                                     ? AppColors.textColorWhite
-                                                                     : AppColors
-                                                                     .textColorBlack,
-                                                               ),
-                                                             ],
-                                                           ),
-                                                           SizedBox(height: 2.h,),
-                                                           Text(
-                                                             "Support by following & interacting with a growing Community."
-                                                                 .tr(),
-                                                             textAlign: TextAlign.center,
-                                                             style: TextStyle(
-                                                                 height: 1.4,
-                                                                 color:
-                                                                 AppColors.textColorGrey,
-                                                                 fontWeight: FontWeight.w400,
-                                                                 fontSize: 10.sp,
-                                                                 fontFamily: 'Inter'),
-                                                           ),
-                                                         ],
-                                                       ),
-                                                     ),
-                                                   ),
-                                                 );
-                                               },
-                                             );
-                                           // }
+                                                Future.delayed(Duration(seconds: 2),
+                                                    closeDialogAndNavigate);
+                                                return Dialog(
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(8.0),
+                                                  ),
+                                                  backgroundColor: Colors.transparent,
+                                                  child: BackdropFilter(
+                                                    filter: ImageFilter.blur(
+                                                        sigmaX: 7, sigmaY: 7),
+                                                    child: Container(
+                                                      height: 70.h,
+                                                      decoration: BoxDecoration(
+                                                        color: themeNotifier.isDark
+                                                            ? AppColors.showDialogClr
+                                                            : AppColors.textColorWhite,
+                                                        borderRadius:
+                                                        BorderRadius.circular(15),
+                                                      ),
+                                                      padding: EdgeInsets.all(16.0),
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        children: [
+                                                          Container(
+                                                            height: 40.h,
+                                                            child: Padding(
+                                                              padding: EdgeInsets.only(
+                                                                  left: 2.sp,
+                                                                  right: 2.sp,
+                                                                  bottom: 15.sp,
+                                                                  top: 5.sp),
+                                                              child: Container(
+                                                                decoration: BoxDecoration(
+                                                                    color: themeNotifier
+                                                                        .isDark
+                                                                        ? AppColors
+                                                                        .whiteColorWithOpacity
+                                                                        .withOpacity(0.05)
+                                                                        : AppColors
+                                                                        .backgroundColor
+                                                                        .withOpacity(0.1),
+                                                                    borderRadius:
+                                                                    BorderRadius.circular(
+                                                                        15)),
+                                                                child:     Align(
+                                                                  alignment: Alignment.center,
+                                                                  child: ClipRRect(
+                                                                    borderRadius: BorderRadius.circular(15),
+                                                                    child: Image.asset(
+                                                                      "assets/images/terms_logo.png",
+                                                                      fit: BoxFit.cover,
+                                                                      width: double.infinity,
+                                                                      // height: 13.8.h,
+                                                                      // width: 13.8.h,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            "Welcome to KSA’s Web3 Gateway "
+                                                                .tr(),
+                                                            textAlign: TextAlign.center,
+                                                            style: TextStyle(
+                                                                height: 1.3,
+                                                                color: themeNotifier.isDark
+                                                                    ? AppColors.textColorWhite
+                                                                    : AppColors
+                                                                    .textColorBlack,
+                                                                fontWeight: FontWeight.w600,
+                                                                fontSize: 17.5.sp,
+                                                                fontFamily: 'Blogger Sans'),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 15,
+                                                          ),
+                                                          Text(
+                                                            "This is the beginning for so much more to come!"
+                                                                .tr(),
+                                                            textAlign: TextAlign.center,
+                                                            style: TextStyle(
+                                                                height: 1.4,
+                                                                color:
+                                                                AppColors.textColorGrey,
+                                                                fontWeight: FontWeight.w400,
+                                                                fontSize: 11.7.sp,
+                                                                fontFamily: 'Inter'),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 2.h,
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                            MainAxisAlignment.center,
+                                                            crossAxisAlignment:
+                                                            CrossAxisAlignment.end,
+                                                            children: [
+                                                              Image.asset(
+                                                                "assets/images/twitter.png",
+                                                                height: 2.h,
+                                                                width: 2.h,
+                                                                color: themeNotifier.isDark
+                                                                    ? AppColors.textColorWhite
+                                                                    : AppColors
+                                                                    .textColorBlack,
+                                                              ),
+                                                              SizedBox(
+                                                                width: 3.w,
+                                                              ),
+                                                              Image.asset(
+                                                                "assets/images/instagram.png",
+                                                                height: 2.h,
+                                                                width: 2.h,
+                                                                color: themeNotifier.isDark
+                                                                    ? AppColors.textColorWhite
+                                                                    : AppColors
+                                                                    .textColorBlack,
+                                                              ),
+                                                              SizedBox(
+                                                                width: 3.w,
+                                                              ),
+                                                              Image.asset(
+                                                                "assets/images/discord.png",
+                                                                height: 2.h,
+                                                                width: 2.h,
+                                                                color: themeNotifier.isDark
+                                                                    ? AppColors.textColorWhite
+                                                                    : AppColors
+                                                                    .textColorBlack,
+                                                              ),
+                                                              SizedBox(
+                                                                width: 3.w,
+                                                              ),
+                                                              Image.asset(
+                                                                "assets/images/telegram.png",
+                                                                height: 2.h,
+                                                                width: 2.h,
+                                                                color: themeNotifier.isDark
+                                                                    ? AppColors.textColorWhite
+                                                                    : AppColors
+                                                                    .textColorBlack,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(height: 2.h,),
+                                                          Text(
+                                                            "Support by following & interacting with a growing Community."
+                                                                .tr(),
+                                                            textAlign: TextAlign.center,
+                                                            style: TextStyle(
+                                                                height: 1.4,
+                                                                color:
+                                                                AppColors.textColorGrey,
+                                                                fontWeight: FontWeight.w400,
+                                                                fontSize: 10.sp,
+                                                                fontFamily: 'Inter'),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                            // }
 
-                                        }
-                                         },
-                                      isGradient: true,
-                                      color: Colors.transparent,
-                                      textColor: AppColors.textColorBlack,
+                                          }
+                                        },
+                                        isGradient: true,
+                                        color: Colors.transparent,
+                                        textColor: AppColors.textColorBlack,
                                         isLoading:_isLoading
                                     ),
                                     SizedBox(

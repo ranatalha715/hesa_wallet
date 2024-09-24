@@ -357,7 +357,7 @@ class _WalletBankingAndPaymentEmptyState
                                           ),
                                           child: Icon(
                                             Icons.add,
-                                            size: 10,
+                                            size: 8.sp,
                                             color: themeNotifier.isDark
                                                 ? AppColors.textColorGreyShade2
                                                 : AppColors.textColorGreyShade2,
@@ -369,7 +369,7 @@ class _WalletBankingAndPaymentEmptyState
                                         Text(
                                           'Add new'.tr(),
                                           style: TextStyle(
-                                              fontSize: 12.sp,
+                                              fontSize: 11.sp,
                                               fontFamily: 'Inter',
                                               fontWeight: FontWeight.w400,
                                               color: AppColors
@@ -618,7 +618,7 @@ class _WalletBankingAndPaymentEmptyState
                                       ),
                                       child: Icon(
                                         Icons.add,
-                                        size: 10,
+                                        size: 8.sp,
                                         color: themeNotifier.isDark
                                             ? AppColors.textColorGreyShade2
                                             : AppColors.textColorGreyShade2,
@@ -636,7 +636,7 @@ class _WalletBankingAndPaymentEmptyState
                                     child: Text(
                                       'Add new'.tr(),
                                       style: TextStyle(
-                                          fontSize: 12.sp,
+                                          fontSize: 11.sp,
                                           fontFamily: 'Inter',
                                           fontWeight: FontWeight.w400,
                                           color: AppColors.textColorGreyShade2),

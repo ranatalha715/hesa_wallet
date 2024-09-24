@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hesa_wallet/constants/colors.dart';
 import 'package:hesa_wallet/providers/transaction_provider.dart';
@@ -7,6 +8,7 @@ import 'package:hesa_wallet/widgets/app_header.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
@@ -159,6 +161,12 @@ class _TransactionSummaryState extends State<TransactionSummary> {
 
 
 
+  void _launchURL(String url) async {
+    Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      throw 'Could not launch $url';
+    }
+  }
 
 
   String formatCurrency(String? numberString) {
@@ -270,19 +278,22 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                           SizedBox(
                                             height: 3.sp,
                                           ),
-                                          Container(
-                                            width: 47.w,
-                                            // color: Colors.yellow,
-                                            child: Text(
-                                              args!['site'],
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                  color: themeNotifier.isDark
-                                                      ? AppColors.textColorToska
-                                                      : AppColors
-                                                          .textColorToska,
-                                                  fontSize: 10.5.sp,
-                                                  fontWeight: FontWeight.w600),
+                                          GestureDetector(
+                                            onTap:()=>_launchURL(args!['site']),
+                                            child: Container(
+                                              width: 47.w,
+                                              // color: Colors.yellow,
+                                              child: Text(
+                                                args!['site'],
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    color: themeNotifier.isDark
+                                                        ? AppColors.textColorToska
+                                                        : AppColors
+                                                            .textColorToska,
+                                                    fontSize: 10.5.sp,
+                                                    fontWeight: FontWeight.w600),
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -339,7 +350,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                                 BorderRadius.circular(20),
                                             border: Border.all(
                                                 color: AppColors.textColorWhite,
-                                                width: 1.sp),
+                                                width: 1.3.sp),
                                           ),
                                           child: Center(
                                             child: Icon(
@@ -532,10 +543,9 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                       height: 1.h,
                                     ),
                                     transactionDetailsWidget(
-                                      title: 'Timestamp'.tr(),
+                                      title: 'Timestamp:'.tr(),
                                       details:
-                                          DateFormat('MMMM dd, yyyy HH:mm:ss')
-                                              .format(parsedDate),
+                                      DateFormat('MMMM dd, yyyy').format(parsedDate),
                                       isDark:
                                           themeNotifier.isDark ? true : false,
                                     ),
@@ -669,7 +679,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                                               'null'
                                                           ? formatCurrency(feeItem[label]
                                                           .toString())
-                                                          : '- ' +
+                                                          : '' +
                                                               formatCurrency(feeItem[label]
                                                                   .toString());
                                                   bool lastIndex = index ==

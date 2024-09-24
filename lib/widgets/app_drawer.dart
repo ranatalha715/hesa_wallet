@@ -615,17 +615,21 @@ class _AppDrawerState extends State<AppDrawer> {
                             handler: () {
                               Navigator.pop(context);
                             },
-                            isGradient: false,
-                            textColor: isDark
-                                ? AppColors.textColorWhite
-                                : AppColors.textColorBlack.withOpacity(0.8),
-                            color: AppColors.appSecondButton.withOpacity(0.10)),
+                          isGradient: false,
+                          textColor: isDark
+                              ? AppColors.textColorWhite
+                              : AppColors.textColorBlack.withOpacity(0.8),
+                          color: AppColors.appSecondButton.withOpacity(0.10),
+                          isGradientWithBorder: true,
+                          secondBtnBorderClr: true,
+                        ),
                       ),
 
                       SizedBox(height: 2.h),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 22),
-                        child: DialogButton(
+                        child:
+                        AppButton(
                           title: 'Log out'.tr(),
                           handler: () async {
                             // if (isLoading) return;
@@ -690,10 +694,12 @@ class _AppDrawerState extends State<AppDrawer> {
                             }
                           },
                           isLoading: isLoading,
-                          // isGradient: true,
-                          // color: AppColors.errorColor,
-                          color: AppColors.appSecondButton.withOpacity(0.10),
-                          textColor: AppColors.errorColor,
+                          isGradient: false,
+                          color: AppColors.deleteAccountBtnColor
+                              .withOpacity(0.10),
+                          textColor: AppColors.textColorBlack,
+                          buttonWithBorderColor: AppColors.errorColor,
+                          isGradientWithBorder: true,
                         ),
                       ),
 

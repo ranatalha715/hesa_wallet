@@ -1120,10 +1120,10 @@ class _TransactionRequestAcceptRejectState
                                                                             TapGestureRecognizer()
                                                                               ..onTap =
                                                                                   () {
-                                                                                Navigator.push(
-                                                                                  context,
-                                                                                  MaterialPageRoute(builder: (context) => TermsAndConditions()),
-                                                                                );
+                                                                                // Navigator.push(
+                                                                                //   context,
+                                                                                //   MaterialPageRoute(builder: (context) => TermsAndConditions()),
+                                                                                // );
                                                                               },
                                                                             text: 'Terms & Conditions'.tr() +
                                                                                 " ",
@@ -1284,10 +1284,10 @@ class _TransactionRequestAcceptRejectState
                                           TapGestureRecognizer()
                                             ..onTap =
                                                 () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(builder: (context) => TermsAndConditions()),
-                                              );
+                                              // Navigator.push(
+                                              //   context,
+                                              //   MaterialPageRoute(builder: (context) => TermsAndConditions()),
+                                              // );
                                             },
                                           text: 'Terms & Conditions'.tr() +
                                               " ",

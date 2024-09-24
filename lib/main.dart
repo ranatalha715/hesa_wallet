@@ -8,6 +8,7 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hesa_wallet/providers/payment_fees.dart';
 import 'package:hesa_wallet/providers/token_provider.dart';
+import 'package:hesa_wallet/screens/onboarding_notifications/verify_email.dart';
 import 'package:hesa_wallet/screens/unlock/set_confirm_pin_screen.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/nfts_details.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
@@ -633,7 +634,7 @@ handleDisconnection();
             TransactionRequest.routeName: (context) =>
                 const TransactionRequest(),
             TermsAndConditions.routeName: (context) =>
-                const TermsAndConditions(),
+                 TermsAndConditions(),
             NftsCollectionDetails.routeName: (context) =>
                 const NftsCollectionDetails(),
             SetConfirmPinScreen.routeName: (context) =>

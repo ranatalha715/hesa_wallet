@@ -258,7 +258,7 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                               widget.siteURL,
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 10.sp,
+                                  fontSize: 9.sp,
                                   color: AppColors.textColorGreyShade2),
                               overflow: TextOverflow.ellipsis,
                             ),

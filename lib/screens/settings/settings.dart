@@ -287,7 +287,7 @@ class _SettingsState extends State<Settings> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              TermsAndConditions()),
+                                              TermsAndConditions(fromSignup: false,)),
                                     )),
                             SettingsWidget(
                                 title: 'Logout'.tr(),

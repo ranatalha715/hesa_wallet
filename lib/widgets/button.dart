@@ -66,7 +66,7 @@ class AppButton extends StatelessWidget {
             border:  Border.all(
                 color: secondBtnBorderClr! && isGradientWithBorder ?  AppColors
                     .focusTextFieldColor: isGradientWithBorder  ? buttonWithBorderColor: Colors.transparent
-            ),
+            ), 
             borderRadius: BorderRadius.circular(10),
           ),
           child: Center(
