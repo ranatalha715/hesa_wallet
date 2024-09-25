@@ -795,7 +795,7 @@ handleDisconnection();
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // Show a loading indicator while waiting for the deep link to be processed
-        return accessToken.isEmpty ? const Wallet(): PinScreen();
+        return accessToken.isEmpty ? const Wallet(): WalletTokensNfts();
         // WalletTokensNfts();
             // Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {

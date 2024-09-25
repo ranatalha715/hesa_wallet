@@ -182,6 +182,14 @@ class _WalletBankingAndPaymentEmptyState
                     decoration: BoxDecoration(
                       color: AppColors.showDialogClr,
                       borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.textColorBlack.withOpacity(0.95),
+                          offset: Offset(0, 0),
+                          blurRadius: 10,
+                          spreadRadius: 0.4,
+                        ),
+                      ],
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -1022,7 +1030,7 @@ class _WalletBankingAndPaymentEmptyState
                                 horizontal: 5.2.sp, vertical: 1.5.sp),
                             child: Image.asset(
                               cardBrand == 'MASTER'
-                                  ? "assets/images/master_card.png"
+                                  ? "assets/images/master2.png"
                                   : "assets/images/mada_pay.png",
                               height: 16.sp,
                             ),
@@ -1261,6 +1269,14 @@ class _WalletBankingAndPaymentEmptyState
                           ? AppColors.showDialogClr
                           : AppColors.textColorWhite,
                       borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.textColorBlack.withOpacity(0.95),
+                          offset: Offset(0, 0),
+                          blurRadius: 10,
+                          spreadRadius: 0.4,
+                        ),
+                      ],
                     ),
                     child: Column(
                       children: [
@@ -1408,6 +1424,14 @@ class _WalletBankingAndPaymentEmptyState
                           ? AppColors.showDialogClr
                           : AppColors.textColorWhite,
                       borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.textColorBlack.withOpacity(0.95),
+                          offset: Offset(0, 0),
+                          blurRadius: 10,
+                          spreadRadius: 0.4,
+                        ),
+                      ],
                     ),
                     child: Column(
                       children: [

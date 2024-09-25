@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hesa_wallet/constants/colors.dart';
@@ -14,6 +15,7 @@ import 'dart:io' as OS;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../constants/app_deep_linking.dart';
 import '../../providers/theme_provider.dart';
 import '../../widgets/main_header.dart';
@@ -75,6 +77,12 @@ class _ConnectedSitesState extends State<ConnectedSites> {
     });
   }
 
+  void _launchURL(String url) async {
+    Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      throw 'Could not launch $url';
+    }
+  }
 
   Future<void> _checkFirstVisit() async {
     print('checking popup');
@@ -226,7 +234,7 @@ class _ConnectedSitesState extends State<ConnectedSites> {
                                             filter: ImageFilter.blur(
                                                 sigmaX: 7, sigmaY: 7),
                                             child: Container(
-                                              height: 48.h,
+                                              height: 52.h,
                                               width: dialogWidth,
                                               decoration: BoxDecoration(
                                                 color: themeNotifier.isDark
@@ -237,6 +245,14 @@ class _ConnectedSitesState extends State<ConnectedSites> {
                                                 //     color: AppColors.textColorGrey),
                                                 borderRadius:
                                                     BorderRadius.circular(15),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: AppColors.textColorBlack.withOpacity(0.95),
+                                                    offset: Offset(0, 0),
+                                                    blurRadius: 10,
+                                                    spreadRadius: 0.4,
+                                                  ),
+                                                ],
                                               ),
                                               child: Padding(
                                                 padding: EdgeInsets.symmetric(
@@ -268,7 +284,7 @@ class _ConnectedSitesState extends State<ConnectedSites> {
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w600,
-                                                          fontSize: 17.5.sp,
+                                                          fontSize: 16.sp,
                                                           color: themeNotifier
                                                                   .isDark
                                                               ? AppColors
@@ -279,19 +295,21 @@ class _ConnectedSitesState extends State<ConnectedSites> {
                                                     SizedBox(
                                                       height: 2.h,
                                                     ),
-                                                    Text(
-                                                      siteUrl,
-                                                      // 'https://opensea.io',
-                                                      style: TextStyle(
-                                                          color: AppColors
-                                                              .textColorWhite
-                                                              .withOpacity(0.4),
-                                                          fontSize: 10.2.sp,
-                                                          fontWeight:
-                                                              FontWeight.w400),
+                                                    GestureDetector(
+                                                      onTap:()=>_launchURL(siteUrl),
+                                                      child: Text(
+                                                        siteUrl,
+                                                        // 'https://opensea.io',
+                                                        style: TextStyle(
+                                                            color: AppColors.textColorToska,
+                                                            fontSize: 10.2.sp,
+                                                            fontWeight:
+                                                                FontWeight.w400),
+                                                      ),
                                                     ),
-                                                    Spacer(),
-                                                    DialogButton(
+                                                    SizedBox(height:3.h),
+                                                    // Spacer(),
+                                                    AppButton(
                                                       title: 'Disconnect'.tr(),
                                                       textColor:
                                                           AppColors.errorColor,
@@ -378,11 +396,11 @@ class _ConnectedSitesState extends State<ConnectedSites> {
 
 
                                                       },
-                                                      isLoading: isLoading,
-                                                      // isGradient: true,
-                                                      color: AppColors
-                                                          .appSecondButton
+                                                      isGradient: false,
+                                                      color: AppColors.deleteAccountBtnColor
                                                           .withOpacity(0.10),
+                                                      buttonWithBorderColor: AppColors.errorColor,
+                                                      isGradientWithBorder: true,
                                                     ),
                                                     SizedBox(
                                                       height: 2.h,
@@ -394,16 +412,12 @@ class _ConnectedSitesState extends State<ConnectedSites> {
                                                             .pop(false);
                                                       },
                                                       isGradient: false,
-                                                      color: AppColors
-                                                          .appSecondButton
-                                                          .withOpacity(0.10),
-                                                      textColor: themeNotifier
-                                                              .isDark
-                                                          ? AppColors
-                                                              .textColorWhite
-                                                          : AppColors
-                                                              .textColorBlack
-                                                              .withOpacity(0.8),
+                                                      textColor:
+                                                          AppColors.textColorWhite,
+                                                      color: AppColors.appSecondButton.withOpacity(0.10),
+                                                      isGradientWithBorder: true,
+                                                      secondBtnBorderClr: false,
+                                                      buttonWithBorderColor: AppColors.greenBorderClr,
                                                     ),
                                                     Spacer(),
                                                   ],
@@ -1087,6 +1101,14 @@ class _ConnectedSitesState extends State<ConnectedSites> {
                       decoration: BoxDecoration(
                         color: AppColors.connectedSitesPopupsClr,
                         borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.textColorBlack.withOpacity(0.45),
+                            offset: Offset(0, 0),
+                            blurRadius: 10,
+                            spreadRadius: 0.4,
+                          ),
+                        ],
                         // border:
                         //     Border.all(color: AppColors.textColorGrey, width: 1),
                       ),

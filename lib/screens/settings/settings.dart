@@ -72,13 +72,21 @@ class _SettingsState extends State<Settings> {
             child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
                 child: Container(
-                  height: 33.h,
+                  height: 35.h,
                   width: dialogWidth,
                   decoration: BoxDecoration(
                     color: isDark
                         ? AppColors.showDialogClr
                         : AppColors.textColorWhite,
                     borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.textColorBlack.withOpacity(0.95),
+                        offset: Offset(0, 0),
+                        blurRadius: 10,
+                        spreadRadius: 0.4,
+                      ),
+                    ],
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -101,9 +109,9 @@ class _SettingsState extends State<Settings> {
                         ),
                       ),
                       SizedBox(
-                        height: 2.h,
+                        height: 4.h,
                       ),
-                      Expanded(child: SizedBox()),
+                      // Expanded(child: SizedBox()),
                       Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 22),
                           child: AppButton(
@@ -112,17 +120,20 @@ class _SettingsState extends State<Settings> {
                               Navigator.pop(context);
                             },
                             isGradient: false,
-                            color: AppColors.appSecondButton.withOpacity(0.10),
                             textColor: isDark
                                 ? AppColors.textColorWhite
-                                : AppColors.textColorBlack.withOpacity(0.8),)
+                                : AppColors.textColorBlack.withOpacity(0.8),
+                            color: AppColors.appSecondButton.withOpacity(0.10),
+                            isGradientWithBorder: true,
+                            secondBtnBorderClr: true,
+                          )
                         // color: Colors.transparent),
                       ),
 
                       SizedBox(height: 2.h),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 22),
-                        child: DialogButton(
+                        child: AppButton(
                           title: 'Log out'.tr(),
                           handler: () async {
                             try {
@@ -181,9 +192,13 @@ class _SettingsState extends State<Settings> {
                               });
                             }
                           },
-                          isLoading: isLoading,
-                          color: AppColors.appSecondButton.withOpacity(0.10),
-                          textColor: AppColors.errorColor,
+                          // isLoading: isLoading,
+                          isGradient: false,
+                          color: AppColors.deleteAccountBtnColor
+                              .withOpacity(0.10),
+                          textColor: AppColors.textColorBlack,
+                          buttonWithBorderColor: AppColors.errorColor,
+                          isGradientWithBorder: true,
                         ),
                       ),
                       Expanded(child: SizedBox()),

@@ -60,6 +60,7 @@ class AppColors {
   static const connectDiscSites = Color(0xff04A20A);
   static const paymentTypesBorder = Color(0x3A3C3C);
   static const transactionFeeBorder = Color(0xff3A3C3C);
+  static const greenBorderClr = Color(0xff66D71B);
   static const accountAtRisk = Color(0xffFECACA);
   static const verifyAccount = Color(0xffDC2626);
   static const languageDivider = Color(0xff343535);

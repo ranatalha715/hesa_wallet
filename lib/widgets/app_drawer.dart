@@ -574,7 +574,7 @@ class _AppDrawerState extends State<AppDrawer> {
             child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
                 child: Container(
-                  height: 33.h,
+                  height: 35.h,
                   width: dialogWidth,
                   decoration: BoxDecoration(
                     // border: Border.all(
@@ -583,6 +583,14 @@ class _AppDrawerState extends State<AppDrawer> {
                         ? AppColors.showDialogClr
                         : AppColors.textColorWhite,
                     borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.textColorBlack.withOpacity(0.95),
+                        offset: Offset(0, 0),
+                        blurRadius: 10,
+                        spreadRadius: 0.4,
+                      ),
+                    ],
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -605,9 +613,9 @@ class _AppDrawerState extends State<AppDrawer> {
                         ),
                       ),
                       SizedBox(
-                        height: 2.h,
+                        height: 4.h,
                       ),
-                      Expanded(child: SizedBox()),
+                      // Expanded(child: SizedBox()),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 22),
                         child: AppButton(

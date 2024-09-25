@@ -461,6 +461,15 @@ class _TransactionRequestState extends State<TransactionRequest> {
                         decoration: BoxDecoration(
                           color: AppColors.showDialogClr,
                           borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.textColorBlack.withOpacity(0.95),
+                              offset: Offset(0, 0),
+                              blurRadius: 10,
+                              spreadRadius: 0.4,
+                            ),
+                          ],
+
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -3221,76 +3230,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
     );
   }
 
-  Widget otpContainer({
-    required FocusNode focusNode,
-    required FocusNode previousFocusNode,
-    required Function handler,
-    required TextEditingController controller,
-  }) {
-    return Container(
-      child: TextField(
-        controller: controller,
-        focusNode: focusNode,
-        onChanged: (value) {
-          if (value.isEmpty) {
-            focusNode.requestFocus();
-            if (controller.text.isNotEmpty) {
-              controller.clear();
-              handler();
-            } else {
-              // Move focus to the previous SMSVerificationTextField
-              // and clear its value recursively
-              // FocusScope.of(context).previousFocus();
-              previousFocusNode.requestFocus();
-            }
-          } else {
-            handler();
-          }
-        },
-        keyboardType: TextInputType.number,
-        cursorColor: AppColors.textColorGrey,
-        // obscureText: true,
-        maxLength: 1,
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(1),
-        ],
-        // Hide the entered OTP digits
-        textAlign: TextAlign.center,
-        textAlignVertical: TextAlignVertical.bottom,
-        style: TextStyle(
-          color: AppColors.textColorGrey,
-          fontSize: 17.5.sp,
-          // fontWeight: FontWeight.bold,
-          // letterSpacing: 16,
-        ),
-        decoration: InputDecoration(
-          counterText: '', // Hide the default character counter
-          contentPadding: EdgeInsets.only(top: 16, bottom: 16),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(
-              color: AppColors.textColorGrey,
-              width: 1,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(
-              color: AppColors.textColorGrey,
-              width: 1,
-            ),
-          ),
-        ),
-      ),
-      height: 8.h,
-      width: 10.w,
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(10),
-      ),
-    );
-  }
-
   void confirmationRequestDialogue({bool isDark = true}) {
     // Navigator.pop(context);
     showDialog(
@@ -3316,6 +3255,14 @@ class _TransactionRequestState extends State<TransactionRequest> {
                       ? AppColors.showDialogClr
                       : AppColors.textColorWhite,
                   borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.textColorBlack.withOpacity(0.95),
+                      offset: Offset(0, 0),
+                      blurRadius: 10,
+                      spreadRadius: 0.4,
+                    ),
+                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -3447,6 +3394,14 @@ class _TransactionRequestState extends State<TransactionRequest> {
                       ? AppColors.showDialogClr
                       : AppColors.textColorWhite,
                   borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.textColorBlack.withOpacity(0.95),
+                      offset: Offset(0, 0),
+                      blurRadius: 10,
+                      spreadRadius: 0.4,
+                    ),
+                  ],
                 ),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -3645,6 +3600,14 @@ class _TransactionRequestState extends State<TransactionRequest> {
                       ? AppColors.showDialogClr
                       : AppColors.textColorWhite,
                   borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.textColorBlack.withOpacity(0.95),
+                      offset: Offset(0, 0),
+                      blurRadius: 10,
+                      spreadRadius: 0.4,
+                    ),
+                  ],
                 ),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -3843,6 +3806,14 @@ class _TransactionRequestState extends State<TransactionRequest> {
                       //     width: 0.1.h, color: AppColors.textColorGrey),
                       // color: AppColors.backgroundColor,
                       borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.textColorBlack.withOpacity(0.95),
+                          offset: Offset(0, 0),
+                          blurRadius: 10,
+                          spreadRadius: 0.4,
+                        ),
+                      ],
                     ),
                     child: Column(
                       children: [

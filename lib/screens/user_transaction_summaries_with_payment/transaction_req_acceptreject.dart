@@ -635,18 +635,17 @@ class _TransactionRequestAcceptRejectState
                                                 ),
                                                 transactionDetailsWidget(
                                                   title: operation ==
-                                                          'makeCollectionCounterOffer' ||
-                                                      operation ==
-                                                          'AcceptCollectionOffer'
-                                                      ||
-                                                      operation ==
-                                                          'rejectCollectionCounterOffer'  ||
-                                                      operation ==
-                                                          'CancelCollectionAuctionListing'  ||
-                                                      operation ==
-                                                          'CancelCollectionListing' ||
-                                                      operation ==
-                                                          'CancelCollectionOfferMade'
+                                                              'makeCollectionCounterOffer' ||
+                                                          operation ==
+                                                              'AcceptCollectionOffer' ||
+                                                          operation ==
+                                                              'rejectCollectionCounterOffer' ||
+                                                          operation ==
+                                                              'CancelCollectionAuctionListing' ||
+                                                          operation ==
+                                                              'CancelCollectionListing' ||
+                                                          operation ==
+                                                              'CancelCollectionOfferMade'
                                                       ? 'Collection ID:'.tr()
                                                       : 'Token ID:'.tr(),
                                                   details:
@@ -660,68 +659,80 @@ class _TransactionRequestAcceptRejectState
                                                       AppColors.textColorToska,
                                                 ),
                                                 if (paramsMap!['offererId'] !=
-                                                        null || paramsMap!['Creator ID'] !=
-                                                    null)
-                                                transactionDetailsWidget(
-                                                  title: operation ==
-                                                              'makeNFTCounterOffer' || operation ==
-                                                      'rejectNFTCounterOffer'||
-                                                          operation ==
-                                                              'makeCollectionCounterOffer' || operation ==
-                                                      'AcceptNFTOfferReceived'  || operation ==
-                                                      'AcceptCollectionOffer' || operation ==
-                                                      'rejectNFTOfferReceived' || operation ==
-                                                      'rejectCollectionOfferReceived' ||
-                                                      operation ==
-                                                          'rejectCollectionCounterOffer' ||
-                                                      operation ==
-                                                          'CancelNFTOfferMade' ||
-                                                      operation ==
-                                                          'CancelCollectionOfferMade'
-                                                      ? 'Offerer ID:'
-                                                      : 'Creator ID:'.tr(),
-                                                  details: replaceMiddleWithDots(operation ==
-                                                              'makeNFTCounterOffer' ||
-                                                          operation ==
-                                                              'makeCollectionCounterOffer' || operation ==
-                                                      'rejectNFTCounterOffer'
-                                                      || operation ==
-                                                      'AcceptNFTOfferReceived' || operation ==
-                                                      'AcceptCollectionOffer' || operation ==
-                                                      'rejectNFTOfferReceived'  || operation ==
-                                                      'rejectCollectionOfferReceived' ||
-                                                      operation ==
-                                                          'rejectCollectionCounterOffer' ||
-                                                      operation ==
-                                                          'CancelNFTOfferMade'   ||
-                                                      operation ==
-                                                          'CancelCollectionOfferMade'
-                                                      ? paramsMap!['offererId']
-                                                          .toString()
-                                                      : paramsMap![
-                                                              'creatorWalletAddress']
-                                                          .toString()),
-                                                  isDark: themeNotifier.isDark
-                                                      ? true
-                                                      : false,
-                                                ),
+                                                        null ||
+                                                    paramsMap!['Creator ID'] !=
+                                                        null)
+                                                  transactionDetailsWidget(
+                                                    title: operation ==
+                                                                'makeNFTCounterOffer' ||
+                                                            operation ==
+                                                                'rejectNFTCounterOffer' ||
+                                                            operation ==
+                                                                'makeCollectionCounterOffer' ||
+                                                            operation ==
+                                                                'AcceptNFTOfferReceived' ||
+                                                            operation ==
+                                                                'AcceptCollectionOffer' ||
+                                                            operation ==
+                                                                'rejectNFTOfferReceived' ||
+                                                            operation ==
+                                                                'rejectCollectionOfferReceived' ||
+                                                            operation ==
+                                                                'rejectCollectionCounterOffer' ||
+                                                            operation ==
+                                                                'CancelNFTOfferMade' ||
+                                                            operation ==
+                                                                'CancelCollectionOfferMade'
+                                                        ? 'Offerer ID:'
+                                                        : 'Creator ID:'.tr(),
+                                                    details: replaceMiddleWithDots(operation ==
+                                                                'makeNFTCounterOffer' ||
+                                                            operation ==
+                                                                'makeCollectionCounterOffer' ||
+                                                            operation ==
+                                                                'rejectNFTCounterOffer' ||
+                                                            operation ==
+                                                                'AcceptNFTOfferReceived' ||
+                                                            operation ==
+                                                                'AcceptCollectionOffer' ||
+                                                            operation ==
+                                                                'rejectNFTOfferReceived' ||
+                                                            operation ==
+                                                                'rejectCollectionOfferReceived' ||
+                                                            operation ==
+                                                                'rejectCollectionCounterOffer' ||
+                                                            operation ==
+                                                                'CancelNFTOfferMade' ||
+                                                            operation ==
+                                                                'CancelCollectionOfferMade'
+                                                        ? paramsMap![
+                                                                'offererId']
+                                                            .toString()
+                                                        : paramsMap![
+                                                                'creatorWalletAddress']
+                                                            .toString()),
+                                                    isDark: themeNotifier.isDark
+                                                        ? true
+                                                        : false,
+                                                  ),
                                                 if (paramsMap!['offerAmount'] !=
                                                     null)
                                                   transactionDetailsWidget(
-                                                    title:
-                                                    operation !=
-                                                        "AcceptNFTOfferReceived" &&
-                                                        operation !=
-                                                            "AcceptCollectionOffer" &&
-                                                        operation !=
-                                                            "rejectNFTOfferReceived" &&
-                                                        operation !=
-                                                            "rejectCollectionOfferReceived"
-                                                        ? 'Counter Offer Value:'.tr() : 'Offer Amount'.tr(),
-                                                    details:
-                                                    paramsMap!['offerAmount']
-                                                                .toString() +
-                                                            " SAR",
+                                                    title: operation !=
+                                                                "AcceptNFTOfferReceived" &&
+                                                            operation !=
+                                                                "AcceptCollectionOffer" &&
+                                                            operation !=
+                                                                "rejectNFTOfferReceived" &&
+                                                            operation !=
+                                                                "rejectCollectionOfferReceived"
+                                                        ? 'Counter Offer Value:'
+                                                            .tr()
+                                                        : 'Offer Amount'.tr(),
+                                                    details: paramsMap![
+                                                                'offerAmount']
+                                                            .toString() +
+                                                        " SAR",
                                                     isDark: themeNotifier.isDark
                                                         ? true
                                                         : false,
@@ -729,8 +740,7 @@ class _TransactionRequestAcceptRejectState
                                                 SizedBox(
                                                   height: 2.h,
                                                 ),
-                                                if (operation !=
-                                                        "makeNFTCounterOffer" &&
+                                                if (operation != "makeNFTCounterOffer" &&
                                                     operation !=
                                                         "makeCollectionCounterOffer" &&
                                                     operation !=
@@ -738,11 +748,11 @@ class _TransactionRequestAcceptRejectState
                                                     operation !=
                                                         "rejectCollectionOfferReceived" &&
                                                     operation !=
-                                                        "rejectNFTCounterOffer"  &&
+                                                        "rejectNFTCounterOffer" &&
                                                     operation !=
-                                                        "rejectCollectionCounterOffer"  &&
+                                                        "rejectCollectionCounterOffer" &&
                                                     operation !=
-                                                        "CancelAuctionListing"  &&
+                                                        "CancelAuctionListing" &&
                                                     operation !=
                                                         "CancelCollectionAuctionListing" &&
                                                     operation !=
@@ -750,18 +760,16 @@ class _TransactionRequestAcceptRejectState
                                                     operation !=
                                                         "CancelCollectionListing" &&
                                                     operation !=
-                                                        "CancelNFTOfferMade"  &&
+                                                        "CancelNFTOfferMade" &&
                                                     operation !=
-                                                        "CancelCollectionOfferMade"
-                                                )
+                                                        "CancelCollectionOfferMade")
                                                   Container(
                                                     decoration: BoxDecoration(
-                                                        color: AppColors
-                                                            .transactionFeeContainer,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                    10.sp),
+                                                      color: AppColors
+                                                          .transactionFeeContainer,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10.sp),
                                                     ),
                                                     child: Padding(
                                                       padding: EdgeInsets.only(
@@ -799,74 +807,112 @@ class _TransactionRequestAcceptRejectState
                                                           SizedBox(
                                                             height: 1.h,
                                                           ),
-                                                          if (feesMap!['offerAmount'] != null)
+                                                          if (feesMap![
+                                                                  'offerAmount'] !=
+                                                              null)
                                                             transactionFeesWidget(
-                                                              title: feesMap!['offerAmount']
-                                                              ['label']
+                                                              title: feesMap![
+                                                                          'offerAmount']
+                                                                      ['label']
                                                                   .toString(),
-                                                              details: feesMap!['offerAmount']
-                                                              ['value']
+                                                              details: feesMap![
+                                                                          'offerAmount']
+                                                                      ['value']
                                                                   .toString(),
-                                                              showCurrency: true,
-                                                              isDark: themeNotifier.isDark
-                                                                  ? true
-                                                                  : false,
+                                                              showCurrency:
+                                                                  true,
+                                                              isDark:
+                                                                  themeNotifier
+                                                                          .isDark
+                                                                      ? true
+                                                                      : false,
                                                             ),
-                                                          if (feesMap!['saleCommission'] != null)
+                                                          if (feesMap![
+                                                                  'saleCommission'] !=
+                                                              null)
                                                             transactionFeesWidget(
-                                                              title: feesMap!['saleCommission']
-                                                              ['label']
+                                                              title: feesMap![
+                                                                          'saleCommission']
+                                                                      ['label']
                                                                   .toString(),
-                                                              details: feesMap!['saleCommission']
-                                                              ['value']
+                                                              details: feesMap![
+                                                                          'saleCommission']
+                                                                      ['value']
                                                                   .toString(),
-                                                              showCurrency: true,
-                                                              isDark: themeNotifier.isDark
-                                                                  ? true
-                                                                  : false,
+                                                              showCurrency:
+                                                                  true,
+                                                              isDark:
+                                                                  themeNotifier
+                                                                          .isDark
+                                                                      ? true
+                                                                      : false,
                                                             ),
-                                                          if (feesMap!['creatorRoyalty'] != null)
+                                                          if (feesMap![
+                                                                  'creatorRoyalty'] !=
+                                                              null)
                                                             transactionFeesWidget(
-                                                              title: feesMap!['creatorRoyalty']
-                                                              ['label']
+                                                              title: feesMap![
+                                                                          'creatorRoyalty']
+                                                                      ['label']
                                                                   .toString(),
-                                                              details: feesMap!['creatorRoyalty']
-                                                              ['value']
+                                                              details: feesMap![
+                                                                          'creatorRoyalty']
+                                                                      ['value']
                                                                   .toString(),
-                                                              showCurrency: true,
-                                                              isDark: themeNotifier.isDark
-                                                                  ? true
-                                                                  : false,
+                                                              showCurrency:
+                                                                  true,
+                                                              isDark:
+                                                                  themeNotifier
+                                                                          .isDark
+                                                                      ? true
+                                                                      : false,
                                                             ),
-                                                          if (feesMap!['networkFees'] != null)
+                                                          if (feesMap![
+                                                                  'networkFees'] !=
+                                                              null)
                                                             transactionFeesWidget(
-                                                              title: feesMap!['networkFees']
-                                                              ['label']
+                                                              title: feesMap![
+                                                                          'networkFees']
+                                                                      ['label']
                                                                   .toString(),
-                                                              details: feesMap!['networkFees']
-                                                              ['value']
+                                                              details: feesMap![
+                                                                          'networkFees']
+                                                                      ['value']
                                                                   .toString(),
-                                                              showCurrency: true,
-                                                              isDark: themeNotifier.isDark
-                                                                  ? true
-                                                                  : false,
+                                                              showCurrency:
+                                                                  true,
+                                                              isDark:
+                                                                  themeNotifier
+                                                                          .isDark
+                                                                      ? true
+                                                                      : false,
                                                             ),
-                                                          if (feesMap!['totalReceivable'] != null)
+                                                          if (feesMap![
+                                                                  'totalReceivable'] !=
+                                                              null)
                                                             Column(children: [
                                                               Divider(
-                                                                color: AppColors.textColorGrey,
+                                                                color: AppColors
+                                                                    .textColorGrey,
                                                               ),
                                                               transactionFeesWidget(
-                                                                title: feesMap!['totalReceivable']
-                                                                ['label']
+                                                                title: feesMap![
+                                                                            'totalReceivable']
+                                                                        [
+                                                                        'label']
                                                                     .toString(),
-                                                                details: feesMap!['totalReceivable']
-                                                                ['value']
+                                                                details: feesMap![
+                                                                            'totalReceivable']
+                                                                        [
+                                                                        'value']
                                                                     .toString(),
-                                                                showCurrency: true,
-                                                                isDark: themeNotifier.isDark
-                                                                    ? true
-                                                                    : false,
+                                                                showCurrency:
+                                                                    true,
+                                                                isDark:
+                                                                    themeNotifier
+                                                                            .isDark
+                                                                        ? true
+                                                                        : false,
                                                               ),
                                                             ]),
                                                           SizedBox(
@@ -894,21 +940,19 @@ class _TransactionRequestAcceptRejectState
                                                 SizedBox(
                                                   height: 3.h,
                                                 ),
-                                                if (operation !=
-                                                        "makeNFTCounterOffer" &&
+                                                if (operation != "makeNFTCounterOffer" &&
                                                     operation !=
                                                         "makeCollectionCounterOffer" &&
                                                     operation !=
                                                         "rejectNFTCounterOffer" &&
                                                     operation !=
-                                                        "rejectCollectionCounterOffer"
-                                                    &&
+                                                        "rejectCollectionCounterOffer" &&
                                                     operation !=
                                                         "rejectNFTOfferReceived" &&
                                                     operation !=
                                                         "rejectCollectionOfferReceived" &&
                                                     operation !=
-                                                        "CancelAuctionListing"  &&
+                                                        "CancelAuctionListing" &&
                                                     operation !=
                                                         "CancelCollectionAuctionListing" &&
                                                     operation !=
@@ -955,21 +999,19 @@ class _TransactionRequestAcceptRejectState
                                                     ),
                                                   ),
                                                 SizedBox(height: 2.h),
-                                                if (operation !=
-                                                        "makeNFTCounterOffer" &&
+                                                if (operation != "makeNFTCounterOffer" &&
                                                     operation !=
                                                         "makeCollectionCounterOffer" &&
                                                     operation !=
                                                         "rejectNFTCounterOffer" &&
                                                     operation !=
-                                                        "rejectCollectionCounterOffer"
-                                                    &&
+                                                        "rejectCollectionCounterOffer" &&
                                                     operation !=
                                                         "rejectNFTOfferReceived" &&
                                                     operation !=
-                                                        "rejectCollectionOfferReceived"  &&
+                                                        "rejectCollectionOfferReceived" &&
                                                     operation !=
-                                                        "CancelAuctionListing"  &&
+                                                        "CancelAuctionListing" &&
                                                     operation !=
                                                         "CancelCollectionAuctionListing" &&
                                                     operation !=
@@ -1058,82 +1100,78 @@ class _TransactionRequestAcceptRejectState
                                                 operation !=
                                                             "makeNFTCounterOffer" &&
                                                         operation !=
-                                                            "makeCollectionCounterOffer" && operation !=
-                                                    "rejectNFTCounterOffer" && operation !=
-                                                    "rejectCollectionCounterOffer"
-                                                    && operation !=
-                                                    "rejectNFTOfferReceived" && operation !=
-                                                    "rejectCollectionOfferReceived" && operation !=
-                                                    "CancelAuctionListing"  &&
-                                                    operation !=
-                                                        "CancelCollectionAuctionListing" &&
-                                                    operation !=
-                                                        "CancelListing" &&
-                                                    operation !=
-                                                        "CancelCollectionListing" &&
-                                                    operation !=
-                                                        "CancelNFTOfferMade" &&
-                                                    operation !=
-                                                        "CancelCollectionOfferMade"
+                                                            "makeCollectionCounterOffer" &&
+                                                        operation !=
+                                                            "rejectNFTCounterOffer" &&
+                                                        operation !=
+                                                            "rejectCollectionCounterOffer" &&
+                                                        operation !=
+                                                            "rejectNFTOfferReceived" &&
+                                                        operation !=
+                                                            "rejectCollectionOfferReceived" &&
+                                                        operation !=
+                                                            "CancelAuctionListing" &&
+                                                        operation !=
+                                                            "CancelCollectionAuctionListing" &&
+                                                        operation !=
+                                                            "CancelListing" &&
+                                                        operation !=
+                                                            "CancelCollectionListing" &&
+                                                        operation !=
+                                                            "CancelNFTOfferMade" &&
+                                                        operation !=
+                                                            "CancelCollectionOfferMade"
                                                     ? SizedBox(
                                                         height: 3.h,
                                                       )
                                                     : SizedBox(
                                                         height: 15.h,
                                                       ),
-                                                if(operation ==
-                                                    "AcceptNFTOfferReceived" ||
+                                                if (operation ==
+                                                        "AcceptNFTOfferReceived" ||
                                                     operation ==
-                                                        "AcceptCollectionOffer" )
+                                                        "AcceptCollectionOffer")
                                                   Container(
                                                     decoration: BoxDecoration(),
                                                     // margin: EdgeInsets.symmetric(horizontal: 20.sp),
                                                     child: Padding(
                                                       padding:
-                                                      EdgeInsets.symmetric(
-                                                          horizontal: 0.sp),
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 0.sp),
                                                       child: Column(
                                                         children: [
-                                                          SizedBox(height: 2.5.h),
+                                                          SizedBox(
+                                                              height: 2.5.h),
                                                           Padding(
                                                             padding: EdgeInsets
                                                                 .symmetric(
-                                                                horizontal:
-                                                                0),
+                                                                    horizontal:
+                                                                        0),
                                                             child: Column(
                                                                 children: [
                                                                   RichText(
                                                                     text:
-                                                                    TextSpan(
+                                                                        TextSpan(
                                                                       children: [
                                                                         TextSpan(
                                                                             text:
-                                                                            'By continuing you agree to the  '.tr(),
+                                                                                'By continuing you agree to the  '.tr(),
                                                                             style: TextStyle(
-                                                                              // height: 2,
+                                                                                // height: 2,
                                                                                 color: AppColors.textColorWhite,
                                                                                 fontWeight: FontWeight.w400,
                                                                                 fontSize: 10.sp,
                                                                                 fontFamily: 'Inter')),
                                                                         TextSpan(
-                                                                            recognizer:
-                                                                            TapGestureRecognizer()
-                                                                              ..onTap =
-                                                                                  () {
+                                                                            recognizer: TapGestureRecognizer()
+                                                                              ..onTap = () {
                                                                                 // Navigator.push(
                                                                                 //   context,
                                                                                 //   MaterialPageRoute(builder: (context) => TermsAndConditions()),
                                                                                 // );
                                                                               },
-                                                                            text: 'Terms & Conditions'.tr() +
-                                                                                " ",
-                                                                            style: TextStyle(
-                                                                                decoration: TextDecoration.underline,
-                                                                                height: 1.5,
-                                                                                color: AppColors.textColorToska,
-                                                                                fontWeight: FontWeight.w600,
-                                                                                fontSize: 10.sp,
-                                                                                fontFamily: 'Inter')),
+                                                                            text: 'Terms & Conditions'.tr() + " ",
+                                                                            style: TextStyle(decoration: TextDecoration.underline, height: 1.5, color: AppColors.textColorToska, fontWeight: FontWeight.w600, fontSize: 10.sp, fontFamily: 'Inter')),
                                                                         TextSpan(
                                                                             text: '  of Hesa Wallet Payments.'
                                                                                 .tr(),
@@ -1147,49 +1185,55 @@ class _TransactionRequestAcceptRejectState
                                                                   )
                                                                 ]),
                                                           ),
-                                                          SizedBox(height: 1.5.h),
+                                                          SizedBox(
+                                                              height: 1.5.h),
                                                           AppButton(
                                                             title:
-                                                            "Reject request"
-                                                                .tr(),
+                                                                "Reject request"
+                                                                    .tr(),
                                                             handler: () {
                                                               // if(operation=="MintNFT"){
                                                               rejectTransactions();
                                                               // }
                                                             },
                                                             isGradient: false,
-                                                            isGradientWithBorder: true,
-                                                            buttonWithBorderColor: AppColors.errorColor,
-                                                            color: AppColors.deleteAccountBtnColor
-                                                                .withOpacity(0.10),
+                                                            isGradientWithBorder:
+                                                                true,
+                                                            buttonWithBorderColor:
+                                                                AppColors
+                                                                    .errorColor,
+                                                            color: AppColors
+                                                                .deleteAccountBtnColor
+                                                                .withOpacity(
+                                                                    0.10),
                                                             textColor: themeNotifier.isDark
                                                                 ? AppColors
-                                                                .textColorWhite
+                                                                    .textColorWhite
                                                                 : AppColors
-                                                                .textColorBlack
-                                                                .withOpacity(
-                                                                0.8),
+                                                                    .textColorBlack
+                                                                    .withOpacity(
+                                                                        0.8),
                                                           ),
                                                           SizedBox(
                                                             height: 2.h,
                                                           ),
                                                           AppButton(
                                                               title:
-                                                              "Accept".tr(),
-                                                              handler: () async {
+                                                                  "Accept".tr(),
+                                                              handler:
+                                                                  () async {
                                                                 setState(() {
                                                                   isValidating =
-                                                                  true;
+                                                                      true;
                                                                 });
                                                                 setState(() {
                                                                   isLoading =
-                                                                  true;
+                                                                      true;
                                                                 });
-
 
                                                                 setState(() {
                                                                   isLoading =
-                                                                  false;
+                                                                      false;
                                                                 });
                                                               },
                                                               // isLoading: isLoading,r
@@ -1199,8 +1243,8 @@ class _TransactionRequestAcceptRejectState
                                                           SizedBox(height: 2.h),
                                                           AppButton(
                                                               title:
-                                                              "Reject request"
-                                                                  .tr(),
+                                                                  "Reject request"
+                                                                      .tr(),
                                                               handler: () {
                                                                 // if(operation=="MintNFT"){
                                                                 rejectTransactions();
@@ -1209,20 +1253,22 @@ class _TransactionRequestAcceptRejectState
                                                               isGradient: false,
                                                               textColor: themeNotifier.isDark
                                                                   ? AppColors
-                                                                  .textColorWhite
+                                                                      .textColorWhite
                                                                   : AppColors
-                                                                  .textColorBlack
-                                                                  .withOpacity(
-                                                                  0.8),
+                                                                      .textColorBlack
+                                                                      .withOpacity(
+                                                                          0.8),
                                                               color: AppColors
                                                                   .appSecondButton
                                                                   .withOpacity(
-                                                                  0.10)),
+                                                                      0.10)),
                                                           SizedBox(
                                                             height: operation !=
-      "AcceptNFTOfferReceived" &&
-      operation !=
-      "AcceptCollectionOffer" ? 2.h : 3.h,
+                                                                        "AcceptNFTOfferReceived" &&
+                                                                    operation !=
+                                                                        "AcceptCollectionOffer"
+                                                                ? 2.h
+                                                                : 3.h,
                                                           )
                                                         ],
                                                       ),
@@ -1241,66 +1287,56 @@ class _TransactionRequestAcceptRejectState
                           )
                   ],
                 ),
-                if(operation !=
-                    "AcceptNFTOfferReceived" &&
-                    operation !=
-                        "AcceptCollectionOffer" )
-                Positioned(
-                  left: 28,
-                  right: 28,
-                  bottom: 10,
-                  child: Container(
-                  decoration: BoxDecoration(),
-                  // margin: EdgeInsets.symmetric(horizontal: 20.sp),
-                  child: Padding(
-                    padding:
-                    EdgeInsets.symmetric(
-                        horizontal: 0.sp),
-                    child: Column(
-                      children: [
-                        SizedBox(height: 2.5.h),
-                        Padding(
-                          padding: EdgeInsets
-                              .symmetric(
-                              horizontal:
-                              0),
-                          child: Column(
-                              children: [
+                if (operation != "AcceptNFTOfferReceived" &&
+                    operation != "AcceptCollectionOffer")
+                  Positioned(
+                    left: 28,
+                    right: 28,
+                    bottom: 10,
+                    child: Container(
+                      decoration: BoxDecoration(),
+                      // margin: EdgeInsets.symmetric(horizontal: 20.sp),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 0.sp),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 2.5.h),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 0),
+                              child: Column(children: [
                                 RichText(
-                                  text:
-                                  TextSpan(
+                                  text: TextSpan(
                                     children: [
                                       TextSpan(
                                           text:
-                                          'By continuing you agree to the  '.tr(),
+                                              'By continuing you agree to the  '
+                                                  .tr(),
                                           style: TextStyle(
-                                            // height: 2,
+                                              // height: 2,
                                               color: AppColors.textColorWhite,
                                               fontWeight: FontWeight.w400,
                                               fontSize: 10.sp,
                                               fontFamily: 'Inter')),
                                       TextSpan(
-                                          recognizer:
-                                          TapGestureRecognizer()
-                                            ..onTap =
-                                                () {
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
                                               // Navigator.push(
                                               //   context,
                                               //   MaterialPageRoute(builder: (context) => TermsAndConditions()),
                                               // );
                                             },
-                                          text: 'Terms & Conditions'.tr() +
-                                              " ",
+                                          text: 'Terms & Conditions'.tr() + " ",
                                           style: TextStyle(
-                                              decoration: TextDecoration.underline,
+                                              decoration:
+                                                  TextDecoration.underline,
                                               height: 1.5,
                                               color: AppColors.textColorToska,
                                               fontWeight: FontWeight.w600,
                                               fontSize: 10.sp,
                                               fontFamily: 'Inter')),
                                       TextSpan(
-                                          text: '  of Hesa Wallet Payments.'
-                                              .tr(),
+                                          text:
+                                              '  of Hesa Wallet Payments.'.tr(),
                                           style: TextStyle(
                                               color: AppColors.textColorWhite,
                                               fontWeight: FontWeight.w400,
@@ -1310,505 +1346,404 @@ class _TransactionRequestAcceptRejectState
                                   ),
                                 )
                               ]),
-                        ),
-                        SizedBox(height: 1.5.h),
-                        AppButton(
-                            title:
-                            "Accept".tr(),
-                            handler: () async {
-                              setState(() {
-                                isValidating =
-                                true;
-                              });
-                              setState(() {
-                                isLoading =
-                                true;
-                              });
-                              final result =
-                              await Provider.of<AuthProvider>(context,
-                                  listen: false)
-                                  .sendOTP(
-                                token: accessToken,
-                                context: context,
-                              );
-                              setState(() {
-                                isLoading =
-                                false;
-                              });
-                              if(result==AuthResult.success){
-                              startTimer();
-                              otpDialog(
-                                events: _events,
-                                firstBtnHandler: () async {
-
-                                    setState(() {
-                                      isLoading = true;
-                                    });
-                                    if (operation ==
-                                        'AcceptNFTOfferReceived') {
-                                      await Provider.of<
-                                          TransactionProvider>(
-                                          context,
-                                          listen:
-                                          false)
-                                          .acceptOffer(
-                                        params:
-                                        params,
-                                        token:
-                                        accessToken,
-                                        walletAddress:
-                                        walletAddress,
-                                        context:
-                                        context,
-                                        operation:
-                                        operation,
-                                        code:  otp1Controller.text +
-                                            otp2Controller.text +
-                                            otp3Controller.text +
-                                            otp4Controller.text +
-                                            otp5Controller.text +
-                                            otp6Controller.text,
-                                      );
-                                    } else if (operation ==
-                                        'rejectNFTOfferReceived') {
-                                      await Provider.of<TransactionProvider>(
-                                          context,
-                                          listen:
-                                          false)
-                                          .rejectNFTOfferReceived(
-                                          params:
-                                          params,
-                                          token:
-                                          accessToken,
-                                          walletAddress:
-                                          walletAddress,
-                                          context:
-                                          context,
-                                          operation:
-                                          operation,
-                                        code:  otp1Controller.text +
-                                            otp2Controller.text +
-                                            otp3Controller.text +
-                                            otp4Controller.text +
-                                            otp5Controller.text +
-                                            otp6Controller.text,
-                                      );
-                                    } else if (operation ==
-                                        'AcceptCollectionOffer') {
-                                      await Provider.of<
-                                          TransactionProvider>(
-                                          context,
-                                          listen:
-                                          false)
-                                          .acceptCollectionOffer(
-                                        params:
-                                        params,
-                                        token:
-                                        accessToken,
-                                        walletAddress:
-                                        walletAddress,
-                                        context:
-                                        context,
-                                        operation:
-                                        operation,
-                                        code:  otp1Controller.text +
-                                            otp2Controller.text +
-                                            otp3Controller.text +
-                                            otp4Controller.text +
-                                            otp5Controller.text +
-                                            otp6Controller.text,
-                                      );
-                                    } else if (operation ==
-                                        'rejectCollectionOfferReceived') {
-                                      await Provider.of<TransactionProvider>(
-                                          context,
-                                          listen:
-                                          false)
-                                          .rejectCollectionOfferReceived(
-                                          params:
-                                          params,
-                                          token:
-                                          accessToken,
-                                          walletAddress:
-                                          walletAddress,
-                                          context:
-                                          context,
-                                          operation:
-                                          operation,
-                                        code:  otp1Controller.text +
-                                            otp2Controller.text +
-                                            otp3Controller.text +
-                                            otp4Controller.text +
-                                            otp5Controller.text +
-                                            otp6Controller.text,
-                                      );
-                                    } else if (operation ==
-                                        'makeNFTCounterOffer') {
-                                      await Provider.of<
-                                          TransactionProvider>(
-                                          context,
-                                          listen:
-                                          false)
-                                          .makeCounterOffer(
-                                        walletAddress:
-                                        walletAddress,
-                                        // params: params,
-                                        token:
-                                        accessToken,
-                                        context:
-                                        context,
-                                        operation:
-                                        operation,
-                                        id: counterId,
-                                        offererId:
-                                        counterOffererId,
-                                        offerAmount:
-                                        counterOffererAmount,
-                                        code:  otp1Controller.text +
-                                            otp2Controller.text +
-                                            otp3Controller.text +
-                                            otp4Controller.text +
-                                            otp5Controller.text +
-                                            otp6Controller.text,
-                                      );
-                                    }
-                                    if (operation ==
-                                        'CancelNFTOfferMade') {
-                                      await Provider.of<
-                                          TransactionProvider>(
-                                          context,
-                                          listen:
-                                          false)
-                                          .cancelNFTOfferMade(
-                                        walletAddress:
-                                        walletAddress,
-                                        // params: params,
-                                        token:
-                                        accessToken,
-                                        context:
-                                        context,
-                                        operation:
-                                        operation,
-                                        params:
-                                        params,
-                                        code:  otp1Controller.text +
-                                            otp2Controller.text +
-                                            otp3Controller.text +
-                                            otp4Controller.text +
-                                            otp5Controller.text +
-                                            otp6Controller.text,
-                                      );
-                                    } else if (operation ==
-                                        'rejectNFTCounterOffer') {
-                                      await Provider.of<
-                                          TransactionProvider>(
-                                          context,
-                                          listen:
-                                          false)
-                                          .rejectNFTCounterOffer(
-                                        walletAddress:
-                                        walletAddress,
-                                        // params: params,
-                                        token:
-                                        accessToken,
-                                        context:
-                                        context,
-                                        operation:
-                                        operation,
-                                        id: counterId,
-                                        offererId:
-                                        counterOffererId,
-                                        offerAmount:
-                                        counterOffererAmount,
-                                        code:  otp1Controller.text +
-                                            otp2Controller.text +
-                                            otp3Controller.text +
-                                            otp4Controller.text +
-                                            otp5Controller.text +
-                                            otp6Controller.text,
-                                      );
-                                    } else if (operation ==
-                                        'makeCollectionCounterOffer') {
-                                      await Provider.of<
-                                          TransactionProvider>(
-                                          context,
-                                          listen:
-                                          false)
-                                          .makeCollectionCounterOffer(
-                                        walletAddress:
-                                        walletAddress,
-                                        // params: params,
-                                        token:
-                                        accessToken,
-                                        context:
-                                        context,
-                                        operation:
-                                        operation,
-                                        id: counterId,
-                                        offererId:
-                                        counterOffererId,
-                                        offerAmount:
-                                        counterOffererAmount,
-                                        code:  otp1Controller.text +
-                                            otp2Controller.text +
-                                            otp3Controller.text +
-                                            otp4Controller.text +
-                                            otp5Controller.text +
-                                            otp6Controller.text,
-                                      );
-                                    } else if (operation ==
-                                        'rejectCollectionCounterOffer') {
-                                      await Provider.of<
-                                          TransactionProvider>(
-                                          context,
-                                          listen:
-                                          false)
-                                          .rejectCollectionCounterOffer(
-                                        walletAddress:
-                                        walletAddress,
-                                        // params: params,
-                                        token:
-                                        accessToken,
-                                        context:
-                                        context,
-                                        operation:
-                                        operation,
-                                        id: counterId,
-                                        offererId:
-                                        counterOffererId,
-                                        offerAmount:
-                                        counterOffererAmount,
-                                        code:  otp1Controller.text +
-                                            otp2Controller.text +
-                                            otp3Controller.text +
-                                            otp4Controller.text +
-                                            otp5Controller.text +
-                                            otp6Controller.text,
-                                      );
-                                    } else if (operation ==
-                                        'CancelCollectionOfferMade') {
-                                      await Provider.of<
-                                          TransactionProvider>(
-                                          context,
-                                          listen:
-                                          false)
-                                          .cancelCollectionOfferMade(
-                                        walletAddress:
-                                        walletAddress,
-                                        // params: params,
-                                        token:
-                                        accessToken,
-                                        context:
-                                        context,
-                                        operation:
-                                        operation,
-                                        params:
-                                        params,
-                                        code:  otp1Controller.text +
-                                            otp2Controller.text +
-                                            otp3Controller.text +
-                                            otp4Controller.text +
-                                            otp5Controller.text +
-                                            otp6Controller.text,
-                                      );
-                                    }
-                                    if (operation ==
-                                        'CancelAuctionListing') {
-                                      await Provider.of<
-                                          TransactionProvider>(
-                                          context,
-                                          listen:
-                                          false)
-                                          .cancelAuctionListing(
-                                          walletAddress:
-                                          walletAddress,
-                                          token:
-                                          accessToken,
-                                          context:
-                                          context,
-                                          operation:
-                                          operation,
-                                          params:
-                                          params,
-                                          code:  otp1Controller.text +
-                                              otp2Controller.text +
-                                              otp3Controller.text +
-                                              otp4Controller.text +
-                                              otp5Controller.text +
-                                              otp6Controller.text,
-                                      );
-                                    } else if (operation ==
-                                        'CancelCollectionAuctionListing') {
-                                      await Provider.of<
-                                          TransactionProvider>(
-                                          context,
-                                          listen:
-                                          false)
-                                          .cancelCollectionAuctionListing(
-                                        walletAddress:
-                                        walletAddress,
-                                        token:
-                                        accessToken,
-                                        context:
-                                        context,
-                                        operation:
-                                        operation,
-                                        params:
-                                        params,
-                                        code:  otp1Controller.text +
-                                            otp2Controller.text +
-                                            otp3Controller.text +
-                                            otp4Controller.text +
-                                            otp5Controller.text +
-                                            otp6Controller.text,
-                                      );
-                                    } else if (operation ==
-                                        'CancelListing') {
-                                      await Provider.of<
-                                          TransactionProvider>(
-                                          context,
-                                          listen:
-                                          false)
-                                          .cancelListing(
-                                        walletAddress:
-                                        walletAddress,
-                                        token:
-                                        accessToken,
-                                        context:
-                                        context,
-                                        operation:
-                                        operation,
-                                        params:
-                                        params,
-                                        code:  Provider.of<
-                                            AuthProvider>(
-                                            context,
-                                            listen: false)
-                                            .codeFromOtpBoxes
-                                      );
-                                    } else if (operation ==
-                                        'CancelCollectionListing') {
-                                      await Provider.of<
-                                          TransactionProvider>(
-                                          context,
-                                          listen:
-                                          false)
-                                          .cancelCollectionListing(
-                                        walletAddress:
-                                        walletAddress,
-                                        token:
-                                        accessToken,
-                                        context:
-                                        context,
-                                        operation:
-                                        operation,
-                                        params:
-                                        params,
-                                        code:  otp1Controller.text +
-                                            otp2Controller.text +
-                                            otp3Controller.text +
-                                            otp4Controller.text +
-                                            otp5Controller.text +
-                                            otp6Controller.text,
-                                      );
-                                    }
-
-                                    else {}
-                                    // print('loading popup' +
-                                    //     _isLoading.toString());
-                                    Navigator.pop(context);
-                                    // Future.delayed(Duration(seconds: 2));
-                                    // final loginResult =
-
-                                    setState(() {
-                                      isLoading = false;
-                                    });
-
-                                  },
-                                secondBtnHandler: () async {
-                                  if (_timeLeft == 0) {
-                                    print('resend function calling');
-                                    try {
-                                      setState(() {
-                                        _isLoadingResend = true;
-                                      });
-                                      final otpResult =
+                            ),
+                            SizedBox(height: 1.5.h),
+                            AppButton(
+                                title: "Accept".tr(),
+                                handler: () async {
+                                  setState(() {
+                                    isValidating = true;
+                                  });
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  final result =
                                       await Provider.of<AuthProvider>(context,
-                                          listen: false)
+                                              listen: false)
                                           .sendOTP(
-                                        token: accessToken,
-                                        context: context,
-                                      );
-                                      setState(() {
-                                        _isLoadingResend = false;
-                                      });
-                                      if (otpResult ==
-                                          AuthResult.success) {
-                                        startTimer();
-                                      }
-                                    } catch (error) {
-                                      print("Error: $error");
-                                      // _showToast('An error occurred'); // Show an error message
-                                    } finally {
-                                      setState(() {
-                                        _isLoadingResend = false;
-                                      });
-                                    }
-                                  } else {}
+                                    token: accessToken,
+                                    context: context,
+                                  );
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  if (result == AuthResult.success) {
+                                    startTimer();
+                                    otpDialog(
+                                      events: _events,
+                                      firstBtnHandler: () async {
+                                        setState(() {
+                                          isLoading = true;
+                                        });
+                                        if (operation ==
+                                            'AcceptNFTOfferReceived') {
+                                          await Provider.of<
+                                                      TransactionProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .acceptOffer(
+                                            params: params,
+                                            token: accessToken,
+                                            walletAddress: walletAddress,
+                                            context: context,
+                                            operation: operation,
+                                            code: otp1Controller.text +
+                                                otp2Controller.text +
+                                                otp3Controller.text +
+                                                otp4Controller.text +
+                                                otp5Controller.text +
+                                                otp6Controller.text,
+                                          );
+                                        } else if (operation ==
+                                            'rejectNFTOfferReceived') {
+                                          await Provider.of<
+                                                      TransactionProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .rejectNFTOfferReceived(
+                                            params: params,
+                                            token: accessToken,
+                                            walletAddress: walletAddress,
+                                            context: context,
+                                            operation: operation,
+                                            code: otp1Controller.text +
+                                                otp2Controller.text +
+                                                otp3Controller.text +
+                                                otp4Controller.text +
+                                                otp5Controller.text +
+                                                otp6Controller.text,
+                                          );
+                                        } else if (operation ==
+                                            'AcceptCollectionOffer') {
+                                          await Provider.of<
+                                                      TransactionProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .acceptCollectionOffer(
+                                            params: params,
+                                            token: accessToken,
+                                            walletAddress: walletAddress,
+                                            context: context,
+                                            operation: operation,
+                                            code: otp1Controller.text +
+                                                otp2Controller.text +
+                                                otp3Controller.text +
+                                                otp4Controller.text +
+                                                otp5Controller.text +
+                                                otp6Controller.text,
+                                          );
+                                        } else if (operation ==
+                                            'rejectCollectionOfferReceived') {
+                                          await Provider.of<
+                                                      TransactionProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .rejectCollectionOfferReceived(
+                                            params: params,
+                                            token: accessToken,
+                                            walletAddress: walletAddress,
+                                            context: context,
+                                            operation: operation,
+                                            code: otp1Controller.text +
+                                                otp2Controller.text +
+                                                otp3Controller.text +
+                                                otp4Controller.text +
+                                                otp5Controller.text +
+                                                otp6Controller.text,
+                                          );
+                                        } else if (operation ==
+                                            'makeNFTCounterOffer') {
+                                          await Provider.of<
+                                                      TransactionProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .makeCounterOffer(
+                                            walletAddress: walletAddress,
+                                            // params: params,
+                                            token: accessToken,
+                                            context: context,
+                                            operation: operation,
+                                            id: counterId,
+                                            offererId: counterOffererId,
+                                            offerAmount: counterOffererAmount,
+                                            code: otp1Controller.text +
+                                                otp2Controller.text +
+                                                otp3Controller.text +
+                                                otp4Controller.text +
+                                                otp5Controller.text +
+                                                otp6Controller.text,
+                                          );
+                                        }
+                                        if (operation == 'CancelNFTOfferMade') {
+                                          await Provider.of<
+                                                      TransactionProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .cancelNFTOfferMade(
+                                            walletAddress: walletAddress,
+                                            // params: params,
+                                            token: accessToken,
+                                            context: context,
+                                            operation: operation,
+                                            params: params,
+                                            code: otp1Controller.text +
+                                                otp2Controller.text +
+                                                otp3Controller.text +
+                                                otp4Controller.text +
+                                                otp5Controller.text +
+                                                otp6Controller.text,
+                                          );
+                                        } else if (operation ==
+                                            'rejectNFTCounterOffer') {
+                                          await Provider.of<
+                                                      TransactionProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .rejectNFTCounterOffer(
+                                            walletAddress: walletAddress,
+                                            // params: params,
+                                            token: accessToken,
+                                            context: context,
+                                            operation: operation,
+                                            id: counterId,
+                                            offererId: counterOffererId,
+                                            offerAmount: counterOffererAmount,
+                                            code: otp1Controller.text +
+                                                otp2Controller.text +
+                                                otp3Controller.text +
+                                                otp4Controller.text +
+                                                otp5Controller.text +
+                                                otp6Controller.text,
+                                          );
+                                        } else if (operation ==
+                                            'makeCollectionCounterOffer') {
+                                          await Provider.of<
+                                                      TransactionProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .makeCollectionCounterOffer(
+                                            walletAddress: walletAddress,
+                                            // params: params,
+                                            token: accessToken,
+                                            context: context,
+                                            operation: operation,
+                                            id: counterId,
+                                            offererId: counterOffererId,
+                                            offerAmount: counterOffererAmount,
+                                            code: otp1Controller.text +
+                                                otp2Controller.text +
+                                                otp3Controller.text +
+                                                otp4Controller.text +
+                                                otp5Controller.text +
+                                                otp6Controller.text,
+                                          );
+                                        } else if (operation ==
+                                            'rejectCollectionCounterOffer') {
+                                          await Provider.of<
+                                                      TransactionProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .rejectCollectionCounterOffer(
+                                            walletAddress: walletAddress,
+                                            // params: params,
+                                            token: accessToken,
+                                            context: context,
+                                            operation: operation,
+                                            id: counterId,
+                                            offererId: counterOffererId,
+                                            offerAmount: counterOffererAmount,
+                                            code: otp1Controller.text +
+                                                otp2Controller.text +
+                                                otp3Controller.text +
+                                                otp4Controller.text +
+                                                otp5Controller.text +
+                                                otp6Controller.text,
+                                          );
+                                        } else if (operation ==
+                                            'CancelCollectionOfferMade') {
+                                          await Provider.of<
+                                                      TransactionProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .cancelCollectionOfferMade(
+                                            walletAddress: walletAddress,
+                                            // params: params,
+                                            token: accessToken,
+                                            context: context,
+                                            operation: operation,
+                                            params: params,
+                                            code: otp1Controller.text +
+                                                otp2Controller.text +
+                                                otp3Controller.text +
+                                                otp4Controller.text +
+                                                otp5Controller.text +
+                                                otp6Controller.text,
+                                          );
+                                        }
+                                        if (operation ==
+                                            'CancelAuctionListing') {
+                                          await Provider.of<
+                                                      TransactionProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .cancelAuctionListing(
+                                            walletAddress: walletAddress,
+                                            token: accessToken,
+                                            context: context,
+                                            operation: operation,
+                                            params: params,
+                                            code: otp1Controller.text +
+                                                otp2Controller.text +
+                                                otp3Controller.text +
+                                                otp4Controller.text +
+                                                otp5Controller.text +
+                                                otp6Controller.text,
+                                          );
+                                        } else if (operation ==
+                                            'CancelCollectionAuctionListing') {
+                                          await Provider.of<
+                                                      TransactionProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .cancelCollectionAuctionListing(
+                                            walletAddress: walletAddress,
+                                            token: accessToken,
+                                            context: context,
+                                            operation: operation,
+                                            params: params,
+                                            code: otp1Controller.text +
+                                                otp2Controller.text +
+                                                otp3Controller.text +
+                                                otp4Controller.text +
+                                                otp5Controller.text +
+                                                otp6Controller.text,
+                                          );
+                                        } else if (operation ==
+                                            'CancelListing') {
+                                          await Provider.of<
+                                                      TransactionProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .cancelListing(
+                                                  walletAddress: walletAddress,
+                                                  token: accessToken,
+                                                  context: context,
+                                                  operation: operation,
+                                                  params: params,
+                                                  code:
+                                                      Provider.of<AuthProvider>(
+                                                              context,
+                                                              listen: false)
+                                                          .codeFromOtpBoxes);
+                                        } else if (operation ==
+                                            'CancelCollectionListing') {
+                                          await Provider.of<
+                                                      TransactionProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .cancelCollectionListing(
+                                            walletAddress: walletAddress,
+                                            token: accessToken,
+                                            context: context,
+                                            operation: operation,
+                                            params: params,
+                                            code: otp1Controller.text +
+                                                otp2Controller.text +
+                                                otp3Controller.text +
+                                                otp4Controller.text +
+                                                otp5Controller.text +
+                                                otp6Controller.text,
+                                          );
+                                        } else {}
+                                        // print('loading popup' +
+                                        //     _isLoading.toString());
+                                        Navigator.pop(context);
+                                        // Future.delayed(Duration(seconds: 2));
+                                        // final loginResult =
+
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                      },
+                                      secondBtnHandler: () async {
+                                        if (_timeLeft == 0) {
+                                          print('resend function calling');
+                                          try {
+                                            setState(() {
+                                              _isLoadingResend = true;
+                                            });
+                                            final otpResult =
+                                                await Provider.of<AuthProvider>(
+                                                        context,
+                                                        listen: false)
+                                                    .sendOTP(
+                                              token: accessToken,
+                                              context: context,
+                                            );
+                                            setState(() {
+                                              _isLoadingResend = false;
+                                            });
+                                            if (otpResult ==
+                                                AuthResult.success) {
+                                              startTimer();
+                                            }
+                                          } catch (error) {
+                                            print("Error: $error");
+                                            // _showToast('An error occurred'); // Show an error message
+                                          } finally {
+                                            setState(() {
+                                              _isLoadingResend = false;
+                                            });
+                                          }
+                                        } else {}
+                                      },
+                                      firstTitle: 'Confirm',
+                                      secondTitle: 'Resend code ',
+
+                                      // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
+
+                                      context: context,
+                                      isDark: themeNotifier.isDark,
+                                      isFirstButtonActive: isOtpButtonActive,
+                                      isSecondButtonActive: false,
+                                      otp1Controller: otp1Controller,
+                                      otp2Controller: otp2Controller,
+                                      otp3Controller: otp3Controller,
+                                      otp4Controller: otp4Controller,
+                                      otp5Controller: otp5Controller,
+                                      otp6Controller: otp6Controller,
+                                      firstFieldFocusNode: firstFieldFocusNode,
+                                      secondFieldFocusNode:
+                                          secondFieldFocusNode,
+                                      thirdFieldFocusNode: thirdFieldFocusNode,
+                                      forthFieldFocusNode: forthFieldFocusNode,
+                                      fifthFieldFocusNode: fifthFieldFocusNode,
+                                      sixthFieldFocusNode: sixthFieldFocusNode,
+                                      firstBtnBgColor:
+                                          AppColors.activeButtonColor,
+                                      firstBtnTextColor:
+                                          AppColors.textColorBlack,
+                                      secondBtnBgColor: Colors.transparent,
+                                      secondBtnTextColor: _timeLeft != 0
+                                          ? AppColors.textColorBlack
+                                              .withOpacity(0.8)
+                                          : AppColors.textColorWhite,
+                                      // themeNotifier.isDark
+                                      //     ? AppColors.textColorWhite
+                                      //     : AppColors.textColorBlack
+                                      //         .withOpacity(0.8),
+                                      isLoading: _isLoadingResend,
+                                    );
+                                  }
                                 },
-                                firstTitle: 'Confirm',
-                                secondTitle: 'Resend code ',
-
-                                // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
-
-                                context: context,
-                                isDark: themeNotifier.isDark,
-                                isFirstButtonActive: isOtpButtonActive,
-                                isSecondButtonActive: false,
-                                otp1Controller: otp1Controller,
-                                otp2Controller: otp2Controller,
-                                otp3Controller: otp3Controller,
-                                otp4Controller: otp4Controller,
-                                otp5Controller: otp5Controller,
-                                otp6Controller: otp6Controller,
-                                firstFieldFocusNode:
-                                firstFieldFocusNode,
-                                secondFieldFocusNode:
-                                secondFieldFocusNode,
-                                thirdFieldFocusNode:
-                                thirdFieldFocusNode,
-                                forthFieldFocusNode:
-                                forthFieldFocusNode,
-                                fifthFieldFocusNode:
-                                fifthFieldFocusNode,
-                                sixthFieldFocusNode:
-                                sixthFieldFocusNode,
-                                firstBtnBgColor:
-                                AppColors.activeButtonColor,
-                                firstBtnTextColor:
-                                AppColors.textColorBlack,
-                                secondBtnBgColor: Colors.transparent,
-                                secondBtnTextColor: _timeLeft != 0
-                                    ? AppColors.textColorBlack
-                                    .withOpacity(0.8)
-                                    : AppColors.textColorWhite,
-                                // themeNotifier.isDark
-                                //     ? AppColors.textColorWhite
-                                //     : AppColors.textColorBlack
-                                //         .withOpacity(0.8),
-                                isLoading: _isLoadingResend,
-                              );}
-
-                            },
-                            // isLoading: isLoading,r
-                            isGradient: true,
-                            color: AppColors
-                                .textColorBlack),
-
-                      ],
+                                // isLoading: isLoading,r
+                                isGradient: true,
+                                color: AppColors.textColorBlack),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                ),)
+                  )
               ],
             ),
           ),
@@ -1888,7 +1823,7 @@ class _TransactionRequestAcceptRejectState
                         : AppColors.textColorBlack,
                     fontSize: 11.sp,
                     fontWeight:
-                    boldDetails ? FontWeight.w800 : FontWeight.w500),
+                        boldDetails ? FontWeight.w800 : FontWeight.w500),
               ),
             ),
           ),
@@ -2035,75 +1970,6 @@ class _TransactionRequestAcceptRejectState
     );
   }
 
-  Widget otpContainer({
-    required FocusNode focusNode,
-    required FocusNode previousFocusNode,
-    required Function handler,
-    required TextEditingController controller,
-  }) {
-    return Container(
-      child: TextField(
-        controller: controller,
-        focusNode: focusNode,
-        onChanged: (value) {
-          if (value.isEmpty) {
-            focusNode.requestFocus();
-            if (controller.text.isNotEmpty) {
-              controller.clear();
-              handler();
-            } else {
-              // Move focus to the previous SMSVerificationTextField
-              // and clear its value recursively
-              // FocusScope.of(context).previousFocus();
-              previousFocusNode.requestFocus();
-            }
-          } else {
-            handler();
-          }
-        },
-        keyboardType: TextInputType.number,
-        cursorColor: AppColors.textColorGrey,
-        // obscureText: true,
-        maxLength: 1,
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(1),
-        ],
-        // Hide the entered OTP digits
-        textAlign: TextAlign.center,
-        textAlignVertical: TextAlignVertical.bottom,
-        style: TextStyle(
-          color: AppColors.textColorGrey,
-          fontSize: 17.5.sp,
-          // fontWeight: FontWeight.bold,
-          // letterSpacing: 16,
-        ),
-        decoration: InputDecoration(
-          counterText: '', // Hide the default character counter
-          contentPadding: EdgeInsets.only(top: 16, bottom: 16),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(
-              color: AppColors.textColorGrey,
-              width: 1,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(
-              color: AppColors.textColorGrey,
-              width: 1,
-            ),
-          ),
-        ),
-      ),
-      height: 8.h,
-      width: 10.w,
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(10),
-      ),
-    );
-  }
 
   void confirmationRequestDialogue({bool isDark = true}) {
     // Navigator.pop(context);
@@ -2130,6 +1996,14 @@ class _TransactionRequestAcceptRejectState
                       ? AppColors.showDialogClr
                       : AppColors.textColorWhite,
                   borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.textColorBlack.withOpacity(0.95),
+                      offset: Offset(0, 0),
+                      blurRadius: 10,
+                      spreadRadius: 0.4,
+                    ),
+                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -2261,6 +2135,14 @@ class _TransactionRequestAcceptRejectState
                       ? AppColors.showDialogClr
                       : AppColors.textColorWhite,
                   borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.textColorBlack.withOpacity(0.95),
+                      offset: Offset(0, 0),
+                      blurRadius: 10,
+                      spreadRadius: 0.4,
+                    ),
+                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -2445,7 +2327,3 @@ class _TransactionRequestAcceptRejectState
     );
   }
 }
-
-// border: Border.all(
-//                       width: 0.1.h,
-//                       color: AppColors.textColorGrey),

@@ -63,6 +63,7 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
   @override
   void initState() {
     generateFcmToken();
+
     // TODO: implement initState
     Timer.periodic(Duration(seconds: 1), (timer) async {
 
@@ -289,9 +290,10 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                                   );
                                                 }
 
-                                                Future.delayed(Duration(seconds: 2),
+                                                Future.delayed(Duration(seconds: 50),
                                                     closeDialogAndNavigate);
-                                                return Dialog(
+                                                return
+                                                  Dialog(
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius: BorderRadius.circular(8.0),
                                                   ),
@@ -300,14 +302,23 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                                     filter: ImageFilter.blur(
                                                         sigmaX: 7, sigmaY: 7),
                                                     child: Container(
-                                                      height: 70.h,
+                                                      height: 73.h,
                                                       decoration: BoxDecoration(
                                                         color: themeNotifier.isDark
                                                             ? AppColors.showDialogClr
                                                             : AppColors.textColorWhite,
                                                         borderRadius:
                                                         BorderRadius.circular(15),
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: AppColors.textColorBlack.withOpacity(0.95), // Dark shadow color
+                                                            offset: Offset(0, 0), // No offset, shadow will appear equally on all sides
+                                                            blurRadius: 10, // Adjust blur for softer shadow
+                                                            spreadRadius: 0.4, // Spread the shadow slightly
+                                                          ),
+                                                        ],
                                                       ),
+
                                                       padding: EdgeInsets.all(16.0),
                                                       child: Column(
                                                         mainAxisAlignment:

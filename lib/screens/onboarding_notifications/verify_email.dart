@@ -23,6 +23,7 @@ class VerifyEmail extends StatefulWidget {
 
 class _VerifyEmailState extends State<VerifyEmail> {
   Timer? _timer;
+
   // late StreamController<int> _events;
   StreamController<int> _events = StreamController<int>.broadcast();
   var _isLoadingOtpDialoge = false;
@@ -34,8 +35,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
   bool isOtpButtonActive = false;
   int _timeLeft = 60;
   var accessToken = "";
-
-
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -248,289 +247,286 @@ class _VerifyEmailState extends State<VerifyEmail> {
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return Consumer<AuthProvider>(builder: (context, auth, child) {
-        return Consumer<UserProvider>(builder: (context, user, child)
-        {
+        return Consumer<UserProvider>(builder: (context, user, child) {
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
-                return StreamBuilder<int>(
-                    stream: _events.stream,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<int> snapshot) {
-                      return Scaffold(
-                          backgroundColor: themeNotifier.isDark
-                              ? AppColors.backgroundColor
-                              : AppColors.textColorWhite,
-                          body: Column(children: [
-                            MainHeader(title: 'Verify Email'),
+            return StreamBuilder<int>(
+                stream: _events.stream,
+                builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                  return Scaffold(
+                      backgroundColor: themeNotifier.isDark
+                          ? AppColors.backgroundColor
+                          : AppColors.textColorWhite,
+                      body: Column(children: [
+                        MainHeader(title: 'Verify Email'),
+                        Expanded(
+                            child: Container(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                SizedBox(height: 3.h),
+                                Container(
+                                  margin:
+                                      EdgeInsets.symmetric(horizontal: 17.sp),
+                                  height: 70.h,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.showDialogClr,
+                                    borderRadius: BorderRadius.circular(10.sp),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColors.textColorBlack.withOpacity(0.45), // Dark shadow color
+                                        offset: Offset(0, 0), // No offset, shadow will appear equally on all sides
+                                        blurRadius: 10, // Adjust blur for softer shadow
+                                        spreadRadius: 0.4, // Spread the shadow slightly
+                                      ),
+                                    ],
+                                  ),
 
-
-                            Expanded(child: Container(
-                              child: SingleChildScrollView(child: Column(
-                                children: [
-                                  SizedBox(height: 3.h),
-                                  Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 17.sp),
-                                    height: 70.h,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.showDialogClr,
-                                      borderRadius: BorderRadius.circular(
-                                          10.sp),
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 4.h,
-                                        ),
-                                        Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 18.0),
-                                            child: Image.asset(
-                                              "assets/images/email.png",
-                                              height: 6.2.h,
-                                              width: 6.2.h,
-                                              color: AppColors.hexaGreen,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 2.h,
-                                        ),
-                                        Text(
-                                          'Email Verification Sent'.tr(),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 17.sp,
-                                              color: AppColors.textColorWhite),
-                                        ),
-
-                                        SizedBox(
-                                          height: 2.h,
-                                        ),
-
-                                        Padding(
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 4.h,
+                                      ),
+                                      Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: Padding(
                                           padding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 20),
-                                          child: Text(
-                                            'To complete the registration please \nenter the code sent to your email.'
-                                                .tr(),
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                height: 1.4,
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 10.2.sp,
-                                                color: AppColors.textColorGrey),
+                                              const EdgeInsets.only(top: 18.0),
+                                          child: Image.asset(
+                                            "assets/images/email.png",
+                                            height: 6.2.h,
+                                            width: 6.2.h,
+                                            color: AppColors.hexaGreen,
                                           ),
                                         ),
+                                      ),
+                                      SizedBox(
+                                        height: 2.h,
+                                      ),
+                                      Text(
+                                        'Email Verification Sent'.tr(),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 17.sp,
+                                            color: AppColors.textColorWhite),
+                                      ),
 
-                                        SizedBox(height: 2.h),
+                                      SizedBox(
+                                        height: 2.h,
+                                      ),
 
-                                        Text(
-                                          'Enter verification Code',
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20),
+                                        child: Text(
+                                          'To complete the registration please \nenter the code sent to your email.'
+                                              .tr(),
+                                          textAlign: TextAlign.center,
                                           style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 13.sp,
-                                              color: themeNotifier.isDark
-                                                  ? AppColors.textColorWhite
-                                                  : AppColors.textColorBlack),
+                                              height: 1.4,
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 10.2.sp,
+                                              color: AppColors.textColorGrey),
                                         ),
+                                      ),
 
-                                        SizedBox(
-                                          height: 2.h,
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 10.sp),
-                                          child: Pinput(
-                                              scrollPadding: EdgeInsets.only(
-                                                  bottom: MediaQuery
-                                                      .of(context)
-                                                      .viewInsets
-                                                      .bottom - 100),
-                                              controller: otp6Controller,
-                                              length: 6,
-                                              defaultPinTheme: PinTheme(
-                                                width: 9.8.w,
-                                                height: 8.h,
-                                                textStyle: TextStyle(
-                                                    color: AppColors
-                                                        .textColorWhite,
-                                                    fontSize: 18.sp,
-                                                    fontWeight: FontWeight.w700,
-                                                    fontFamily: 'Blogger Sans'
+                                      SizedBox(height: 2.h),
+
+                                      Text(
+                                        'Enter verification Code',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 13.sp,
+                                            color: themeNotifier.isDark
+                                                ? AppColors.textColorWhite
+                                                : AppColors.textColorBlack),
+                                      ),
+
+                                      SizedBox(
+                                        height: 2.h,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10.sp),
+                                        child: Pinput(
+                                            scrollPadding: EdgeInsets.only(
+                                                bottom: MediaQuery.of(context)
+                                                        .viewInsets
+                                                        .bottom -
+                                                    100),
+                                            controller: otp6Controller,
+                                            length: 6,
+                                            defaultPinTheme: PinTheme(
+                                              width: 9.8.w,
+                                              height: 8.h,
+                                              textStyle: TextStyle(
+                                                  color:
+                                                      AppColors.textColorWhite,
+                                                  fontSize: 18.sp,
+                                                  fontWeight: FontWeight.w700,
+                                                  fontFamily: 'Blogger Sans'
                                                   // letterSpacing: 16,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  border: fromAuth
-                                                      ? Border.all(
-                                                      color: auth
-                                                          .otpErrorResponse
-                                                          ? AppColors.errorColor
-                                                          : Colors.transparent,
-                                                      width: 0.3.sp)
-                                                      : Border.all(
-                                                      color: user
-                                                          .otpErrorResponse
-                                                          ? AppColors.errorColor
-                                                          : user
-                                                          .otpSuccessResponse
-                                                          ? AppColors.hexaGreen
-                                                          : Colors.transparent,
-                                                      width: 0.3.sp),
-                                                  borderRadius: BorderRadius
-                                                      .circular(8),
-                                                  color: AppColors
-                                                      .transparentBtnBorderColorDark
-                                                      .withOpacity(0.15),
-                                                ),
+                                                  ),
+                                              decoration: BoxDecoration(
+                                                border: fromAuth
+                                                    ? Border.all(
+                                                        color: auth
+                                                                .otpErrorResponse
+                                                            ? AppColors
+                                                                .errorColor
+                                                            : Colors
+                                                                .transparent,
+                                                        width: 0.3.sp)
+                                                    : Border.all(
+                                                        color: user
+                                                                .otpErrorResponse
+                                                            ? AppColors
+                                                                .errorColor
+                                                            : user
+                                                                    .otpSuccessResponse
+                                                                ? AppColors
+                                                                    .hexaGreen
+                                                                : Colors
+                                                                    .transparent,
+                                                        width: 0.3.sp),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                color: AppColors
+                                                    .transparentBtnBorderColorDark
+                                                    .withOpacity(0.15),
                                               ),
-                                              pinputAutovalidateMode:
-                                              PinputAutovalidateMode.onSubmit,
-                                              showCursor: true,
-                                              onChanged: (v) =>
-                                              Provider
-                                                  .of<AuthProvider>(
-                                                  context,
-                                                  listen: false)
-                                                  .otpSuccessResponse,
-                                              onCompleted: (pin) async {
-                                                setState(() {
-                                                  otpPin = pin;
-                                                });
-                                                print("OTP code");
-
-                                                print(pin.toString());
-                                                Provider
-                                                    .of<AuthProvider>(context,
-                                                    listen: false)
-                                                    .codeFromOtpBoxes = pin;
-                                                Provider
-                                                    .of<AuthProvider>(context,
-                                                    listen: false)
-                                                    .otpSuccessResponse;
-
-                                                otp6Controller.text.length == 6
-                                                    ? firstbuttonFunction()
-                                                    : () {};
-                                              }),
-                                        ),
-                                        if (auth.otpErrorResponse)
-                                          Padding(
-                                            padding: EdgeInsets.only(top: 2.h),
-                                            child: Text(
-                                              '*Incorrect verification code'
-                                                  .tr(),
-                                              style: TextStyle(
-                                                  color: AppColors.errorColor,
-                                                  fontSize: 10.2.sp,
-                                                  fontWeight: FontWeight.w400),
                                             ),
-                                          ),
-
-                                        SizedBox(
-                                          height: 5.h,
-                                        ),
-                                        // Expanded(
-                                        //     child: SizedBox())
-                                        Padding(
-                                            padding:
-                                            EdgeInsets.symmetric(
-                                                horizontal: 15.sp),
-                                            child: DialogButton(
-                                              title: 'Confirm',
-                                              isactive: otp6Controller.text
-                                                  .length == 6,
-                                              handler: () async {
-                                                if (otp6Controller.text
-                                                    .length == 6) {
-                                                  firstbuttonFunction();
-                                                }
-                                              },
-                                              isLoading: false,
-                                              color: AppColors
-                                                  .activeButtonColor,
-                                              textColor: AppColors
-                                                  .textColorBlack,
-                                            )),
-                                        SizedBox(height: 2.h),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 22.sp),
-                                          child: AppButton(
-                                              title:
-                                              // snapshot.data != null && snapshot.data! > 0 ?
-                                              'Resend code: ' +
-                                                  // "${snapshot.data.toString()}"
-                                                  "${(snapshot.data! ~/ 60)
-                                                      .toString()
-                                                      .padLeft(
-                                                      2, '0')}:${(snapshot
-                                                      .data! % 60)
-                                                      .toString()
-                                                      .padLeft(2, '0')}"
-                                              // :secondTitle
-                                              ,
-
-                                              // secondTitle,
-                                              isactive: true,
-                                              handler: () async {
-                                                if (_timeLeft == 0) {
-                                                  print(
-                                                      'resend function calling');
-                                                  try {
-                                                    setState(() {
-                                                      _isLoadingResend = true;
-                                                    });
-                                                    final result =
-                                                    await Provider.of<
-                                                        AuthProvider>(
+                                            pinputAutovalidateMode:
+                                                PinputAutovalidateMode.onSubmit,
+                                            showCursor: true,
+                                            onChanged: (v) =>
+                                                Provider.of<AuthProvider>(
                                                         context,
                                                         listen: false)
-                                                        .registerEmailResendOtp(
-                                                        medium: "email",
-                                                        token: accessToken,
-                                                        context: context);
-                                                    setState(() {
-                                                      _isLoadingResend = false;
-                                                    });
-                                                    if (result ==
-                                                        AuthResult.success) {
-                                                      restartCountdown();
-                                                      _events =
-                                                      new StreamController<
-                                                          int>();
-                                                      _events.add(60);
-                                                      startTimer();
-                                                    }
-                                                  } catch (error) {
-                                                    print("Error: $error");
-                                                  } finally {
-                                                    setState(() {
-                                                      _isLoadingResend = false;
-                                                    });
-                                                  }
-                                                } else {}
-                                              },
-                                              isGradient: false,
-                                              isGradientWithBorder: false,
-                                              textColor: _timeLeft != 0
-                                                  ? AppColors.textColorBlack
-                                                  .withOpacity(0.8)
-                                                  : AppColors.textColorWhite,
-                                              color: Colors.transparent),
+                                                    .otpSuccessResponse,
+                                            onCompleted: (pin) async {
+                                              setState(() {
+                                                otpPin = pin;
+                                              });
+                                              print("OTP code");
+
+                                              print(pin.toString());
+                                              Provider.of<AuthProvider>(context,
+                                                      listen: false)
+                                                  .codeFromOtpBoxes = pin;
+                                              Provider.of<AuthProvider>(context,
+                                                      listen: false)
+                                                  .otpSuccessResponse;
+
+                                              otp6Controller.text.length == 6
+                                                  ? firstbuttonFunction()
+                                                  : () {};
+                                            }),
+                                      ),
+                                      if (auth.otpErrorResponse)
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 2.h),
+                                          child: Text(
+                                            '*Incorrect verification code'.tr(),
+                                            style: TextStyle(
+                                                color: AppColors.errorColor,
+                                                fontSize: 10.2.sp,
+                                                fontWeight: FontWeight.w400),
+                                          ),
                                         ),
-                                      ],
-                                    ),
+
+                                      SizedBox(
+                                        height: 5.h,
+                                      ),
+                                      // Expanded(
+                                      //     child: SizedBox())
+                                      Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 15.sp),
+                                          child: DialogButton(
+                                            title: 'Confirm',
+                                            isactive:
+                                                otp6Controller.text.length == 6,
+                                            handler: () async {
+                                              if (otp6Controller.text.length ==
+                                                  6) {
+                                                firstbuttonFunction();
+                                              }
+                                            },
+                                            isLoading: false,
+                                            color: AppColors.activeButtonColor,
+                                            textColor: AppColors.textColorBlack,
+                                          )),
+                                      SizedBox(height: 2.h),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 22.sp),
+                                        child: AppButton(
+                                            title:
+                                                // snapshot.data != null && snapshot.data! > 0 ?
+                                                'Resend code: ' +
+                                                    // "${snapshot.data.toString()}"
+                                                    "${(snapshot.data! ~/ 60).toString().padLeft(2, '0')}:${(snapshot.data! % 60).toString().padLeft(2, '0')}"
+                                            // :secondTitle
+                                            ,
+
+                                            // secondTitle,
+                                            isactive: true,
+                                            handler: () async {
+                                              if (_timeLeft == 0) {
+                                                print(
+                                                    'resend function calling');
+                                                try {
+                                                  setState(() {
+                                                    _isLoadingResend = true;
+                                                  });
+                                                  final result = await Provider
+                                                          .of<AuthProvider>(
+                                                              context,
+                                                              listen: false)
+                                                      .registerEmailResendOtp(
+                                                          medium: "email",
+                                                          token: accessToken,
+                                                          context: context);
+                                                  setState(() {
+                                                    _isLoadingResend = false;
+                                                  });
+                                                  if (result ==
+                                                      AuthResult.success) {
+                                                    restartCountdown();
+                                                    _events =
+                                                        new StreamController<
+                                                            int>();
+                                                    _events.add(60);
+                                                    startTimer();
+                                                  }
+                                                } catch (error) {
+                                                  print("Error: $error");
+                                                } finally {
+                                                  setState(() {
+                                                    _isLoadingResend = false;
+                                                  });
+                                                }
+                                              } else {}
+                                            },
+                                            isGradient: false,
+                                            isGradientWithBorder: false,
+                                            textColor: _timeLeft != 0
+                                                ? AppColors.textColorBlack
+                                                    .withOpacity(0.8)
+                                                : AppColors.textColorWhite,
+                                            color: Colors.transparent),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),),
-                            ))
-                          ]));
-                    });
-              });
+                                ),
+                              ],
+                            ),
+                          ),
+                        ))
+                      ]));
+                });
+          });
         });
       });
     });

@@ -464,6 +464,14 @@ class _ResetPasswordState extends State<ResetPassword> {
                                                     : AppColors.textColorWhite,
                                                 borderRadius:
                                                     BorderRadius.circular(15),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: AppColors.textColorBlack.withOpacity(0.95),
+                                                    offset: Offset(0, 0),
+                                                    blurRadius: 10,
+                                                    spreadRadius: 0.4,
+                                                  ),
+                                                ],
                                               ),
                                               child: Column(
                                                 mainAxisAlignment:
