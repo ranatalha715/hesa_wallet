@@ -57,7 +57,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             numbers[i] = '*';
           }
         }
-        isFirstFieldFilled = numbers[0].isNotEmpty;
+        isFirstFieldFilled = numbers[5].isNotEmpty;
       });
     });
   }
@@ -236,6 +236,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return InkWell(
       hoverColor: Colors.grey.withOpacity(0.2),
       borderRadius: BorderRadius.circular(20),
+      onLongPress: () {
+        setState(() {
+          for (int i = 0; i < numbers.length; i++) {
+            numbers[i] = '';
+          }
+          for (int i = 0; i < numbersToSave.length; i++) {
+            numbersToSave[i] = '';
+          }
+        });
+      },
       onTap: () {
         imagePath == null
             ? setState(() async {
@@ -270,7 +280,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     isMatched = true;
                   });
 
-                  Future.delayed(Duration(milliseconds: 700), () {
+                  Future.delayed(Duration(milliseconds: 500), () {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -311,9 +321,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               });
       },
       child: Container(
-        height: 10.h,
-        width: 10.h,
+        height: 7.h,
+        width: 7.h,
         decoration: BoxDecoration(
+          // color: Colors.red,
             ),
         child: Center(
           child: imagePath == null
@@ -361,7 +372,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             child: Text(
               numbers[index],
               style: TextStyle(
-                fontSize: 20.sp,
+                fontSize: 17.sp,
                 color: isMatched
                     ? AppColors.activeButtonColor
                     : AppColors.errorColor,

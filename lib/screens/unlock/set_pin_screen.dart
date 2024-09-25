@@ -16,9 +16,11 @@ class PinScreen extends StatefulWidget {
 class _PinScreenState extends State<PinScreen> {
   late Timer _timer;
   String selectedNumber = '';
+  // List<String> numbers = List.filled(6, '');
+  // List<String> numbersToSave = List.filled(6, '');
   List<String> numbers = List.generate(6, (index) => '');
   List<String> numbersToSave = List.generate(6, (index) => '');
-  bool isFirstFieldFilled = false;
+  bool isLastFieldFilled = false;
 
   @override
   void initState() {
@@ -32,7 +34,7 @@ class _PinScreenState extends State<PinScreen> {
             numbers[i] = '*';
           }
         }
-        isFirstFieldFilled = numbers[0].isNotEmpty;
+        isLastFieldFilled = numbers[5].isNotEmpty;
       });
     });
   }
@@ -54,7 +56,7 @@ class _PinScreenState extends State<PinScreen> {
   //       print("Original numbers:");
   //       print(originalNumbers);
   //
-  //       isFirstFieldFilled = originalNumbers[0].isNotEmpty;
+  //       isLastFieldFilled = originalNumbers[0].isNotEmpty;
   //     });
   //   });
   // }
@@ -80,7 +82,7 @@ class _PinScreenState extends State<PinScreen> {
                 'Enter New Pin',
                 style: TextStyle(
                     fontSize: 13.sp,
-                    color: isFirstFieldFilled
+                    color: isLastFieldFilled
                         ? AppColors.activeButtonColor
                         : AppColors.textColorWhite,
                     fontWeight: FontWeight.w600,
@@ -178,22 +180,22 @@ class _PinScreenState extends State<PinScreen> {
         width: 5.h,
         decoration: BoxDecoration(
           border: Border.all(
-            color: isFirstFieldFilled
+            color: isLastFieldFilled
                 ? AppColors.activeButtonColor
                 : Colors.transparent,
           ),
           borderRadius: BorderRadius.circular(40),
-          color: isFirstFieldFilled
+          color: isLastFieldFilled
               ? Colors.transparent
               : Colors.grey.withOpacity(0.2),
         ),
         child: Center(
           child: Padding(
-            padding: EdgeInsets.only(top: numbers[index] == '*' ? 5.sp : 0),
+            padding: EdgeInsets.only(top: numbers[index] == '*' ? 4.5.sp : 0),
             child: Text(
               numbers[index],
               style: TextStyle(
-                fontSize: 20.sp,
+                fontSize: 17.sp,
                 color: AppColors.activeButtonColor,
                 fontWeight: FontWeight.w400,
                 fontFamily: 'ArialASDCF',
@@ -231,9 +233,19 @@ class _PinScreenState extends State<PinScreen> {
     return InkWell(
       hoverColor: Colors.grey.withOpacity(0.2),
       borderRadius: BorderRadius.circular(20),
+      onLongPress: () {
+        setState(() {
+          for (int i = 0; i < numbers.length; i++) {
+            numbers[i] = '';
+          }
+          for (int i = 0; i < numbersToSave.length; i++) {
+            numbersToSave[i] = '';
+          }
+        });
+      },
       onTap: () {
         imagePath == null
-            ? setState(() {
+            ? setState(()  {
                 // Create a variable to store the six values
                 String result = '';
                 String resultToSave = '';
@@ -261,13 +273,15 @@ class _PinScreenState extends State<PinScreen> {
                 }
                 print("passcode" + resultToSave);
                 if (resultToSave.length == 6) {
+                  Future.delayed(Duration(seconds: 1), () {
+                    // Your code here that will be executed after the delay
+                    Navigator.of(context).pushReplacementNamed(
+                        SetConfirmPinScreen.routeName,
+                        arguments: {
+                          'passcode': resultToSave,
+                        });
+                  });
 
-                  // savePasscode(resultToSave);
-                  Navigator.of(context).pushReplacementNamed(
-                      SetConfirmPinScreen.routeName,
-                      arguments: {
-                        'passcode': resultToSave,
-                      });
 
                 }
 
@@ -290,8 +304,8 @@ class _PinScreenState extends State<PinScreen> {
               });
       },
       child: Container(
-        height: 5.h,
-        width: 5.h,
+        height: 7.h,
+        width: 7.h,
         decoration: BoxDecoration(),
         child: Center(
           child: imagePath == null

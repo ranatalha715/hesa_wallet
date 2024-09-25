@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -10,6 +11,7 @@ import 'package:hesa_wallet/providers/payment_fees.dart';
 import 'package:hesa_wallet/providers/token_provider.dart';
 import 'package:hesa_wallet/screens/onboarding_notifications/verify_email.dart';
 import 'package:hesa_wallet/screens/unlock/set_confirm_pin_screen.dart';
+import 'package:hesa_wallet/screens/unlock/set_pin_screen.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/nfts_details.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:hesa_wallet/widgets/dialog_button.dart';
@@ -55,6 +57,7 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await localized.EasyLocalization.ensureInitialized();
+  // const AndroidInitializationSettings initializationSettingsAndroid =
   // const AndroidInitializationSettings initializationSettingsAndroid =
   // AndroidInitializationSettings('@mipmap/ic_launcher');
   //
@@ -117,9 +120,13 @@ Future<void> main() async {
                 // path to your language files
                 fallbackLocale: Locale('en', 'US'),
                 saveLocale: true,
-                child: MyApp()))
-        // )
+                child:
+              //   DevicePreview(
+              //  enabled: !kReleaseMode,
+              // builder: (context) =>
+                  MyApp()))
         );
+        // );
     // Register the MethodChannel with the same unique name as in the NFT app
     const channel = MethodChannel('com.example.hesa_wallet');
   });
@@ -788,7 +795,8 @@ handleDisconnection();
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // Show a loading indicator while waiting for the deep link to be processed
-        return accessToken.isEmpty ? const Wallet(): WalletTokensNfts();
+        return accessToken.isEmpty ? const Wallet(): PinScreen();
+        // WalletTokensNfts();
             // Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           // Handle any errors

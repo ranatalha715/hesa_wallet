@@ -37,7 +37,7 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
             numbers[i] = '*';
           }
         }
-        isFirstFieldFilled = numbers[0].isNotEmpty;
+        isFirstFieldFilled = numbers[5].isNotEmpty;
       });
     });
   }
@@ -172,7 +172,7 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
             child: Text(
               numbers[index],
               style: TextStyle(
-                fontSize: 20.sp,
+                fontSize: 17.sp,
                 color: isMatched ? AppColors.activeButtonColor:AppColors.errorColor,
                 fontWeight: FontWeight.w400,
                 fontFamily: 'ArialASDCF',
@@ -209,7 +209,17 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
   Widget digitBox(String number, {String? imagePath, String? passcodeToSet }) {
     return InkWell(
       hoverColor: Colors.grey.withOpacity(0.2),
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(50),
+      onLongPress: () {
+        setState(() {
+          for (int i = 0; i < numbers.length; i++) {
+            numbers[i] = '';
+          }
+          for (int i = 0; i < numbersToSave.length; i++) {
+            numbersToSave[i] = '';
+          }
+        });
+      },
       onTap: () {
         imagePath == null
             ? setState(() {
@@ -243,12 +253,16 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
                  isMatched=true;
               });
               savePasscode(resultToSave);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => WalletTokensNfts(),
-                ),
-              );
+              Future.delayed(Duration(seconds: 2), () {
+                // Your code here that will be executed after the delay
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => WalletTokensNfts(),
+                  ),
+                );
+              });
+
             }else{
               setState(() {
                 isMatched=false;
@@ -273,8 +287,8 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
         });
       },
       child: Container(
-        height: 5.h,
-        width: 5.h,
+        height: 7.h,
+        width: 7.h,
         decoration: BoxDecoration(),
         child: Center(
           child: imagePath == null
