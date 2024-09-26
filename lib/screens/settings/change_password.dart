@@ -273,10 +273,10 @@ class _ChangePasswordState extends State<ChangePassword> {
                                 ),
                                 TextFieldParent(
                                   child: TextField(
-                                      scrollPadding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom),
+                                      // scrollPadding: EdgeInsets.only(
+                                      //     bottom: MediaQuery.of(context)
+                                      //         .viewInsets
+                                      //         .bottom),
                                       controller: _oldPasswordController,
                                       keyboardType:
                                           TextInputType.visiblePassword,
@@ -390,10 +390,10 @@ class _ChangePasswordState extends State<ChangePassword> {
                                 ),
                                 TextFieldParent(
                                   child: TextField(
-                                      scrollPadding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom+50),
+                                      // scrollPadding: EdgeInsets.only(
+                                      //     bottom: MediaQuery.of(context)
+                                      //         .viewInsets
+                                      //         .bottom),
                                       controller: _newPasswordController,
                                       keyboardType:
                                           TextInputType.visiblePassword,

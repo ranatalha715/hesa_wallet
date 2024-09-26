@@ -420,40 +420,42 @@ class _WalletBankingAndPaymentEmptyState
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
+                                            if( paymentCards.isNotEmpty)
                                             SizedBox(
                                               width: 8.sp,
                                             ),
+                                           if( paymentCards.isNotEmpty)
                                             trPro.selectedCardBrand == 'VISA'
                                                 ? Image.asset(
-                                                    "assets/images/Visa.png",
-                                                    height: 17.sp,
-                                                  )
+                                              "assets/images/Visa.png",
+                                              height: 17.sp,
+                                            )
                                                 : Container(
                                               height: 2.7.h,
-                                                    decoration: BoxDecoration(
-                                                      color: AppColors
-                                                          .textColorGreyShade2
-                                                          .withOpacity(0.27),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              3),
-                                                    ),
-                                                    child: Padding(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal:
-                                                                  3.3.sp,
-                                                              vertical: 0.4.sp),
-                                                      child: Image.asset(
-                                                        trPro.selectedCardBrand ==
-                                                                'MASTER'
-                                                            ? "assets/images/master2.png"
-                                                            : "assets/images/mada_pay.png",
-                                                        height: 18.sp,
-                                                        width: 18.sp,
-                                                      ),
-                                                    ),
-                                                  ),
+                                              decoration: BoxDecoration(
+                                                color: AppColors
+                                                    .textColorGreyShade2
+                                                    .withOpacity(0.27),
+                                                borderRadius:
+                                                BorderRadius.circular(
+                                                    3),
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                EdgeInsets.symmetric(
+                                                    horizontal:
+                                                    3.3.sp,
+                                                    vertical: 0.4.sp),
+                                                child: Image.asset(
+                                                  trPro.selectedCardBrand ==
+                                                      'MASTER'
+                                                      ? "assets/images/master2.png"
+                                                      : "assets/images/mada_pay.png",
+                                                  height: 18.sp,
+                                                  width: 18.sp,
+                                                ),
+                                              ),
+                                            ),
                                             Padding(
                                               padding:
                                                   const EdgeInsets.symmetric(
@@ -478,20 +480,26 @@ class _WalletBankingAndPaymentEmptyState
                                                               : AppColors
                                                                   .textColorBlack),
                                                     )
-                                                  : Text(
-                                                      'No payment card have been added'
-                                                          .tr(),
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          fontSize: 11.7.sp,
-                                                          color: themeNotifier
-                                                                  .isDark
-                                                              ? AppColors
-                                                                  .textColorGreyShade2
-                                                              : AppColors
-                                                                  .textColorBlack),
-                                                    ),
+                                                  : Container(
+                                                width: 75.w,
+                                                    // color: Colors.yellow,
+                                                    child: Text(
+                                                        'No payment card have been added'
+                                                            .tr(),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            fontSize: 11.7.sp,
+                                                            color: themeNotifier
+                                                                    .isDark
+                                                                ? AppColors
+                                                                    .textColorGreyShade2
+                                                                : AppColors
+                                                                    .textColorBlack),
+                                                      ),
+                                                  ),
                                             ),
                                             Spacer(),
                                             if (paymentCards.isNotEmpty)
@@ -725,19 +733,24 @@ class _WalletBankingAndPaymentEmptyState
                                                               : AppColors
                                                                   .textColorBlack),
                                                     )
-                                                  : Text(
-                                                      'No banking have been added'
-                                                          .tr(),
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          fontSize: 11.7.sp,
-                                                          color: themeNotifier.isDark
-                                                              ? AppColors
-                                                                  .textColorGreyShade2
-                                                              : AppColors
-                                                                  .textColorBlack),
-                                                    )),
+                                                  : Container(
+                                                width: 75.w,
+                                                    child: Text(
+                                                        'No banking have been added'
+                                                            .tr(),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            fontSize: 11.7.sp,
+                                                            color: themeNotifier.isDark
+                                                                ? AppColors
+                                                                    .textColorGreyShade2
+                                                                : AppColors
+                                                                    .textColorBlack),
+                                                      ),
+                                                  )),
                                           // Spacer(),
                                           if (banks.isNotEmpty)
                                             Padding(

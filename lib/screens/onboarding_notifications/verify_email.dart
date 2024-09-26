@@ -190,6 +190,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
       });
       print('loading popup 2' + _isLoadingOtpDialoge.toString());
       if (result == AuthResult.success) {
+        await Future.delayed(const Duration(milliseconds: 1000));
         Navigator.of(context)
             .pushNamedAndRemoveUntil('/TermsAndConditions', (Route d) => false);
       }
@@ -370,13 +371,12 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                               decoration: BoxDecoration(
                                                 border: fromAuth
                                                     ? Border.all(
-                                                        color: auth
-                                                                .otpErrorResponse
+                                                        color: auth.otpErrorResponse && !auth.otpSuccessResponse
                                                             ? AppColors
                                                                 .errorColor
-                                                            : Colors
-                                                                .transparent,
-                                                        width: 0.3.sp)
+                                                            : auth.otpSuccessResponse && !auth.otpErrorResponse ?  AppColors.hexaGreen
+                                                    : Colors.transparent,
+                                                        width: 1.sp)
                                                     : Border.all(
                                                         color: user
                                                                 .otpErrorResponse
@@ -388,7 +388,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                                                     .hexaGreen
                                                                 : Colors
                                                                     .transparent,
-                                                        width: 0.3.sp),
+                                                        width: 1.sp),
                                                 borderRadius:
                                                     BorderRadius.circular(8),
                                                 color: AppColors

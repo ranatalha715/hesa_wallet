@@ -55,13 +55,16 @@ bool otpSuccessResponse=false;
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('accessToken', accessToken);
         await prefs.setString('refreshToken', refreshToken);
-
+        otpErrorResponse=false;
+        otpSuccessResponse=true;
+        notifyListeners();
         // await prefs.setString('password', password);
         print('true ya false h');
         print(Provider.of<UserProvider>(context, listen: false)
             .navigateToNeoForConnectWallet);
         if (Provider.of<UserProvider>(context, listen: false)
             .navigateToNeoForConnectWallet) {
+          await Future.delayed(const Duration(milliseconds: 500));
           await Navigator.of(context)
               .pushNamed(ConnectDapp.routeName, arguments: {});
 
@@ -79,6 +82,7 @@ bool otpSuccessResponse=false;
           // );
           print('go to neo');
         } else {
+          await Future.delayed(const Duration(milliseconds: 500));
           await Navigator.of(context).pushNamedAndRemoveUntil(
               'nfts-page', (Route d) => false,
               arguments: {});
@@ -102,6 +106,7 @@ bool otpSuccessResponse=false;
                     Provider.of<UserProvider>(context, listen: false)
                         .navigateToNeoForConnectWallet
                         .toString());
+                 Future.delayed(const Duration(milliseconds: 500));
                 Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => ConnectDapp()),
                       (Route<dynamic> route) => false,
@@ -131,20 +136,26 @@ bool otpSuccessResponse=false;
           });
         }
         otpErrorResponse=false;
+        otpSuccessResponse=true;
         notifyListeners();
 
         return AuthResult.success;
       } else {
         print("Login failed: ${response.body}");
         otpErrorResponse=true;
+        otpSuccessResponse=false;
         notifyListeners();
         return AuthResult.failure;
       }
     } on TimeoutException catch (e) {
+      otpErrorResponse=true;
+      otpSuccessResponse=false;
       print("TimeoutException during login: $e");
-      _showToast('Timeout occurred during login $e');
+      // _showToast('Timeout occurred during login $e');
       return AuthResult.failure;
     } catch (e) {
+      otpErrorResponse=true;
+      otpSuccessResponse=false;
       print("Exception during login: $e");
       return AuthResult.failure;
     }
@@ -223,8 +234,12 @@ bool otpSuccessResponse=false;
 print('delete account');
 print(json.decode(response.body));
     if (response.statusCode == 201) {
+      otpErrorResponse=false;
+      otpSuccessResponse=false;
       return AuthResult.success;
     } else {
+      otpErrorResponse=false;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }
@@ -253,10 +268,12 @@ print(json.decode(response.body));
     fToast.init(context);
     if (response.statusCode == 201) {
       otpErrorResponse=false;
+      otpSuccessResponse=true;
       notifyListeners();
       return AuthResult.success;
     } else {
       otpErrorResponse=true;
+      otpSuccessResponse=false;
       notifyListeners();
       return AuthResult.failure;
     }
@@ -358,12 +375,16 @@ print(json.decode(response.body));
       print("${response.body}");
       final successResponse = json.decode(response.body);
       loginErrorResponse= null;
+      otpErrorResponse=false;
+      otpSuccessResponse=false;
       return AuthResult.success;
     } else {
       // Show an error message or handle the response as needed
       print("Something went wrong: ${response.body}");
       final errorResponse = json.decode(response.body);
       loginErrorResponse=errorResponse['message'][0]['message'];
+      otpErrorResponse=false;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }
@@ -550,6 +571,8 @@ print(json.decode(response.body));
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('uniqueId', uniqueId);
         uniqueIdFromStep1=uniqueId;
+        otpErrorResponse=false;
+        otpSuccessResponse=false;
         notifyListeners();
         print("uniqueId" + uniqueId);
         final successResponse = json.decode(response.body);
@@ -560,12 +583,16 @@ print(json.decode(response.body));
         final errorResponse = json.decode(response.body);
         print("Registration failed: ${response.body}");
         registerUserErrorResponse = errorResponse['message'][0]['message'];
+        otpErrorResponse=false;
+        otpSuccessResponse=false;
         return AuthResult.failure;
       }
     } catch (e) {
       // Handle network or other errors
       print("Error during registration: $e");
-      _showToast('Registration failed: $e');
+
+      otpErrorResponse=false;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }
@@ -595,16 +622,14 @@ print(json.decode(response.body));
       // Successful login, handle navigation or other actions
       print("User registered successfully!");
       _showToast('User registered successfully!');
-      otpErrorResponse=false;
-      otpSuccessResponse=true;
+
       notifyListeners();
       return AuthResult.success;
     } else {
       // Show an error message or handle the response as needed
       print("Verifying failed: ${response.body}");
       _showToast('${response.body}');
-      otpErrorResponse=true;
-      otpSuccessResponse=false;
+
       notifyListeners();
       return AuthResult.failure;
     }
@@ -689,6 +714,7 @@ print(json.decode(response.body));
         // final prefs = await SharedPreferences.getInstance();
         // await prefs.setString('uniqueId', uniqueId);
         // uniqueIdFromStep1=uniqueId;
+        otpErrorResponse=false;
         otpSuccessResponse=false;
         notifyListeners();
 
@@ -702,6 +728,7 @@ print(json.decode(response.body));
         registerUserErrorResponse = errorResponse['message'][0]['message'];
         // Registration failed
         print("Registration failed: ${response.body}");
+        otpErrorResponse=false;
         otpSuccessResponse=false;
         notifyListeners();
         // _showToast('Registration failed');
@@ -772,16 +799,20 @@ print(json.decode(response.body));
     fToast.init(context);
     if (response.statusCode == 201) {
       // Successful login, handle navigation or other actions
+
       otpErrorResponse=false;
+      otpSuccessResponse=false;
       notifyListeners();
       return AuthResult.success;
     } else {
       // Show an error message or handle the response as needed
-      otpErrorResponse=true;
+      otpErrorResponse=false;
+      otpSuccessResponse=false;
       notifyListeners();
       return AuthResult.failure;
     }
   }
+
 
   var loginErrorResponse;
 
@@ -1038,12 +1069,16 @@ print(json.decode(response.body));
       // Successful login, handle navigation or other actions
       print("Password updated successfully!");
       changePasswordError=null;
+      otpErrorResponse=false;
+      otpSuccessResponse=false;
       return AuthResult.success;
     } else {
       print("Password updation failed: ${response.body}");
       final errorResponse = json.decode(response.body);
       print("Registration failed: ${response.body}");
       changePasswordError = errorResponse['message'][0]['message'];
+      otpErrorResponse=false;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }

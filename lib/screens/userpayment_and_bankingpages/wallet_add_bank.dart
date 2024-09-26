@@ -669,6 +669,10 @@ init() async {
                                                 _accountholdernamerController,
                                             focusNode: _beneficaryNamefocusNode,
                                             textInputAction: TextInputAction.done,
+                                            // scrollPadding: EdgeInsets.only(
+                                            //     bottom: MediaQuery.of(context)
+                                            //         .viewInsets
+                                            //         .bottom),
                                             style: TextStyle(
                                                 fontSize: 10.2.sp,
                                                 color: themeNotifier.isDark

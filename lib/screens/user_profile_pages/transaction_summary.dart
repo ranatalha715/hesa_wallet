@@ -66,7 +66,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
       if (args != null) {
         id = args['id'];
         type = args['type'];
-        print('Aik bhi' + id + type);
+
       }
 
       try {
@@ -77,6 +77,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
         await Provider.of<TransactionProvider>(context, listen: false)
             .getTransactionSummary(
                 accessToken: accessToken, id: id, type: type, context: context);
+        print('this is type' + type);
         setState(() {
           _isLoading = false;
         });
@@ -557,6 +558,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                     ),
                                     transactionDetailsWidget(
                                       title: 'Tx ID:'.tr(),
+                                      func: ()=>_launchURL("https://www.mjraexplorer.com/tx/" + transactionSummary.txId),
                                       details: type == 'counter-offer'
                                           ? replaceMiddleWithDotstxIdCounter(
                                               transactionSummary.txId)
@@ -573,6 +575,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                             themeNotifier.isDark ? true : false,
                                         color: AppColors.hexaGreen),
                                     transactionDetailsWidget(
+                                      func: ()=>_launchURL("https://www.mjraexplorer.com/$type/${transactionSummary.txTokenId}"),
                                       title: type == 'collection'
                                           ? "Collection ID:"
                                           : "Token ID:".tr(),
@@ -595,13 +598,16 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                             "%",
                                         isDark:
                                             themeNotifier.isDark ? true : false,
+                                        color: AppColors.textColorToska,
                                       ),
                                     transactionDetailsWidget(
+                                      func: ()=>_launchURL("https://www.mjraexplorer.com/address/${transactionSummary.txCreatorId}"),
                                       title: 'Creator ID:'.tr(),
                                       details: replaceMiddleWithDots(
                                           transactionSummary.txCreatorId),
                                       isDark:
                                           themeNotifier.isDark ? true : false,
+                                      color: AppColors.textColorToska,
                                     ),
                                     if (transactionSummary.txOfferedBy != 'N/A')
                                       transactionDetailsWidget(
@@ -740,7 +746,9 @@ class _TransactionSummaryState extends State<TransactionSummary> {
       {required String title,
       required String details,
       Color? color,
-      bool isDark = true}) {
+      bool isDark = true,
+        Function? func
+      }) {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.sp),
       child: Row(
@@ -759,21 +767,24 @@ class _TransactionSummaryState extends State<TransactionSummary> {
             ),
           ),
           Spacer(),
-          Container(
-            width: 50.w,
-            // color: Colors.green,
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                details,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                    color:
-                        color == null ? AppColors.textColorGreyShade2 : color,
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w400),
+          GestureDetector(
+            onTap: () => func!(),
+            child: Container(
+              width: 50.w,
+              // color: Colors.green,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  details,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                      color:
+                          color == null ? AppColors.textColorGreyShade2 : color,
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w400),
+                ),
               ),
             ),
           ),

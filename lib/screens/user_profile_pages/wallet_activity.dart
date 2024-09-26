@@ -135,7 +135,7 @@ class _WalletActivityState extends State<WalletActivity> {
         .activities
         .forEach((activity) {
       sortedActivities.add({
-        'type': 'activity',
+        'type': activity.type,
         'tokenName': activity.tokenName,
         'transactionType': activity.transactionType,
         'image': activity.image,

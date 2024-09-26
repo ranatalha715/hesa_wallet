@@ -215,8 +215,12 @@ class UserProvider with ChangeNotifier {
       uniqueIdFromStep1=uniqueId;
       notifyListeners();
       print("uniqueId" + uniqueId);
+      otpErrorResponse=false;
+      otpSuccessResponse=false;
       return AuthResult.success;
     } else {
+      otpErrorResponse=false;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }

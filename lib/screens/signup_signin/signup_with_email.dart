@@ -928,7 +928,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                 SizedBox(height: 10.h),
                                 Container(
                                   margin:
-                                      EdgeInsets.symmetric(horizontal: 4.sp),
+                                      EdgeInsets.symmetric(horizontal: 2.sp),
                                   color: Colors.transparent,
                                   child: Column(
                                     children: [

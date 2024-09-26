@@ -902,11 +902,10 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                                 _accountholdernamerController,
                                             focusNode: _beneficaryNamefocusNode,
                                             textInputAction: TextInputAction.done,
-                                            scrollPadding: EdgeInsets.only(
-                                                bottom: MediaQuery.of(context)
-                                                        .viewInsets
-                                                        .bottom +
-                                                    150),
+                                            // scrollPadding: EdgeInsets.only(
+                                            //     bottom: MediaQuery.of(context)
+                                            //             .viewInsets
+                                            //             .bottom),
                                             style: TextStyle(
                                                 fontSize: 10.2.sp,
                                                 color: themeNotifier.isDark

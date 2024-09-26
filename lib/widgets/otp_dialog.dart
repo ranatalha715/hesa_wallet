@@ -184,19 +184,19 @@ void otpDialog({
                                           decoration: BoxDecoration(
                                             border: fromAuth
                                                 ? Border.all(
-                                                    color: auth.otpErrorResponse
+                                                    color: auth.otpErrorResponse && !auth.otpSuccessResponse
                                                         ? AppColors.errorColor
-                                                        : auth.otpSuccessResponse
+                                                        : auth.otpSuccessResponse && !auth.otpErrorResponse
                                                             ? AppColors.hexaGreen
                                                             : Colors.transparent,
-                                                    width: 0.3.sp)
+                                                    width: 1.sp)
                                                 : Border.all(
-                                                    color: user.otpErrorResponse
+                                                    color: user.otpErrorResponse && !user.otpSuccessResponse
                                                         ? AppColors.errorColor
-                                                        : user.otpSuccessResponse
+                                                        : user.otpSuccessResponse && !user.otpErrorResponse
                                                             ? AppColors.hexaGreen
                                                             : Colors.transparent,
-                                                    width: 0.3.sp),
+                                                    width: 1.sp),
                                             borderRadius:
                                                 BorderRadius.circular(8),
                                             color: AppColors

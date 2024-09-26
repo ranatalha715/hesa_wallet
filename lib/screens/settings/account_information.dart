@@ -381,10 +381,10 @@ class _AccountInformationState extends State<AccountInformation> {
                                           readOnly: isEditAble ? false : true,
                                           controller: _lastnameController,
                                           keyboardType: TextInputType.name,
-                                          scrollPadding: EdgeInsets.only(
-                                              bottom: MediaQuery.of(context)
-                                                  .viewInsets
-                                                  .bottom),
+                                          // scrollPadding: EdgeInsets.only(
+                                          //     bottom: MediaQuery.of(context)
+                                          //         .viewInsets
+                                          //         .bottom),
                                           style: TextStyle(
                                               fontSize: 10.2.sp,
                                               color: themeNotifier.isDark
@@ -549,10 +549,10 @@ class _AccountInformationState extends State<AccountInformation> {
                                           readOnly: isEditAble ? false : true,
                                           controller: _emailController,
                                           keyboardType: TextInputType.emailAddress,
-                                          scrollPadding: EdgeInsets.only(
-                                              bottom: MediaQuery.of(context)
-                                                  .viewInsets
-                                                  .bottom),
+                                          // scrollPadding: EdgeInsets.only(
+                                          //     bottom: MediaQuery.of(context)
+                                          //         .viewInsets
+                                          //         .bottom),
                                           style: TextStyle(
                                               fontSize: 10.2.sp,
                                               color: themeNotifier.isDark
@@ -966,6 +966,10 @@ class _AccountInformationState extends State<AccountInformation> {
                                                           if (userUpdateWithOtpStep2 ==
                                                               AuthResult
                                                                   .success) {
+                                                            await Future.delayed(
+                                                                const Duration(
+                                                                    milliseconds:
+                                                                    500));
                                                             Navigator.pop(
                                                                 context);
                                                             Navigator

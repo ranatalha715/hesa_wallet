@@ -290,7 +290,7 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                                   );
                                                 }
 
-                                                Future.delayed(Duration(seconds: 50),
+                                                Future.delayed(Duration(seconds: 2),
                                                     closeDialogAndNavigate);
                                                 return
                                                   Dialog(
@@ -474,7 +474,7 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                         isGradient: true,
                                         color: Colors.transparent,
                                         textColor: AppColors.textColorBlack,
-                                        isLoading:_isLoading
+                                        // isLoading:_isLoading
                                     ),
                                     SizedBox(
                                       height:  OS.Platform.isIOS ? 2.h : 0,

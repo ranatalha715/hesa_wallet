@@ -457,10 +457,10 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                           },
                                           controller: _firstnameController,
                                           keyboardType: TextInputType.text,
-                                          scrollPadding: EdgeInsets.only(
-                                              bottom: MediaQuery.of(context)
-                                                  .viewInsets
-                                                  .bottom),
+                                          // scrollPadding: EdgeInsets.only(
+                                          //     bottom: MediaQuery.of(context)
+                                          //         .viewInsets
+                                          //         .bottom),
                                           style: TextStyle(
                                               fontSize: 10.2.sp,
                                               color: themeNotifier.isDark
@@ -1167,10 +1167,10 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                           controller:
                                               _identificationnumberController,
                                           keyboardType: TextInputType.number,
-                                          scrollPadding: EdgeInsets.only(
-                                              bottom: MediaQuery.of(context)
-                                                  .viewInsets
-                                                  .bottom),
+                                          // scrollPadding: EdgeInsets.only(
+                                          //     bottom: MediaQuery.of(context)
+                                          //         .viewInsets
+                                          //         .bottom),
                                           style: TextStyle(
                                               fontSize: 10.2.sp,
                                               color: themeNotifier.isDark
