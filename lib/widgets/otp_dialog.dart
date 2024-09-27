@@ -176,7 +176,9 @@ void otpDialog({
                                   Padding(
                                     padding:
                                         EdgeInsets.symmetric(horizontal: 10.sp),
-                                    child: Pinput(
+                                    child:
+                                    Pinput(
+                                      // smsRetriever: ,
                                         controller: otp6Controller,
                                         length: 6,
                                         defaultPinTheme: PinTheme(
@@ -336,7 +338,7 @@ void otpDialog({
                                   //     ),
                                   //   ],
                                   // ),
-                                  if (auth.otpErrorResponse)
+                                  if (auth.otpErrorResponse || user.otpErrorResponse || bank.otpErrorResponse )
                                     Padding(
                                       padding: EdgeInsets.only(top: 2.h),
                                       child: Text(
@@ -376,14 +378,16 @@ void otpDialog({
                                     child: AppButton(
                                         title:
                                             // snapshot.data != null && snapshot.data! > 0 ?
-                                            secondTitle +
+                                        snapshot.data! > 0 ?       secondTitle +
                                                 // "${snapshot.data.toString()}"
-                                                "${(snapshot.data! ~/ 60).toString().padLeft(2, '0')}:${(snapshot.data! % 60).toString().padLeft(2, '0')}"
+
+                                                                  "${(snapshot.data! ~/ 60).toString().padLeft(2, '0')}:${(snapshot.data! % 60).toString().padLeft(2, '0')}"
                                         // :secondTitle
-                                        ,
+                                        : secondTitle + "",
 
                                         // secondTitle,
-                                        isactive: isSecondButtonActive,
+                                        // isactive: isSecondButtonActive,
+                                        isactive: true,
                                         handler: () {
                                           secondBtnHandler();
                                         },

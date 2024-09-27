@@ -491,11 +491,11 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
                                 isGradientWithBorder: true,
 
                                 handler: () => Navigator.pop(context),
-
                                 isGradient: false,
                                 color: AppColors.deleteAccWarningClr
                                     .withOpacity(0.10),
                                 textColor: AppColors.textColorBlack,
+                                buttonWithBorderColor: AppColors.greenBorderClr,
                               ),
                             ],
                           ),

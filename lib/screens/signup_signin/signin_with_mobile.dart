@@ -129,9 +129,18 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
   }
 
   void startTimer() {
+    // Cancel the previous timer if it's active
+    _timer?.cancel();
+    _timeLeft = 60;
     _isTimerActive = true;
-    Timer.periodic(Duration(seconds: 1), (timer) {
-      (_timeLeft > 0) ? _timeLeft-- : _timer?.cancel();
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_timeLeft > 0) {
+        setState(() {
+          _timeLeft--;
+        });
+      } else {
+        _timer?.cancel();
+      }
       print(_timeLeft);
       _events.add(_timeLeft);
     });
@@ -398,7 +407,9 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                                     _isLoadingResend = false;
                                                   });
                                                 }
-                                              } else {}
+                                              } else {
+                                                print('Timer is still running');
+                                              }
                                             },
                                             firstTitle: 'Confirm',
                                             secondTitle: 'Resend code ',
@@ -439,6 +450,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                       }
                                     },
                                     isGradient: true,
+                                    secondBtnBorderClr: false,
                                     color: Colors.transparent,
                                     textColor: AppColors.textColorBlack,
                                   ),
