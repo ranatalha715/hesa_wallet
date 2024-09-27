@@ -22,8 +22,6 @@ class AuthProvider with ChangeNotifier {
   bool isOverlayVisible = false;
   var uniqueIdFromStep1;
   var codeFromOtpBoxes='';
-
-  // var tokenizedUserPayload;
 bool otpErrorResponse=false;
 bool otpSuccessResponse=false;
 

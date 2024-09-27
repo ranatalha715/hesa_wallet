@@ -926,6 +926,7 @@ class _AccountInformationState extends State<AccountInformation> {
                                                       startTimer();
                                                       otpDialog(
                                                         fromAuth: false,
+                                                        fromUser: true,
                                                         incorrect:
                                                             auth.otpErrorResponse,
                                                         // onClose: ()=> removeRoutes(),

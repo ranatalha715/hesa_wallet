@@ -1139,6 +1139,8 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                                       if (result == AuthResult.success) {
                                                         startTimer();
                                                         otpDialog(
+                                                          fromUser: false,
+                                                          fromAuth: false,
                                                           events: _events,
                                                           firstBtnHandler: () async {
                                                             setState(() {
@@ -1165,6 +1167,9 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                                             print("after adding bank");
                                                             if (resultsecond ==
                                                                 AuthResult.success) {
+                                                              await Future.delayed(
+                                                                  const Duration(
+                                                                      milliseconds: 500));
                                                               Navigator.pop(context);
                                                               updateSuccessDialog();
 

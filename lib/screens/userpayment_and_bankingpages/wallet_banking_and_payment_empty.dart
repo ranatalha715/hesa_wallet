@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -14,12 +15,14 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../providers/auth_provider.dart';
 import '../../providers/card_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/transaction_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../widgets/button.dart';
 import '../../widgets/main_header.dart';
+import '../../widgets/otp_dialog.dart';
 
 class WalletBankingAndPaymentEmpty extends StatefulWidget {
   const WalletBankingAndPaymentEmpty({Key? key}) : super(key: key);
@@ -36,13 +39,31 @@ class _WalletBankingAndPaymentEmptyState
   bool _isSelectedBank = false;
   var isDeleteBankLoading = false;
   var _selectedBankDetails = false;
+  bool isOtpButtonActive = false;
   var accessToken = "";
+  Timer? _timer;
+  var _isLoading = false;
+  int _timeLeft = 60;
+  late StreamController<int> _events;
+  bool _isTimerActive = false;
   var isLoading = false;
   var isInit = true;
   var isDialogLoading = false;
 
-  final ScrollController scrollController = ScrollController();
+  FocusNode firstFieldFocusNode = FocusNode();
+  FocusNode secondFieldFocusNode = FocusNode();
+  FocusNode thirdFieldFocusNode = FocusNode();
+  FocusNode forthFieldFocusNode = FocusNode();
+  FocusNode fifthFieldFocusNode = FocusNode();
+  FocusNode sixthFieldFocusNode = FocusNode();
 
+  final ScrollController scrollController = ScrollController();
+  final TextEditingController otp1Controller = TextEditingController();
+  final TextEditingController otp2Controller = TextEditingController();
+  final TextEditingController otp3Controller = TextEditingController();
+  final TextEditingController otp4Controller = TextEditingController();
+  final TextEditingController otp5Controller = TextEditingController();
+  final TextEditingController otp6Controller = TextEditingController();
   navigateToAddCard() async {
     print('card brand');
     print(Provider.of<TransactionProvider>(context, listen: false)
@@ -72,10 +93,28 @@ class _WalletBankingAndPaymentEmptyState
     accessToken = prefs.getString('accessToken')!;
   }
 
+  void _updateOtpButtonState() {
+    setState(() {
+      isOtpButtonActive = otp1Controller.text.isNotEmpty &&
+          otp2Controller.text.isNotEmpty &&
+          otp3Controller.text.isNotEmpty &&
+          otp4Controller.text.isNotEmpty &&
+          otp5Controller.text.isNotEmpty &&
+          otp6Controller.text.isNotEmpty;
+    });
+  }
+
   @override
   void initState() {
-
+   _events = new StreamController<int>();
+   _events.add(60);
     // TODO: implement initState
+   otp1Controller.addListener(_updateOtpButtonState);
+   otp2Controller.addListener(_updateOtpButtonState);
+   otp3Controller.addListener(_updateOtpButtonState);
+   otp4Controller.addListener(_updateOtpButtonState);
+   otp5Controller.addListener(_updateOtpButtonState);
+   otp6Controller.addListener(_updateOtpButtonState);
     super.initState();
   }
 
@@ -110,31 +149,182 @@ class _WalletBankingAndPaymentEmptyState
     });
   }
 
+  void startTimer() {
+    _isTimerActive = true;
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      (_timeLeft > 0) ? _timeLeft-- : _timer?.cancel();
+      print(_timeLeft);
+      _events.add(_timeLeft);
+    });
+  }
+
   Future<void> updateBankAccountAndRefreshDetails(int index, String accessToken,
-      String ibanNumber, String bic, BuildContext ctx) async {
+      String ibanNumber, String accountholdername, String bic, BuildContext ctx) async {
     setState(() {
       isLoading = true;
     });
 
-    var result = await Provider.of<BankProvider>(context, listen: false)
-        .updateBankAccount(
-      isPrimary: true,
-      index: index,
-      accountNumber: ibanNumber,
+    var result =   await Provider.of<BankProvider>(
+        context,
+        listen: false)
+        .updateBankAccountStep1(
       bic: bic,
+      context: context,
       token: accessToken,
-      context: ctx,
+      isPrimary:
+      'isPrimary' == "true"
+          ? true
+          : false, accountNumber: ibanNumber, accountTitle: accountholdername,
     );
+    // await Provider.of<BankProvider>(context, listen: false)
+    //     .updateBankAccount(
+    //   isPrimary: true,
+    //   index: index,
+    //   accountNumber: ibanNumber,
+    //   bic: bic,
+    //   token: accessToken,
+    //   context: ctx,
+    // );
 
     if (result == AuthResult.success) {
-      Navigator.pop(context);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => WalletBankingAndPaymentEmpty(),
-        ),
+      startTimer();
+      otpDialog(
+        fromUser: false,
+        fromAuth: false,
+        events: _events,
+        isDark: true,
+        firstBtnHandler: () async {
+          setState(() {
+            _isLoading = true;
+          });
+          await Future.delayed(
+              const Duration(
+                  milliseconds: 1000));
+          final resultsecond = await Provider
+              .of<BankProvider>(
+              context,
+              listen: false)
+              .updateBankAccountStep2(
+              context: context,
+              token: accessToken,
+              code: Provider.of<
+                  AuthProvider>(
+                  context,
+                  listen: false)
+                  .codeFromOtpBoxes);
+          setState(() {
+            _isLoading = false;
+          });
+          print("after adding bank");
+          if (resultsecond ==
+              AuthResult.success) {
+            await Future.delayed(
+                const Duration(
+                    milliseconds: 500));
+           Navigator.pop(context);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => WalletBankingAndPaymentEmpty(),
+            ),
+          );
+          }
+        },
+        secondBtnHandler: () async {
+          if (_timeLeft == 0) {
+            print(
+                'resend function calling');
+            try {
+              setState(() {
+                // _isLoadingResend = true;
+              });
+              final result = await Provider
+                  .of<AuthProvider>(
+                  context,
+                  listen: false)
+                  .sendOTP(
+                  context: context,
+                  token:
+                  accessToken);
+              setState(() {
+                // _isLoadingResend =
+                // false;
+              });
+              if (result ==
+                  AuthResult.success) {
+                startTimer();
+              }
+            } catch (error) {
+              print("Error: $error");
+              // _showToast('An error occurred'); // Show an error message
+            } finally {
+              setState(() {
+                // _isLoadingResend =
+                // false;
+              });
+            }
+          } else {}
+        },
+        firstTitle: 'Verify',
+        secondTitle: 'Resend code: ',
+
+        // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
+
+        context: context,
+        // isDark: themeNotifier.isDark,
+        isFirstButtonActive:
+        isOtpButtonActive,
+        isSecondButtonActive: false,
+        otp1Controller: otp1Controller,
+        otp2Controller: otp2Controller,
+        otp3Controller: otp3Controller,
+        otp4Controller: otp4Controller,
+        otp5Controller: otp5Controller,
+        otp6Controller: otp6Controller,
+        firstFieldFocusNode:
+        firstFieldFocusNode,
+        secondFieldFocusNode:
+        secondFieldFocusNode,
+        thirdFieldFocusNode:
+        thirdFieldFocusNode,
+        forthFieldFocusNode:
+        forthFieldFocusNode,
+        fifthFieldFocusNode:
+        fifthFieldFocusNode,
+        sixthFieldFocusNode:
+        sixthFieldFocusNode,
+        firstBtnBgColor:
+        AppColors.activeButtonColor,
+        firstBtnTextColor:
+        AppColors.textColorBlack,
+        secondBtnBgColor:
+        Colors.transparent,
+        secondBtnTextColor: _timeLeft !=
+            0
+            ? AppColors.textColorBlack
+            .withOpacity(0.8)
+            : AppColors.textColorWhite,
+        // themeNotifier.isDark
+        //     ? AppColors.textColorWhite
+        //     : AppColors.textColorBlack
+        //         .withOpacity(0.8),
+        isLoading: _isLoading,
       );
-      print('updated success!');
+
+
+
+
+
+
+
+      // Navigator.pop(context);
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => WalletBankingAndPaymentEmpty(),
+      //   ),
+      // );
+      // print('updated success!');
     }
 
     setState(() {
@@ -837,6 +1027,7 @@ class _WalletBankingAndPaymentEmptyState
                                                   accessToken,
                                                   banks[index].ibanNumber,
                                                   banks[index].bic,
+                                                  banks[index].accountTitle.toString(),
                                                   context,
                                                 );
                                                 setState(() {
@@ -1094,15 +1285,20 @@ class _WalletBankingAndPaymentEmptyState
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  selectedBankName,
-                  style: TextStyle(
-                      fontSize: 10.sp,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w400,
-                      color: isDark
-                          ? AppColors.textColorWhite
-                          : AppColors.textColorBlack),
+                Container(
+                  width: 30.w,
+                  child: Text(
+                    selectedBankName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontSize: 10.sp,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
+                        color: isDark
+                            ? AppColors.textColorWhite
+                            : AppColors.textColorBlack),
+                  ),
                 ),
                 SizedBox(
                   width: 1.w,
@@ -1110,26 +1306,36 @@ class _WalletBankingAndPaymentEmptyState
                 isPrimary
                     ? Padding(
                         padding: EdgeInsets.only(top: 0.sp),
-                        child: Text(
-                          ("(" + "primary".tr() + ")"),
-                          style: TextStyle(
-                              fontSize: 10.sp,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.textColorGrey),
+                        child: Container(
+                          width: 16.w,
+                          child: Text(
+                            ("(" + "primary".tr() + ")"),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 10.sp,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.textColorGrey),
+                          ),
                         ),
                       )
                     : SizedBox(height: 3.sp),
                 Spacer(),
-                Text(
-                  accountNumber,
-                  style: TextStyle(
-                      fontSize: 11.5.sp,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w400,
-                      color: isDark
-                          ? AppColors.textColorWhite
-                          : AppColors.textColorBlack),
+                Container(
+                  width: 20.w,
+                  child: Text(
+                    accountNumber,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontSize: 11.5.sp,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
+                        color: isDark
+                            ? AppColors.textColorWhite
+                            : AppColors.textColorBlack),
+                  ),
                 ),
                 PopupMenuButton<String>(
                   color: isDark
@@ -1322,27 +1528,39 @@ class _WalletBankingAndPaymentEmptyState
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(
-                                  bankName,
-                                  style: TextStyle(
-                                    fontSize: 11.5.sp,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.w500,
-                                    color: isDark
-                                        ? AppColors.textColorWhite
-                                        : AppColors.textColorBlack,
+                                Container(
+                                  // color: Colors.yellow,
+                                  width: 35.w,
+                                  child: Text(
+                                    bankName,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 11.5.sp,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w500,
+                                      color: isDark
+                                          ? AppColors.textColorWhite
+                                          : AppColors.textColorBlack,
+                                    ),
                                   ),
                                 ),
                                 Spacer(),
-                                Text(
-                                  accNum,
-                                  style: TextStyle(
-                                    fontSize: 11.5.sp,
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.w400,
-                                    color: isDark
-                                        ? AppColors.textColorWhite
-                                        : AppColors.textColorBlack,
+                                Container(
+                                  width: 20.w,
+                                  // color: Colors.red,
+                                  child: Text(
+                                    accNum,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 11.5.sp,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w400,
+                                      color: isDark
+                                          ? AppColors.textColorWhite
+                                          : AppColors.textColorBlack,
+                                    ),
                                   ),
                                 ),
                               ],

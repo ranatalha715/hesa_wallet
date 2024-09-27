@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hesa_wallet/providers/auth_provider.dart';
+import 'package:hesa_wallet/providers/bank_provider.dart';
 import 'package:hesa_wallet/providers/user_provider.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,7 @@ void otpDialog({
   required String secondTitle,
   required bool isDark,
   bool fromAuth = true,
+  bool fromUser = false,
   required bool isFirstButtonActive,
   required bool isLoading,
   required bool isSecondButtonActive,
@@ -55,6 +57,7 @@ void otpDialog({
       final dialogWidth = screenWidth * 0.85;
       return Consumer<AuthProvider>(builder: (context, auth, child) {
         return Consumer<UserProvider>(builder: (context, user, child) {
+        return Consumer<BankProvider>(builder: (context, bank, child) {
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
             return StreamBuilder<int>(
@@ -84,10 +87,15 @@ void otpDialog({
                                 borderRadius: BorderRadius.circular(15),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.textColorBlack.withOpacity(0.95), // Dark shadow color
-                                    offset: Offset(0, 0), // No offset, shadow will appear equally on all sides
-                                    blurRadius: 10, // Adjust blur for softer shadow
-                                    spreadRadius: 0.4, // Spread the shadow slightly
+                                    color: AppColors.textColorBlack
+                                        .withOpacity(0.95),
+                                    // Dark shadow color
+                                    offset: Offset(0, 0),
+                                    // No offset, shadow will appear equally on all sides
+                                    blurRadius: 10,
+                                    // Adjust blur for softer shadow
+                                    spreadRadius:
+                                        0.4, // Spread the shadow slightly
                                   ),
                                 ],
                               ),
@@ -182,21 +190,51 @@ void otpDialog({
                                               // letterSpacing: 16,
                                               ),
                                           decoration: BoxDecoration(
-                                            border: fromAuth
+                                            border: fromAuth && !fromUser
                                                 ? Border.all(
-                                                    color: auth.otpErrorResponse && !auth.otpSuccessResponse
+                                                    color: auth.otpErrorResponse &&
+                                                            !auth
+                                                                .otpSuccessResponse
                                                         ? AppColors.errorColor
-                                                        : auth.otpSuccessResponse && !auth.otpErrorResponse
-                                                            ? AppColors.hexaGreen
-                                                            : Colors.transparent,
+                                                        : auth.otpSuccessResponse &&
+                                                                !auth
+                                                                    .otpErrorResponse
+                                                            ? AppColors
+                                                                .hexaGreen
+                                                            : Colors
+                                                                .transparent,
                                                     width: 1.sp)
-                                                : Border.all(
-                                                    color: user.otpErrorResponse && !user.otpSuccessResponse
-                                                        ? AppColors.errorColor
-                                                        : user.otpSuccessResponse && !user.otpErrorResponse
-                                                            ? AppColors.hexaGreen
-                                                            : Colors.transparent,
-                                                    width: 1.sp),
+                                                : fromUser && !fromAuth
+                                                    ? Border.all(
+                                                        color: user.otpErrorResponse &&
+                                                                !user
+                                                                    .otpSuccessResponse
+                                                            ? AppColors
+                                                                .errorColor
+                                                            : user.otpSuccessResponse &&
+                                                                    !user
+                                                                        .otpErrorResponse
+                                                                ? AppColors
+                                                                    .hexaGreen
+                                                                : Colors
+                                                                    .transparent,
+                                                        width: 1.sp,
+                                                      )
+                                                    : Border.all(
+                                                        color: bank.otpErrorResponse &&
+                                                                !bank
+                                                                    .otpSuccessResponse
+                                                            ? AppColors
+                                                                .errorColor
+                                                            : bank.otpSuccessResponse &&
+                                                                    !bank
+                                                                        .otpErrorResponse
+                                                                ? AppColors
+                                                                    .hexaGreen
+                                                                : Colors
+                                                                    .transparent,
+                                                        width: 1.sp,
+                                                      ),
                                             borderRadius:
                                                 BorderRadius.circular(8),
                                             color: AppColors
@@ -326,7 +364,7 @@ void otpDialog({
                                           otp6Controller.text.length == 6
                                               ? firstBtnHandler()
                                               : () {};
-                                          },
+                                        },
                                         isLoading: isLoading,
                                         color: firstBtnBgColor,
                                         textColor: firstBtnTextColor,
@@ -372,6 +410,7 @@ void otpDialog({
                 });
           });
         });
+      });
       });
     },
   );

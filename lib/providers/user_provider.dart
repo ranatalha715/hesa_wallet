@@ -83,14 +83,15 @@ class UserProvider with ChangeNotifier {
         PaymentCard card = PaymentCard.fromJson(cardJson);
         _paymentCards.add(card);
       });
-      // print("cardJsonList");
-      // print(cardJsonList);
+
       List<dynamic> banksJsonList = jsonResponse['bankAccounts'];
       _banks.clear();
       banksJsonList.forEach((banJson) {
         Bank bank = Bank.fromJson(banJson);
         _banks.add(bank);
         });
+      print("new banks");
+      print(banksJsonList);
       walletAddress = jsonResponse['accounts'][0]['walletAddress'];
       userName = jsonResponse['userName'];
       mobileNum = jsonResponse['mobileNumber'];

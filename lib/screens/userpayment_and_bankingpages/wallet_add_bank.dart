@@ -884,6 +884,8 @@ init() async {
                                                     if (result == AuthResult.success) {
                                                       startTimer();
                                                       otpDialog(
+                                                        fromAuth: false,
+                                                        fromUser: false,
                                                         events: _events,
                                                         firstBtnHandler: () async {
                                                           setState(() {
@@ -911,6 +913,9 @@ init() async {
                                                           print("after adding bank");
                                                           if (resultsecond ==
                                                               AuthResult.success) {
+                                                            await Future.delayed(
+                                                                const Duration(
+                                                                    milliseconds: 500));
                                                             Navigator.pop(context);
                                                             showDialog(
                                                               context: context,

@@ -699,6 +699,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                                             {
                                               startTimer();
                                               otpDialog(
+                                                fromAuth: false,
+                                                fromUser:true,
                                                 events: _events,
 
                                                 firstBtnHandler: () async {

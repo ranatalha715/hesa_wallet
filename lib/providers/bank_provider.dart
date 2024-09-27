@@ -118,6 +118,8 @@ class BankProvider with ChangeNotifier{
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('uniqueId', uniqueId);
       uniqueIdFromStep1=uniqueId;
+       otpErrorResponse=false;
+       otpSuccessResponse=false;
       notifyListeners();
       print("uniqueId" + uniqueId);
       if (responseData['success']) {
@@ -134,6 +136,8 @@ class BankProvider with ChangeNotifier{
       final errorResponse = json.decode(response.body);
       print("Failed to add bank account. Status code: ${response.body}");
       addBankErrorResponse = errorResponse['message'][0]['message'];
+       otpErrorResponse=false;
+       otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }
@@ -277,18 +281,23 @@ class BankProvider with ChangeNotifier{
         'Authorization': 'Bearer $token',
       },
     );
-    print('updated bank response' + response.body);
+    print('updatedBody' + body.toString());
+    print('updatedbankresponseStep1' + response.body);
     if (response.statusCode == 201) {
       final jsonResponse = json.decode(response.body);
       final uniqueId = jsonResponse['data']['uniqueId'];
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('uniqueId', uniqueId);
       uniqueIdFromStep1=uniqueId;
+      otpErrorResponse=false;
+      otpSuccessResponse=false;
       notifyListeners();
       print("Update bank successfully!");
       return AuthResult.success;
     } else {
       print("Bank is not updated yet: ${response.body}");
+      otpErrorResponse=false;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }
