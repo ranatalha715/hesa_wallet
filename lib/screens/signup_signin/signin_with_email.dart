@@ -78,7 +78,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
     final args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    final auth=Provider.of<AuthProvider>(context, listen: false);
+    final auth = Provider.of<AuthProvider>(context, listen: false);
     return GestureDetector(
       onHorizontalDragUpdate: (details) {
         if (details.delta.dx > 0) {
@@ -95,8 +95,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                     : exit(0);
                 return false;
               },
-              child:
-              Scaffold(
+              child: Scaffold(
                 backgroundColor: themeNotifier.isDark
                     ? AppColors.backgroundColor
                     : AppColors.textColorWhite,
@@ -157,8 +156,8 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                     controller: _emailController,
                                     keyboardType: TextInputType.emailAddress,
                                     textInputAction: TextInputAction.next,
-                                    onChanged: (v){
-                                      auth.loginErrorResponse=null;
+                                    onChanged: (v) {
+                                      auth.loginErrorResponse = null;
                                     },
                                     style: TextStyle(
                                         fontSize: 10.2.sp,
@@ -169,7 +168,11 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                         fontFamily: 'Inter'),
                                     decoration: InputDecoration(
                                       contentPadding: EdgeInsets.symmetric(
-                                          vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
+                                          vertical: OS.Platform.isIOS
+                                              ? 14.5.sp
+                                              : 10.0,
+                                          horizontal:
+                                              OS.Platform.isIOS ? 10.sp : 16.0),
                                       hintText:
                                           'Enter your email or username'.tr(),
                                       hintStyle: TextStyle(
@@ -182,14 +185,21 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                           borderRadius:
                                               BorderRadius.circular(8.0),
                                           borderSide: BorderSide(
-                                            color: (isValidating && _emailController.text.isEmpty) || auth.loginErrorResponse.toString().contains('username')
-                                                ? AppColors.errorColor : Colors.transparent,
+                                            color: (isValidating &&
+                                                        _emailController
+                                                            .text.isEmpty) ||
+                                                    auth.loginErrorResponse
+                                                        .toString()
+                                                        .contains('username')
+                                                ? AppColors.errorColor
+                                                : Colors.transparent,
                                           )),
                                       focusedBorder: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(8.0),
                                           borderSide: BorderSide(
-                                            color: AppColors.focusTextFieldColor,
+                                            color:
+                                                AppColors.focusTextFieldColor,
                                           )),
                                     ),
                                     cursorColor: AppColors.textColorGrey),
@@ -205,11 +215,19 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                         color: AppColors.errorColor),
                                   ),
                                 ),
-                              if (auth.loginErrorResponse != null && _emailController.text.isNotEmpty && isValidating && auth.loginErrorResponse.toString().contains('username'))
+                              if (auth.loginErrorResponse != null &&
+                                  _emailController.text.isNotEmpty &&
+                                  isValidating &&
+                                  auth.loginErrorResponse
+                                      .toString()
+                                      .contains('username'))
                                 Padding(
                                   padding: EdgeInsets.only(top: 7.sp),
                                   child: Text(
-        auth.loginErrorResponse == "This username is unavailable" ? "*Email Address or username not recognized":"",
+                                    auth.loginErrorResponse ==
+                                            "This username is unavailable"
+                                        ? "*Email Address or username not recognized"
+                                        : "",
                                     // "*${auth.loginErrorResponse}",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
@@ -247,8 +265,8 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                             140),
                                     controller: _passwordController,
                                     keyboardType: TextInputType.visiblePassword,
-                                    onChanged: (v){
-                                      auth.loginErrorResponse=null;
+                                    onChanged: (v) {
+                                      auth.loginErrorResponse = null;
                                     },
                                     obscureText: _obscurePassword,
                                     style: TextStyle(
@@ -261,7 +279,11 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                         fontFamily: 'Inter'),
                                     decoration: InputDecoration(
                                       contentPadding: EdgeInsets.symmetric(
-                                          vertical:OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
+                                          vertical: OS.Platform.isIOS
+                                              ? 14.5.sp
+                                              : 10.0,
+                                          horizontal:
+                                              OS.Platform.isIOS ? 10.sp : 16.0),
                                       hintText: 'Enter your password'.tr(),
                                       hintStyle: TextStyle(
                                           fontSize: 10.2.sp,
@@ -273,13 +295,21 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                           borderRadius:
                                               BorderRadius.circular(8.0),
                                           borderSide: BorderSide(
-                                            color: (isValidating && _passwordController.text.isEmpty) || auth.loginErrorResponse.toString().contains('password') ? AppColors.errorColor : Colors.transparent,
+                                            color: (isValidating &&
+                                                        _passwordController
+                                                            .text.isEmpty) ||
+                                                    auth.loginErrorResponse
+                                                        .toString()
+                                                        .contains('password')
+                                                ? AppColors.errorColor
+                                                : Colors.transparent,
                                           )),
                                       focusedBorder: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(8.0),
                                           borderSide: BorderSide(
-                                            color: AppColors.focusTextFieldColor,
+                                            color:
+                                                AppColors.focusTextFieldColor,
                                           )),
                                       suffixIcon: IconButton(
                                         icon: Icon(
@@ -311,11 +341,19 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                         color: AppColors.errorColor),
                                   ),
                                 ),
-                              if (auth.loginErrorResponse != null && _passwordController.text.isNotEmpty && isValidating && auth.loginErrorResponse.toString().contains('password'))
+                              if (auth.loginErrorResponse != null &&
+                                  _passwordController.text.isNotEmpty &&
+                                  isValidating &&
+                                  auth.loginErrorResponse
+                                      .toString()
+                                      .contains('password'))
                                 Padding(
                                   padding: EdgeInsets.only(bottom: 7.sp),
                                   child: Text(
-                                    auth.loginErrorResponse == "You have entered an invalid password" ? "*Password incorrect":"",
+                                    auth.loginErrorResponse ==
+                                            "You have entered an invalid password"
+                                        ? "*Password incorrect"
+                                        : "",
                                     // "*${auth.loginErrorResponse}",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
@@ -362,21 +400,23 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                     setState(() {
                                       _isLoading = true;
                                       if (_isLoading) {
-                                        FocusManager.instance.primaryFocus?.unfocus();
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
                                       }
-                                      auth.loginErrorResponse=null;
+                                      auth.loginErrorResponse = null;
                                     });
-                                    final String password = _passwordController.text;
+                                    final String password =
+                                        _passwordController.text;
                                     final bytes = utf8.encode(password);
                                     final sha512Hash = sha512.convert(bytes);
                                     final sha512String = sha512Hash.toString();
                                     final result =
-                                        await Provider.of<AuthProvider>(
-                                                context,
+                                        await Provider.of<AuthProvider>(context,
                                                 listen: false)
                                             .loginWithUsername(
                                                 username: _emailController.text,
-                                                password: _passwordController.text,
+                                                password:
+                                                sha512String,
                                                 // sha512String,
                                                 context: context);
                                     setState(() {
@@ -401,8 +441,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                 onTap: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        SigninWithMobile(),
+                                    builder: (context) => SigninWithMobile(),
                                   ),
                                 ),
                                 child: Container(
@@ -426,7 +465,9 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                 ),
                               ),
                               SizedBox(
-                                height: OS.Platform.isIOS && !isKeyboardVisible ? 5.h : 2.h,
+                                height: OS.Platform.isIOS && !isKeyboardVisible
+                                    ? 5.h
+                                    : 2.h,
                               )
                             ],
                           ),
@@ -459,9 +500,9 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                     child: Text(
                                       'Done',
                                       style: TextStyle(
-                                          color: Colors.blue,
-                                          fontSize: 11.5.sp,
-                                          fontWeight: FontWeight.bold)
+                                              color: Colors.blue,
+                                              fontSize: 11.5.sp,
+                                              fontWeight: FontWeight.bold)
                                           .apply(fontWeightDelta: -1),
                                     ),
                                   ))),

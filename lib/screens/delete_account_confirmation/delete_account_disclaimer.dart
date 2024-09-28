@@ -74,14 +74,20 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
   }
 
   void startTimer() {
+    // Cancel the previous timer if it's active
+    _timer?.cancel();
+    _timeLeft = 60;
     _isTimerActive = true;
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (_timeLeft > 0) {
-        _timeLeft--;
-        _events.add(_timeLeft); // Add updated time to the stream
+        setState(() {
+          _timeLeft--;
+        });
       } else {
-        timer.cancel(); // Cancel the timer when timeLeft is 0
+        _timer?.cancel();
       }
+      print(_timeLeft);
+      _events.add(_timeLeft);
     });
   }
 
@@ -408,9 +414,6 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
                                               if (result ==
                                                   AuthResult
                                                       .success) {
-                                                restartCountdown();
-                                                _events = new StreamController<int>();
-                                                _events.add(60);
                                                 startTimer();
                                               }
                                             } catch (error) {
@@ -425,7 +428,7 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
                                           } else {}
                                         },
                                         firstTitle: 'Verify',
-                                        secondTitle: 'Resend code: ',
+                                        secondTitle: 'Resend code ',
 
                                         context: context,
                                         isDark: themeNotifier.isDark,

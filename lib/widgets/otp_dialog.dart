@@ -375,7 +375,7 @@ void otpDialog({
                                   Padding(
                                     padding:
                                         EdgeInsets.symmetric(horizontal: 22.sp),
-                                    child: AppButton(
+                                    child: AppButtonForResendOtp(
                                         title:
                                             // snapshot.data != null && snapshot.data! > 0 ?
                                         snapshot.data! > 0 ?       secondTitle +
@@ -393,7 +393,9 @@ void otpDialog({
                                         },
                                         isGradient: false,
                                         isGradientWithBorder: false,
-                                        textColor: secondBtnTextColor,
+                                        textColor: snapshot.data! > 0
+                                            ? AppColors.appSecondButton
+                                            : AppColors.textColorWhite,
                                         color: secondBtnBgColor),
                                   ),
                                   Expanded(child: SizedBox()),

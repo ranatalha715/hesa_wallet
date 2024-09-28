@@ -103,9 +103,18 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
   String _searchQuery = "";
 
   void startTimer() {
+    // Cancel the previous timer if it's active
+    _timer?.cancel();
+    _timeLeft = 60;
     _isTimerActive = true;
-    Timer.periodic(Duration(seconds: 1), (timer) {
-      (_timeLeft > 0) ? _timeLeft-- : _timer?.cancel();
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_timeLeft > 0) {
+        setState(() {
+          _timeLeft--;
+        });
+      } else {
+        _timer?.cancel();
+      }
       print(_timeLeft);
       _events.add(_timeLeft);
     });
@@ -1172,9 +1181,6 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                                                       milliseconds: 500));
                                                               Navigator.pop(context);
                                                               updateSuccessDialog();
-
-
-
                                                             }
                                                           },
                                                           secondBtnHandler: () async {
@@ -1213,7 +1219,7 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                                             } else {}
                                                           },
                                                           firstTitle: 'Verify',
-                                                          secondTitle: 'Resend code: ',
+                                                          secondTitle: 'Resend code ',
 
                                                           // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
 
@@ -1437,7 +1443,7 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
 
       Future.delayed(
           Duration(
-              seconds: 3),
+              seconds: 1),
           closeDialogAndNavigate);
       return StatefulBuilder(
           builder: (BuildContext

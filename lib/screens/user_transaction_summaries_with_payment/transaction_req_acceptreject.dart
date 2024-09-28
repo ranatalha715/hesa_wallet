@@ -178,9 +178,18 @@ class _TransactionRequestAcceptRejectState
   // }
 
   void startTimer() {
+    // Cancel the previous timer if it's active
+    _timer?.cancel();
+    _timeLeft = 60;
     _isTimerActive = true;
-    Timer.periodic(Duration(seconds: 1), (timer) {
-      (_timeLeft > 0) ? _timeLeft-- : _timer?.cancel();
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_timeLeft > 0) {
+        setState(() {
+          _timeLeft--;
+        });
+      } else {
+        _timer?.cancel();
+      }
       print(_timeLeft);
       _events.add(_timeLeft);
     });
@@ -367,20 +376,22 @@ class _TransactionRequestAcceptRejectState
   }
 
   String replaceMiddleWithDotsTokenId(String input) {
-    if (input.length <= 30) {
+    // If the input length is less than or equal to 30, return it as is
+    if (input.length <= 65) {
       return input;
     }
 
     final int middleIndex = input.length ~/ 2; // Find the middle index
-    final int startIndex = middleIndex - 12; // Calculate the start index
-    final int endIndex = middleIndex + 9; // Calculate the end index
+    final int startIndex = middleIndex - 32; // Calculate the start index
+    final int endIndex = middleIndex + 32; // Calculate the end index
 
-    // Split the input string into three parts and join them with '...'
+    // Split the input string into two parts, removing the middle 30 characters and adding '....'
     final String result =
-        input.substring(0, startIndex) + '...' + input.substring(endIndex);
+        input.substring(0, startIndex) + '....' + input.substring(endIndex);
 
     return result;
   }
+
 
   String capitalizeFirstLetter(String text) {
     if (text.isEmpty) {
@@ -617,8 +628,7 @@ class _TransactionRequestAcceptRejectState
                                                 ),
                                                 transactionDetailsWidget(
                                                   title: 'Timestamp'.tr(),
-                                                  details: DateFormat(
-                                                          'MMMM dd, yyyy HH:mm:ss')
+                                                  details: DateFormat('MMMM dd, yyyy')
                                                       .format(unformatted),
                                                   isDark: themeNotifier.isDark
                                                       ? true
@@ -1349,6 +1359,27 @@ class _TransactionRequestAcceptRejectState
                             ),
                             SizedBox(height: 1.5.h),
                             AppButton(
+                              title:
+                              "Reject request"
+                                  .tr(),
+                              handler: () {
+                                // if(operation=="MintNFT"){
+                                rejectTransactions();
+                                // }
+                              },
+                              isGradient: false,
+                              isGradientWithBorder: true,
+                              buttonWithBorderColor: AppColors.errorColor,
+                              color: AppColors.deleteAccountBtnColor
+                                  .withOpacity(0.10),
+                              textColor: themeNotifier.isDark
+                                  ? AppColors.textColorWhite
+                                  : AppColors.textColorBlack
+                                  .withOpacity(0.8),
+
+                            ),
+                            SizedBox(height: 2.h),
+                            AppButton(
                                 title: "Accept".tr(),
                                 handler: () async {
                                   setState(() {
@@ -1387,12 +1418,10 @@ class _TransactionRequestAcceptRejectState
                                             walletAddress: walletAddress,
                                             context: context,
                                             operation: operation,
-                                            code: otp1Controller.text +
-                                                otp2Controller.text +
-                                                otp3Controller.text +
-                                                otp4Controller.text +
-                                                otp5Controller.text +
-                                                otp6Controller.text,
+                                            code: Provider.of<AuthProvider>(
+                                                context,
+                                                listen: false)
+                                                .codeFromOtpBoxes
                                           );
                                         } else if (operation ==
                                             'rejectNFTOfferReceived') {
@@ -1406,12 +1435,10 @@ class _TransactionRequestAcceptRejectState
                                             walletAddress: walletAddress,
                                             context: context,
                                             operation: operation,
-                                            code: otp1Controller.text +
-                                                otp2Controller.text +
-                                                otp3Controller.text +
-                                                otp4Controller.text +
-                                                otp5Controller.text +
-                                                otp6Controller.text,
+                                            code: Provider.of<AuthProvider>(
+                                                context,
+                                                listen: false)
+                                                .codeFromOtpBoxes
                                           );
                                         } else if (operation ==
                                             'AcceptCollectionOffer') {
@@ -1425,12 +1452,10 @@ class _TransactionRequestAcceptRejectState
                                             walletAddress: walletAddress,
                                             context: context,
                                             operation: operation,
-                                            code: otp1Controller.text +
-                                                otp2Controller.text +
-                                                otp3Controller.text +
-                                                otp4Controller.text +
-                                                otp5Controller.text +
-                                                otp6Controller.text,
+                                            code: Provider.of<AuthProvider>(
+                                                context,
+                                                listen: false)
+                                                .codeFromOtpBoxes
                                           );
                                         } else if (operation ==
                                             'rejectCollectionOfferReceived') {
@@ -1444,12 +1469,10 @@ class _TransactionRequestAcceptRejectState
                                             walletAddress: walletAddress,
                                             context: context,
                                             operation: operation,
-                                            code: otp1Controller.text +
-                                                otp2Controller.text +
-                                                otp3Controller.text +
-                                                otp4Controller.text +
-                                                otp5Controller.text +
-                                                otp6Controller.text,
+                                            code: Provider.of<AuthProvider>(
+                                                context,
+                                                listen: false)
+                                                .codeFromOtpBoxes
                                           );
                                         } else if (operation ==
                                             'makeNFTCounterOffer') {
@@ -1466,12 +1489,10 @@ class _TransactionRequestAcceptRejectState
                                             id: counterId,
                                             offererId: counterOffererId,
                                             offerAmount: counterOffererAmount,
-                                            code: otp1Controller.text +
-                                                otp2Controller.text +
-                                                otp3Controller.text +
-                                                otp4Controller.text +
-                                                otp5Controller.text +
-                                                otp6Controller.text,
+                                            code: Provider.of<AuthProvider>(
+                                                context,
+                                                listen: false)
+                                                .codeFromOtpBoxes
                                           );
                                         }
                                         if (operation == 'CancelNFTOfferMade') {
@@ -1486,12 +1507,7 @@ class _TransactionRequestAcceptRejectState
                                             context: context,
                                             operation: operation,
                                             params: params,
-                                            code: otp1Controller.text +
-                                                otp2Controller.text +
-                                                otp3Controller.text +
-                                                otp4Controller.text +
-                                                otp5Controller.text +
-                                                otp6Controller.text,
+                                            code:  Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes,
                                           );
                                         } else if (operation ==
                                             'rejectNFTCounterOffer') {
@@ -1508,12 +1524,10 @@ class _TransactionRequestAcceptRejectState
                                             id: counterId,
                                             offererId: counterOffererId,
                                             offerAmount: counterOffererAmount,
-                                            code: otp1Controller.text +
-                                                otp2Controller.text +
-                                                otp3Controller.text +
-                                                otp4Controller.text +
-                                                otp5Controller.text +
-                                                otp6Controller.text,
+                                            code:Provider.of<AuthProvider>(
+                                                context,
+                                                listen: false)
+                                                .codeFromOtpBoxes
                                           );
                                         } else if (operation ==
                                             'makeCollectionCounterOffer') {
@@ -1530,12 +1544,10 @@ class _TransactionRequestAcceptRejectState
                                             id: counterId,
                                             offererId: counterOffererId,
                                             offerAmount: counterOffererAmount,
-                                            code: otp1Controller.text +
-                                                otp2Controller.text +
-                                                otp3Controller.text +
-                                                otp4Controller.text +
-                                                otp5Controller.text +
-                                                otp6Controller.text,
+                                            code: Provider.of<AuthProvider>(
+                                                context,
+                                                listen: false)
+                                                .codeFromOtpBoxes
                                           );
                                         } else if (operation ==
                                             'rejectCollectionCounterOffer') {
@@ -1552,12 +1564,10 @@ class _TransactionRequestAcceptRejectState
                                             id: counterId,
                                             offererId: counterOffererId,
                                             offerAmount: counterOffererAmount,
-                                            code: otp1Controller.text +
-                                                otp2Controller.text +
-                                                otp3Controller.text +
-                                                otp4Controller.text +
-                                                otp5Controller.text +
-                                                otp6Controller.text,
+                                            code: Provider.of<AuthProvider>(
+                                                context,
+                                                listen: false)
+                                                .codeFromOtpBoxes
                                           );
                                         } else if (operation ==
                                             'CancelCollectionOfferMade') {
@@ -1572,12 +1582,10 @@ class _TransactionRequestAcceptRejectState
                                             context: context,
                                             operation: operation,
                                             params: params,
-                                            code: otp1Controller.text +
-                                                otp2Controller.text +
-                                                otp3Controller.text +
-                                                otp4Controller.text +
-                                                otp5Controller.text +
-                                                otp6Controller.text,
+                                            code: Provider.of<AuthProvider>(
+                                                context,
+                                                listen: false)
+                                                .codeFromOtpBoxes
                                           );
                                         }
                                         if (operation ==
@@ -1611,12 +1619,10 @@ class _TransactionRequestAcceptRejectState
                                             context: context,
                                             operation: operation,
                                             params: params,
-                                            code: otp1Controller.text +
-                                                otp2Controller.text +
-                                                otp3Controller.text +
-                                                otp4Controller.text +
-                                                otp5Controller.text +
-                                                otp6Controller.text,
+                                            code: Provider.of<AuthProvider>(
+                                                context,
+                                                listen: false)
+                                                .codeFromOtpBoxes
                                           );
                                         } else if (operation ==
                                             'CancelListing') {
@@ -1647,20 +1653,13 @@ class _TransactionRequestAcceptRejectState
                                             context: context,
                                             operation: operation,
                                             params: params,
-                                            code: otp1Controller.text +
-                                                otp2Controller.text +
-                                                otp3Controller.text +
-                                                otp4Controller.text +
-                                                otp5Controller.text +
-                                                otp6Controller.text,
+                                            code: Provider.of<AuthProvider>(
+                                                context,
+                                                listen: false)
+                                                .codeFromOtpBoxes
                                           );
                                         } else {}
-                                        // print('loading popup' +
-                                        //     _isLoading.toString());
                                         Navigator.pop(context);
-                                        // Future.delayed(Duration(seconds: 2));
-                                        // final loginResult =
-
                                         setState(() {
                                           isLoading = false;
                                         });
@@ -1739,6 +1738,8 @@ class _TransactionRequestAcceptRejectState
                                 // isLoading: isLoading,r
                                 isGradient: true,
                                 color: AppColors.textColorBlack),
+
+
                           ],
                         ),
                       ),
@@ -1762,22 +1763,33 @@ class _TransactionRequestAcceptRejectState
       padding: EdgeInsets.only(bottom: 8.sp),
       child: Row(
         children: [
-          Text(
-            title,
-            style: TextStyle(
-                color: isDark
-                    ? AppColors.textColorWhite
-                    : AppColors.textColorBlack,
-                fontSize: 11.sp,
-                fontWeight: FontWeight.w500),
+          Container(
+            // color: Colors.red,
+            width: 25.w,
+            child: Text(
+              title,
+              // maxLines: 1,
+              // overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  color: isDark
+                      ? AppColors.textColorWhite
+                      : AppColors.textColorBlack,
+                  fontSize: 11.sp,
+                  fontWeight: FontWeight.w500),
+            ),
           ),
           Spacer(),
-          Text(
-            details,
-            style: TextStyle(
-                color: color == null ? AppColors.textColorGreyShade2 : color,
-                fontSize: 11.sp,
-                fontWeight: FontWeight.w400),
+          Container(
+            // color: Colors.yellow,
+            width: 50.w,
+            child: Text(
+              details,
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                  color: color == null ? AppColors.textColorGreyShade2 : color,
+                  fontSize: 11.sp,
+                  fontWeight: FontWeight.w400),
+            ),
           ),
         ],
       ),

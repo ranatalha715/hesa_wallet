@@ -2113,7 +2113,6 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        _showToast('Non Payable Transaction Sent!');
         testDialogToCheck(
             context: context,
             title: 'CancelNFTOfferMade',
@@ -2125,7 +2124,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Non Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'CancelNFTOfferMade',
@@ -2136,7 +2134,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'CancelNFTOfferMade',

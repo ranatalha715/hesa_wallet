@@ -56,14 +56,20 @@ class _VerifyEmailState extends State<VerifyEmail> {
   final TextEditingController otp6Controller = TextEditingController();
 
   void startTimer() {
+    // Cancel the previous timer if it's active
+    _timer?.cancel();
+    _timeLeft = 60;
     _isTimerActive = true;
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (_timeLeft > 0) {
-        _timeLeft--;
-        _events.add(_timeLeft);
+        setState(() {
+          _timeLeft--;
+        });
       } else {
-        timer.cancel();
+        _timer?.cancel();
       }
+      print(_timeLeft);
+      _events.add(_timeLeft);
     });
   }
 

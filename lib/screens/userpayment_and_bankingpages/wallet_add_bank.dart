@@ -84,9 +84,18 @@ class _WalletAddBankState extends State<WalletAddBank> {
   String _searchQuery = "";
 
   void startTimer() {
+    // Cancel the previous timer if it's active
+    _timer?.cancel();
+    _timeLeft = 60;
     _isTimerActive = true;
-    Timer.periodic(Duration(seconds: 1), (timer) {
-      (_timeLeft > 0) ? _timeLeft-- : _timer?.cancel();
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_timeLeft > 0) {
+        setState(() {
+          _timeLeft--;
+        });
+      } else {
+        _timer?.cancel();
+      }
       print(_timeLeft);
       _events.add(_timeLeft);
     });
@@ -1077,7 +1086,7 @@ init() async {
                                                           } else {}
                                                         },
                                                         firstTitle: 'Verify',
-                                                        secondTitle: 'Resend code: ',
+                                                        secondTitle: 'Resend code ',
                                                         context: context,
                                                         isDark: themeNotifier.isDark,
                                                         isFirstButtonActive:

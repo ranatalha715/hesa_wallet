@@ -412,7 +412,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                               }
                                             },
                                             firstTitle: 'Confirm',
-                                            secondTitle: 'Resend code ',
+                                            secondTitle:  'Resend code ',
                                             context: context,
                                             isDark: themeNotifier.isDark,
                                             isFirstButtonActive: isOtpButtonActive,

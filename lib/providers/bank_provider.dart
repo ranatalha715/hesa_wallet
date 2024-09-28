@@ -322,6 +322,7 @@ class BankProvider with ChangeNotifier{
 
     print('updateBankStep2 Response');
     print(response.body);
+    print(uniqueIdFromStep1.toString());
     fToast = FToast();
     fToast.init(context);
     if (response.statusCode == 201) {
