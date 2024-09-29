@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hesa_wallet/providers/user_provider.dart';
@@ -12,7 +10,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:uni_links/uni_links.dart';
-
 import '../constants/app_deep_linking.dart';
 import '../constants/colors.dart';
 import '../constants/configs.dart';

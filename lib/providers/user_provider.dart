@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hesa_wallet/models/connected_sites_model.dart';
@@ -10,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import '../constants/colors.dart';
-import 'package:dio/dio.dart';
 import '../constants/configs.dart';
 import '../models/bank_model.dart';
 import '../models/payment_card_model.dart';
@@ -58,7 +55,9 @@ class UserProvider with ChangeNotifier {
   }) async {
     final url = Uri.parse(BASE_URL + '/user');
     // final body = {};
-    final cookieHeader = 'token=$token';
+    // final cookieHeader = 'token=$token';
+    print("this is token");
+    print(token.toString());
 
     final response = await http.get(
       url,
@@ -69,14 +68,11 @@ class UserProvider with ChangeNotifier {
         'Authorization': 'Bearer $token',
       },
     );
-
+print('userdetails' + response.statusCode.toString());
     fToast = FToast();
     fToast.init(context);
     if (response.statusCode == 200) {
-      // Successful login, handle navigation or other actions
       final jsonResponse = json.decode(response.body);
-      // List<PaymentCard> paymentCards = [];
-
       List<dynamic> cardJsonList = jsonResponse['paymentCards'];
       _paymentCards.clear();
       cardJsonList.forEach((cardJson) {

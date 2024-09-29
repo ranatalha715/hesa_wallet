@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
-
-import '../constants/colors.dart';
 import '../constants/configs.dart';
 
 class PaymentFees with ChangeNotifier {

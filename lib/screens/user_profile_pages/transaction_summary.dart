@@ -366,7 +366,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                     SizedBox(
                                       height: 1.h,
                                     ),
-                                    if(txSummary.txType== 'Cancel Auction Listing')
+                                    if(txSummary.txType== 'Cancel Auction Listing' || txSummary.txType== 'Cancel Listing')
                                     Padding(
                                       padding:  EdgeInsets.only(bottom: 2.h),
                                       child: Text(
@@ -513,7 +513,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                               ),
                             ),
                             Container(
-                              height: txSummary.txType == 'Cancel Auction Listing' ? 64.h :null,
+                              height: txSummary.txType == 'Cancel Auction Listing' ||  txSummary.txType == 'Cancel Listing' ? 64.h :null,
                               decoration: BoxDecoration(
                                   color: AppColors.transactionReqBorderWhole,
                                   // color: AppColors.errorColor,

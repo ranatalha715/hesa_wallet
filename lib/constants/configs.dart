@@ -4,4 +4,3 @@ enum AuthResult {
   success,
   failure,
 }
-

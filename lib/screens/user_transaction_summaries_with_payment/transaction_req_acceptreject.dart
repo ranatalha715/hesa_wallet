@@ -423,6 +423,27 @@ class _TransactionRequestAcceptRejectState
     });
   }
 
+  String formatCurrency(String? numberString) {
+    // Check if the string is null or empty
+    if (numberString == null || numberString.isEmpty) {
+      return "0"; // Return a default value if input is invalid
+    }
+
+    try {
+      // Convert the string to a number (num handles both int and double)
+      num number = num.parse(numberString);
+
+      // Create a NumberFormat object for Saudi currency style
+      final formatter = NumberFormat("#,##0.##", "en_US");
+
+      // Format the number with commas
+      return formatter.format(number);
+    } catch (e) {
+      // Handle any format exceptions and return a fallback
+      return "Invalid Number";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final args =
@@ -825,10 +846,10 @@ class _TransactionRequestAcceptRejectState
                                                                           'offerAmount']
                                                                       ['label']
                                                                   .toString(),
-                                                              details: feesMap![
-                                                                          'offerAmount']
-                                                                      ['value']
-                                                                  .toString(),
+                                                              details: formatCurrency(feesMap![
+                                                              'offerAmount']
+                                                              ['value']
+                                                                  .toString(),),
                                                               showCurrency:
                                                                   true,
                                                               isDark:
@@ -845,10 +866,10 @@ class _TransactionRequestAcceptRejectState
                                                                           'saleCommission']
                                                                       ['label']
                                                                   .toString(),
-                                                              details: feesMap![
-                                                                          'saleCommission']
-                                                                      ['value']
-                                                                  .toString(),
+                                                              details: formatCurrency(feesMap![
+                                                              'saleCommission']
+                                                              ['value']
+                                                                  .toString(),),
                                                               showCurrency:
                                                                   true,
                                                               isDark:
@@ -865,10 +886,10 @@ class _TransactionRequestAcceptRejectState
                                                                           'creatorRoyalty']
                                                                       ['label']
                                                                   .toString(),
-                                                              details: feesMap![
-                                                                          'creatorRoyalty']
-                                                                      ['value']
-                                                                  .toString(),
+                                                              details: formatCurrency(feesMap![
+                                                              'creatorRoyalty']
+                                                              ['value']
+                                                                  .toString(),),
                                                               showCurrency:
                                                                   true,
                                                               isDark:
@@ -885,10 +906,10 @@ class _TransactionRequestAcceptRejectState
                                                                           'networkFees']
                                                                       ['label']
                                                                   .toString(),
-                                                              details: feesMap![
-                                                                          'networkFees']
-                                                                      ['value']
-                                                                  .toString(),
+                                                              details: formatCurrency(feesMap![
+                                                              'networkFees']
+                                                              ['value']
+                                                                  .toString(),),
                                                               showCurrency:
                                                                   true,
                                                               isDark:
@@ -898,7 +919,7 @@ class _TransactionRequestAcceptRejectState
                                                                       : false,
                                                             ),
                                                           if (feesMap![
-                                                                  'totalReceivable'] !=
+                                                                  'total'] !=
                                                               null)
                                                             Column(children: [
                                                               Divider(
@@ -907,15 +928,15 @@ class _TransactionRequestAcceptRejectState
                                                               ),
                                                               transactionFeesWidget(
                                                                 title: feesMap![
-                                                                            'totalReceivable']
+                                                                            'total']
                                                                         [
                                                                         'label']
                                                                     .toString(),
-                                                                details: feesMap![
-                                                                            'totalReceivable']
-                                                                        [
-                                                                        'value']
-                                                                    .toString(),
+                                                                details: formatCurrency(feesMap![
+                                                                'total']
+                                                                [
+                                                                'value']
+                                                                    .toString(),),
                                                                 showCurrency:
                                                                     true,
                                                                 isDark:
@@ -1251,27 +1272,27 @@ class _TransactionRequestAcceptRejectState
                                                               color: AppColors
                                                                   .textColorBlack),
                                                           SizedBox(height: 2.h),
-                                                          AppButton(
-                                                              title:
-                                                                  "Reject request"
-                                                                      .tr(),
-                                                              handler: () {
-                                                                // if(operation=="MintNFT"){
-                                                                rejectTransactions();
-                                                                // }
-                                                              },
-                                                              isGradient: false,
-                                                              textColor: themeNotifier.isDark
-                                                                  ? AppColors
-                                                                      .textColorWhite
-                                                                  : AppColors
-                                                                      .textColorBlack
-                                                                      .withOpacity(
-                                                                          0.8),
-                                                              color: AppColors
-                                                                  .appSecondButton
-                                                                  .withOpacity(
-                                                                      0.10)),
+                                                          // AppButton(
+                                                          //     title:
+                                                          //         "Reject request"
+                                                          //             .tr(),
+                                                          //     handler: () {
+                                                          //       // if(operation=="MintNFT"){
+                                                          //       rejectTransactions();
+                                                          //       // }
+                                                          //     },
+                                                          //     isGradient: false,
+                                                          //     textColor: themeNotifier.isDark
+                                                          //         ? AppColors
+                                                          //             .textColorWhite
+                                                          //         : AppColors
+                                                          //             .textColorBlack
+                                                          //             .withOpacity(
+                                                          //                 0.8),
+                                                          //     color: AppColors
+                                                          //         .appSecondButton
+                                                          //         .withOpacity(
+                                                          //             0.10)),
                                                           SizedBox(
                                                             height: operation !=
                                                                         "AcceptNFTOfferReceived" &&
