@@ -1140,7 +1140,8 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                                         isPrimary:
                                                         widget.isPrimary == "true"
                                                             ? true
-                                                            : false, accountNumber: _ibannumberController.text, accountTitle: _accountholdernamerController.text,
+                                                            : false, accountNumber: _ibannumberController.text,
+                                                        accountTitle: _accountholdernamerController.text,
                                                       );
                                                       setState(() {
                                                         _isLoading = false;

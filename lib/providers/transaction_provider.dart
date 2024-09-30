@@ -1131,19 +1131,19 @@ class TransactionProvider with ChangeNotifier {
       fToast.init(context);
       print('payload to send bilal');
       print(requestBody.toString());
+      print('listnftauction');
+      print(response.body);
 
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
         checkoutURL = responseBody['data']['checkoutURL'];
         checkoutId = responseBody['data']['checkoutId'];
-        _showToast('Payable Transaction Sent!');
         print("send response " + responseBody.toString());
 
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'ListNFTForAuction not working',
@@ -1155,7 +1155,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'ListNFTForAuction not working',
@@ -1222,13 +1221,11 @@ class TransactionProvider with ChangeNotifier {
         final Map<String, dynamic> responseBody = json.decode(response.body);
         checkoutURL = responseBody['data']['checkoutURL'];
         checkoutId = responseBody['data']['checkoutId'];
-        _showToast('Payable Transaction Sent!');
         print("send response " + responseBody.toString());
 
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'ListCollectionForAuction not working',
@@ -1240,7 +1237,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'ListCollectionForAuction not working',
@@ -1472,9 +1468,10 @@ class TransactionProvider with ChangeNotifier {
       fToast.init(context);
       print('payload to send bilal');
       print(requestBody.toString());
-
+      print('makeoffer Response');
+      print(response.body);
       if (response.statusCode == 201) {
-        print(response.body);
+
         final Map<String, dynamic> responseBody = json.decode(response.body);
         checkoutURL = responseBody['data']['checkoutURL'];
         checkoutId = responseBody['data']['checkoutId'];

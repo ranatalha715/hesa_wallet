@@ -30,6 +30,7 @@ import '../../constants/configs.dart';
 import '../../constants/inapp_settings.dart';
 import '../../main.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/bank_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../widgets/main_header.dart';
@@ -477,6 +478,8 @@ class _TransactionRequestAcceptRejectState
 
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
+    final banks = Provider.of<UserProvider>(context, listen: false).banks;
+    final bankpro = Provider.of<BankProvider>(context, listen: false);
     final formattedText = addSpacesToText(displayedText);
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       setThemeDark = themeNotifier.isDark;
@@ -1074,58 +1077,94 @@ class _TransactionRequestAcceptRejectState
                                                           width: 1.0,
                                                         ),
                                                       ),
-                                                      child: Padding(
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal:
-                                                                    10.sp),
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            SizedBox(
-                                                              width: 1.w,
+                                                      child:   ListView.builder(
+                                                        controller: scrollController,
+                                                        itemCount: banks.length,
+                                                        shrinkWrap: true,
+                                                        padding: EdgeInsets.zero,
+                                                        itemBuilder: (context, index) {
+                                                          bool isFirst = index == 0;
+                                                          bool isLast =
+                                                              index == banks.length - 1;
+                                                          String lastFourDigits = banks[index]
+                                                              .ibanNumber
+                                                              .substring(
+                                                            banks[index]
+                                                                .ibanNumber
+                                                                .length -
+                                                                4,
+                                                          );
+                                                          bankpro.selectedBank = banks[index]
+                                                              .isPrimary ==
+                                                              "true"
+                                                              ? " **** " +
+                                                              banks[index]
+                                                                  .ibanNumber
+                                                                  .substring(banks[index]
+                                                                  .ibanNumber
+                                                                  .length -
+                                                                  4)
+                                                              : "";
+                                                          print("Selected Bank Name");
+                                                          print(bankpro.selectedBankName);
+                                                          return
+                                                          // banks[index].isPrimary!='true' ?
+                                                          Padding(
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        10.sp, vertical: 10.sp),
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                SizedBox(
+                                                                  width: 1.w,
+                                                                ),
+                                                                Text(
+                                                                  banks[index].isPrimary.toString(),
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          11.7.sp,
+                                                                      fontFamily:
+                                                                          'Inter',
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      color: themeNotifier.isDark
+                                                                          ? AppColors
+                                                                              .textColorWhite
+                                                                          : AppColors
+                                                                              .textColorBlack),
+                                                                ),
+                                                                Spacer(),
+                                                                Text(
+                                                               banks[index].ibanNumber,
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          11.7.sp,
+                                                                      fontFamily:
+                                                                          'Inter',
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      color: themeNotifier.isDark
+                                                                          ? AppColors
+                                                                              .textColorWhite
+                                                                          : AppColors
+                                                                              .textColorBlack),
+                                                                ),
+                                                              ],
                                                             ),
-                                                            Text(
-                                                              "SNB".tr(),
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      11.7.sp,
-                                                                  fontFamily:
-                                                                      'Inter',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  color: themeNotifier.isDark
-                                                                      ? AppColors
-                                                                          .textColorWhite
-                                                                      : AppColors
-                                                                          .textColorBlack),
-                                                            ),
-                                                            Spacer(),
-                                                            Text(
-                                                              "**** 1234".tr(),
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      11.7.sp,
-                                                                  fontFamily:
-                                                                      'Inter',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                  color: themeNotifier.isDark
-                                                                      ? AppColors
-                                                                          .textColorWhite
-                                                                      : AppColors
-                                                                          .textColorBlack),
-                                                            ),
-                                                          ],
-                                                        ),
+                                                          );
+                                                              // :SizedBox();
+                                                        },
                                                       ),
+
                                                     ),
                                                   ),
                                                 operation !=
@@ -1249,28 +1288,348 @@ class _TransactionRequestAcceptRejectState
                                                             height: 2.h,
                                                           ),
                                                           AppButton(
-                                                              title:
-                                                                  "Accept".tr(),
-                                                              handler:
-                                                                  () async {
+                                                              title: "Accept".tr(),
+                                                              handler: () async {
                                                                 setState(() {
-                                                                  isValidating =
-                                                                      true;
+                                                                  isValidating = true;
                                                                 });
                                                                 setState(() {
-                                                                  isLoading =
-                                                                      true;
+                                                                  isLoading = true;
                                                                 });
+                                                                final result =
+                                                                await Provider.of<AuthProvider>(context,
+                                                                    listen: false)
+                                                                    .sendOTP(
+                                                                  token: accessToken,
+                                                                  context: context,
+                                                                );
+                                                                setState(() {
+                                                                  isLoading = false;
+                                                                });
+                                                                if (result == AuthResult.success) {
+                                                                  startTimer();
+                                                                  otpDialog(
+                                                                    events: _events,
+                                                                    firstBtnHandler: () async {
+                                                                      setState(() {
+                                                                        isLoading = true;
+                                                                      });
+                                                                      if (operation ==
+                                                                          'AcceptNFTOfferReceived') {
+                                                                        await Provider.of<
+                                                                            TransactionProvider>(
+                                                                            context,
+                                                                            listen: false)
+                                                                            .acceptOffer(
+                                                                            params: params,
+                                                                            token: accessToken,
+                                                                            walletAddress: walletAddress,
+                                                                            context: context,
+                                                                            operation: operation,
+                                                                            code: Provider.of<AuthProvider>(
+                                                                                context,
+                                                                                listen: false)
+                                                                                .codeFromOtpBoxes
+                                                                        );
+                                                                      } else if (operation ==
+                                                                          'AcceptCollectionOffer') {
+                                                                        await Provider.of<
+                                                                            TransactionProvider>(
+                                                                            context,
+                                                                            listen: false)
+                                                                            .acceptCollectionOffer(
+                                                                            params: params,
+                                                                            token: accessToken,
+                                                                            walletAddress: walletAddress,
+                                                                            context: context,
+                                                                            operation: operation,
+                                                                            code: Provider.of<AuthProvider>(
+                                                                                context,
+                                                                                listen: false)
+                                                                                .codeFromOtpBoxes
+                                                                        );
+                                                                      }
+                                                                      else if (operation ==
+                                                                          'rejectCollectionOfferReceived') {
+                                                                        await Provider.of<
+                                                                            TransactionProvider>(
+                                                                            context,
+                                                                            listen: false)
+                                                                            .rejectCollectionOfferReceived(
+                                                                            params: params,
+                                                                            token: accessToken,
+                                                                            walletAddress: walletAddress,
+                                                                            context: context,
+                                                                            operation: operation,
+                                                                            code: Provider.of<AuthProvider>(
+                                                                                context,
+                                                                                listen: false)
+                                                                                .codeFromOtpBoxes
+                                                                        );
+                                                                      } else if (operation ==
+                                                                          'makeNFTCounterOffer') {
+                                                                        await Provider.of<
+                                                                            TransactionProvider>(
+                                                                            context,
+                                                                            listen: false)
+                                                                            .makeCounterOffer(
+                                                                            walletAddress: walletAddress,
+                                                                            // params: params,
+                                                                            token: accessToken,
+                                                                            context: context,
+                                                                            operation: operation,
+                                                                            id: counterId,
+                                                                            offererId: counterOffererId,
+                                                                            offerAmount: counterOffererAmount,
+                                                                            code: Provider.of<AuthProvider>(
+                                                                                context,
+                                                                                listen: false)
+                                                                                .codeFromOtpBoxes
+                                                                        );
+                                                                      }
+                                                                      if (operation == 'CancelNFTOfferMade') {
+                                                                        await Provider.of<
+                                                                            TransactionProvider>(
+                                                                            context,
+                                                                            listen: false)
+                                                                            .cancelNFTOfferMade(
+                                                                          walletAddress: walletAddress,
+                                                                          // params: params,
+                                                                          token: accessToken,
+                                                                          context: context,
+                                                                          operation: operation,
+                                                                          params: params,
+                                                                          code:  Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes,
+                                                                        );
+                                                                      } else if (operation ==
+                                                                          'rejectNFTCounterOffer') {
+                                                                        await Provider.of<
+                                                                            TransactionProvider>(
+                                                                            context,
+                                                                            listen: false)
+                                                                            .rejectNFTCounterOffer(
+                                                                            walletAddress: walletAddress,
+                                                                            // params: params,
+                                                                            token: accessToken,
+                                                                            context: context,
+                                                                            operation: operation,
+                                                                            id: counterId,
+                                                                            offererId: counterOffererId,
+                                                                            offerAmount: counterOffererAmount,
+                                                                            code:Provider.of<AuthProvider>(
+                                                                                context,
+                                                                                listen: false)
+                                                                                .codeFromOtpBoxes
+                                                                        );
+                                                                      } else if (operation ==
+                                                                          'makeCollectionCounterOffer') {
+                                                                        await Provider.of<
+                                                                            TransactionProvider>(
+                                                                            context,
+                                                                            listen: false)
+                                                                            .makeCollectionCounterOffer(
+                                                                            walletAddress: walletAddress,
+                                                                            // params: params,
+                                                                            token: accessToken,
+                                                                            context: context,
+                                                                            operation: operation,
+                                                                            id: counterId,
+                                                                            offererId: counterOffererId,
+                                                                            offerAmount: counterOffererAmount,
+                                                                            code: Provider.of<AuthProvider>(
+                                                                                context,
+                                                                                listen: false)
+                                                                                .codeFromOtpBoxes
+                                                                        );
+                                                                      } else if (operation ==
+                                                                          'rejectCollectionCounterOffer') {
+                                                                        await Provider.of<
+                                                                            TransactionProvider>(
+                                                                            context,
+                                                                            listen: false)
+                                                                            .rejectCollectionCounterOffer(
+                                                                            walletAddress: walletAddress,
+                                                                            // params: params,
+                                                                            token: accessToken,
+                                                                            context: context,
+                                                                            operation: operation,
+                                                                            id: counterId,
+                                                                            offererId: counterOffererId,
+                                                                            offerAmount: counterOffererAmount,
+                                                                            code: Provider.of<AuthProvider>(
+                                                                                context,
+                                                                                listen: false)
+                                                                                .codeFromOtpBoxes
+                                                                        );
+                                                                      } else if (operation ==
+                                                                          'CancelCollectionOfferMade') {
+                                                                        await Provider.of<
+                                                                            TransactionProvider>(
+                                                                            context,
+                                                                            listen: false)
+                                                                            .cancelCollectionOfferMade(
+                                                                            walletAddress: walletAddress,
+                                                                            // params: params,
+                                                                            token: accessToken,
+                                                                            context: context,
+                                                                            operation: operation,
+                                                                            params: params,
+                                                                            code: Provider.of<AuthProvider>(
+                                                                                context,
+                                                                                listen: false)
+                                                                                .codeFromOtpBoxes
+                                                                        );
+                                                                      }
+                                                                      if (operation ==
+                                                                          'CancelAuctionListing') {
+                                                                        await Provider.of<
+                                                                            TransactionProvider>(
+                                                                            context,
+                                                                            listen: false)
+                                                                            .cancelAuctionListing(
+                                                                          walletAddress: walletAddress,
+                                                                          token: accessToken,
+                                                                          context: context,
+                                                                          operation: operation,
+                                                                          params: params,
+                                                                          code: otp1Controller.text +
+                                                                              otp2Controller.text +
+                                                                              otp3Controller.text +
+                                                                              otp4Controller.text +
+                                                                              otp5Controller.text +
+                                                                              otp6Controller.text,
+                                                                        );
+                                                                      } else if (operation ==
+                                                                          'CancelCollectionAuctionListing') {
+                                                                        await Provider.of<
+                                                                            TransactionProvider>(
+                                                                            context,
+                                                                            listen: false)
+                                                                            .cancelCollectionAuctionListing(
+                                                                            walletAddress: walletAddress,
+                                                                            token: accessToken,
+                                                                            context: context,
+                                                                            operation: operation,
+                                                                            params: params,
+                                                                            code: Provider.of<AuthProvider>(
+                                                                                context,
+                                                                                listen: false)
+                                                                                .codeFromOtpBoxes
+                                                                        );
+                                                                      } else if (operation ==
+                                                                          'CancelListing') {
+                                                                        await Provider.of<
+                                                                            TransactionProvider>(
+                                                                            context,
+                                                                            listen: false)
+                                                                            .cancelListing(
+                                                                            walletAddress: walletAddress,
+                                                                            token: accessToken,
+                                                                            context: context,
+                                                                            operation: operation,
+                                                                            params: params,
+                                                                            code:
+                                                                            Provider.of<AuthProvider>(
+                                                                                context,
+                                                                                listen: false)
+                                                                                .codeFromOtpBoxes);
+                                                                      } else if (operation ==
+                                                                          'CancelCollectionListing') {
+                                                                        await Provider.of<
+                                                                            TransactionProvider>(
+                                                                            context,
+                                                                            listen: false)
+                                                                            .cancelCollectionListing(
+                                                                            walletAddress: walletAddress,
+                                                                            token: accessToken,
+                                                                            context: context,
+                                                                            operation: operation,
+                                                                            params: params,
+                                                                            code: Provider.of<AuthProvider>(
+                                                                                context,
+                                                                                listen: false)
+                                                                                .codeFromOtpBoxes
+                                                                        );
+                                                                      } else {}
+                                                                      Navigator.pop(context);
+                                                                      setState(() {
+                                                                        isLoading = false;
+                                                                      });
+                                                                    },
+                                                                    secondBtnHandler: () async {
+                                                                      if (_timeLeft == 0) {
+                                                                        print('resend function calling');
+                                                                        try {
+                                                                          setState(() {
+                                                                            _isLoadingResend = true;
+                                                                          });
+                                                                          final otpResult =
+                                                                          await Provider.of<AuthProvider>(
+                                                                              context,
+                                                                              listen: false)
+                                                                              .sendOTP(
+                                                                            token: accessToken,
+                                                                            context: context,
+                                                                          );
+                                                                          setState(() {
+                                                                            _isLoadingResend = false;
+                                                                          });
+                                                                          if (otpResult ==
+                                                                              AuthResult.success) {
+                                                                            startTimer();
+                                                                          }
+                                                                        } catch (error) {
+                                                                          print("Error: $error");
+                                                                          // _showToast('An error occurred'); // Show an error message
+                                                                        } finally {
+                                                                          setState(() {
+                                                                            _isLoadingResend = false;
+                                                                          });
+                                                                        }
+                                                                      } else {}
+                                                                    },
+                                                                    firstTitle: 'Confirm',
+                                                                    secondTitle: 'Resend code ',
 
-                                                                setState(() {
-                                                                  isLoading =
-                                                                      false;
-                                                                });
+                                                                    // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
+
+                                                                    context: context,
+                                                                    isDark: themeNotifier.isDark,
+                                                                    isFirstButtonActive: isOtpButtonActive,
+                                                                    isSecondButtonActive: false,
+                                                                    otp1Controller: otp1Controller,
+                                                                    otp2Controller: otp2Controller,
+                                                                    otp3Controller: otp3Controller,
+                                                                    otp4Controller: otp4Controller,
+                                                                    otp5Controller: otp5Controller,
+                                                                    otp6Controller: otp6Controller,
+                                                                    firstFieldFocusNode: firstFieldFocusNode,
+                                                                    secondFieldFocusNode:
+                                                                    secondFieldFocusNode,
+                                                                    thirdFieldFocusNode: thirdFieldFocusNode,
+                                                                    forthFieldFocusNode: forthFieldFocusNode,
+                                                                    fifthFieldFocusNode: fifthFieldFocusNode,
+                                                                    sixthFieldFocusNode: sixthFieldFocusNode,
+                                                                    firstBtnBgColor:
+                                                                    AppColors.activeButtonColor,
+                                                                    firstBtnTextColor:
+                                                                    AppColors.textColorBlack,
+                                                                    secondBtnBgColor: Colors.transparent,
+                                                                    secondBtnTextColor: _timeLeft != 0
+                                                                        ? AppColors.textColorBlack
+                                                                        .withOpacity(0.8)
+                                                                        : AppColors.textColorWhite,
+                                                                    // themeNotifier.isDark
+                                                                    //     ? AppColors.textColorWhite
+                                                                    //     : AppColors.textColorBlack
+                                                                    //         .withOpacity(0.8),
+                                                                    isLoading: _isLoadingResend,
+                                                                  );
+                                                                }
                                                               },
                                                               // isLoading: isLoading,r
                                                               isGradient: true,
-                                                              color: AppColors
-                                                                  .textColorBlack),
+                                                              color: AppColors.textColorBlack),
                                                           SizedBox(height: 2.h),
                                                           // AppButton(
                                                           //     title:

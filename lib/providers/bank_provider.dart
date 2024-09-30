@@ -112,6 +112,7 @@ class BankProvider with ChangeNotifier{
     fToast.init(context);
     print('addbankStep1');
     print(response.body);
+    // print(body);
     if (response.statusCode == 201) {
       final responseData = json.decode(response.body);
       final uniqueId = responseData['data']['uniqueId'];

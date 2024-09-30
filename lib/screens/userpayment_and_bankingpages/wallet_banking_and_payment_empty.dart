@@ -167,7 +167,7 @@ class _WalletBankingAndPaymentEmptyState
     });
   }
 
-  Future<void> updateBankAccountAndRefreshDetails(int index, String accessToken,
+  Future<void> updateBankAccountAndRefreshDetails(bool isPrimary, int index, String accessToken,
       String ibanNumber, String accountholdername, String bic, BuildContext ctx) async {
     setState(() {
       isLoading = true;
@@ -180,10 +180,7 @@ class _WalletBankingAndPaymentEmptyState
       bic: bic,
       context: context,
       token: accessToken,
-      isPrimary:
-      'isPrimary' == "true"
-          ? true
-          : false, accountNumber: ibanNumber, accountTitle: accountholdername,
+      isPrimary: isPrimary, accountNumber: ibanNumber, accountTitle: accountholdername,
     );
     // await Provider.of<BankProvider>(context, listen: false)
     //     .updateBankAccount(
@@ -498,6 +495,7 @@ class _WalletBankingAndPaymentEmptyState
           break;
         }
       }
+      // print('bankpro.selectedBankName' + bankpro.selectedBankName);
       return Stack(
         children: [
           Scaffold(
@@ -913,7 +911,7 @@ class _WalletBankingAndPaymentEmptyState
                                                   const EdgeInsets.symmetric(
                                                       horizontal: 8.0),
                                               child: banks.isNotEmpty
-                                                  ? Text(
+                                                  ?   Text(
                                                       " **** " +
                                                           bankpro.selectedBank
                                                               .substring(
@@ -933,6 +931,7 @@ class _WalletBankingAndPaymentEmptyState
                                                                   .textColorBlack),
                                                     )
                                                   : Container(
+                                                color: Colors.red,
                                                 width: 75.w,
                                                     child: Text(
                                                         'No banking have been added'
@@ -1032,6 +1031,7 @@ class _WalletBankingAndPaymentEmptyState
                                                   isLoading = true;
                                                 });
                                                 await updateBankAccountAndRefreshDetails(
+                                                  true,
                                                   index,
                                                   accessToken,
                                                   banks[index].ibanNumber,
