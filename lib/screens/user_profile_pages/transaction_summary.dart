@@ -66,7 +66,6 @@ class _TransactionSummaryState extends State<TransactionSummary> {
       if (args != null) {
         id = args['id'];
         type = args['type'];
-
       }
 
       try {
@@ -160,15 +159,12 @@ class _TransactionSummaryState extends State<TransactionSummary> {
     return result;
   }
 
-
-
   void _launchURL(String url) async {
     Uri uri = Uri.parse(url);
     if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
       throw 'Could not launch $url';
     }
   }
-
 
   String formatCurrency(String? numberString) {
     // Check if the string is null or empty
@@ -190,7 +186,6 @@ class _TransactionSummaryState extends State<TransactionSummary> {
       return "Invalid Number";
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -280,7 +275,8 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                             height: 3.sp,
                                           ),
                                           GestureDetector(
-                                            onTap:()=>_launchURL(args!['site']),
+                                            onTap: () =>
+                                                _launchURL(args!['site']),
                                             child: Container(
                                               width: 47.w,
                                               // color: Colors.yellow,
@@ -289,11 +285,13 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                     color: themeNotifier.isDark
-                                                        ? AppColors.textColorToska
+                                                        ? AppColors
+                                                            .textColorToska
                                                         : AppColors
                                                             .textColorToska,
                                                     fontSize: 10.5.sp,
-                                                    fontWeight: FontWeight.w600),
+                                                    fontWeight:
+                                                        FontWeight.w600),
                                               ),
                                             ),
                                           ),
@@ -328,10 +326,18 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          transactionSummary.receiverBankDetails !=
+                                          transactionSummary
+                                                      .receiverBankDetails !=
                                                   'null'
                                               ? 'Payout'
-                                              : txSummary.txType == 'Cancel Auction Listing' ? 'Transaction Successful': 'Payment Successful'.tr(),
+                                              :  transactionSummary.txType
+                                              .contains("Cancel") ||
+                                              transactionSummary.txType
+                                                  .contains("Reject") ||
+                                                      txSummary.txType ==
+                                                          'Reject Counter Offer'
+                                                  ? 'Transaction Successful'
+                                                  : 'Payment Successful'.tr(),
                                           style: TextStyle(
                                             color: themeNotifier.isDark
                                                 ? AppColors.textColorWhite
@@ -366,145 +372,177 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                     SizedBox(
                                       height: 1.h,
                                     ),
-                                    if(txSummary.txType== 'Cancel Auction Listing' || txSummary.txType== 'Cancel Listing')
-                                    Padding(
-                                      padding:  EdgeInsets.only(bottom: 2.h),
-                                      child: Text(
-                                        replaceMiddleWithDotstxId(transactionSummary.txId) ,
-                                             style: TextStyle(
+                                    if (txSummary.txType ==
+                                            'Cancel Auction Listing' ||
+                                        txSummary.txType == 'Cancel Listing' ||
+                                        txSummary.txType == 'Reject Offer' ||
+                                        txSummary.txType ==
+                                            'Reject Counter Offer')
+                                      Padding(
+                                        padding: EdgeInsets.only(bottom: 2.h),
+                                        child: Text(
+                                          transactionSummary.txType
+                                                  .contains("Counter")
+                                              ? replaceMiddleWithDotstxIdCounter(
+                                                  transactionSummary.txId)
+                                              : replaceMiddleWithDotstxId(
+                                                  transactionSummary.txId),
+                                          style: TextStyle(
+                                            color: themeNotifier.isDark
+                                                ? AppColors.textColorGreyShade2
+                                                : AppColors.textColorBlack,
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 10.sp,
+                                          ),
+                                        ),
+                                      ),
+                                    if (!transactionSummary.txType
+                                            .contains("Cancel") &&
+                                        !transactionSummary.txType
+                                            .contains("Reject"))
+                                      Text(
+                                        // transactionSummary.txAmountType ==
+                                        //         'credit'
+                                        //     ? '+' +
+                                        //         transactionSummary.txTotalAmount +
+                                        //         ' SAR'
+                                        //     : '-' +
+                                        formatCurrency(transactionSummary
+                                                .txTotalAmount) +
+                                            ' SAR',
+                                        style: TextStyle(
+                                          fontSize: 26.5.sp,
+                                          fontWeight: FontWeight.w700,
+                                          color:
+                                              transactionSummary.txAmountType ==
+                                                      'credit'
+                                                  ? AppColors.hexaGreen
+                                                  : AppColors.hexaGreen,
+                                        ),
+                                      ),
+                                    if (transactionSummary
+                                            .receiverBankDetails !=
+                                        'null')
+                                      Text(
+                                        "Deposit to",
+                                        style: TextStyle(
                                           color: themeNotifier.isDark
                                               ? AppColors.textColorGreyShade2
                                               : AppColors.textColorBlack,
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 8.sp,
                                         ),
                                       ),
-                                    ),
-                                    if(!transactionSummary.txType.contains("Cancel"))
-                                    Text(
-                                      // transactionSummary.txAmountType ==
-                                      //         'credit'
-                                      //     ? '+' +
-                                      //         transactionSummary.txTotalAmount +
-                                      //         ' SAR'
-                                      //     : '-' +
-                                      formatCurrency(transactionSummary.txTotalAmount) + ' SAR',
-                                      style: TextStyle(
-                                        fontSize: 26.5.sp,
-                                        fontWeight: FontWeight.w700,
-                                        color:
-                                            transactionSummary.txAmountType ==
-                                                    'credit'
-                                                ? AppColors.hexaGreen
-                                                : AppColors.hexaGreen,
-                                      ),
-                                    ),
-                                    if(  transactionSummary
-                                        .receiverBankDetails !=
-                                        'null')
-                                    Text(
-                                      "Deposit to",
-                                      style: TextStyle(
-                                        color: themeNotifier.isDark
-                                            ? AppColors.textColorGreyShade2
-                                            : AppColors.textColorBlack,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 8.sp,
-                                      ),
-                                    ),
-                                    if(  transactionSummary
-                                        .txCrdBrand !=
+                                    if (transactionSummary.txCrdBrand !=
                                         'Unknown')
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 10.sp, vertical: 5.sp),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          transactionSummary.receiverBankDetails !=
-                                                  "null"
-                                              ?
-                                          Image.network(
-                                            transactionSummary.txBankImage,    // "assets/images/bank.png",
-                                                  height: 23.sp,
-                                                  width: 23.sp,
-                                            errorBuilder: (context, error, stackTrace) {
-                                              return Icon(Icons.error);  // Fallback UI
-                                            },
-                                          )
-                                              : transactionSummary.txCrdBrand ==
-                                                      'VISA'
-                                                  ? Image.asset(
-                                                      "assets/images/Visa.png",
-                                                      height: 23.sp,
-                                                      width: 23.sp)
-                                                  : Container(
-                                            height: 2.7.h,
-                                            decoration: BoxDecoration(
-                                              color: AppColors
-                                                  .textColorGreyShade2
-                                                  .withOpacity(0.27),
-                                              borderRadius:
-                                              BorderRadius.circular(
-                                                  3),
-                                            ),
-                                                      child: Padding(
-                                                        padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal:
-                                                            transactionSummary
-                                                                .txCrdBrand == 'MASTER' ?  5.8.sp:3.8.sp,
-                                                            vertical: transactionSummary
-                                                            .txCrdBrand == 'MASTER' ? 4.sp:3.7.sp),
-                                                        child: Image.asset(
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10.sp, vertical: 5.sp),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            transactionSummary
+                                                        .receiverBankDetails !=
+                                                    "null"
+                                                ? Image.network(
+                                                    transactionSummary
+                                                        .txBankImage,
+                                                    // "assets/images/bank.png",
+                                                    height: 23.sp,
+                                                    width: 23.sp,
+                                                    errorBuilder: (context,
+                                                        error, stackTrace) {
+                                                      return Icon(Icons
+                                                          .error); // Fallback UI
+                                                    },
+                                                  )
+                                                : transactionSummary
+                                                            .txCrdBrand ==
+                                                        'VISA'
+                                                    ? Image.asset(
+                                                        "assets/images/Visa.png",
+                                                        height: 23.sp,
+                                                        width: 23.sp)
+                                                    : Container(
+                                                        height: 2.7.h,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: AppColors
+                                                              .textColorGreyShade2
+                                                              .withOpacity(
+                                                                  0.27),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(3),
+                                                        ),
+                                                        child: Padding(
+                                                          padding: EdgeInsets.symmetric(
+                                                              horizontal:
+                                                                  transactionSummary
+                                                                              .txCrdBrand ==
+                                                                          'MASTER'
+                                                                      ? 5.8.sp
+                                                                      : 3.8.sp,
+                                                              vertical: transactionSummary
+                                                                          .txCrdBrand ==
+                                                                      'MASTER'
+                                                                  ? 4.sp
+                                                                  : 3.7.sp),
+                                                          child: Image.asset(
                                                             transactionSummary
                                                                         .txCrdBrand ==
                                                                     'Unknown'
                                                                 ? "assets/images/unknown_card.png"
-                                                                :  transactionSummary
-                                                                .txCrdBrand == 'MASTER' ? "assets/images/master2.png":
-                                                            "assets/images/mada_pay.png"
-                                                          ,
+                                                                : transactionSummary
+                                                                            .txCrdBrand ==
+                                                                        'MASTER'
+                                                                    ? "assets/images/master2.png"
+                                                                    : "assets/images/mada_pay.png",
                                                             // height: 18.sp,
                                                             // width: 18.sp
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                          SizedBox(
-                                            width: 3.sp,
-                                          ),
-                                          // if (transactionSummary.txCrdBrand !=
-                                          //         'VISA' &&
-                                          //     transactionSummary.txCrdBrand !=
-                                          //         'MASTER') // MADA missing
-                                          //   Text(
-                                          //     transactionSummary.txCrdBrand,
-                                          //     style: TextStyle(
-                                          //         fontSize: 10.sp,
-                                          //         fontWeight: FontWeight.w400,
-                                          //         color: themeNotifier.isDark
-                                          //             ? AppColors.textColorWhite
-                                          //             : AppColors
-                                          //                 .textColorBlack),
-                                          //   ),
-                                          SizedBox(
-                                            width: 4.w,
-                                          ),
-                                          // Spacer(),
-                                          Text(
-                                            transactionSummary.receiverBankDetails!="null" ?
-                                             transactionSummary.txBankAccNum:transactionSummary.txCrdNum  ,
-                                            style: TextStyle(
-                                                fontSize: 10.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: themeNotifier.isDark
-                                                    ? AppColors.textColorWhite
-                                                    : AppColors.textColorBlack),
-                                          ),
-                                        ],
+                                            SizedBox(
+                                              width: 3.sp,
+                                            ),
+                                            // if (transactionSummary.txCrdBrand !=
+                                            //         'VISA' &&
+                                            //     transactionSummary.txCrdBrand !=
+                                            //         'MASTER') // MADA missing
+                                            //   Text(
+                                            //     transactionSummary.txCrdBrand,
+                                            //     style: TextStyle(
+                                            //         fontSize: 10.sp,
+                                            //         fontWeight: FontWeight.w400,
+                                            //         color: themeNotifier.isDark
+                                            //             ? AppColors.textColorWhite
+                                            //             : AppColors
+                                            //                 .textColorBlack),
+                                            //   ),
+                                            SizedBox(
+                                              width: 4.w,
+                                            ),
+                                            // Spacer(),
+                                            Text(
+                                              transactionSummary
+                                                          .receiverBankDetails !=
+                                                      "null"
+                                                  ? transactionSummary
+                                                      .txBankAccNum
+                                                  : transactionSummary.txCrdNum,
+                                              style: TextStyle(
+                                                  fontSize: 10.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: themeNotifier.isDark
+                                                      ? AppColors.textColorWhite
+                                                      : AppColors
+                                                          .textColorBlack),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
                                     SizedBox(
                                       height: 1.h,
                                     ),
@@ -513,7 +551,16 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                               ),
                             ),
                             Container(
-                              height: txSummary.txType == 'Cancel Auction Listing' ||  txSummary.txType == 'Cancel Listing' ? 64.h :null,
+                              height:
+                                  // txSummary.txType == 'Cancel Auction Listing' ||  txSummary.txType == 'Cancel Listing'
+                                  txSummary.txType
+                                              .toString()
+                                              .contains('Cancel') ||
+                                          txSummary.txType
+                                              .toString()
+                                              .contains('Reject')
+                                      ? 64.h
+                                      : null,
                               decoration: BoxDecoration(
                                   color: AppColors.transactionReqBorderWhole,
                                   // color: AppColors.errorColor,
@@ -545,8 +592,8 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                     ),
                                     transactionDetailsWidget(
                                       title: 'Timestamp:'.tr(),
-                                      details:
-                                      DateFormat('MMMM dd, yyyy').format(parsedDate),
+                                      details: DateFormat('MMMM dd, yyyy')
+                                          .format(parsedDate),
                                       isDark:
                                           themeNotifier.isDark ? true : false,
                                     ),
@@ -558,7 +605,9 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                     ),
                                     transactionDetailsWidget(
                                       title: 'Tx ID:'.tr(),
-                                      func: ()=>_launchURL("https://www.mjraexplorer.com/tx/" + transactionSummary.txId),
+                                      func: () => _launchURL(
+                                          "https://www.mjraexplorer.com/tx/" +
+                                              transactionSummary.txId),
                                       details: type == 'counter-offer'
                                           ? replaceMiddleWithDotstxIdCounter(
                                               transactionSummary.txId)
@@ -575,7 +624,8 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                             themeNotifier.isDark ? true : false,
                                         color: AppColors.hexaGreen),
                                     transactionDetailsWidget(
-                                      func: ()=>_launchURL("https://www.mjraexplorer.com/$type/${transactionSummary.txTokenId}"),
+                                      func: () => _launchURL(
+                                          "https://www.mjraexplorer.com/$type/${transactionSummary.txTokenId}"),
                                       title: type == 'collection'
                                           ? "Collection ID:"
                                           : "Token ID:".tr(),
@@ -601,7 +651,8 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                         color: AppColors.textColorToska,
                                       ),
                                     transactionDetailsWidget(
-                                      func: ()=>_launchURL("https://www.mjraexplorer.com/address/${transactionSummary.txCreatorId}"),
+                                      func: () => _launchURL(
+                                          "https://www.mjraexplorer.com/address/${transactionSummary.txCreatorId}"),
                                       title: 'Creator ID:'.tr(),
                                       details: replaceMiddleWithDots(
                                           transactionSummary.txCreatorId),
@@ -683,11 +734,13 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                                       transactionSummary
                                                                   .receiverBankDetails !=
                                                               'null'
-                                                          ? formatCurrency(feeItem[label]
-                                                          .toString())
+                                                          ? formatCurrency(
+                                                              feeItem[label]
+                                                                  .toString())
                                                           : '' +
-                                                              formatCurrency(feeItem[label]
-                                                                  .toString());
+                                                              formatCurrency(
+                                                                  feeItem[label]
+                                                                      .toString());
                                                   bool lastIndex = index ==
                                                       transactionSummary
                                                               .transactionFeeses
@@ -747,8 +800,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
       required String details,
       Color? color,
       bool isDark = true,
-        Function? func
-      }) {
+      Function? func}) {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.sp),
       child: Row(

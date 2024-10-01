@@ -115,6 +115,16 @@ class _WalletBankingAndPaymentEmptyState
    otp4Controller.addListener(_updateOtpButtonState);
    otp5Controller.addListener(_updateOtpButtonState);
    otp6Controller.addListener(_updateOtpButtonState);
+   final paymentCards =
+       Provider.of<UserProvider>(context, listen: false).paymentCards;
+   var trPro = Provider.of<TransactionProvider>(context, listen: false);
+   if (trPro.selectedCardNum == null || trPro.selectedCardNum == "") {
+     if (paymentCards.isNotEmpty) {
+       trPro.selectedCardNum = paymentCards[0].bin;
+       trPro.selectedCardLast4Digits = paymentCards[0].last4Digits;
+       trPro.selectedCardBrand = paymentCards[0].cardBrand;
+     }
+   }
     super.initState();
   }
 
@@ -129,6 +139,16 @@ class _WalletBankingAndPaymentEmptyState
 
       await Provider.of<UserProvider>(context, listen: false)
           .getUserDetails(token: accessToken, context: context);
+      final paymentCards =
+          Provider.of<UserProvider>(context, listen: false).paymentCards;
+      var trPro = Provider.of<TransactionProvider>(context, listen: false);
+      if (trPro.selectedCardNum == null || trPro.selectedCardNum == "") {
+        if (paymentCards.isNotEmpty) {
+          trPro.selectedCardNum = paymentCards[0].bin;
+          trPro.selectedCardLast4Digits = paymentCards[0].last4Digits;
+          trPro.selectedCardBrand = paymentCards[0].cardBrand;
+        }
+      }
       setState(() {
         isLoading = false;
       });
@@ -176,11 +196,12 @@ class _WalletBankingAndPaymentEmptyState
     var result =   await Provider.of<BankProvider>(
         context,
         listen: false)
-        .updateBankAccountStep1(
-      bic: bic,
+        .updateBankAccountAsPrimaryStep1(
+      // bic: bic,
       context: context,
       token: accessToken,
-      isPrimary: isPrimary, accountNumber: ibanNumber, accountTitle: accountholdername,
+      isPrimary: isPrimary, accountNumber: ibanNumber,
+      // accountTitle: accountholdername,
     );
     // await Provider.of<BankProvider>(context, listen: false)
     //     .updateBankAccount(
@@ -871,102 +892,98 @@ class _WalletBankingAndPaymentEmptyState
                                     height: 6.5.h,
                                     decoration: BoxDecoration(
                                       color: AppColors.textFieldParentDark,
-
                                       borderRadius: BorderRadius.circular(8.0),
                                     ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 5),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          SizedBox(
-                                            width: 1.h,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          width: 1.h,
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(left: 4.sp),
+                                          width: 45.w,
+                                          child: Text(
+                                            bankpro.selectedBankName,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontWeight:
+                                                    FontWeight.w500,
+                                                fontSize: 10.sp,
+                                                color: themeNotifier
+                                                        .isDark
+                                                    ? AppColors
+                                                        .textColorWhite
+                                                    : AppColors
+                                                        .textColorBlack),
                                           ),
-
-                                          Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 0.0),
-                                              child: Text(
-                                                bankpro.selectedBankName,
-                                                //       'Banking Details'.tr(),
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.w500,
-                                                    fontSize: 10.sp,
-                                                    color: themeNotifier
-                                                            .isDark
-                                                        ? AppColors
-                                                            .textColorWhite
-                                                        : AppColors
-                                                            .textColorBlack),
-                                              )),
-                                          Spacer(),
-                                          Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 8.0),
-                                              child: banks.isNotEmpty
-                                                  ?   Text(
-                                                      " **** " +
+                                        ),
+                                        if(banks.isNotEmpty)
+                                        Spacer(),
+                                        Padding(
+                                            padding:
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 6.0),
+                                            child: banks.isNotEmpty
+                                                ?   Text(
+                                                    " **** " +
+                                                        bankpro.selectedBank
+                                                            .substring(
                                                           bankpro.selectedBank
-                                                              .substring(
-                                                            bankpro.selectedBank
-                                                                    .length -
-                                                                4,
-                                                          ),
-                                                      // 'Banking Details'.tr(),
+                                                                  .length -
+                                                              4,
+                                                        ),
+                                                    // 'Banking Details'.tr(),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: 11.sp,
+                                                        color: themeNotifier.isDark
+                                                            ? AppColors
+                                                                .textColorWhite
+                                                            : AppColors
+                                                                .textColorBlack),
+                                                  )
+                                                : Container(
+                                              // color: Colors.red,
+                                              width: 75.w,
+                                                  child: Text(
+                                                      'No banking have been added'
+                                                          .tr(),
+                                                      maxLines: 1,
+                                                      overflow: TextOverflow.ellipsis,
                                                       style: TextStyle(
                                                           fontWeight:
-                                                              FontWeight.w500,
-                                                          fontSize: 11.sp,
+                                                              FontWeight.w400,
+                                                          fontSize: 11.7.sp,
                                                           color: themeNotifier.isDark
                                                               ? AppColors
-                                                                  .textColorWhite
+                                                                  .textColorGreyShade2
                                                               : AppColors
                                                                   .textColorBlack),
-                                                    )
-                                                  : Container(
-                                                color: Colors.red,
-                                                width: 75.w,
-                                                    child: Text(
-                                                        'No banking have been added'
-                                                            .tr(),
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow.ellipsis,
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            fontSize: 11.7.sp,
-                                                            color: themeNotifier.isDark
-                                                                ? AppColors
-                                                                    .textColorGreyShade2
-                                                                : AppColors
-                                                                    .textColorBlack),
-                                                      ),
-                                                  )),
-                                          // Spacer(),
-                                          if (banks.isNotEmpty)
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  right: 7.sp),
-                                              child:  Icon(
-                                                _isSelectedBank
-                                                    ? Icons
-                                                    .keyboard_arrow_up
-                                                    : Icons
-                                                    .keyboard_arrow_down,
-                                                size: 22.sp,
-                                                color:
-                                                AppColors.textColorGrey,
-                                              ),
-                                            )
-                                        ],
-                                      ),
+                                                    ),
+                                                )),
+                                        // Spacer(),
+                                        if (banks.isNotEmpty)
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                right: 7.sp),
+                                            child:  Icon(
+                                              _isSelectedBank
+                                                  ? Icons
+                                                  .keyboard_arrow_up
+                                                  : Icons
+                                                  .keyboard_arrow_down,
+                                              size: 22.sp,
+                                              color:
+                                              AppColors.textColorGrey,
+                                            ),
+                                          )
+                                      ],
                                     ),
                                   ),
                                 ),

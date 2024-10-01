@@ -257,6 +257,52 @@ class BankProvider with ChangeNotifier{
     }
   }
 
+  Future<AuthResult> updateBankAccountAsPrimaryStep1({
+    required bool isPrimary,
+    required String accountNumber,
+    // required String accountTitle,
+    // required String bic,
+    required String token,
+    required BuildContext context,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/user/bank-account/update/step1');
+    final body = {
+      "accountNumber" : accountNumber.toString(),
+      // "accountTitle": accountTitle.toString(),
+      // "bic" : bic.toString(),
+      "isPrimary": isPrimary.toString(),
+    };
+
+    final response = await http.post(
+      url,
+      body: body,
+      headers: {
+        // "Content-type": "application/json",
+        "Accept": "application/json",
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print('updatedBody' + body.toString());
+    print('updatedbankresponseStep1' + response.body);
+    if (response.statusCode == 201) {
+      final jsonResponse = json.decode(response.body);
+      final uniqueId = jsonResponse['data']['uniqueId'];
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('uniqueId', uniqueId);
+      uniqueIdFromStep1=uniqueId;
+      otpErrorResponse=false;
+      otpSuccessResponse=false;
+      notifyListeners();
+      print("Update bank successfully!");
+      return AuthResult.success;
+    } else {
+      print("Bank is not updated yet: ${response.body}");
+      otpErrorResponse=false;
+      otpSuccessResponse=false;
+      return AuthResult.failure;
+    }
+  }
+
   Future<AuthResult> updateBankAccountStep1({
     required bool isPrimary,
     required String accountNumber,

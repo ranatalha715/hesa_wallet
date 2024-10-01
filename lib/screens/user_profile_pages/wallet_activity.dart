@@ -221,7 +221,7 @@ class _WalletActivityState extends State<WalletActivity> {
                                       (BuildContext context, int index) {
                                     var activity = sortedActivities[index];
 
-                                    if (activity['type'] == 'site_connection') {
+                                    if (activity['type'] == 'site_connection' ) {
                                       // Custom container for the site connection
                                       return WalletActivityWidget(
                                         title: "Site Connected",

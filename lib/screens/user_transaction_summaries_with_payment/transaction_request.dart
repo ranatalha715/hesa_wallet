@@ -609,6 +609,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
     if (trPro.selectedCardNum == null || trPro.selectedCardNum == "") {
       if (paymentCards.isNotEmpty) {
         trPro.selectedCardNum = paymentCards[0].bin;
+        trPro.selectedCardLast4Digits = paymentCards[0].last4Digits;
         trPro.selectedCardBrand = paymentCards[0].cardBrand;
       }
     }
@@ -755,7 +756,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                 ),
                                 transactionDetailsWidget(
                                   title: 'Timestamp'.tr(),
-                                  details: DateFormat('MMMM dd, yyyy HH:mm:ss')
+                                  details: DateFormat('MMMM dd, yyyy')
                                       .format(unformatted),
                                   isDark: themeNotifier.isDark ? true : false,
                                 ),
@@ -1479,6 +1480,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                   paymentCards[
                                                                           index]
                                                                       .bin;
+                                                              trPro.selectedCardLast4Digits=paymentCards[index].last4Digits;
                                                               trPro.selectedCardBrand =
                                                                   paymentCards[
                                                                           index]

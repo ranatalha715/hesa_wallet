@@ -52,8 +52,12 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+import 'constants/configs.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await localized.EasyLocalization.ensureInitialized();
@@ -121,12 +125,11 @@ Future<void> main() async {
                 fallbackLocale: Locale('en', 'US'),
                 saveLocale: true,
                 child:
-              //   DevicePreview(
-              //  enabled: !kReleaseMode,
-              // builder: (context) =>
-                  MyApp()))
-        );
-        // );
+                    //   DevicePreview(
+                    //  enabled: !kReleaseMode,
+                    // builder: (context) =>
+                    MyApp())));
+    // );
     // Register the MethodChannel with the same unique name as in the NFT app
     const channel = MethodChannel('com.example.hesa_wallet');
   });
@@ -192,15 +195,18 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   Timer? _timer;
   StreamSubscription<String?>? _linkSubscription;
+
   void clearLinkStream() {
     // Cancel or reset the link stream if possible
-    getLinksStream().drain();  // This will stop the stream from emitting more items
+    getLinksStream()
+        .drain(); // This will stop the stream from emitting more items
 
     print('Link stream has been cleared.');
   }
+
   void showNotification() async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
-    AndroidNotificationDetails(
+        AndroidNotificationDetails(
       'your_channel_id', // id
       'your_channel_name', // name
       importance: Importance.max,
@@ -209,7 +215,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     );
 
     const NotificationDetails platformChannelSpecifics =
-    NotificationDetails(android: androidPlatformChannelSpecifics);
+        NotificationDetails(android: androidPlatformChannelSpecifics);
 
     await flutterLocalNotificationsPlugin.show(
       0, // notification id
@@ -231,10 +237,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     getAccessToken();
     Future.delayed(Duration(seconds: 2), () {
       showNotification();
-    //   if(accessToken !='') {
-    //     Provider.of<AuthProvider>(context, listen: false)
-    //       .updateFCM(FCM: fcmToken, token: accessToken, context: context);
-    //   }
+      //   if(accessToken !='') {
+      //     Provider.of<AuthProvider>(context, listen: false)
+      //       .updateFCM(FCM: fcmToken, token: accessToken, context: context);
+      //   }
     });
 
     WidgetsBinding.instance.addObserver(this);
@@ -257,10 +263,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       await Provider.of<AuthProvider>(context, listen: false)
           .updateFCM(FCM: fcmToken, token: accessToken, context: context);
     });
-    Timer.periodic(Duration(minutes: 25), (timer) async {
-      await Provider.of<AuthProvider>(context, listen: false).refreshToken(
-          refreshToken: refreshToken, context: context, token: accessToken);
-    });
+    startTokenRefreshTimer(
+        refreshToken: refreshToken, token: accessToken, context: context);
+    // Timer.periodic(Duration(minutes: 25), (timer) async {
+    //   await Provider.of<AuthProvider>(context, listen: false).refreshToken(
+    //       refreshToken: refreshToken, context: context, token: accessToken);
+    // });
   }
 
   @override
@@ -331,13 +339,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   // }
 
   void handleDisconnection() async {
-    final prefs =
-    await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     await prefs.setString('disconnectionTime', DateTime.now().toString());
-    await  prefs.setBool('isConnected', false);
-    setState(() {
-
-    });
+    await prefs.setBool('isConnected', false);
+    setState(() {});
     await Future.delayed(Duration(seconds: 2), () {});
     await showDialog(
       context: context,
@@ -357,6 +362,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       },
     );
   }
+
   Future<void> initUniLinks() async {
     try {
       print('trying');
@@ -373,41 +379,41 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             Provider.of<UserProvider>(context, listen: false)
                 .navigateToNeoForConnectWallet = true;
 
-
-            Provider.of<TransactionProvider>(context,listen: false).logoFromNeo=logoFromNeo;
-            Provider.of<TransactionProvider>(context,listen: false).siteUrl=siteUrl;
+            Provider.of<TransactionProvider>(context, listen: false)
+                .logoFromNeo = logoFromNeo;
+            Provider.of<TransactionProvider>(context, listen: false).siteUrl =
+                siteUrl;
             setState(() {
-              isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
-                  .navigateToNeoForConnectWallet;  // Set overlay visibility to true
+              isOverlayVisible = Provider.of<UserProvider>(context,
+                      listen: false)
+                  .navigateToNeoForConnectWallet; // Set overlay visibility to true
             });
 
             print("check kro" +
                 Provider.of<UserProvider>(context, listen: false)
                     .navigateToNeoForConnectWallet
                     .toString());
-          }
-          else if(operation != null && operation == 'DisconnectWallet') {
-handleDisconnection();
-          }
-          else {
+          } else if (operation != null && operation == 'DisconnectWallet') {
+            handleDisconnection();
+          } else {
             Provider.of<UserProvider>(context, listen: false)
                 .navigateToNeoForConnectWallet = false;
 
             setState(() {
-              isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
-                  .navigateToNeoForConnectWallet;  // Set overlay visibility to false
+              isOverlayVisible = Provider.of<UserProvider>(context,
+                      listen: false)
+                  .navigateToNeoForConnectWallet; // Set overlay visibility to false
             });
           }
           return true; // Exit the loop after processing
-        } else{
+        } else {
           Provider.of<UserProvider>(context, listen: false)
               .navigateToNeoForConnectWallet = false;
 
           setState(() {
             isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
-                .navigateToNeoForConnectWallet;  // Set overlay visibility to false
+                .navigateToNeoForConnectWallet; // Set overlay visibility to false
           });
-
         }
 
         return false;
@@ -420,7 +426,6 @@ handleDisconnection();
       print('trying error');
     }
   }
-
 
   // Future<void> initUniLinks() async {
   //   try {
@@ -464,19 +469,17 @@ handleDisconnection();
   // }
 
   // payable non payable functions
-@override
+  @override
   void didChangeDependencies() {
-  // isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
-  //     .navigateToNeoForConnectWallet;
+    // isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
+    //     .navigateToNeoForConnectWallet;
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
-
       // setState(() {
       //   isOverlayVisible=false;
       // });
@@ -490,10 +493,7 @@ handleDisconnection();
       //       .navigateToNeoForConnectWallet;
       // });
       // _showLockScreen();
-
-
-    }
-    else if (state == AppLifecycleState.resumed) {
+    } else if (state == AppLifecycleState.resumed) {
       // SystemNavigator.pop();
       // setState(() {
       //   isOverlayVisible=false;
@@ -508,8 +508,7 @@ handleDisconnection();
       //       // .navigateToNeoForConnectWallet;
       // });
       // _hideLockScreen();
-    }
-    else{}
+    } else {}
     // print('isOverlayVisible');
     // print(isOverlayVisible);
   }
@@ -542,6 +541,27 @@ handleDisconnection();
     });
   }
 
+  void startTokenRefreshTimer({
+    required String refreshToken,
+    required String token,
+    required BuildContext context,
+  }) {
+    Timer.periodic(Duration(minutes: 30), (Timer timer) async {
+      final result =
+          await Provider.of<AuthProvider>(context, listen: false).refreshToken(
+        refreshToken: refreshToken,
+        token: token,
+        context: context,
+      );
+
+      if (result == AuthResult.failure) {
+        print('Token refresh failed, consider retrying or handling failure.');
+      } else {
+        print('Token refreshed successfully.');
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final emailVerified =
@@ -570,68 +590,67 @@ handleDisconnection();
                 ),
           debugShowCheckedModeBanner: false,
           home:
-          // accessToken.isEmpty ?
-          //  Stack(
-          //   children: [
-          //     Wallet(),
-          //     if (!isWifiOn)
-          //       LoaderBluredScreen(
-          //         isWifiOn: false,
-          //       ),
-          //   ],
-          // ): WalletTokensNfts(),
+              // accessToken.isEmpty ?
+              //  Stack(
+              //   children: [
+              //     Wallet(),
+              //     if (!isWifiOn)
+              //       LoaderBluredScreen(
+              //         isWifiOn: false,
+              //       ),
+              //   ],
+              // ): WalletTokensNfts(),
 
-
-        _buildContent(),
-              // Provider.of<TokenProvider>(
-              //   context,
-              //   context,devic
-              // ).isTokenEmpty
-              // accessToken == ""
-              //     ? Stack(
-              //         children: [
-              //           Wallet(),
-              //           if (!isWifiOn)
-              //             LoaderBluredScreen(
-              //               isWifiOn: false,
-              //             )
-              //         ],
-              //       )
-              //     : isOverlayVisible
-              //         ? const ConnectDapp()
-              //         :
-              //         //fromNeoApp will be used later
-              //         Stack(
-              //             children: [
-              //               // PinScreen(),
-              //
-              //               WalletTokensNfts(),
-              //
-              //               // TransactionRequestAcceptReject(),
-              //
-              //               // Consumer<UserProvider>(builder: (context, user, child) {
-              //               //   return user.navigateToNeoForConnectWallet
-              //               //       ? const
-              //
-              //               //       : const SizedBox();
-              //               // }),
-              //               // if (!emailVerified)
-              //               //   OnboardingAddEmail(),
-              //
-              //               if (!isWifiOn)
-              //                 LoaderBluredScreen(
-              //                   isWifiOn: false,
-              //                 ),
-              //
-              //               // Container(
-              //               //   margin: EdgeInsets.only(top: 20.h),
-              //               //   height: 15.h,
-              //               //   width: 50.h,
-              //               //   color: Colors.white,
-              //               //   child: Center(child: Text(_receivedData)),
-              //               // )
-              //             ],
-              //           ),
+              _buildContent(),
+          // Provider.of<TokenProvider>(
+          //   context,
+          //   context,devic
+          // ).isTokenEmpty
+          // accessToken == ""
+          //     ? Stack(
+          //         children: [
+          //           Wallet(),
+          //           if (!isWifiOn)
+          //             LoaderBluredScreen(
+          //               isWifiOn: false,
+          //             )
+          //         ],
+          //       )
+          //     : isOverlayVisible
+          //         ? const ConnectDapp()
+          //         :
+          //         //fromNeoApp will be used later
+          //         Stack(
+          //             children: [
+          //               // PinScreen(),
+          //
+          //               WalletTokensNfts(),
+          //
+          //               // TransactionRequestAcceptReject(),
+          //
+          //               // Consumer<UserProvider>(builder: (context, user, child) {
+          //               //   return user.navigateToNeoForConnectWallet
+          //               //       ? const
+          //
+          //               //       : const SizedBox();
+          //               // }),
+          //               // if (!emailVerified)
+          //               //   OnboardingAddEmail(),
+          //
+          //               if (!isWifiOn)
+          //                 LoaderBluredScreen(
+          //                   isWifiOn: false,
+          //                 ),
+          //
+          //               // Container(
+          //               //   margin: EdgeInsets.only(top: 20.h),
+          //               //   height: 15.h,
+          //               //   width: 50.h,
+          //               //   color: Colors.white,
+          //               //   child: Center(child: Text(_receivedData)),
+          //               // )
+          //             ],
+          //           ),
           routes: {
             SignUpWithEmail.routeName: (context) => const SignUpWithEmail(),
             SigninWithEmail.routeName: (context) => const SigninWithEmail(),
@@ -640,8 +659,7 @@ handleDisconnection();
                 const TransactionRequestAcceptReject(),
             TransactionRequest.routeName: (context) =>
                 const TransactionRequest(),
-            TermsAndConditions.routeName: (context) =>
-                 TermsAndConditions(),
+            TermsAndConditions.routeName: (context) => TermsAndConditions(),
             NftsCollectionDetails.routeName: (context) =>
                 const NftsCollectionDetails(),
             SetConfirmPinScreen.routeName: (context) =>
@@ -789,15 +807,16 @@ handleDisconnection();
       },
     );
   }
+
   Widget _buildContent() {
     return FutureBuilder<void>(
-      future: initUniLinks(),  // Call the modified initUniLinks function
+      future: initUniLinks(), // Call the modified initUniLinks function
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // Show a loading indicator while waiting for the deep link to be processed
-        return accessToken.isEmpty ? const Wallet(): WalletTokensNfts();
-        // WalletTokensNfts();
-            // Center(child: CircularProgressIndicator());
+          return accessToken.isEmpty ? const Wallet() : WalletTokensNfts();
+          // WalletTokensNfts();
+          // Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           // Handle any errors
           return Center(child: Text('Error: ${snapshot.error}'));
@@ -813,29 +832,27 @@ handleDisconnection();
                   ),
               ],
             );
-          }  else if (!isOverlayVisible){
+          } else if (!isOverlayVisible) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => WalletTokensNfts()),
-                    (Route<dynamic> route) => false,
+                (Route<dynamic> route) => false,
               );
             });
             return WalletTokensNfts();
-          }
-          else if (isOverlayVisible) {
+          } else if (isOverlayVisible) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => ConnectDapp()),
-                    (Route<dynamic> route) => false,
+                (Route<dynamic> route) => false,
               );
             });
             return ConnectDapp();
-          }
-          else {
+          } else {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => WalletTokensNfts()),
-                    (Route<dynamic> route) => false,
+                (Route<dynamic> route) => false,
               );
             });
             return WalletTokensNfts();
@@ -844,7 +861,7 @@ handleDisconnection();
       },
     );
   }
-  //// transactions
+//// transactions
 }
 
 bool isTokenExpired(String token) {
@@ -858,4 +875,3 @@ bool isTokenExpired(String token) {
 
   return true; // If no expiry information is found, consider it expired
 }
-
