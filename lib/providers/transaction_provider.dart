@@ -1070,7 +1070,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'ListCollection Fixed price not working',
@@ -1218,12 +1217,10 @@ class TransactionProvider with ChangeNotifier {
       print(response.body);
 
       if (response.statusCode == 201) {
-
         final Map<String, dynamic> responseBody = json.decode(response.body);
         checkoutURL = responseBody['data']['checkoutURL'];
         checkoutId = responseBody['data']['checkoutId'];
         print("send response " + responseBody.toString());
-
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -1321,7 +1318,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'BurnNFT not working',
@@ -1391,7 +1387,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'BurnCollection not working',
@@ -1550,13 +1545,11 @@ class TransactionProvider with ChangeNotifier {
         final Map<String, dynamic> responseBody = json.decode(response.body);
         checkoutURL = responseBody['data']['checkoutURL'];
         checkoutId = responseBody['data']['checkoutId'];
-        _showToast('Payable Transaction Sent!');
         print("send response " + responseBody.toString());
 
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'MakeCollectionOffer',
@@ -1568,7 +1561,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'MakeCollectionOffer',
@@ -1632,13 +1624,11 @@ class TransactionProvider with ChangeNotifier {
         final Map<String, dynamic> responseBody = json.decode(response.body);
         checkoutURL = responseBody['data']['checkoutURL'];
         checkoutId = responseBody['data']['checkoutId'];
-        _showToast('Payable Transaction Sent!');
         print("send response " + responseBody.toString());
 
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'AcceptCounterOffer',
@@ -1650,7 +1640,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'AcceptCounterOffer',
@@ -1714,13 +1703,11 @@ class TransactionProvider with ChangeNotifier {
         final Map<String, dynamic> responseBody = json.decode(response.body);
         checkoutURL = responseBody['data']['checkoutURL'];
         checkoutId = responseBody['data']['checkoutId'];
-        _showToast('Payable Transaction Sent!');
         print("send response " + responseBody.toString());
 
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'acceptCollectionCounterOffer',
@@ -1732,7 +1719,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'acceptCollectionCounterOffer',
@@ -1787,7 +1773,6 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        _showToast('Non Payable Transaction Sent!');
         print("send response " + responseBody.toString());
         testDialogToCheck(
             context: context,
@@ -1798,7 +1783,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Non Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'AcceptOfferNFT',
@@ -1809,7 +1793,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context, title: 'AcceptOfferNFT', description: e.toString());
       functionToNavigateAfterNonPayable(
@@ -1866,7 +1849,6 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        _showToast('Non Payable Transaction Sent!');
         print("send response " + responseBody.toString());
         testDialogToCheck(
             context: context,
@@ -1877,7 +1859,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Non Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'AcceptCollectionOffer',
@@ -1888,7 +1869,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'AcceptCollectionOffer',
@@ -1946,7 +1926,6 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        _showToast('Non Payable Transaction Sent!');
         testDialogToCheck(
             context: context,
             title: 'rejectNFTOfferReceived',
@@ -1958,7 +1937,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Non Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'rejectNFTOfferReceived',
@@ -1969,7 +1947,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'rejectNFTOfferReceived',
@@ -2027,7 +2004,6 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        _showToast('Non Payable Transaction Sent!');
         testDialogToCheck(
             context: context,
             title: 'RejectCollectionOffer',
@@ -2039,7 +2015,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Non Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'RejectCollectionOffer',
@@ -2050,7 +2025,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'RejectCollectionOffer',
@@ -2179,7 +2153,6 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        _showToast('Non Payable Transaction Sent!');
         testDialogToCheck(
             context: context,
             title: 'CancelAuctionListing',
@@ -2190,7 +2163,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Non Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'CancelAuctionListing',
@@ -2201,7 +2173,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'CancelAuctionListing',
@@ -2254,7 +2225,6 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        _showToast('Non Payable Transaction Sent!');
         testDialogToCheck(
             context: context,
             title: 'CancelCollectionAuctionListing',
@@ -2265,7 +2235,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Non Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'CancelCollectionAuctionListing',
@@ -2276,7 +2245,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'CancelCollectionAuctionListing',
@@ -2329,7 +2297,6 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        // _showToast('Non Payable Transaction Sent!');
         testDialogToCheck(
             context: context,
             title: 'CancelListing',
@@ -2340,7 +2307,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Non Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'CancelListing',
@@ -2351,7 +2317,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context, title: 'CancelListing', description: e.toString());
       functionToNavigateAfterNonPayable(e.toString(), operation,context,);
@@ -2402,7 +2367,6 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        _showToast('Non Payable Transaction Sent!');
         testDialogToCheck(
             context: context,
             title: 'CancelCollectionListing',
@@ -2413,7 +2377,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Non Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'CancelCollectionListing',
@@ -2424,7 +2387,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'CancelCollectionListing',
@@ -2476,12 +2438,10 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        _showToast('Non Payable Transaction Sent!');
         print("send response " + responseBody.toString());
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Non Payable Transaction not sent');
         testDialogToCheck(
             context: context,
             title: 'CancelCollectionOfferMade not working',
@@ -2492,7 +2452,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'CancelCollectionOfferMade not working',
@@ -2597,7 +2556,6 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        // _showToast('Counter Offer Sent!');
         print("send response " + responseBody.toString());
         testDialogToCheck(
             context: context,
@@ -2608,7 +2566,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        // _showToast('Counter Offer Not Sent');
         testDialogToCheck(
             context: context,
             title: 'MakeCounterOffer',
@@ -2619,7 +2576,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      // _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'MakeCounterOffer',
@@ -2668,7 +2624,6 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        // _showToast('Counter Offer Sent!');
         print("send response " + responseBody.toString());
         testDialogToCheck(
             context: context,
@@ -2679,7 +2634,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        // _showToast('Counter Offer Not Sent');
         testDialogToCheck(
             context: context,
             title: 'MakeCollectionCounterOffer',
@@ -2690,7 +2644,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      // _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'MakeCollectionCounterOffer',
@@ -2740,7 +2693,6 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        _showToast('Reject NFTCounter Offer Sent!');
         print("send response " + responseBody.toString());
         testDialogToCheck(
             context: context,
@@ -2751,7 +2703,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Reject NFTCounter Offer Not Sent');
         testDialogToCheck(
             context: context,
             title: 'RejectNFTCounterOffer',
@@ -2762,7 +2713,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      // _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'RejectNFTCounterOffer',
@@ -2812,7 +2762,6 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        _showToast('Reject CollectionCounter Offer Sent!');
         print("send response " + responseBody.toString());
         testDialogToCheck(
             context: context,
@@ -2823,7 +2772,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        _showToast('Reject CollectionCounter Offer Not Sent');
         testDialogToCheck(
             context: context,
             title: 'RejectCollectionCounterOffer',
@@ -2834,7 +2782,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      // _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'RejectCollectionCounterOffer',
@@ -2878,13 +2825,11 @@ class TransactionProvider with ChangeNotifier {
       } else {
         // Handle the error response here if needed
         print("Error: ${response.body}");
-        _showToast('Something Went Wrong!');
         return AuthResult.failure;
       }
     } catch (e) {
       // Handle exceptions here
       print('Error: $e');
-      _showToast('Something Went Wrong!');
       return AuthResult.failure;
     }
   }
@@ -2923,7 +2868,6 @@ class TransactionProvider with ChangeNotifier {
           title: 'Process Api Response',
           description: response.body.toString());
       if (response.statusCode == 201) {
-        _showToast('Payment Processed Successfully');
         functionToNavigateAfterPayable(
             response.body.toString(), operation!, context,
             statusCode: response.statusCode.toString());
@@ -2932,7 +2876,6 @@ class TransactionProvider with ChangeNotifier {
       } else {
         // Handle the error response here if needed
         print("Process Api Error: ${response.body}");
-        _showToast('Payment Processing Failed');
         functionToNavigateAfterPayable(
             response.body.toString(), operation!, context,
             statusCode: response.statusCode.toString());
@@ -2941,7 +2884,6 @@ class TransactionProvider with ChangeNotifier {
     } on TimeoutException catch (error) {
       // Handle timeout error
       print('Process Api Timeout Error: $error');
-      _showToast('Request Timeout');
       testDialogToCheck(
           context: context,
           title: 'Process Api Response',
@@ -2956,8 +2898,6 @@ class TransactionProvider with ChangeNotifier {
     } catch (e) {
       // Handle other exceptions here
       print('Process Api Error: $e');
-
-      _showToast('Error');
       testDialogToCheck(
           context: context,
           title: 'Process Api Response On catch',
@@ -3016,21 +2956,17 @@ class TransactionProvider with ChangeNotifier {
       fToast.init(context);
 
       if (response.statusCode == 200) {
-        _showToast('Card Tokenized Successfully');
-
         print(response.body);
 
         return AuthResult.success;
       } else {
         // Handle the error response here if needed
         print("Error: ${response.body}");
-        _showToast('Card Processing Failed');
         return AuthResult.failure;
       }
     } catch (e) {
       // Handle exceptions here
       print('Error: $e');
-      _showToast('Error');
       return AuthResult.failure;
     }
   }
@@ -3064,30 +3000,17 @@ class TransactionProvider with ChangeNotifier {
 
         if (responseBody['success'] == true) {
           final paymentLink = responseBody['data']['paymentLink'];
-          _showToast('Payment Link Generated: $paymentLink');
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(
-          //     builder: (BuildContext context) {
-          //       return PaymentWebView(
-          //         targetUrl: paymentLink,
-          //       );
-          //     },
-          //   ),
-          // );
           print(responseBody);
           return AuthResult.success;
         } else {
           final errorMessage = responseBody['message'];
-          _showToast('Error: $errorMessage');
           return AuthResult.failure;
         }
       } else {
-        _showToast('Error: ${response.body}');
         return AuthResult.failure;
       }
     } catch (e) {
       print('Error: $e');
-      _showToast('Error');
       return AuthResult.failure;
     }
   }
@@ -3100,13 +3023,6 @@ class TransactionProvider with ChangeNotifier {
     final randomNumber = min + random.nextInt(max - min);
     return randomNumber.toString();
   }
-
-  // void _showToast(String message) {
-  //   // Replace this with your toast notification code
-  // }
-  //
-  // // enum AuthResult { success, failure }
-
   Future<AuthResult> fetchPayableTransactions({
     required String id,
   }) async {

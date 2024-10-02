@@ -330,12 +330,14 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                                       .receiverBankDetails !=
                                                   'null'
                                               ? 'Payout'
-                                              :  transactionSummary.txType
-                                              .contains("Cancel") ||
-                                              transactionSummary.txType
-                                                  .contains("Reject") ||
+                                              : transactionSummary.txType
+                                                          .contains("Cancel") ||
+                                                      transactionSummary.txType
+                                                          .contains("Reject") ||
                                                       txSummary.txType ==
-                                                          'Reject Counter Offer'
+                                                          'Reject Counter Offer' ||
+                                                      txSummary.txType ==
+                                                          'Make Counter Offer'
                                                   ? 'Transaction Successful'
                                                   : 'Payment Successful'.tr(),
                                           style: TextStyle(
@@ -377,7 +379,12 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                         txSummary.txType == 'Cancel Listing' ||
                                         txSummary.txType == 'Reject Offer' ||
                                         txSummary.txType ==
-                                            'Reject Counter Offer')
+                                            'Reject Counter Offer' ||
+                                        txSummary.txType ==
+                                            'rejectCollectionOfferReceived'||
+                                        txSummary.txType ==
+                                            'Make Counter Offer'
+                                    )
                                       Padding(
                                         padding: EdgeInsets.only(bottom: 2.h),
                                         child: Text(
@@ -399,14 +406,10 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                     if (!transactionSummary.txType
                                             .contains("Cancel") &&
                                         !transactionSummary.txType
-                                            .contains("Reject"))
+                                            .contains("Reject") &&
+                                    txSummary.txType !=
+                                    'Make Counter Offer')
                                       Text(
-                                        // transactionSummary.txAmountType ==
-                                        //         'credit'
-                                        //     ? '+' +
-                                        //         transactionSummary.txTotalAmount +
-                                        //         ' SAR'
-                                        //     : '-' +
                                         formatCurrency(transactionSummary
                                                 .txTotalAmount) +
                                             ' SAR',
@@ -507,20 +510,6 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                             SizedBox(
                                               width: 3.sp,
                                             ),
-                                            // if (transactionSummary.txCrdBrand !=
-                                            //         'VISA' &&
-                                            //     transactionSummary.txCrdBrand !=
-                                            //         'MASTER') // MADA missing
-                                            //   Text(
-                                            //     transactionSummary.txCrdBrand,
-                                            //     style: TextStyle(
-                                            //         fontSize: 10.sp,
-                                            //         fontWeight: FontWeight.w400,
-                                            //         color: themeNotifier.isDark
-                                            //             ? AppColors.textColorWhite
-                                            //             : AppColors
-                                            //                 .textColorBlack),
-                                            //   ),
                                             SizedBox(
                                               width: 4.w,
                                             ),
@@ -552,8 +541,8 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                             ),
                             Container(
                               height:
-                                  // txSummary.txType == 'Cancel Auction Listing' ||  txSummary.txType == 'Cancel Listing'
-                                  txSummary.txType
+                                  txSummary.txType == 'Make Counter Offer' ||
+                                          txSummary.txType
                                               .toString()
                                               .contains('Cancel') ||
                                           txSummary.txType
@@ -563,10 +552,8 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                       : null,
                               decoration: BoxDecoration(
                                   color: AppColors.transactionReqBorderWhole,
-                                  // color: AppColors.errorColor,
                                   borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(15.sp),
-                                    // Adjust the radius as needed
                                     topRight: Radius.circular(15.sp),
                                   )),
                               child: Padding(

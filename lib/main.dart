@@ -546,7 +546,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     required String token,
     required BuildContext context,
   }) {
-    Timer.periodic(Duration(minutes: 30), (Timer timer) async {
+    Timer.periodic(Duration(minutes: 25), (Timer timer) async {
       final result =
           await Provider.of<AuthProvider>(context, listen: false).refreshToken(
         refreshToken: refreshToken,
