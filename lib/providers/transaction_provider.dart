@@ -256,6 +256,7 @@ class TransactionProvider with ChangeNotifier {
   var txBankImage = '';
   var txBankAccNum = '';
   var receiverBankDetails = '';
+  var receiverCardDetails = '';
 
   clearTxSummaryData(){
      txTimeStamp = '';
@@ -411,6 +412,8 @@ class TransactionProvider with ChangeNotifier {
                       ['creatorRoyaltyPercentage']
                   .toString() ??
               'N/A';
+          receiverCardDetails =
+              jsonData['cardDetails'].toString();
           txCrdBrand = jsonData['cardDetails']['type'].toString() ?? 'N/A';
           txCrdNum =
               jsonData['cardDetails']['maskedNumber'].toString() ?? 'N/A';

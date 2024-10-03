@@ -48,6 +48,7 @@ class _SettingsState extends State<Settings> {
     prefs.remove('accessToken');
     prefs.remove('refreshToken');
     prefs.remove('siteUrl');
+    prefs.remove('isConnected');
   }
 
   init() async {
@@ -338,7 +339,12 @@ class _SettingsState extends State<Settings> {
             ),
           ),
           if(_isLoading)
-            LoaderBluredScreen()
+            Positioned(
+                top: 12.h,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: LoaderBluredScreen())
         ],
       );
     });

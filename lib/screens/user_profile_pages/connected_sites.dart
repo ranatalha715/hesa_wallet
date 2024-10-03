@@ -182,20 +182,20 @@ class _ConnectedSitesState extends State<ConnectedSites> {
                 SizedBox(
                   height: 3.h,
                 ),
-                // if (connectedSites.isEmpty)
-                //   Padding(
-                //     padding: EdgeInsets.only(top: 20.h),
-                //     child: Text(
-                //       "You are not connected to any apps.",
-                //       style: TextStyle(
-                //           color: themeNotifier.isDark
-                //               ? AppColors.textColorGreyShade2
-                //               : AppColors.textColorBlack,
-                //           fontWeight: FontWeight.w500,
-                //           fontSize: 12.sp,
-                //           fontFamily: 'Blogger Sans'),
-                //     ),
-                //   ),
+                if (!isConnected)
+                  Padding(
+                    padding: EdgeInsets.only(top: 20.h),
+                    child: Text(
+                      "You are not connected to any apps.",
+                      style: TextStyle(
+                          color: themeNotifier.isDark
+                              ? AppColors.textColorGreyShade2
+                              : AppColors.textColorBlack,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12.sp,
+                          fontFamily: 'Blogger Sans'),
+                    ),
+                  ),
 
                 isConnected
                     ? ListView(
@@ -322,7 +322,6 @@ class _ConnectedSitesState extends State<ConnectedSites> {
                                                         final prefs =
                                                         await SharedPreferences
                                                             .getInstance();
-
 
                                                         await prefs.setString('disconnectionTime', DateTime.now().toString());
                                                         await  prefs.setBool('isConnected', false);
@@ -1261,7 +1260,14 @@ class _ConnectedSitesState extends State<ConnectedSites> {
               ],
             ),
           ),
-          if (isLoading) LoaderBluredScreen()
+          if (isLoading)
+
+            Positioned(
+                top: 12.h,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: LoaderBluredScreen())
         ],
       );
     });

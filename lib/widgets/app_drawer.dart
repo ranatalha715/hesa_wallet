@@ -51,6 +51,7 @@ class _AppDrawerState extends State<AppDrawer> {
     prefs.remove('accessToken');
     prefs.remove('refreshToken');
     prefs.remove('siteUrl');
+    prefs.remove('isConnected');
   }
 
   String replaceMiddleWithDots(String input) {
@@ -115,7 +116,7 @@ class _AppDrawerState extends State<AppDrawer> {
               child: Column(
                 children: [
                   Container(
-                    height: 40.h,
+                    height: 42.h,
                     // color: Colors.blue,
                     // color: themeNotifier.isDark
                     //     ? AppColors.backgroundColor
@@ -152,6 +153,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                 height: 58.sp,
                                 width: 58.sp,
                                 decoration: BoxDecoration(
+                                  // color: Colors.red,
                                     color: AppColors.backgroundColor,
                                     borderRadius: BorderRadius.circular(100)),
                                 child: Padding(
@@ -232,9 +234,7 @@ class _AppDrawerState extends State<AppDrawer> {
                     color: themeNotifier.isDark
                         ? AppColors.drawerOptBackgroundClr
                         : AppColors.drawerDividerlightColor.withOpacity(0.35),
-
                     // color: Colors.transparent,
-
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
@@ -665,8 +665,6 @@ class _AppDrawerState extends State<AppDrawer> {
                                       (route) =>
                                   false, // This predicate ensures that all previous routes are removed.
                                 );
-
-
                                 await AppDeepLinking().openNftApp(
                                   {
                                     "operation": "disconnectWallet",

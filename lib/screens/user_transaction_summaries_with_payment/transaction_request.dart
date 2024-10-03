@@ -827,7 +827,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                   ),
                                 if (paramsMap!['offerAmount'] != null)
                                   transactionDetailsWidget(
-                                    title: 'Counter Offer Value:'.tr(),
+                                    title: 'Counter Offer Amount:'.tr(),
                                     details:
                                         paramsMap!['offerAmount'].toString() +
                                             " SAR",

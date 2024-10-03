@@ -1321,7 +1321,13 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                       ),
                   ],
                 )),
-            if (_isLoading) LoaderBluredScreen()
+            if (_isLoading)
+              Positioned(
+                  top: 12.h,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: LoaderBluredScreen())
           ],
         ),
       );

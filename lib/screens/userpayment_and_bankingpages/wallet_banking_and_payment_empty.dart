@@ -1142,7 +1142,13 @@ class _WalletBankingAndPaymentEmptyState
               ),
             ),
           ),
-          if (isLoading) LoaderBluredScreen()
+          if (isLoading)
+            Positioned(
+              top: 12.h,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: LoaderBluredScreen())
         ],
       );
     });

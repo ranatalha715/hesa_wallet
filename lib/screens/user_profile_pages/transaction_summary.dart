@@ -383,7 +383,9 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                         txSummary.txType ==
                                             'rejectCollectionOfferReceived'||
                                         txSummary.txType ==
-                                            'Make Counter Offer'
+                                            'Make Counter Offer' ||
+                                        txSummary.txType ==
+                                            'Make Collection Counter Offer'
                                     )
                                       Padding(
                                         padding: EdgeInsets.only(bottom: 2.h),
@@ -408,7 +410,9 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                         !transactionSummary.txType
                                             .contains("Reject") &&
                                     txSummary.txType !=
-                                    'Make Counter Offer')
+                                    'Make Counter Offer'  &&
+                                        txSummary.txType !=
+                                            'Make Collection Counter Offer')
                                       Text(
                                         formatCurrency(transactionSummary
                                                 .txTotalAmount) +
@@ -460,7 +464,8 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                                           .error); // Fallback UI
                                                     },
                                                   )
-                                                : transactionSummary
+                                                : transactionSummary.receiverCardDetails != 'null' ?
+                                            transactionSummary
                                                             .txCrdBrand ==
                                                         'VISA'
                                                     ? Image.asset(
@@ -506,7 +511,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                                             // width: 18.sp
                                                           ),
                                                         ),
-                                                      ),
+                                                      ): SizedBox(),
                                             SizedBox(
                                               width: 3.sp,
                                             ),
@@ -541,7 +546,8 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                             ),
                             Container(
                               height:
-                                  txSummary.txType == 'Make Counter Offer' ||
+                            txSummary.txType ==
+                            'Make Collection Counter Offer' || txSummary.txType == 'Make Counter Offer' ||
                                           txSummary.txType
                                               .toString()
                                               .contains('Cancel') ||
@@ -551,6 +557,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                       ? 64.h
                                       : null,
                               decoration: BoxDecoration(
+                                  // color: AppColors.errorColor,
                                   color: AppColors.transactionReqBorderWhole,
                                   borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(15.sp),
@@ -775,7 +782,13 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                 ],
               ),
             ),
-            if (_isLoading) LoaderBluredScreen(),
+            if (_isLoading)
+              Positioned(
+                  top: 12.h,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: LoaderBluredScreen())
           ],
         );
       });

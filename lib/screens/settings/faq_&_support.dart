@@ -25,15 +25,6 @@ class _FAQAndSupportState extends State<FAQAndSupport> {
   Future<void> didChangeDependencies() async {
     // TODO: implement didChangeDependencies
     if(_isinit){
-      setState(() {
-        _isLoading=true;
-      });
-      await Future.delayed(Duration(milliseconds: 900), () {
-        print('This code will be executed after 2 seconds');
-      });
-      setState(() {
-        _isLoading=false;
-      });
     }
     _isinit=false;
     super.didChangeDependencies();
@@ -120,7 +111,12 @@ class _FAQAndSupportState extends State<FAQAndSupport> {
             ),
           ),
           if(_isLoading)
-            LoaderBluredScreen()
+            Positioned(
+                top: 12.h,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: LoaderBluredScreen())
         ],
       );
     });

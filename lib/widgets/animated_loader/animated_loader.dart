@@ -57,14 +57,17 @@ class _CircularProgressAnimationState extends State<CircularProgressAnimation>
   @override
   Widget build(BuildContext context) {
     return
-        Center(
-          child: Transform.rotate(
-            angle: _animation.value * 4.0 * 3.1415,
-            child: Image.asset(
-              'assets/images/animated_loader.png',
-              // Replace this with your image path
-              width: 40.sp, // Set your desired image width
-              height: 40.sp, // Set your desired image height
+        Padding(
+          padding:  EdgeInsets.only(bottom: 10.h),
+          child: Center(
+            child: Transform.rotate(
+              angle: _animation.value * 4.0 * 3.1415,
+              child: Image.asset(
+                'assets/images/animated_loader.png',
+                // Replace this with your image path
+                width: 40.sp, // Set your desired image width
+                height: 40.sp, // Set your desired image height
+              ),
             ),
           ),
         );
@@ -107,18 +110,23 @@ class _LoaderBluredScreenState extends State<LoaderBluredScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return  BackdropFilter(
-        filter: ImageFilter.blur(
-        sigmaX: 7, sigmaY: 7),
-    child:
-    // widget.isWifiOn ?
-    Container(
-        height: 100.h,
-        width: double.infinity,
-        // color: Colors.white.withOpacity(0.7),
-        child: widget.isWifiOn
-         ? CircularProgressAnimation() : SizedBox(),
-    )
+    return  Stack(
+      children: [
+        Expanded(child: Container(color: AppColors.backgroundColor,)),
+        // BackdropFilter(
+        //     filter: ImageFilter.blur(
+        //     sigmaX: 7, sigmaY: 7),
+        // child:
+        // widget.isWifiOn ?
+        Container(
+            height: 100.h,
+            width: double.infinity,
+            // color: Colors.white.withOpacity(0.7),
+            child: widget.isWifiOn
+             ? CircularProgressAnimation() : SizedBox(),
+        )
+        // ),
+      ],
     );
   }
 

@@ -139,15 +139,6 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
   Future<void> didChangeDependencies() async {
     // TODO: implement didChangeDependencies
     if (_isinit) {
-      setState(() {
-        _isLoading = true;
-      });
-      await Future.delayed(Duration(milliseconds: 900), () {
-        print('This code will be executed after 2 seconds');
-      });
-      setState(() {
-        _isLoading = false;
-      });
     }
     _isinit = false;
     super.didChangeDependencies();
@@ -508,7 +499,13 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
               ],
             ),
           ),
-          if (_isLoading) LoaderBluredScreen()
+          if (_isLoading)
+            Positioned(
+                top: 12.h,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: LoaderBluredScreen())
         ],
       );
     });
