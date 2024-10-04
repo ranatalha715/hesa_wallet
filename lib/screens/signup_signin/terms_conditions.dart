@@ -493,7 +493,12 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
             ),
           ),
           if(_isLoading)
-            LoaderBluredScreen()
+            Positioned(
+                top: 12.h,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: LoaderBluredScreen())
         ],
       );
     });

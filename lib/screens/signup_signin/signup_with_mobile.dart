@@ -79,14 +79,11 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
   var _isLoading = false;
   int _timeLeft = 60;
 
-
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
     // print(accessToken);
   }
-
-
 
   final ScrollController scrollController = ScrollController();
   List<String> _allNationalities = [
@@ -393,7 +390,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
     });
   }
 
-
   void updateDialogBoxButtonState() {
     setState(() {
       isOtpButtonActive = true;
@@ -404,7 +400,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
   Widget build(BuildContext context) {
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
-    final auth=Provider.of<AuthProvider>(context, listen: false);
+    final auth = Provider.of<AuthProvider>(context, listen: false);
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return Stack(
         children: [
@@ -417,7 +413,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                 Column(
                   children: [
                     MainHeader(title: 'Create a Wallet'.tr()),
-
                     Expanded(
                       child: Container(
                         width: double.infinity,
@@ -454,7 +449,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                     ),
                                     TextFieldParent(
                                       child: TextField(
-
                                           textCapitalization:
                                               TextCapitalization.words,
                                           focusNode: firstNameFocusNode,
@@ -476,14 +470,20 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                               fontWeight: FontWeight.w400,
                                               fontFamily: 'Inter'),
                                           decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.symmetric(
-                                                vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: OS.Platform.isIOS
+                                                        ? 14.5.sp
+                                                        : 10.0,
+                                                    horizontal:
+                                                        OS.Platform.isIOS
+                                                            ? 10.sp
+                                                            : 16.0),
                                             hintText: 'Enter first name'.tr(),
                                             hintStyle: TextStyle(
                                                 fontSize: 10.2.sp,
                                                 color: AppColors.textColorGrey,
                                                 fontWeight: FontWeight.w400,
-
                                                 fontFamily: 'Inter'),
                                             enabledBorder: OutlineInputBorder(
                                                 borderRadius:
@@ -500,8 +500,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                 borderRadius:
                                                     BorderRadius.circular(8.0),
                                                 borderSide: BorderSide(
-                                                  color:
-                                                      AppColors.focusTextFieldColor,
+                                                  color: AppColors
+                                                      .focusTextFieldColor,
                                                 )),
                                           ),
                                           cursorColor: AppColors.textColorGrey),
@@ -562,8 +562,15 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                               fontWeight: FontWeight.w400,
                                               fontFamily: 'Inter'),
                                           decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.symmetric(
-                                                vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: OS.Platform.isIOS
+                                                        ? 14.5.sp
+                                                        : 10.0,
+                                                    horizontal:
+                                                        OS.Platform.isIOS
+                                                            ? 10.sp
+                                                            : 16.0),
                                             hintText: 'Enter last name'.tr(),
                                             hintStyle: TextStyle(
                                                 fontSize: 10.2.sp,
@@ -584,8 +591,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                 borderRadius:
                                                     BorderRadius.circular(8.0),
                                                 borderSide: BorderSide(
-                                                  color:
-                                                      AppColors.focusTextFieldColor,
+                                                  color: AppColors
+                                                      .focusTextFieldColor,
                                                 )),
                                           ),
                                           cursorColor: AppColors.textColorGrey),
@@ -625,7 +632,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                     ),
                                     Container(
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8.0),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
                                       ),
                                       child: Column(
                                         children: [
@@ -638,11 +646,12 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                             child: Container(
                                               height: 6.5.h,
                                               decoration: BoxDecoration(
-                                                color:
-                                                    AppColors.textFieldParentDark,
+                                                color: AppColors
+                                                    .textFieldParentDark,
                                                 borderRadius: BorderRadius.only(
                                                   topLeft: Radius.circular(8.0),
-                                                  topRight: Radius.circular(8.0),
+                                                  topRight:
+                                                      Radius.circular(8.0),
                                                   bottomLeft: Radius.circular(
                                                       _isSelectedNationality
                                                           ? 8.0
@@ -654,8 +663,9 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                 ),
                                               ),
                                               child: Padding(
-                                                padding: const EdgeInsets.symmetric(
-                                                    horizontal: 5),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 5),
                                                 child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.start,
@@ -690,16 +700,15 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                       padding:
                                                           const EdgeInsets.only(
                                                               right: 10),
-                                                      child:
-                                                      Icon(
+                                                      child: Icon(
                                                         _isSelectedNationality
                                                             ? Icons
                                                                 .keyboard_arrow_up
                                                             : Icons
                                                                 .keyboard_arrow_down,
                                                         size: 21.sp,
-                                                        color:
-                                                            AppColors.textColorGrey,
+                                                        color: AppColors
+                                                            .textColorGrey,
                                                       ),
                                                     ),
                                                   ],
@@ -714,10 +723,12 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                     right: 1.sp,
                                                     top: 0.4.h),
                                                 decoration: BoxDecoration(
-                                                  color:
-                                                      AppColors.textFieldParentDark,
-                                                  borderRadius: BorderRadius.all(
-                                                      Radius.circular(8.sp)),
+                                                  color: AppColors
+                                                      .textFieldParentDark,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              8.sp)),
                                                   boxShadow: [
                                                     BoxShadow(
                                                       color: Colors.black
@@ -743,19 +754,23 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                         borderRadius:
                                                             BorderRadius.only(
                                                           topLeft:
-                                                              Radius.circular(8.0),
+                                                              Radius.circular(
+                                                                  8.0),
                                                           // Radius for top-left corner
                                                           topRight:
-                                                              Radius.circular(8.0),
+                                                              Radius.circular(
+                                                                  8.0),
                                                           bottomLeft:
-                                                              Radius.circular(8.0),
-                                                          bottomRight: Radius.circular(
-                                                              8.0), // Radius for top-right corner
+                                                              Radius.circular(
+                                                                  8.0),
+                                                          bottomRight:
+                                                              Radius.circular(
+                                                                  8.0), // Radius for top-right corner
                                                         ),
                                                       ),
                                                       child: TextField(
-                                                        cursorColor:
-                                                            AppColors.textColorGrey,
+                                                        cursorColor: AppColors
+                                                            .textColorGrey,
                                                         onChanged: (value) {
                                                           _filterSearchResults(
                                                               value);
@@ -767,24 +782,33 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                             fontWeight:
                                                                 FontWeight.w400,
                                                             // Off-white color,
-                                                            fontFamily: 'Inter'),
-                                                        decoration: InputDecoration(
+                                                            fontFamily:
+                                                                'Inter'),
+                                                        decoration:
+                                                            InputDecoration(
                                                           contentPadding:
-                                                              EdgeInsets.symmetric(
-                                                                  vertical: 10.0,
-                                                                  horizontal: 16.0),
-                                                          hintText: 'Search'.tr(),
+                                                              EdgeInsets
+                                                                  .symmetric(
+                                                                      vertical:
+                                                                          10.0,
+                                                                      horizontal:
+                                                                          16.0),
+                                                          hintText:
+                                                              'Search'.tr(),
                                                           hintStyle: TextStyle(
                                                               fontSize: 10.2.sp,
                                                               color: AppColors
                                                                   .textColorGrey,
                                                               fontWeight:
-                                                                  FontWeight.w400,
+                                                                  FontWeight
+                                                                      .w400,
                                                               // Off-white color,
-                                                              fontFamily: 'Inter'),
+                                                              fontFamily:
+                                                                  'Inter'),
                                                           suffixIcon: Padding(
-                                                            padding: EdgeInsets.all(
-                                                                13.sp),
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    13.sp),
                                                             child: Image.asset(
                                                               "assets/images/search.png",
                                                               // height: 10.sp,
@@ -833,12 +857,14 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                               ? 12.h
                                                               : 18.h,
                                                       child: Padding(
-                                                        padding: EdgeInsets.only(
-                                                            bottom: 10.sp),
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                bottom: 10.sp),
                                                         child: ListView.builder(
                                                           controller:
                                                               scrollController,
-                                                          padding: EdgeInsets.zero,
+                                                          padding:
+                                                              EdgeInsets.zero,
                                                           // shrinkWrap: true,
                                                           itemCount:
                                                               _filteredNationalities
@@ -867,8 +893,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                                   borderRadius:
                                                                       BorderRadius
                                                                           .only(
-                                                                    bottomLeft: Radius
-                                                                        .circular(isLast
+                                                                    bottomLeft:
+                                                                        Radius.circular(isLast
                                                                             ? 8.0
                                                                             : 0.0),
                                                                     // Adjust as needed
@@ -891,7 +917,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                                     //     color: AppColors.textColorGrey,
                                                                     //   ),
                                                                     Container(
-                                                                      height: 5.h,
+                                                                      height:
+                                                                          5.h,
                                                                       decoration:
                                                                           BoxDecoration(
                                                                         // color: Colors.red,
@@ -903,33 +930,24 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                                         // ),
 
                                                                         borderRadius:
-                                                                            BorderRadius.circular(
-                                                                                8.0),
+                                                                            BorderRadius.circular(8.0),
                                                                       ),
                                                                       child:
                                                                           Padding(
-                                                                        padding: EdgeInsets.symmetric(
-                                                                            horizontal:
-                                                                                10.sp),
-                                                                        child: Row(
+                                                                        padding:
+                                                                            EdgeInsets.symmetric(horizontal: 10.sp),
+                                                                        child:
+                                                                            Row(
                                                                           mainAxisAlignment:
-                                                                              MainAxisAlignment
-                                                                                  .start,
+                                                                              MainAxisAlignment.start,
                                                                           crossAxisAlignment:
-                                                                              CrossAxisAlignment
-                                                                                  .center,
+                                                                              CrossAxisAlignment.center,
                                                                           children: [
                                                                             Padding(
-                                                                              padding:
-                                                                                  EdgeInsets.only(),
-                                                                              child:
-                                                                                  Text(
+                                                                              padding: EdgeInsets.only(),
+                                                                              child: Text(
                                                                                 _filteredNationalities[index],
-                                                                                style: TextStyle(
-                                                                                    fontSize: 11.7.sp,
-                                                                                    fontFamily: 'Inter',
-                                                                                    fontWeight: FontWeight.w500,
-                                                                                    color: AppColors.textColorWhite),
+                                                                                style: TextStyle(fontSize: 11.7.sp, fontFamily: 'Inter', fontWeight: FontWeight.w500, color: AppColors.textColorWhite),
                                                                               ),
                                                                             ),
                                                                           ],
@@ -942,7 +960,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                                     //   ),
                                                                     // if (isLast)
                                                                     SizedBox(
-                                                                      height: 1.h,
+                                                                      height:
+                                                                          1.h,
                                                                     ),
                                                                   ],
                                                                 ),
@@ -956,8 +975,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                       ),
                                                     ),
                                                   ],
-                                                )
-                                                ),
+                                                )),
                                         ],
                                       ),
                                     ),
@@ -999,7 +1017,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                     ),
                                     Container(
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8.0),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
                                       ),
                                       child: Column(
                                         children: [
@@ -1012,11 +1031,12 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                             child: Container(
                                               height: 6.5.h,
                                               decoration: BoxDecoration(
-                                                color:
-                                                    AppColors.textFieldParentDark,
+                                                color: AppColors
+                                                    .textFieldParentDark,
                                                 borderRadius: BorderRadius.only(
                                                   topLeft: Radius.circular(8.0),
-                                                  topRight: Radius.circular(8.0),
+                                                  topRight:
+                                                      Radius.circular(8.0),
                                                   bottomLeft: Radius.circular(
                                                       _isSelectedNationality
                                                           ? 8.0
@@ -1028,8 +1048,9 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                 ),
                                               ),
                                               child: Padding(
-                                                padding: const EdgeInsets.symmetric(
-                                                    horizontal: 5),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 5),
                                                 child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.start,
@@ -1044,7 +1065,10 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                         _selectedIDType == ''
                                                             ? 'National ID - Iqama'
                                                                 .tr()
-                                                            : _selectedIDType == "NATIONAL_ID" ? "NATIONAL ID":_selectedIDType,
+                                                            : _selectedIDType ==
+                                                                    "NATIONAL_ID"
+                                                                ? "NATIONAL ID"
+                                                                : _selectedIDType,
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.w400,
@@ -1071,8 +1095,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                             : Icons
                                                                 .keyboard_arrow_down,
                                                         size: 21.sp,
-                                                        color:
-                                                            AppColors.textColorGrey,
+                                                        color: AppColors
+                                                            .textColorGrey,
                                                       ),
                                                     ),
                                                   ],
@@ -1087,8 +1111,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                   right: 1.sp,
                                                   top: 0.4.h),
                                               decoration: BoxDecoration(
-                                                color:
-                                                    AppColors.textFieldParentDark,
+                                                color: AppColors
+                                                    .textFieldParentDark,
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(8.sp)),
                                                 boxShadow: [
@@ -1097,8 +1121,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                         .withOpacity(0.10),
                                                     offset: Offset(0, 4),
                                                     blurRadius: 3,
-                                                    spreadRadius:
-                                                        0.5,
+                                                    spreadRadius: 0.5,
                                                   ),
                                                 ],
                                               ),
@@ -1187,10 +1210,18 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                               // Off-white color,
                                               fontFamily: 'Inter'),
                                           decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.symmetric(
-                                                vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: OS.Platform.isIOS
+                                                        ? 14.5.sp
+                                                        : 10.0,
+                                                    horizontal:
+                                                        OS.Platform.isIOS
+                                                            ? 10.sp
+                                                            : 16.0),
                                             hintText:
-                                                'Enter Identification number'.tr(),
+                                                'Enter Identification number'
+                                                    .tr(),
                                             hintStyle: TextStyle(
                                                 fontSize: 10.2.sp,
                                                 color: AppColors.textColorGrey,
@@ -1202,7 +1233,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                 borderSide: BorderSide(
                                                   color:
                                                       _identificationnumberController
-                                                                  .text.isEmpty &&
+                                                                  .text
+                                                                  .isEmpty &&
                                                               isValidating
                                                           ? AppColors.errorColor
                                                           : Colors.transparent,
@@ -1211,8 +1243,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                 borderRadius:
                                                     BorderRadius.circular(8.0),
                                                 borderSide: BorderSide(
-                                                  color:
-                                                      AppColors.focusTextFieldColor,
+                                                  color: AppColors
+                                                      .focusTextFieldColor,
                                                 )),
                                           ),
                                           cursorColor: AppColors.textColorGrey),
@@ -1256,8 +1288,9 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                       child: TextField(
                                           focusNode: mobileNumFocusNode,
                                           textInputAction: TextInputAction.done,
-                                          onChanged: (v){
-                                            auth.registerUserErrorResponse=null;
+                                          onChanged: (v) {
+                                            auth.registerUserErrorResponse =
+                                                null;
                                           },
                                           onEditingComplete: () {
                                             FocusScope.of(context).unfocus();
@@ -1276,12 +1309,21 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                               fontWeight: FontWeight.w400,
                                               fontFamily: 'Inter'),
                                           inputFormatters: [
-                                            LengthLimitingTextInputFormatter(10),
-                                            FilteringTextInputFormatter.digitsOnly,
+                                            LengthLimitingTextInputFormatter(
+                                                10),
+                                            FilteringTextInputFormatter
+                                                .digitsOnly,
                                           ],
                                           decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.symmetric(
-                                                vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: OS.Platform.isIOS
+                                                        ? 14.5.sp
+                                                        : 10.0,
+                                                    horizontal:
+                                                        OS.Platform.isIOS
+                                                            ? 10.sp
+                                                            : 16.0),
                                             hintText:
                                                 'Enter your mobile number'.tr(),
                                             hintStyle: TextStyle(
@@ -1293,30 +1335,47 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                 borderRadius:
                                                     BorderRadius.circular(8.0),
                                                 borderSide: BorderSide(
-                                                  color:  (isValidating && _numberController.text.isEmpty) || (_numberController.text.length < 9 &&
-                                                      _numberController.text.isNotEmpty  && isValidating) || auth.registerUserErrorResponse.toString().contains('Mobile number')
-                                                           ? AppColors.errorColor
+                                                  color: (isValidating &&
+                                                              _numberController
+                                                                  .text
+                                                                  .isEmpty) ||
+                                                          (_numberController
+                                                                      .text
+                                                                      .length <
+                                                                  9 &&
+                                                              _numberController
+                                                                  .text
+                                                                  .isNotEmpty &&
+                                                              isValidating) ||
+                                                          auth.registerUserErrorResponse
+                                                              .toString()
+                                                              .contains(
+                                                                  'Mobile number')
+                                                      ? AppColors.errorColor
                                                       : Colors.transparent,
                                                 )),
                                             focusedBorder: OutlineInputBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(8.0),
                                                 borderSide: BorderSide(
-                                                  color:
-                                                      AppColors.focusTextFieldColor,
+                                                  color: AppColors
+                                                      .focusTextFieldColor,
                                                 )),
                                             prefixIcon: Padding(
                                               padding: EdgeInsets.only(
-                                                  left: 10.sp,
-                                                  top: OS.Platform.isIOS ? 10.sp :12.7.sp,
-                                                  right: 11.4.sp,
+                                                left: 10.sp,
+                                                top: OS.Platform.isIOS
+                                                    ? 10.sp
+                                                    : 12.7.sp,
+                                                right: 11.4.sp,
                                               ),
                                               child: Text(
                                                 '+966',
                                                 style: TextStyle(
                                                   color: themeNotifier.isDark
                                                       ? AppColors.textColorWhite
-                                                      : AppColors.textColorBlack,
+                                                      : AppColors
+                                                          .textColorBlack,
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 10.2.sp,
                                                 ),
@@ -1349,11 +1408,16 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                               color: AppColors.errorColor),
                                         ),
                                       ),
-                                    if (auth.registerUserErrorResponse != null && _numberController.text.isNotEmpty && isValidating && auth.registerUserErrorResponse.toString().contains('Mobile number'))
+                                    if (auth.registerUserErrorResponse !=
+                                            null &&
+                                        _numberController.text.isNotEmpty &&
+                                        isValidating &&
+                                        auth.registerUserErrorResponse
+                                            .toString()
+                                            .contains('Mobile number'))
                                       Padding(
                                         padding: EdgeInsets.only(top: 7.sp),
                                         child: Text(
-
                                           "*${auth.registerUserErrorResponse}",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
@@ -1378,8 +1442,9 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Padding(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 5, top: 2),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 5, top: 2),
                                                   child: GestureDetector(
                                                     onTap: () => setState(() {
                                                       _isChecked = !_isChecked;
@@ -1390,10 +1455,13 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                         curve: Curves.easeInOut,
                                                         height: 2.4.h,
                                                         width: 2.4.h,
-                                                        decoration: BoxDecoration(
+                                                        decoration:
+                                                            BoxDecoration(
                                                           color: _isChecked
-                                                              ? AppColors.hexaGreen
-                                                              : Colors.transparent,
+                                                              ? AppColors
+                                                                  .hexaGreen
+                                                              : Colors
+                                                                  .transparent,
                                                           // Animate the color
                                                           border: Border.all(
                                                               color: _isChecked
@@ -1403,8 +1471,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                                       .textColorWhite,
                                                               width: 1),
                                                           borderRadius:
-                                                              BorderRadius.circular(
-                                                                  2),
+                                                              BorderRadius
+                                                                  .circular(2),
                                                         ),
                                                         child: Checkmark(
                                                           checked: _isChecked,
@@ -1413,8 +1481,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                           color: Colors.black,
                                                           drawCross: false,
                                                           drawDash: false,
-                                                        )
-                                                        ),
+                                                        )),
                                                   )),
                                               SizedBox(
                                                 width: 3.w,
@@ -1427,7 +1494,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                     style: TextStyle(
                                                         color: AppColors
                                                             .textColorWhite,
-                                                        fontWeight: FontWeight.w400,
+                                                        fontWeight:
+                                                            FontWeight.w400,
                                                         fontSize: 9.sp,
                                                         fontFamily: 'Inter'),
                                                     maxLines: 2,
@@ -1441,21 +1509,16 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                           ),
                                           AppButton(
                                               title: 'Continue'.tr(),
-                                              isactive: isButtonActive
-
-                                                      &&
-                                                      _isChecked
-                                                  ? true
-                                                  : false,
+                                              isactive:
+                                                  isButtonActive && _isChecked
+                                                      ? true
+                                                      : false,
                                               handler: () async {
                                                 setState(() {
                                                   isValidating = true;
                                                 });
-                                                if (
-
-                                                    isButtonActive && _isChecked
-
-                                                    ) {
+                                                if (isButtonActive &&
+                                                    _isChecked) {
                                                   setState(() {
                                                     _isLoading = true;
                                                     if (_isLoading) {
@@ -1471,9 +1534,11 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                               listen: false)
                                                           .registerUserStep1(
                                                     firstName:
-                                                        _firstnameController.text,
+                                                        _firstnameController
+                                                            .text,
                                                     lastName:
-                                                        _lastnameController.text,
+                                                        _lastnameController
+                                                            .text,
                                                     idNumber:
                                                         _identificationnumberController
                                                             .text,
@@ -1492,8 +1557,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                     startTimer();
                                                     otpDialog(
                                                       events: _events,
-
-                                                      firstBtnHandler: () async {
+                                                      firstBtnHandler:
+                                                          () async {
                                                         try {
                                                           setState(() {
                                                             _isLoadingOtpDialoge =
@@ -1506,12 +1571,13 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                           print('loading popup' +
                                                               _isLoadingOtpDialoge
                                                                   .toString());
-                                                          final result = await Provider
-                                                                  .of<AuthProvider>(
-                                                                      context,
-                                                                      listen: false)
+                                                          final result = await Provider.of<
+                                                                      AuthProvider>(
+                                                                  context,
+                                                                  listen: false)
                                                               .registerUserStep2(
-                                                                  context: context,
+                                                                  context:
+                                                                      context,
                                                                   code: Provider.of<
                                                                               AuthProvider>(
                                                                           context,
@@ -1523,12 +1589,14 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                                 false;
                                                           });
                                                           if (result ==
-                                                              AuthResult.success) {
+                                                              AuthResult
+                                                                  .success) {
                                                             await Future.delayed(
                                                                 const Duration(
                                                                     milliseconds:
                                                                         1000));
-                                                            Navigator.of(context)
+                                                            Navigator.of(
+                                                                    context)
                                                                 .pushNamed(
                                                                     SignUpWithEmail
                                                                         .routeName,
@@ -1547,12 +1615,12 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                                 });
                                                           }
                                                         } catch (error) {
-                                                          print("Error: $error");
+                                                          print(
+                                                              "Error: $error");
                                                           setState(() {
                                                             _isLoadingOtpDialoge =
                                                                 false;
                                                           });
-
                                                         } finally {
                                                           setState(() {
                                                             _isLoadingOtpDialoge =
@@ -1560,7 +1628,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                           });
                                                         }
                                                       },
-                                                      secondBtnHandler: () async {
+                                                      secondBtnHandler:
+                                                          () async {
                                                         if (_timeLeft == 0) {
                                                           print(
                                                               'resend function calling');
@@ -1569,17 +1638,18 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                               _isLoadingResend =
                                                                   true;
                                                             });
-                                                            final result = await Provider
-                                                                    .of<AuthProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
+                                                            final result = await Provider.of<
+                                                                        AuthProvider>(
+                                                                    context,
+                                                                    listen:
+                                                                        false)
                                                                 .registerNumResendOtp(
                                                                     context:
                                                                         context,
                                                                     token:
                                                                         accessToken,
-                                                                    medium: "sms");
+                                                                    medium:
+                                                                        "sms");
                                                             setState(() {
                                                               _isLoadingResend =
                                                                   false;
@@ -1590,8 +1660,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                               startTimer();
                                                             }
                                                           } catch (error) {
-                                                            print("Error: $error");
-
+                                                            print(
+                                                                "Error: $error");
                                                           } finally {
                                                             setState(() {
                                                               _isLoadingResend =
@@ -1601,13 +1671,13 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                         } else {}
                                                       },
                                                       firstTitle: 'Confirm',
-                                                      secondTitle: 'Resend code ',
-
+                                                      secondTitle:
+                                                          'Resend code ',
                                                       context: context,
-                                                      isDark: themeNotifier.isDark,
+                                                      isDark:
+                                                          themeNotifier.isDark,
                                                       isFirstButtonActive:
                                                           isOtpButtonActive,
-
                                                       isSecondButtonActive:
                                                           !_isTimerActive,
                                                       otp1Controller:
@@ -1637,14 +1707,16 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                       firstBtnBgColor: AppColors
                                                           .activeButtonColor,
                                                       firstBtnTextColor:
-                                                          AppColors.textColorBlack,
+                                                          AppColors
+                                                              .textColorBlack,
                                                       secondBtnBgColor:
                                                           Colors.transparent,
                                                       secondBtnTextColor:
                                                           _timeLeft != 0
                                                               ? AppColors
                                                                   .textColorBlack
-                                                                  .withOpacity(0.8)
+                                                                  .withOpacity(
+                                                                      0.8)
                                                               : AppColors
                                                                   .textColorWhite,
                                                       isLoading:
@@ -1659,7 +1731,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                       ),
                                     ),
                                     SizedBox(
-                                      height: OS.Platform.isIOS ? 6.h:4.h,
+                                      height: OS.Platform.isIOS ? 6.h : 4.h,
                                     ),
                                   ],
                                 ),
@@ -1680,21 +1752,22 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                       return Visibility(
                           visible: isKeyboardVisible,
                           child: GestureDetector(
-                            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                            onTap: () =>
+                                FocusManager.instance.primaryFocus?.unfocus(),
                             child: Container(
                                 height: 3.h,
                                 color: AppColors.profileHeaderDark,
                                 child: Align(
                                     alignment: Alignment.centerRight,
                                     child: Padding(
-                                      padding:
-                                      const EdgeInsets.symmetric(horizontal: 20),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20),
                                       child: Text(
                                         'Done',
                                         style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 11.5.sp,
-                                            fontWeight: FontWeight.bold)
+                                                color: Colors.white,
+                                                fontSize: 11.5.sp,
+                                                fontWeight: FontWeight.bold)
                                             .apply(fontWeightDelta: -1),
                                       ),
                                     ))),
@@ -1704,9 +1777,13 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
               ],
             ),
           ),
-
-
-          if (_isLoading) LoaderBluredScreen()
+          if (_isLoading)
+            Positioned(
+                top: 12.h,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: LoaderBluredScreen())
         ],
       );
     });
@@ -1721,7 +1798,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          _selectedIDType = name == 'NATIONAL ID' ? 'NATIONAL_ID':name;
+          _selectedIDType = name == 'NATIONAL ID' ? 'NATIONAL_ID' : name;
           _isSelected = false;
         });
         idNumFocusNode.requestFocus();
@@ -1853,7 +1930,6 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
     );
   }
 }
-
 
 extension Capitalizing on String {
   String get capitalized {

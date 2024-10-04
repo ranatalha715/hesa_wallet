@@ -70,7 +70,7 @@ class _ResetEmailState extends State<ResetEmail> {
 
   @override
   Widget build(BuildContext context) {
-    final user =Provider.of<UserProvider>(context, listen: false);
+    final user = Provider.of<UserProvider>(context, listen: false);
     Locale currentLocale = context.locale;
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return Stack(
@@ -133,8 +133,8 @@ class _ResetEmailState extends State<ResetEmail> {
                                 TextFieldParent(
                                   child: TextField(
                                       controller: _emailController,
-                                      onChanged: (v){
-                                        user.emailErrorResponse=null;
+                                      onChanged: (v) {
+                                        user.emailErrorResponse = null;
                                       },
                                       scrollPadding: EdgeInsets.only(
                                           bottom: MediaQuery.of(context)
@@ -151,7 +151,12 @@ class _ResetEmailState extends State<ResetEmail> {
                                           fontFamily: 'Inter'),
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.symmetric(
-                                            vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
+                                            vertical: OS.Platform.isIOS
+                                                ? 14.5.sp
+                                                : 10.0,
+                                            horizontal: OS.Platform.isIOS
+                                                ? 10.sp
+                                                : 16.0),
                                         hintText:
                                             'Enter your recovery email'.tr(),
                                         hintStyle: TextStyle(
@@ -164,7 +169,12 @@ class _ResetEmailState extends State<ResetEmail> {
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: (isValidating && _emailController.text.isEmpty) || user.emailErrorResponse.toString().contains('Email')
+                                              color: (isValidating &&
+                                                          _emailController
+                                                              .text.isEmpty) ||
+                                                      user.emailErrorResponse
+                                                          .toString()
+                                                          .contains('Email')
                                                   ? AppColors.errorColor
                                                   : Colors.transparent,
                                             )),
@@ -172,7 +182,8 @@ class _ResetEmailState extends State<ResetEmail> {
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: AppColors.focusTextFieldColor,
+                                              color:
+                                                  AppColors.focusTextFieldColor,
                                             )),
                                       ),
                                       cursorColor: AppColors.textColorGrey),
@@ -190,11 +201,15 @@ class _ResetEmailState extends State<ResetEmail> {
                                           color: AppColors.errorColor),
                                     ),
                                   ),
-                                if (user.emailErrorResponse != null && _emailController.text.isNotEmpty && isValidating && user.emailErrorResponse.toString().contains('Email'))
+                                if (user.emailErrorResponse != null &&
+                                    _emailController.text.isNotEmpty &&
+                                    isValidating &&
+                                    user.emailErrorResponse
+                                        .toString()
+                                        .contains('Email'))
                                   Padding(
                                     padding: EdgeInsets.only(top: 7.sp),
                                     child: Text(
-
                                       "*${user.emailErrorResponse}",
                                       style: TextStyle(
                                           fontWeight: FontWeight.w400,
@@ -212,9 +227,9 @@ class _ResetEmailState extends State<ResetEmail> {
                         Positioned(
                           left: 20,
                           right: 20,
-                          bottom:  OS.Platform.isIOS  && !isKeyboardVisible ? 50 :30,
-                          child:
-                          AppButton(
+                          bottom:
+                              OS.Platform.isIOS && !isKeyboardVisible ? 50 : 30,
+                          child: AppButton(
                             title: 'Proceed'.tr(),
                             isactive: isButtonActive ? true : false,
                             handler: () async {
@@ -225,9 +240,10 @@ class _ResetEmailState extends State<ResetEmail> {
                                 setState(() {
                                   isLoading = true;
                                   if (isLoading) {
-                                    FocusManager.instance.primaryFocus?.unfocus();
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
                                   }
-                                  user.emailErrorResponse=null;
+                                  user.emailErrorResponse = null;
                                 });
                                 final result = await Provider.of<UserProvider>(
                                   context,
@@ -261,7 +277,7 @@ class _ResetEmailState extends State<ResetEmail> {
                                       return Dialog(
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
-                                          BorderRadius.circular(8.0),
+                                              BorderRadius.circular(8.0),
                                         ),
                                         backgroundColor: Colors.transparent,
                                         child: BackdropFilter(
@@ -275,31 +291,38 @@ class _ResetEmailState extends State<ResetEmail> {
                                                     ? AppColors.showDialogClr
                                                     : AppColors.textColorWhite,
                                                 borderRadius:
-                                                BorderRadius.circular(15),
+                                                    BorderRadius.circular(15),
                                                 boxShadow: [
                                                   BoxShadow(
-                                                    color: AppColors.textColorBlack.withOpacity(0.95), // Dark shadow color
-                                                    offset: Offset(0, 0), // No offset, shadow will appear equally on all sides
-                                                    blurRadius: 10, // Adjust blur for softer shadow
-                                                    spreadRadius: 0.4, // Spread the shadow slightly
+                                                    color: AppColors
+                                                        .textColorBlack
+                                                        .withOpacity(0.95),
+                                                    // Dark shadow color
+                                                    offset: Offset(0, 0),
+                                                    // No offset, shadow will appear equally on all sides
+                                                    blurRadius: 10,
+                                                    // Adjust blur for softer shadow
+                                                    spreadRadius:
+                                                        0.4, // Spread the shadow slightly
                                                   ),
                                                 ],
                                               ),
                                               child: Column(
                                                 mainAxisAlignment:
-                                                MainAxisAlignment.start,
+                                                    MainAxisAlignment.start,
                                                 children: [
                                                   SizedBox(
                                                     height: 4.h,
                                                   ),
                                                   Align(
                                                     alignment:
-                                                    Alignment.bottomCenter,
+                                                        Alignment.bottomCenter,
                                                     child: Image.asset(
                                                       "assets/images/email.png",
                                                       height: 5.9.h,
                                                       width: 5.6.h,
-                                                      color: AppColors.hexaGreen,
+                                                      color:
+                                                          AppColors.hexaGreen,
                                                     ),
                                                   ),
                                                   SizedBox(height: 2.h),
@@ -308,14 +331,14 @@ class _ResetEmailState extends State<ResetEmail> {
                                                         .tr(),
                                                     style: TextStyle(
                                                         fontWeight:
-                                                        FontWeight.w600,
+                                                            FontWeight.w600,
                                                         fontSize: 17.sp,
                                                         color: themeNotifier
-                                                            .isDark
+                                                                .isDark
                                                             ? AppColors
-                                                            .textColorWhite
+                                                                .textColorWhite
                                                             : AppColors
-                                                            .textColorBlack),
+                                                                .textColorBlack),
                                                   ),
                                                   SizedBox(
                                                     height: 2.h,
@@ -328,11 +351,11 @@ class _ResetEmailState extends State<ResetEmail> {
                                                       'Please check your email to continue resetting your pasword.'
                                                           .tr(),
                                                       textAlign:
-                                                      TextAlign.center,
+                                                          TextAlign.center,
                                                       style: TextStyle(
                                                           height: 1.4,
                                                           fontWeight:
-                                                          FontWeight.w400,
+                                                              FontWeight.w400,
                                                           fontSize: 10.2.sp,
                                                           color: AppColors
                                                               .textColorGrey),
@@ -351,7 +374,6 @@ class _ResetEmailState extends State<ResetEmail> {
                             color: Colors.transparent,
                             textColor: AppColors.textColorBlack,
                           ),
-
                         ),
                       ],
                     ),
@@ -360,7 +382,13 @@ class _ResetEmailState extends State<ResetEmail> {
               ],
             ),
           ),
-          if (isLoading) LoaderBluredScreen()
+          if (isLoading)
+            Positioned(
+                top: 12.h,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: LoaderBluredScreen())
         ],
       );
     });
