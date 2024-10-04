@@ -24,10 +24,12 @@ class TransactionProvider with ChangeNotifier {
   var selectedCardLast4Digits;
   var selectedCardBrand;
   var logoFromNeo;
+  String totalForDialog = '';
   var siteUrl;
   var selectedPaymentMethod='cards';
   bool showRedDot=false;
-
+  bool otpErrorResponse=false;
+  bool otpSuccessResponse=false;
   // var decodedMetaData;
 
   removeSelectedCardNum(){
@@ -1783,6 +1785,8 @@ class TransactionProvider with ChangeNotifier {
             description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
+        otpErrorResponse=false;
+        otpSuccessResponse=true;
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -1792,6 +1796,8 @@ class TransactionProvider with ChangeNotifier {
             description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation,context,
             statusCode: response.statusCode.toString());
+        otpErrorResponse=true;
+        otpSuccessResponse=false;
         return AuthResult.failure;
       }
     } catch (e) {
@@ -1803,6 +1809,8 @@ class TransactionProvider with ChangeNotifier {
         operation,
         context,
       );
+      otpErrorResponse=true;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }
@@ -1859,6 +1867,8 @@ class TransactionProvider with ChangeNotifier {
             description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation,context,
             statusCode: response.statusCode.toString());
+        otpErrorResponse=false;
+        otpSuccessResponse=true;
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -1868,6 +1878,8 @@ class TransactionProvider with ChangeNotifier {
             description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
+        otpErrorResponse=true;
+        otpSuccessResponse=false;
         return AuthResult.failure;
       }
     } catch (e) {
@@ -1880,6 +1892,8 @@ class TransactionProvider with ChangeNotifier {
         e.toString(),
         operation,context,
       );
+      otpErrorResponse=true;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }
@@ -1936,7 +1950,8 @@ class TransactionProvider with ChangeNotifier {
         functionToNavigateAfterNonPayable(response.body.toString(), operation,context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
-
+        otpErrorResponse=false;
+        otpSuccessResponse=true;
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -1946,6 +1961,8 @@ class TransactionProvider with ChangeNotifier {
             description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation,context,
             statusCode: response.statusCode.toString());
+        otpErrorResponse=true;
+        otpSuccessResponse=false;
         return AuthResult.failure;
       }
     } catch (e) {
@@ -1958,6 +1975,8 @@ class TransactionProvider with ChangeNotifier {
         e.toString(),
         operation, context,
       );
+      otpErrorResponse=true;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }
@@ -2014,7 +2033,8 @@ class TransactionProvider with ChangeNotifier {
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
-
+        otpErrorResponse=false;
+        otpSuccessResponse=true;
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -2024,6 +2044,8 @@ class TransactionProvider with ChangeNotifier {
             description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation,context,
             statusCode: response.statusCode.toString());
+        otpErrorResponse=true;
+        otpSuccessResponse=false;
         return AuthResult.failure;
       }
     } catch (e) {
@@ -2036,6 +2058,8 @@ class TransactionProvider with ChangeNotifier {
         e.toString(),
         operation,context,
       );
+      otpErrorResponse=true;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }
@@ -2163,6 +2187,8 @@ class TransactionProvider with ChangeNotifier {
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
+        otpErrorResponse=false;
+        otpSuccessResponse=true;
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -2172,6 +2198,8 @@ class TransactionProvider with ChangeNotifier {
             description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
+        otpErrorResponse=true;
+        otpSuccessResponse=false;
         return AuthResult.failure;
       }
     } catch (e) {
@@ -2181,6 +2209,8 @@ class TransactionProvider with ChangeNotifier {
           title: 'CancelAuctionListing',
           description: e.toString());
       functionToNavigateAfterNonPayable(e.toString(), operation, context,);
+      otpErrorResponse=true;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }
@@ -2235,6 +2265,8 @@ class TransactionProvider with ChangeNotifier {
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
+        otpErrorResponse=false;
+        otpSuccessResponse=true;
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -2244,6 +2276,8 @@ class TransactionProvider with ChangeNotifier {
             description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation,context,
             statusCode: response.statusCode.toString());
+        otpErrorResponse=true;
+        otpSuccessResponse=false;
         return AuthResult.failure;
       }
     } catch (e) {
@@ -2253,6 +2287,8 @@ class TransactionProvider with ChangeNotifier {
           title: 'CancelCollectionAuctionListing',
           description: e.toString());
       functionToNavigateAfterNonPayable(e.toString(), operation, context,);
+      otpErrorResponse=true;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }
@@ -2307,6 +2343,8 @@ class TransactionProvider with ChangeNotifier {
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
+        otpErrorResponse=false;
+        otpSuccessResponse=true;
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -2316,6 +2354,8 @@ class TransactionProvider with ChangeNotifier {
             description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
+        otpErrorResponse=true;
+        otpSuccessResponse=false;
         return AuthResult.failure;
       }
     } catch (e) {
@@ -2323,6 +2363,8 @@ class TransactionProvider with ChangeNotifier {
       testDialogToCheck(
           context: context, title: 'CancelListing', description: e.toString());
       functionToNavigateAfterNonPayable(e.toString(), operation,context,);
+      otpErrorResponse=true;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }
@@ -2377,6 +2419,8 @@ class TransactionProvider with ChangeNotifier {
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
+        otpErrorResponse=false;
+        otpSuccessResponse=true;
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -2386,6 +2430,8 @@ class TransactionProvider with ChangeNotifier {
             description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
+        otpErrorResponse=true;
+        otpSuccessResponse=false;
         return AuthResult.failure;
       }
     } catch (e) {
@@ -2395,6 +2441,8 @@ class TransactionProvider with ChangeNotifier {
           title: 'CancelCollectionListing',
           description: e.toString());
       functionToNavigateAfterNonPayable(e.toString(), operation, context,);
+      otpErrorResponse=true;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }
@@ -2442,6 +2490,8 @@ class TransactionProvider with ChangeNotifier {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
         print("send response " + responseBody.toString());
+        otpErrorResponse=false;
+        otpSuccessResponse=true;
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -2451,6 +2501,8 @@ class TransactionProvider with ChangeNotifier {
             description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
+        otpErrorResponse=true;
+        otpSuccessResponse=false;
         return AuthResult.failure;
       }
     } catch (e) {
@@ -2460,6 +2512,8 @@ class TransactionProvider with ChangeNotifier {
           title: 'CancelCollectionOfferMade not working',
           description: e.toString());
       functionToNavigateAfterNonPayable(e.toString(), operation, context,);
+      otpErrorResponse=true;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }
@@ -2566,6 +2620,8 @@ class TransactionProvider with ChangeNotifier {
             description: response.body.toString());
         functionToNavigateAfterCounterOffer(response.body.toString(), operation,
             statusCode: response.statusCode.toString());
+        otpErrorResponse=false;
+        otpSuccessResponse=true;
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -2575,6 +2631,8 @@ class TransactionProvider with ChangeNotifier {
             description: response.body.toString());
         functionToNavigateAfterCounterOffer(response.body.toString(), operation,
             statusCode: response.statusCode.toString());
+        otpErrorResponse=true;
+        otpSuccessResponse=false;
         return AuthResult.failure;
       }
     } catch (e) {
@@ -2584,6 +2642,8 @@ class TransactionProvider with ChangeNotifier {
           title: 'MakeCounterOffer',
           description: e.toString());
       functionToNavigateAfterCounterOffer(e.toString(), operation);
+      otpErrorResponse=true;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }
@@ -2634,6 +2694,8 @@ class TransactionProvider with ChangeNotifier {
             description: response.body.toString());
         functionToNavigateAfterCounterOffer(response.body.toString(), operation,
             statusCode: response.statusCode.toString());
+        otpErrorResponse=false;
+        otpSuccessResponse=true;
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -2643,6 +2705,8 @@ class TransactionProvider with ChangeNotifier {
             description: response.body.toString());
         functionToNavigateAfterCounterOffer(response.body.toString(), operation,
             statusCode: response.statusCode.toString());
+        otpErrorResponse=true;
+        otpSuccessResponse=false;
         return AuthResult.failure;
       }
     } catch (e) {
@@ -2652,6 +2716,8 @@ class TransactionProvider with ChangeNotifier {
           title: 'MakeCollectionCounterOffer',
           description: e.toString());
       functionToNavigateAfterCounterOffer(e.toString(), operation);
+      otpErrorResponse=true;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }
@@ -2703,6 +2769,8 @@ class TransactionProvider with ChangeNotifier {
             description: response.body.toString());
         functionToNavigateAfterCounterOffer(response.body.toString(), operation,
             statusCode: response.statusCode.toString());
+        otpErrorResponse=false;
+        otpSuccessResponse=true;
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -2712,6 +2780,8 @@ class TransactionProvider with ChangeNotifier {
             description: response.body.toString());
         functionToNavigateAfterCounterOffer(response.body.toString(), operation,
             statusCode: response.statusCode.toString());
+        otpErrorResponse=true;
+        otpSuccessResponse=false;
         return AuthResult.failure;
       }
     } catch (e) {
@@ -2721,6 +2791,8 @@ class TransactionProvider with ChangeNotifier {
           title: 'RejectNFTCounterOffer',
           description: e.toString());
       functionToNavigateAfterCounterOffer(e.toString(), operation);
+      otpErrorResponse=true;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }
@@ -2772,6 +2844,8 @@ class TransactionProvider with ChangeNotifier {
             description: response.body.toString());
         functionToNavigateAfterCounterOffer(response.body.toString(), operation,
             statusCode: response.statusCode.toString());
+        otpErrorResponse=false;
+        otpSuccessResponse=true;
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -2781,6 +2855,8 @@ class TransactionProvider with ChangeNotifier {
             description: response.body.toString());
         functionToNavigateAfterCounterOffer(response.body.toString(), operation,
             statusCode: response.statusCode.toString());
+        otpErrorResponse=true;
+        otpSuccessResponse=false;
         return AuthResult.failure;
       }
     } catch (e) {
@@ -2790,6 +2866,8 @@ class TransactionProvider with ChangeNotifier {
           title: 'RejectCollectionCounterOffer',
           description: e.toString());
       functionToNavigateAfterCounterOffer(e.toString(), operation);
+      otpErrorResponse=true;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }
@@ -3046,6 +3124,48 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
+      return AuthResult.failure;
+    }
+  }
+
+  Future<AuthResult> nonPayableTransactionSendOTP({
+    required BuildContext context,
+    required String token,
+  }) async {
+    final url = Uri.parse(BASE_URL + '/user/otp/send');
+    final body = {};
+
+    try {
+      final response = await http.post(
+        url,
+        body: body,
+        headers: {
+          // "Content-type": "application/json",
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      fToast = FToast();
+      fToast.init(context);
+      print('send otp' + response.body);
+
+      if (response.statusCode == 201) {
+        otpErrorResponse=false;
+        otpSuccessResponse=false;
+        return AuthResult.success;
+      } else {
+        // Show an error message or handle the response as needed
+        print("Something went wrong: ${response.body}");
+        otpErrorResponse=false;
+        otpSuccessResponse=false;
+        return AuthResult.failure;
+      }
+    } catch (e) {
+      // Handle the exception
+      print("Exception occurred: $e");
+      otpErrorResponse=false;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }

@@ -148,6 +148,7 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
   Widget build(BuildContext context) {
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
+    final auth=Provider.of<AuthProvider>(context,listen: false);
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return Stack(
         children: [
@@ -333,15 +334,17 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
 
                                       startTimer();
                                       otpDialog(
+                                        fromTransaction: false,
+                                        fromAuth: true,
+                                        fromUser: false,
                                         events: _events,
-
                                         firstBtnHandler: () async {
                                             try {
                                               setState(() {
                                                 _isLoadingOtpDialoge =
                                                 true;
                                               });
-                                              await Future.delayed(const Duration(milliseconds: 1000));
+                                              await Future.delayed(const Duration(milliseconds: 500));
                                               print('loading popup' +
                                                   _isLoadingOtpDialoge
                                                       .toString());

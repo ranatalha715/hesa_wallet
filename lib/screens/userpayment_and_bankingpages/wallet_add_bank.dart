@@ -895,6 +895,7 @@ init() async {
                                                       otpDialog(
                                                         fromAuth: false,
                                                         fromUser: false,
+                                                        fromTransaction: false,
                                                         events: _events,
                                                         firstBtnHandler: () async {
                                                           setState(() {
@@ -902,7 +903,7 @@ init() async {
                                                           });
                                                           await Future.delayed(
                                                               const Duration(
-                                                                  milliseconds: 1000));
+                                                                  milliseconds: 500));
                                                           final resultsecond = await Provider
                                                               .of<BankProvider>(
                                                               context,

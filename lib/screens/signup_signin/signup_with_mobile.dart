@@ -1594,7 +1594,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                             await Future.delayed(
                                                                 const Duration(
                                                                     milliseconds:
-                                                                        1000));
+                                                                        500));
                                                             Navigator.of(
                                                                     context)
                                                                 .pushNamed(

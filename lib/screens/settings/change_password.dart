@@ -707,8 +707,10 @@ class _ChangePasswordState extends State<ChangePassword> {
                                               otpDialog(
                                                 fromAuth: false,
                                                 fromUser:true,
+                                                fromTransaction: false,
                                                 events: _events,
-
+                                                incorrect: auth
+                                                    .otpErrorResponse,
                                                 firstBtnHandler: () async {
                                                   try {
                                                     setState(() {
@@ -718,7 +720,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                                                     await Future.delayed(
                                                         const Duration(
                                                             milliseconds:
-                                                            1000));
+                                                            500));
                                                     print('loading popup' +
                                                         _isLoadingOtpDialoge
                                                             .toString());

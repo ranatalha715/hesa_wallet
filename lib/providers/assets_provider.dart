@@ -425,22 +425,27 @@ class AssetsProvider with ChangeNotifier {
     final extractedData = json.decode(response.body);
 
     if (response.statusCode == 200) {
-      tokenId=extractedData['id'];
-      tokenName=extractedData['name'];
-      image=extractedData['image'];
-      ownerName=extractedData['owner']['userName'];
-      ownerAddress=extractedData['owner']['id'];
-      creatorName=extractedData['creator']['userName'];
-      creatorAddress=extractedData['creator']['id'];
-      createdAt=extractedData['createdAt'];
-      isListable=extractedData['isListable'].toString();
-      burnable=extractedData['burnable'].toString();
-      creatorRoyalty=extractedData['creatorRoyalty'].toString();
-      standard=extractedData['standard'];
-      status=extractedData['status'];
-      chain=extractedData['chain'];
-      listingType=extractedData['listingType'].toString();
-      return AuthResult.success;
+      if (response.statusCode == 200) {
+        tokenId = extractedData['id'] ?? 'Unknown ID';
+        tokenName = extractedData['name'] ?? 'Unknown Token Name';
+        image = extractedData['image'] ?? 'No Image';
+        ownerName = extractedData['owner']?['userName'] ?? 'Unknown Owner';
+        ownerAddress = extractedData['owner']?['id'] ?? 'Unknown Address';
+        creatorName = extractedData['creator']?['userName'] ?? 'Unknown Creator';
+        creatorAddress = extractedData['creator']?['id'] ?? 'Unknown Address';
+        createdAt = extractedData['createdAt'] ?? 'Unknown Date';
+        isListable = extractedData['isListable']?.toString() ?? 'false';
+        burnable = extractedData['burnable']?.toString() ?? 'false';
+        creatorRoyalty = extractedData['creatorRoyalty']?.toString() ?? '0';
+        standard = extractedData['standard'] ?? 'Unknown Standard';
+        status = extractedData['status'] ?? 'Unknown Status';
+        chain = extractedData['chain'] ?? 'Unknown Chain';
+        listingType = extractedData['listingType']?.toString() ?? '0';
+        return AuthResult.success;
+      } else {
+        return AuthResult.failure;
+      }
+
     } else {
       return AuthResult.failure;
     }

@@ -999,6 +999,7 @@ class _AccountInformationState extends State<AccountInformation> {
                                                       otpDialog(
                                                         fromAuth: false,
                                                         fromUser: true,
+                                                        fromTransaction: false,
                                                         incorrect: auth
                                                             .otpErrorResponse,
                                                         // onClose: ()=> removeRoutes(),
@@ -1011,7 +1012,7 @@ class _AccountInformationState extends State<AccountInformation> {
                                                           await Future.delayed(
                                                               const Duration(
                                                                   milliseconds:
-                                                                      1000));
+                                                                      500));
                                                           print('loading popup' +
                                                               _isLoading
                                                                   .toString());

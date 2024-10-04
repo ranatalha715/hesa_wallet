@@ -156,11 +156,16 @@ class _TransactionRequestState extends State<TransactionRequest> {
               Provider.of<TransactionProvider>(context, listen: false)
                   .checkoutId,
         );
-        Provider.of<TransactionProvider>(context, listen: false)
-            .testDialogToCheck(
-                context: context,
-                title: '$operation',
-                description: paymentResultData.paymentResult.toString());
+        paymentSuccesfullDialogue(
+            amount: Provider.of<TransactionProvider>(
+                context,
+                listen: false)
+                .totalForDialog );
+        // Provider.of<TransactionProvider>(context, listen: false)
+        //     .testDialogToCheck(
+        //         context: context,
+        //         title: '$operation',
+        //         description: paymentResultData.paymentResult.toString());
         Provider.of<TransactionProvider>(context, listen: false)
             .functionToNavigateAfterPayable(
                 paymentResultData.paymentResult.toString(), operation, context,
@@ -910,6 +915,13 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                       : false;
                                               bool lastIndex =
                                                   index == feesMap!.length - 1;
+                                              feeLabel == 'Total'
+                                                  ? Provider.of<TransactionProvider>(
+                                                              context,
+                                                              listen: false)
+                                                          .totalForDialog =
+                                                      formatCurrency(feeValue)
+                                                  : '';
                                               return Column(
                                                 children: [
                                                   if (lastIndex)
@@ -3353,7 +3365,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
     );
   }
 
-  void paymentSuccesfullDialogue({bool isDark = true}) {
+  void paymentSuccesfullDialogue({
+    bool isDark = true,
+    String amount = '',
+  }) {
     // Navigator.pop(context);
     print("opening d");
     showDialog(
@@ -3417,14 +3432,13 @@ class _TransactionRequestState extends State<TransactionRequest> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
-                                  color: AppColors.activeButtonColor,
-                                  width: 1.sp),
+                                  color: AppColors.textColorWhite, width: 1.sp),
                             ),
                             child: Center(
                               child: Icon(
                                 Icons.check_rounded,
                                 size: 10.sp,
-                                color: AppColors.activeButtonColor,
+                                color: AppColors.textColorWhite,
                               ),
                             ),
                           ),
@@ -3434,7 +3448,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                         height: 2.h,
                       ),
                       Text(
-                        '5.75 SAR'.tr(),
+                        amount + ' SAR'.tr(),
                         style: TextStyle(
                           fontSize: 27.sp,
                           fontWeight: FontWeight.w600,

@@ -81,7 +81,7 @@ class _TransactionRequestAcceptRejectState
   bool _isTimerActive = false;
   var _isLoadingResend = false;
   Timer? _timer;
-  int _timeLeft = 300;
+  int _timeLeft = 60;
   late StreamController<int> _events;
   var params;
   var fees = "";
@@ -319,7 +319,7 @@ class _TransactionRequestAcceptRejectState
 
     init();
     _events = new StreamController<int>();
-    _events.add(300);
+    _events.add(60);
     otp1Controller.addListener(_updateOtpButtonState);
     otp2Controller.addListener(_updateOtpButtonState);
     otp3Controller.addListener(_updateOtpButtonState);
@@ -1377,11 +1377,11 @@ class _TransactionRequestAcceptRejectState
                                                                         true;
                                                                   });
                                                                   final result = await Provider.of<
-                                                                              AuthProvider>(
+                                                                              TransactionProvider>(
                                                                           context,
                                                                           listen:
                                                                               false)
-                                                                      .sendOTP(
+                                                                      .nonPayableTransactionSendOTP(
                                                                     token:
                                                                         accessToken,
                                                                     context:
@@ -1396,6 +1396,9 @@ class _TransactionRequestAcceptRejectState
                                                                           .success) {
                                                                     startTimer();
                                                                     otpDialog(
+                                                                      fromTransaction: true,
+                                                                      fromAuth: false,
+                                                                      fromUser: false,
                                                                       events:
                                                                           _events,
                                                                       firstBtnHandler:
@@ -1405,6 +1408,7 @@ class _TransactionRequestAcceptRejectState
                                                                           isLoading =
                                                                               true;
                                                                         });
+                                                                        await Future.delayed(const Duration(milliseconds: 500));
                                                                         if (operation ==
                                                                             'AcceptNFTOfferReceived') {
                                                                           await Provider.of<TransactionProvider>(context, listen: false).acceptOffer(
@@ -1527,7 +1531,7 @@ class _TransactionRequestAcceptRejectState
                                                                               context: context,
                                                                               operation: operation,
                                                                               params: params,
-                                                                              code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
+                                                                              code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes,);
                                                                         }
                                                                         if (operation ==
                                                                             'CancelAuctionListing') {
@@ -1544,12 +1548,7 @@ class _TransactionRequestAcceptRejectState
                                                                                 operation,
                                                                             params:
                                                                                 params,
-                                                                            code: otp1Controller.text +
-                                                                                otp2Controller.text +
-                                                                                otp3Controller.text +
-                                                                                otp4Controller.text +
-                                                                                otp5Controller.text +
-                                                                                otp6Controller.text,
+                                                                            code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes,
                                                                           );
                                                                         } else if (operation ==
                                                                             'CancelCollectionAuctionListing') {
@@ -1618,7 +1617,7 @@ class _TransactionRequestAcceptRejectState
                                                                                   true;
                                                                             });
                                                                             final otpResult =
-                                                                                await Provider.of<AuthProvider>(context, listen: false).sendOTP(
+                                                                                await Provider.of<TransactionProvider>(context, listen: false).nonPayableTransactionSendOTP(
                                                                               token:
                                                                                   accessToken,
                                                                               context:
@@ -1851,9 +1850,9 @@ class _TransactionRequestAcceptRejectState
                                     isLoading = true;
                                   });
                                   final result =
-                                      await Provider.of<AuthProvider>(context,
+                                      await Provider.of<TransactionProvider>(context,
                                               listen: false)
-                                          .sendOTP(
+                                          .nonPayableTransactionSendOTP(
                                     token: accessToken,
                                     context: context,
                                   );
@@ -1863,11 +1862,15 @@ class _TransactionRequestAcceptRejectState
                                   if (result == AuthResult.success) {
                                     startTimer();
                                     otpDialog(
+                                      fromTransaction: true,
+                                      fromAuth: false,
+                                      fromUser: false,
                                       events: _events,
                                       firstBtnHandler: () async {
                                         setState(() {
                                           isLoading = true;
                                         });
+                                        await Future.delayed(const Duration(milliseconds: 500));
                                         if (operation ==
                                             'AcceptNFTOfferReceived') {
                                           await Provider.of<
@@ -2141,10 +2144,10 @@ class _TransactionRequestAcceptRejectState
                                               _isLoadingResend = true;
                                             });
                                             final otpResult =
-                                                await Provider.of<AuthProvider>(
+                                                await Provider.of<TransactionProvider>(
                                                         context,
                                                         listen: false)
-                                                    .sendOTP(
+                                                    .nonPayableTransactionSendOTP(
                                               token: accessToken,
                                               context: context,
                                             );

@@ -76,6 +76,9 @@ class _VerifyEmailState extends State<VerifyEmail> {
   openVerifyEmailPopup() {
     startTimer();
     otpDialog(
+      fromTransaction: false,
+      fromAuth: true,
+      fromUser: false,
       events: _events,
       isBlurred: false,
       isEmailOtpDialog: true,
@@ -84,7 +87,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
           setState(() {
             _isLoadingOtpDialoge = true;
           });
-          await Future.delayed(const Duration(milliseconds: 1000));
+          await Future.delayed(const Duration(milliseconds: 500));
           print('loading popup' + _isLoadingOtpDialoge.toString());
           final result = await Provider.of<AuthProvider>(context, listen: false)
               .registerUserStep4(

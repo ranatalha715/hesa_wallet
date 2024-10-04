@@ -27,6 +27,7 @@ class NftsDetails extends StatefulWidget {
 
 class _NftsDetailsState extends State<NftsDetails> {
   var accessToken;
+  var _isInit = true;
 
   String replaceMiddleWithDots(String input) {
     if (input.length <= 20) {
@@ -63,7 +64,7 @@ class _NftsDetailsState extends State<NftsDetails> {
 
   String formatDate(String dateString) {
     final DateTime dateTime = DateTime.parse(dateString);
-    final DateFormat formatter = DateFormat('MMM dd, yyyy HH:mm:ss');
+    final DateFormat formatter = DateFormat('MMM dd, yyyy');
     return formatter.format(dateTime);
   }
 
@@ -91,20 +92,25 @@ class _NftsDetailsState extends State<NftsDetails> {
 
   @override
   Future<void> didChangeDependencies() async {
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    await getAccessToken();
     setState(() {
       isLoading = true;
     });
+    await Future.delayed(Duration(milliseconds: 500), () {
+      // print('Executed after 500 milliseconds');
+    });
 
-    await Provider.of<AssetsProvider>(context, listen: false)
-        .getNftCollectionDetails(
-      token: accessToken,
-      type: 'nft',
-      id: args["tokenId"],
-    );
-
+    if (_isInit) {
+      final args = await ModalRoute.of(context)!.settings.arguments
+          as Map<String, dynamic>?;
+      await getAccessToken();
+      await Provider.of<AssetsProvider>(context, listen: false)
+          .getNftCollectionDetails(
+        token: accessToken,
+        type: 'nft',
+        id: args!["tokenId"],
+      );
+    }
+    _isInit = false;
     setState(() {
       isLoading = false;
     });
@@ -124,12 +130,22 @@ class _NftsDetailsState extends State<NftsDetails> {
         children: [
           Scaffold(
               backgroundColor: AppColors.backgroundColor,
-              body: Column(
+              body: isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.activeButtonColor,
+                      ),
+                    )
+                  : Column(
                       children: [
                         MainHeader(
-                          title: assetsDetails.tokenName,
-                          subTitle: replaceMiddleWithDotsCollectionId(
-                              assetsDetails.tokenId),
+                          title: isLoading
+                              ? 'Token Name'
+                              : assetsDetails.tokenName,
+                          subTitle: isLoading
+                              ? '.......'
+                              : replaceMiddleWithDotsCollectionId(
+                                  assetsDetails.tokenId),
                           showSubTitle: true,
                         ),
                         SizedBox(height: 3.h),
@@ -141,7 +157,8 @@ class _NftsDetailsState extends State<NftsDetails> {
                               padding: EdgeInsets.zero,
                               children: [
                                 Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 10.sp),
+                                  margin:
+                                      EdgeInsets.symmetric(horizontal: 10.sp),
                                   // color: Colors.red,
                                   height: 47.h,
                                   width: 45.h,
@@ -166,7 +183,8 @@ class _NftsDetailsState extends State<NftsDetails> {
                                   //   fit: BoxFit.cover,
                                   // ),
                                 ),
-                                Divider(color: AppColors.transactionSummNeoBorder),
+                                Divider(
+                                    color: AppColors.transactionSummNeoBorder),
                                 SizedBox(height: 2.h),
                                 nftsDetailsWidget(
                                   title: 'Created:'.tr(),
@@ -180,7 +198,9 @@ class _NftsDetailsState extends State<NftsDetails> {
                                 // // ),
                                 nftsDetailsWidget(
                                     title: 'Token ID:'.tr(),
-                                    func: ()=>_launchURL("https://www.mjraexplorer.com/nft/" + assetsDetails.tokenId),
+                                    func: () => _launchURL(
+                                        "https://www.mjraexplorer.com/nft/" +
+                                            assetsDetails.tokenId),
                                     //     Navigator.push(
                                     //   context,
                                     //   MaterialPageRoute(
@@ -198,7 +218,9 @@ class _NftsDetailsState extends State<NftsDetails> {
                                 if (assetsDetails.creatorName != null)
                                   nftsDetailsWidget(
                                     title: 'Creator:'.tr(),
-                                    func: ()=>_launchURL("https://www.mjraexplorer.com/address/" + assetsDetails.creatorAddress),
+                                    func: () => _launchURL(
+                                        "https://www.mjraexplorer.com/address/" +
+                                            assetsDetails.creatorAddress),
                                     details: replaceMiddleWithDots(
                                             assetsDetails.creatorName) ??
                                         "N/A",
@@ -214,7 +236,9 @@ class _NftsDetailsState extends State<NftsDetails> {
                                 if (assetsDetails.ownerName != "null")
                                   nftsDetailsWidget(
                                     title: 'Owned by:'.tr(),
-                                    func: ()=>_launchURL("https://www.mjraexplorer.com/address/" + assetsDetails.ownerAddress),
+                                    func: () => _launchURL(
+                                        "https://www.mjraexplorer.com/address/" +
+                                            assetsDetails.ownerAddress),
                                     details: assetsDetails.ownerName,
                                     // replaceMiddleWithDots(args["ownerId"]) ?? "N/A",
                                     isDark: themeNotifier.isDark ? true : false,
@@ -269,13 +293,13 @@ class _NftsDetailsState extends State<NftsDetails> {
                         SizedBox(height: 2.h),
                       ],
                     )),
-          if (isLoading)
-            Positioned(
-                top: 12.h,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: LoaderBluredScreen())
+          // if (isLoading)
+          //   Positioned(
+          //       top: 12.h,
+          //       bottom: 0,
+          //       left: 0,
+          //       right: 0,
+          //       child: LoaderBluredScreen())
         ],
       );
     });

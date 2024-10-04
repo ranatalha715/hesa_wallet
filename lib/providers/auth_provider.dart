@@ -407,15 +407,21 @@ print(json.decode(response.body));
       print('send otp' + response.body);
 
       if (response.statusCode == 201) {
+        otpErrorResponse=false;
+        otpSuccessResponse=false;
         return AuthResult.success;
       } else {
         // Show an error message or handle the response as needed
         print("Something went wrong: ${response.body}");
+        otpErrorResponse=false;
+        otpSuccessResponse=false;
         return AuthResult.failure;
       }
     } catch (e) {
       // Handle the exception
       print("Exception occurred: $e");
+      otpErrorResponse=false;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }

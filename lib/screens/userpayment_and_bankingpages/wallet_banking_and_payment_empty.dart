@@ -218,6 +218,7 @@ class _WalletBankingAndPaymentEmptyState
       otpDialog(
         fromUser: false,
         fromAuth: false,
+        fromTransaction:false,
         events: _events,
         isDark: true,
         firstBtnHandler: () async {
@@ -226,7 +227,7 @@ class _WalletBankingAndPaymentEmptyState
           });
           await Future.delayed(
               const Duration(
-                  milliseconds: 1000));
+                  milliseconds: 500));
           final resultsecond = await Provider
               .of<BankProvider>(
               context,

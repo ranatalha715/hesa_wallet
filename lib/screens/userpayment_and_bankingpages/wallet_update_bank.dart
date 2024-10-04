@@ -1151,6 +1151,7 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                                         otpDialog(
                                                           fromUser: false,
                                                           fromAuth: false,
+                                                          fromTransaction: false,
                                                           events: _events,
                                                           firstBtnHandler: () async {
                                                             setState(() {
@@ -1158,7 +1159,7 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                                             });
                                                             await Future.delayed(
                                                                 const Duration(
-                                                                    milliseconds: 1000));
+                                                                    milliseconds: 500));
                                                             final resultsecond = await Provider
                                                                 .of<BankProvider>(
                                                                 context,

@@ -123,7 +123,13 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
         children: [
           Scaffold(
               backgroundColor: AppColors.backgroundColor,
-              body: Column(
+              body: isLoading
+                  ? Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.activeButtonColor,
+                ),
+              )
+                  : Column(
                 children: [
                   MainHeader(
                     title: assetsDetails.tokenName ,
@@ -256,13 +262,13 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                   SizedBox(height: 2.h),
                 ],
               )),
-          if (isLoading)
-            Positioned(
-                top: 12.h,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: LoaderBluredScreen())
+          // if (isLoading)
+          //   Positioned(
+          //       top: 12.h,
+          //       bottom: 0,
+          //       left: 0,
+          //       right: 0,
+          //       child: LoaderBluredScreen())
         ],
       );
     });
