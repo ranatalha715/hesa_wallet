@@ -58,6 +58,7 @@ class AppColors {
   static const transactionFeeContainer = Color(0xff343434);
   static const transactionSummNeoBorder = Color(0xff343535);
   static const connectDiscSites = Color(0xff04A20A);
+  static const otpSuccesBorderClr = Color(0xff04A20A);
   static const paymentTypesBorder = Color(0x3A3C3C);
   static const transactionFeeBorder = Color(0xff3A3C3C);
   static const greenBorderClr = Color(0xff66D71B);

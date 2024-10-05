@@ -156,7 +156,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
               Provider.of<TransactionProvider>(context, listen: false)
                   .checkoutId,
         );
-        paymentSuccesfullDialogue(
+        paymentFailedDialogue(
             amount: Provider.of<TransactionProvider>(
                 context,
                 listen: false)
@@ -199,11 +199,15 @@ class _TransactionRequestState extends State<TransactionRequest> {
         // Handle success
       } else {
         print('Payment failed');
-        Provider.of<TransactionProvider>(context, listen: false)
-            .testDialogToCheck(
-                context: context,
-                title: '$operation',
-                description: paymentResultData.errorString.toString());
+        paymentFailedDialogue(amount: Provider.of<TransactionProvider>(
+            context,
+            listen: false)
+            .totalForDialog);
+        // Provider.of<TransactionProvider>(context, listen: false)
+        //     .testDialogToCheck(
+        //         context: context,
+        //         title: '$operation',
+        //         description: paymentResultData.errorString.toString());
         // AppDeepLinking().openNftApp(
         //   {
         //     "operation": "$operation",
@@ -217,10 +221,14 @@ class _TransactionRequestState extends State<TransactionRequest> {
       }
     } catch (e) {
       print('Error occurred: $e');
-      Provider.of<TransactionProvider>(context, listen: false)
-          .testDialogToCheck(
-              context: context, title: '$operation', description: e.toString());
-      // AppDeepLinking().openNftApp(
+      paymentFailedDialogue(amount: Provider.of<TransactionProvider>(
+          context,
+          listen: false)
+          .totalForDialog);
+      // Provider.of<TransactionProvider>(context, listen: false)
+      //     .testDialogToCheck(
+      //         context: context, title: '$operation', description: e.toString());
+      // // AppDeepLinking().openNftApp(
       //   {
       //     "operation": "$operation",
       //     "data": e.toString(),
@@ -286,11 +294,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
 
   @override
   void initState() {
-    // Future.delayed(Duration(seconds: 2), () {
-    //
-    //   paymentSuccesfullDialogue(isDark: setThemeDark);
-    // }
-    // );
+    Future.delayed(Duration(seconds: 2), () {
+
+      transactionFailed(isDark: setThemeDark);
+    }
+    );
     init();
     // Locale currentLocale = context.locale;
     // bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
@@ -3573,9 +3581,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
     );
   }
 
-  void paymentFailedDialogue({bool isDark = true}) {
-    // Navigator.pop(context);
-    print("opening d");
+  void paymentFailedDialogue({bool isDark = true,  String amount = '',}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -3590,7 +3596,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
           child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
               child: Container(
-                height: 28.h,
+                height: 30.h,
                 width: dialogWidth,
                 decoration: BoxDecoration(
                   // border:
@@ -3615,40 +3621,46 @@ class _TransactionRequestState extends State<TransactionRequest> {
                       // SizedBox(
                       //   height: 3.h,
                       // ),
-                      Text(
-                        'Payment Failed'.tr(),
-                        style: TextStyle(
-                          color: isDark
-                              ? AppColors.textColorWhite
-                              : AppColors.textColorBlack,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 17.5.sp,
-                        ),
-                      ),
-                      // SizedBox(
-                      //   width: 2.w,
-                      // ),
-                      // Container(
-                      //   width: 2.h,
-                      //   height: 2.h,
-                      //   decoration: BoxDecoration(
-                      //     borderRadius: BorderRadius.circular(20),
-                      //     border: Border.all(
-                      //         color: AppColors.gradientColor1, width: 1.sp),
-                      //   ),
-                      //   child: Center(
-                      //     child: Icon(
-                      //       Icons.check_rounded,
-                      //       size: 10.sp,
-                      //       color: AppColors.gradientColor1,
-                      //     ),
-                      //   ),
-                      // ),
+                     Row(
+                       mainAxisAlignment: MainAxisAlignment.center,
+                       crossAxisAlignment: CrossAxisAlignment.center,
+                       children: [
+                         Text(
+                           'Payment Failed'.tr(),
+                           style: TextStyle(
+                             color: isDark
+                                 ? AppColors.textColorWhite
+                                 : AppColors.textColorBlack,
+                             fontWeight: FontWeight.w600,
+                             fontSize: 17.5.sp,
+                           ),
+                         ),
+                         SizedBox(
+                           width: 2.w,
+                         ),
+                         Container(
+                           width: 2.h,
+                           height: 2.h,
+                           decoration: BoxDecoration(
+                             borderRadius: BorderRadius.circular(20),
+                             border: Border.all(
+                                 color: AppColors.textColorWhite, width: 1.sp),
+                           ),
+                           child: Center(
+                             child: Icon(
+                               Icons.check_rounded,
+                               size: 10.sp,
+                               color: AppColors.textColorWhite,
+                             ),
+                           ),
+                         ),
+                       ],
+                     ),
                       SizedBox(
                         height: 2.h,
                       ),
                       Text(
-                        '5.75 SAR'.tr(),
+                        amount + ' SAR'.tr(),
                         style: TextStyle(
                           fontSize: 27.sp,
                           fontWeight: FontWeight.w600,
@@ -3769,6 +3781,90 @@ class _TransactionRequestState extends State<TransactionRequest> {
                     // SizedBox(height: 2.h,),
 
                     ),
+              )),
+        );
+      },
+    );
+  }
+
+  void transactionFailed({bool isDark = true,  String amount = '',}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final screenWidth = MediaQuery.of(context).size.width;
+        final dialogWidth = screenWidth * 0.90;
+
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          backgroundColor: Colors.transparent,
+          child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+              child: Container(
+                height: 18.h,
+                width: dialogWidth,
+                decoration: BoxDecoration(
+                  // border:
+                  //     Border.all(width: 0.1.h, color: AppColors.textColorGrey),
+                  color: isDark
+                      ? AppColors.showDialogClr
+                      : AppColors.textColorWhite,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.textColorBlack.withOpacity(0.95),
+                      offset: Offset(0, 0),
+                      blurRadius: 10,
+                      spreadRadius: 0.4,
+                    ),
+                  ],
+                ),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // SizedBox(
+                      //   height: 3.h,
+                      // ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Transaction failed'.tr(),
+                            style: TextStyle(
+                              color: isDark
+                                  ? AppColors.paymentFailedDialog
+                                  : AppColors.paymentFailedDialog,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 17.5.sp,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 2.h,
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.sp),
+                          child: Text(
+                            'Something went wrong, please try again.'.tr(),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 10.5.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.textColorGreyShade2,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                    ]
+
+                ),
               )),
         );
       },

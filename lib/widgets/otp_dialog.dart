@@ -212,7 +212,7 @@ void otpDialog({
                                                                     !auth
                                                                         .otpErrorResponse
                                                                 ? AppColors
-                                                                    .hexaGreen
+                                                                    .otpSuccesBorderClr
                                                                 : Colors
                                                                     .transparent,
                                                         width: 1.sp)
@@ -229,7 +229,7 @@ void otpDialog({
                                                                         !user
                                                                             .otpErrorResponse
                                                                     ? AppColors
-                                                                        .hexaGreen
+                                                                        .otpSuccesBorderClr
                                                                     : Colors
                                                                         .transparent,
                                                             width: 1.sp,
@@ -248,7 +248,7 @@ void otpDialog({
                                                                             !transaction
                                                                                 .otpErrorResponse
                                                                         ? AppColors
-                                                                            .hexaGreen
+                                                                            .otpSuccesBorderClr
                                                                         : Colors
                                                                             .transparent,
                                                                 width: 1.sp,
@@ -263,7 +263,7 @@ void otpDialog({
                                                                             !bank
                                                                                 .otpErrorResponse
                                                                         ? AppColors
-                                                                            .hexaGreen
+                                                                            .otpSuccesBorderClr
                                                                         : Colors
                                                                             .transparent,
                                                                 width: 1.sp,

@@ -110,23 +110,27 @@ class _LoaderBluredScreenState extends State<LoaderBluredScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return  Stack(
-      children: [
-        Expanded(child: Container(color: AppColors.backgroundColor,)),
-        // BackdropFilter(
-        //     filter: ImageFilter.blur(
-        //     sigmaX: 7, sigmaY: 7),
-        // child:
-        // widget.isWifiOn ?
-        Container(
+    return  Scaffold(
+      body: Stack(
+        children: [
+           Container(color: AppColors.backgroundColor,
+             height: 100.h,
+           ),
+          // BackdropFilter(
+          //     filter: ImageFilter.blur(
+          //     sigmaX: 7, sigmaY: 7),
+          // child:
+          // widget.isWifiOn ?
+          Container(
             height: 100.h,
             width: double.infinity,
             // color: Colors.white.withOpacity(0.7),
             child: widget.isWifiOn
-             ? CircularProgressAnimation() : SizedBox(),
-        )
-        // ),
-      ],
+                ? CircularProgressAnimation() : SizedBox(),
+          )
+          // ),
+        ],
+      )
     );
   }
 
