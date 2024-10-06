@@ -904,8 +904,10 @@ class _WalletBankingAndPaymentEmptyState
                                         SizedBox(
                                           width: 1.h,
                                         ),
+                                        if(banks.isNotEmpty)
                                         Container(
                                           margin: EdgeInsets.only(left: 4.sp),
+                                          // color: Colors.red,
                                           width: 45.w,
                                           child: Text(
                                             bankpro.selectedBankName,
@@ -1319,7 +1321,8 @@ class _WalletBankingAndPaymentEmptyState
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  width: 30.w,
+                  // color: Colors.red,
+                  width: selectedBankName.toString().length > 12 ? 30.w:25.w,
                   child: Text(
                     selectedBankName,
                     maxLines: 1,
@@ -1357,6 +1360,7 @@ class _WalletBankingAndPaymentEmptyState
                 Spacer(),
                 Container(
                   width: 20.w,
+               // color: Colors.red,
                   child: Text(
                     accountNumber,
                     maxLines: 1,

@@ -342,6 +342,8 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                   return TextFieldParent(
                                     child: TextField(
                                         focusNode: userNameFocusNode,
+                                        textCapitalization:
+                                        TextCapitalization.words,
                                         textInputAction: TextInputAction.next,
                                         onEditingComplete: () {
                                           emailFocusNode.requestFocus();

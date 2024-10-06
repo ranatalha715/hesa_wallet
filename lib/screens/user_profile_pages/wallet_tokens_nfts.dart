@@ -1082,7 +1082,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                           child: Padding(
                                             padding:
                                                 EdgeInsets.only(bottom: 5.sp),
-                                            child: Image.asset(
+                                            child:
+                                            Image.asset(
                                               "assets/images/lock.png",
                                               height: 19.sp,
                                               width: 19.sp,

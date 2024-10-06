@@ -351,23 +351,11 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                         SizedBox(
                                           width: 2.w,
                                         ),
-                                        Container(
-                                          width: 2.h,
-                                          height: 2.h,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            border: Border.all(
-                                                color: AppColors.textColorWhite,
-                                                width: 1.3.sp),
-                                          ),
-                                          child: Center(
-                                            child: Icon(
-                                              Icons.check_rounded,
-                                              size: 10.sp,
-                                              color: AppColors.textColorWhite,
-                                            ),
-                                          ),
+                                        Image.asset(
+                                          "assets/images/check_circle_white.png",
+                                          height: 16.sp,
+                                          width: 16.sp,
+                                          color: AppColors.textColorWhite,
                                         ),
                                       ],
                                     ),
@@ -614,6 +602,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                     transactionDetailsWidget(
                                         title: 'Tx Status:'.tr(),
                                         details: transactionSummary.txStatus,
+                                        isSuccess: true,
                                         isDark:
                                             themeNotifier.isDark ? true : false,
                                         color: AppColors.hexaGreen),
@@ -642,7 +631,6 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                             "%",
                                         isDark:
                                             themeNotifier.isDark ? true : false,
-                                        color: AppColors.textColorToska,
                                       ),
                                     transactionDetailsWidget(
                                       func: () => _launchURL(
@@ -800,6 +788,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
       required String details,
       Color? color,
       bool isDark = true,
+      bool isSuccess = false,
       Function? func}) {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.sp),
@@ -826,20 +815,37 @@ class _TransactionSummaryState extends State<TransactionSummary> {
               // color: Colors.green,
               child: Align(
                 alignment: Alignment.centerRight,
-                child: Text(
-                  details,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                      color:
-                          color == null ? AppColors.textColorGreyShade2 : color,
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w400),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      details,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                          color:
+                              color == null ? AppColors.textColorGreyShade2 : color,
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    if(isSuccess)
+                      Padding(
+                        padding:  EdgeInsets.only(left: 2.sp),
+                        child: Image.asset(
+                          "assets/images/check_circle_white.png",
+                          height: 11.sp,
+                          width: 11.sp,
+                          color: AppColors.hexaGreen,
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ),
           ),
+
         ],
       ),
     );

@@ -66,12 +66,10 @@ class BankProvider with ChangeNotifier{
   final responseData = json.decode(response.body);
   if (responseData['success']) {
   print("Bank Added");
-  _showToast('Bank Added successfully!');
   // Perform any additional actions upon successful bank addition
   return AuthResult.success;
   } else {
   print("Failed to add bank account: ${responseData['message']}");
-  _showToast('Failed to add bank account');
   // Show an error message or handle the failure as needed
   return AuthResult.failure;
   }
@@ -247,12 +245,10 @@ class BankProvider with ChangeNotifier{
     if (response.statusCode == 201) {
       // Successful login, handle navigation or other actions
       print("Update bank successfully!");
-      // _showToast('Update bank successfully!');
       return AuthResult.success;
     } else {
       // Show an error message or handle the response as needed
       print("Bank is not updated yet: ${response.body}");
-      // _showToast('Bank is not updated yet');
       return AuthResult.failure;
     }
   }
@@ -413,14 +409,12 @@ class BankProvider with ChangeNotifier{
       // Successful login, handle navigation or other actions
       final successResponse = json.decode(response.body);
       print("Bank Deleted successfully!");
-      _showToast(successResponse['message']);
       // Perform any additional actions upon successful bank addition
       return AuthResult.success;
     } else {
       // Show an error message or handle the response as needed
       final errorResponse = json.decode(response.body);
       print("Bank is not Deleted yet: ${response.body}");
-      _showToast(errorResponse['message']);
       return AuthResult.failure;
     }
   }

@@ -42,7 +42,6 @@ bool otpSuccessResponse=false;
       if (response.statusCode == 201) {
         // Successful login
         print("User logged in successfully!");
-        // _showToast("message",duration: 6000);
         final jsonResponse = json.decode(response.body);
         final accessToken = jsonResponse['data']['accessToken'];
         final refreshToken = jsonResponse['data']['refreshToken'];
@@ -146,7 +145,6 @@ bool otpSuccessResponse=false;
       otpErrorResponse=true;
       otpSuccessResponse=false;
       print("TimeoutException during login: $e");
-      // _showToast('Timeout occurred during login $e');
       return AuthResult.failure;
     } catch (e) {
       otpErrorResponse=true;
@@ -173,12 +171,10 @@ bool otpSuccessResponse=false;
     if (response.statusCode == 201) {
       // Successful login, handle navigation or other actions
       print("Information updated successfully!");
-      _showToast('Information updated successfully!');
       return AuthResult.success;
     } else {
       // Show an error message or handle the response as needed
       print("Something went wrong: ${response.body}");
-      _showToast('Something went wrong');
       return AuthResult.failure;
     }
   }
@@ -450,12 +446,10 @@ print(json.decode(response.body));
     if (response.statusCode == 201) {
       // Successful login, handle navigation or other actions
       print("${response.body}");
-      _showToast('OTP sent successfully!');
       return AuthResult.success;
     } else {
       // Show an error message or handle the response as needed
       print("Something went wrong: ${response.body}");
-      _showToast('Something went wrong');
       return AuthResult.failure;
     }
   }
@@ -487,7 +481,6 @@ print(json.decode(response.body));
       return AuthResult.success;
     } else {
       print("registerNumResendOtp failed: ${response.body}");
-      _showToast('${response.body}');
       notifyListeners();
       return AuthResult.failure;
     }
@@ -521,7 +514,6 @@ print(json.decode(response.body));
       return AuthResult.success;
     } else {
       print("registerEmailResendOtp failed: ${response.body}");
-      _showToast('${response.body}');
       notifyListeners();
       return AuthResult.failure;
     }
@@ -577,7 +569,6 @@ print(json.decode(response.body));
         notifyListeners();
         print("uniqueId" + uniqueId);
         final successResponse = json.decode(response.body);
-        // _showToast(successResponse['message']);
         registerUserErrorResponse= null;
         return AuthResult.success;
       } else {
@@ -622,14 +613,12 @@ print(json.decode(response.body));
     if (response.statusCode == 201) {
       // Successful login, handle navigation or other actions
       print("User registered successfully!");
-      _showToast('User registered successfully!');
 
       notifyListeners();
       return AuthResult.success;
     } else {
       // Show an error message or handle the response as needed
       print("Verifying failed: ${response.body}");
-      _showToast('${response.body}');
 
       notifyListeners();
       return AuthResult.failure;
@@ -721,7 +710,6 @@ print(json.decode(response.body));
 
         // print("uniqueId" + uniqueId);
         // final successResponse = json.decode(response.body);
-        // _showToast(successResponse['message']);
         registerUserErrorResponse=null;
         return AuthResult.success;
       } else {
@@ -732,7 +720,6 @@ print(json.decode(response.body));
         otpErrorResponse=false;
         otpSuccessResponse=false;
         notifyListeners();
-        // _showToast('Registration failed');
         return AuthResult.failure;
       }
     } catch (e) {
@@ -890,7 +877,6 @@ print(json.decode(response.body));
       }
     } on TimeoutException catch (e) {
       print("TimeoutException during login: $e");
-      // _showToast('Timeout occurred during login $e');
       loginErrorResponse=e.toString();
       // if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet) {
       //   await AppDeepLinking().openNftApp(
@@ -909,7 +895,6 @@ print(json.decode(response.body));
     } catch (e) {
       // Catching any other exception that might occur during the login process
       print("Exception during login: $e");
-      // _showToast('An error occurred during login $e');
       loginErrorResponse=e.toString();
       // if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet) {
       //   await AppDeepLinking().openNftApp(

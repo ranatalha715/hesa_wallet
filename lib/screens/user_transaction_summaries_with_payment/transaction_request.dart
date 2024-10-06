@@ -156,7 +156,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
               Provider.of<TransactionProvider>(context, listen: false)
                   .checkoutId,
         );
-        paymentFailedDialogue(
+        paymentSuccesfullDialogue(
             amount: Provider.of<TransactionProvider>(
                 context,
                 listen: false)
@@ -294,11 +294,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
 
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 2), () {
-
-      transactionFailed(isDark: setThemeDark);
-    }
-    );
+    // Future.delayed(Duration(seconds: 2), () {
+    //
+    //   paymentSuccesfullDialogue(isDark: setThemeDark);
+    // }
+    // );
     init();
     // Locale currentLocale = context.locale;
     // bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
@@ -3377,10 +3377,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
     bool isDark = true,
     String amount = '',
   }) {
-    // Navigator.pop(context);
-    print("opening d");
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         final screenWidth = MediaQuery.of(context).size.width;
         final dialogWidth = screenWidth * 0.90;
@@ -3434,22 +3433,28 @@ class _TransactionRequestState extends State<TransactionRequest> {
                           SizedBox(
                             width: 2.w,
                           ),
-                          Container(
-                            width: 2.h,
-                            height: 2.h,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                  color: AppColors.textColorWhite, width: 1.sp),
-                            ),
-                            child: Center(
-                              child: Icon(
-                                Icons.check_rounded,
-                                size: 10.sp,
-                                color: AppColors.textColorWhite,
-                              ),
-                            ),
+                          Image.asset(
+                            "assets/images/check_circle_white.png",
+                            height: 16.sp,
+                            width: 16.sp,
+                            color: AppColors.textColorWhite,
                           ),
+                          // Container(
+                          //   width: 2.h,
+                          //   height: 2.h,
+                          //   decoration: BoxDecoration(
+                          //     borderRadius: BorderRadius.circular(20),
+                          //     border: Border.all(
+                          //         color: AppColors.textColorWhite, width: 1.sp),
+                          //   ),
+                          //   child: Center(
+                          //     child: Icon(
+                          //       Icons.check_rounded,
+                          //       size: 10.sp,
+                          //       color: AppColors.textColorWhite,
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                       SizedBox(
@@ -3584,6 +3589,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
   void paymentFailedDialogue({bool isDark = true,  String amount = '',}) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         final screenWidth = MediaQuery.of(context).size.width;
         final dialogWidth = screenWidth * 0.90;
@@ -3633,25 +3639,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                  : AppColors.textColorBlack,
                              fontWeight: FontWeight.w600,
                              fontSize: 17.5.sp,
-                           ),
-                         ),
-                         SizedBox(
-                           width: 2.w,
-                         ),
-                         Container(
-                           width: 2.h,
-                           height: 2.h,
-                           decoration: BoxDecoration(
-                             borderRadius: BorderRadius.circular(20),
-                             border: Border.all(
-                                 color: AppColors.textColorWhite, width: 1.sp),
-                           ),
-                           child: Center(
-                             child: Icon(
-                               Icons.check_rounded,
-                               size: 10.sp,
-                               color: AppColors.textColorWhite,
-                             ),
                            ),
                          ),
                        ],
@@ -3790,6 +3777,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
   void transactionFailed({bool isDark = true,  String amount = '',}) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         final screenWidth = MediaQuery.of(context).size.width;
         final dialogWidth = screenWidth * 0.90;
