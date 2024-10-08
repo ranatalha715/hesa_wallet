@@ -114,25 +114,6 @@ class _SettingsState extends State<Settings> {
                       ),
                       // Expanded(child: SizedBox()),
                       Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 22),
-                          child: AppButton(
-                            title: 'Cancel'.tr(),
-                            handler: () {
-                              Navigator.pop(context);
-                            },
-                            isGradient: false,
-                            textColor: isDark
-                                ? AppColors.textColorWhite
-                                : AppColors.textColorBlack.withOpacity(0.8),
-                            color: AppColors.appSecondButton.withOpacity(0.10),
-                            isGradientWithBorder: true,
-                            secondBtnBorderClr: true,
-                          )
-                        // color: Colors.transparent),
-                      ),
-
-                      SizedBox(height: 2.h),
-                      Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 22),
                         child: AppButton(
                           title: 'Log out'.tr(),
@@ -201,6 +182,24 @@ class _SettingsState extends State<Settings> {
                           buttonWithBorderColor: AppColors.errorColor,
                           isGradientWithBorder: true,
                         ),
+                      ),
+                      SizedBox(height: 2.h),
+                      Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 22),
+                          child: AppButton(
+                            title: 'Cancel'.tr(),
+                            handler: () {
+                              Navigator.pop(context);
+                            },
+                            isGradient: false,
+                            textColor: isDark
+                                ? AppColors.textColorWhite
+                                : AppColors.textColorBlack.withOpacity(0.8),
+                            color: AppColors.appSecondButton.withOpacity(0.10),
+                            isGradientWithBorder: true,
+                            secondBtnBorderClr: true,
+                          )
+                        // color: Colors.transparent),
                       ),
                       Expanded(child: SizedBox()),
                     ],

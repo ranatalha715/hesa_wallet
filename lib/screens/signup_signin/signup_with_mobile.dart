@@ -1067,8 +1067,14 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                                 .tr()
                                                             : _selectedIDType ==
                                                                     "NATIONAL_ID"
-                                                                ? "NATIONAL ID"
-                                                                : _selectedIDType,
+                                                                ? "National ID"
+                                                                : _selectedIDType ==
+                                                                        "IQAMA"
+                                                                    ? "Iqama"
+                                                                    : _selectedIDType ==
+                                                                            "PASSPORT"
+                                                                        ? "Passport"
+                                                                        : _selectedIDType,
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.w400,
@@ -1133,21 +1139,21 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                 children: [
                                                   identificationTypeWidget(
                                                     isFirst: true,
-                                                    name: 'IQAMA'.tr(),
+                                                    name: 'Iqama'.tr(),
                                                     isDark: themeNotifier.isDark
                                                         ? true
                                                         : false,
                                                   ),
                                                   identificationTypeWidget(
                                                     // isLast: false,
-                                                    name: 'NATIONAL ID'.tr(),
+                                                    name: 'National ID'.tr(),
                                                     isDark: themeNotifier.isDark
                                                         ? true
                                                         : false,
                                                   ),
                                                   identificationTypeWidget(
                                                     isLast: true,
-                                                    name: 'PASSPORT'.tr(),
+                                                    name: 'Passport'.tr(),
                                                     isDark: themeNotifier.isDark
                                                         ? true
                                                         : false,
@@ -1798,7 +1804,13 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          _selectedIDType = name == 'NATIONAL ID' ? 'NATIONAL_ID' : name;
+          _selectedIDType = name == 'National ID'
+              ? 'NATIONAL_ID'
+              : name == 'Iqama'
+                  ? 'IQAMA'
+                  : name == 'Passport'
+                      ? 'PASSPORT'
+                      : name;
           _isSelected = false;
         });
         idNumFocusNode.requestFocus();

@@ -80,11 +80,11 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     final auth = Provider.of<AuthProvider>(context, listen: false);
     return GestureDetector(
-      onHorizontalDragUpdate: (details) {
-        if (details.delta.dx > 0) {
-          Navigator.of(context).pop();
-        }
-      },
+      // onHorizontalDragUpdate: (details) {
+      //   if (details.delta.dx > 0) {
+      //     Navigator.of(context).pop();
+      //   }
+      // },
       child: Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
         return Stack(
           children: [

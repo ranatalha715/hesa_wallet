@@ -125,143 +125,187 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
               backgroundColor: AppColors.backgroundColor,
               body: isLoading
                   ? Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.activeButtonColor,
-                ),
-              )
+                      child: CircularProgressIndicator(
+                        color: AppColors.activeButtonColor,
+                      ),
+                    )
                   : Column(
-                children: [
-                  MainHeader(
-                    title: assetsDetails.tokenName ,
-                    subTitle: replaceMiddleWithDotsCollectionId(
-                        assetsDetails.tokenId ),
-                    showSubTitle: true,
-                    showLogo: true,
-                    logoPath: assetsDetails.logoImage,
-                  ),
-                  SizedBox(height: 3.h),
-                  Expanded(
-                      child: ListView(
-                    padding: EdgeInsets.zero,
-                    controller: scrollController,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10.sp),
-                        // color: Colors.red,
-                        height: 47.h,
-                        width: 45.h,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12.sp),
-                          child: Image.network(
-                            assetsDetails.image,
-                            fit: BoxFit.cover,
-                            errorBuilder: (BuildContext context,
-                                Object exception, StackTrace? stackTrace) {
-                              return Image.asset(
-                                'assets/images/nft.png',
-                                // Path to your placeholder image
-                                fit: BoxFit.cover,
-                              );
-                            },
-                          ),
+                      children: [
+                        MainHeader(
+                          title:  isLoading
+                              ? 'Collection Name'
+                              : assetsDetails.tokenName,
+                          subTitle:  isLoading
+                              ? '.......'
+                              : replaceMiddleWithDotsCollectionId(
+                              assetsDetails.tokenId),
+                          showSubTitle: true,
+                          showLogo: true,
+                          logoPath: assetsDetails.logoImage,
                         ),
-                      ),
-                      Divider(color: AppColors.transactionSummNeoBorder),
-                      SizedBox(height: 2.h),
-                      nftsDetailsWidget(
-                        title: 'Created:'.tr(),
-                        details: formatDate(assetsDetails.createdAt),
-                        isDark: themeNotifier.isDark ? true : false,
-                      ),
-                      nftsDetailsWidget(
-                        title: 'Collection ID:'.tr(),
-                        func: () => _launchURL(
-                            "https://www.mjraexplorer.com/collection/" +
-                                assetsDetails.tokenId),
-                        details: replaceMiddleWithDotsCollectionId(
-                            assetsDetails.tokenId),
-                        isDark: themeNotifier.isDark ? true : false,
-                        color: AppColors.textColorToska,
-                      ),
-                      if (assetsDetails.creatorName != null)
-                        nftsDetailsWidget(
-                          title: 'Creator:'.tr(),
-                          func: () => _launchURL(
-                              "https://www.mjraexplorer.com/address/" +
-                                  assetsDetails.creatorAddress),
-                          details: replaceMiddleWithDots(
-                                  assetsDetails.creatorName) ??
-                              "N/A",
-                          isDark: themeNotifier.isDark ? true : false,
-                          color: AppColors.textColorToska,
-                        ),
-                      if (assetsDetails.creatorRoyalty != "null")
-                        nftsDetailsWidget(
-                          title: 'Creator royalty:'.tr(),
-                          details: assetsDetails.creatorRoyalty + "%" ?? "N/A",
-                          isDark: themeNotifier.isDark ? true : false,
-                        ),
-                      if (assetsDetails.ownerName != "null")
-                        nftsDetailsWidget(
-                          title: 'Owned by:'.tr(),
-                          func: () => _launchURL(
-                              "https://www.mjraexplorer.com/address/" +
-                                  assetsDetails.ownerAddress),
-                          details:
-                              replaceMiddleWithDots(assetsDetails.ownerName) ??
-                                  "N/A",
-                          isDark: themeNotifier.isDark ? true : false,
-                          color: AppColors.textColorToska,
-                        ),
-                      if (assetsDetails.collectionItems != "null")
-                        nftsDetailsWidget(
-                          title: 'collection Items:'.tr(),
-                          details: replaceMiddleWithDots(
-                                  assetsDetails.collectionItems) ??
-                              "N/A",
-                          isDark: themeNotifier.isDark ? true : false,
-                        ),
-                      nftsDetailsWidget(
-                        title: 'Collection Status:'.tr(),
-                        details: assetsDetails.status,
-                        isDark: themeNotifier.isDark ? true : false,
-                      ),
-                      if (assetsDetails.listingType != "null")
-                        nftsDetailsWidget(
-                          title: 'Listing Type:'.tr(),
-                          details: assetsDetails.listingType,
-                          isDark: themeNotifier.isDark ? true : false,
-                        ),
-                      // if(args["nftIds"] != null)
-                      //   nftsDetailsWidget(
-                      //     title: 'Collection Items:'.tr(),
-                      //     details: args["nftIds"].toString(),
-                      //     isDark: themeNotifier.isDark ? true : false,
-                      //   ),
-                      if (assetsDetails.standard != "null")
-                        nftsDetailsWidget(
-                          title: 'Collection Standard:'.tr(),
-                          details: assetsDetails.standard,
-                          isDark: themeNotifier.isDark ? true : false,
-                        ),
-                      if (assetsDetails.chain != "null")
-                        nftsDetailsWidget(
-                          title: 'Chain:'.tr(),
-                          details: assetsDetails.chain,
-                          isDark: themeNotifier.isDark ? true : false,
-                        ),
-                      if (assetsDetails.burnable != "null")
-                        nftsDetailsWidget(
-                          title: 'Burn Control:'.tr(),
-                          details:
-                              assetsDetails.burnable == "true" ? "On" : "Off",
-                          isDark: themeNotifier.isDark ? true : false,
-                        )
-                    ],
-                  )),
-                  SizedBox(height: 2.h),
-                ],
-              )),
+                        SizedBox(height: 3.h),
+                        Expanded(
+                            child: isLoading
+                                ? Container(
+                                    height: 88.h,
+                                    width: double.infinity,
+                                    color: Colors.black,
+                                  )
+                                : ListView(
+                                    padding: EdgeInsets.zero,
+                                    controller: scrollController,
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 10.sp),
+                                        // color: Colors.red,
+                                        height: 47.h,
+                                        width: 45.h,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(12.sp),
+                                          child: Image.network(
+                                            assetsDetails.image,
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (BuildContext context,
+                                                Object exception,
+                                                StackTrace? stackTrace) {
+                                              return Image.asset(
+                                                'assets/images/nft.png',
+                                                // Path to your placeholder image
+                                                fit: BoxFit.cover,
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      Divider(
+                                          color: AppColors
+                                              .transactionSummNeoBorder),
+                                      SizedBox(height: 2.h),
+                                      nftsDetailsWidget(
+                                        title: 'Created:'.tr(),
+                                        details:
+                                            formatDate(assetsDetails.createdAt),
+                                        isDark:
+                                            themeNotifier.isDark ? true : false,
+                                      ),
+                                      nftsDetailsWidget(
+                                        title: 'Collection ID:'.tr(),
+                                        func: () => _launchURL(
+                                            "https://www.mjraexplorer.com/collection/" +
+                                                assetsDetails.tokenId),
+                                        details:
+                                            replaceMiddleWithDotsCollectionId(
+                                                assetsDetails.tokenId),
+                                        isDark:
+                                            themeNotifier.isDark ? true : false,
+                                        color: AppColors.textColorToska,
+                                      ),
+                                      if (assetsDetails.creatorName != null)
+                                        nftsDetailsWidget(
+                                          title: 'Creator:'.tr(),
+                                          func: () => _launchURL(
+                                              "https://www.mjraexplorer.com/address/" +
+                                                  assetsDetails.creatorAddress),
+                                          details: replaceMiddleWithDots(
+                                                  assetsDetails.creatorName) ??
+                                              "N/A",
+                                          isDark: themeNotifier.isDark
+                                              ? true
+                                              : false,
+                                          color: AppColors.textColorToska,
+                                        ),
+                                      if (assetsDetails.creatorRoyalty !=
+                                          "null")
+                                        nftsDetailsWidget(
+                                          title: 'Creator royalty:'.tr(),
+                                          details:
+                                              assetsDetails.creatorRoyalty +
+                                                      "%" ??
+                                                  "N/A",
+                                          isDark: themeNotifier.isDark
+                                              ? true
+                                              : false,
+                                        ),
+                                      if (assetsDetails.ownerName != "null")
+                                        nftsDetailsWidget(
+                                          title: 'Owned by:'.tr(),
+                                          func: () => _launchURL(
+                                              "https://www.mjraexplorer.com/address/" +
+                                                  assetsDetails.ownerAddress),
+                                          details: replaceMiddleWithDots(
+                                                  assetsDetails.ownerName) ??
+                                              "N/A",
+                                          isDark: themeNotifier.isDark
+                                              ? true
+                                              : false,
+                                          color: AppColors.textColorToska,
+                                        ),
+                                      if (assetsDetails.collectionItems !=
+                                          "null")
+                                        nftsDetailsWidget(
+                                          title: 'collection Items:'.tr(),
+                                          details: replaceMiddleWithDots(
+                                                  assetsDetails
+                                                      .collectionItems) ??
+                                              "N/A",
+                                          isDark: themeNotifier.isDark
+                                              ? true
+                                              : false,
+                                        ),
+                                      nftsDetailsWidget(
+                                        title: 'Collection Status:'.tr(),
+                                        details: assetsDetails.status,
+                                        isDark:
+                                            themeNotifier.isDark ? true : false,
+                                      ),
+                                      if (assetsDetails.listingType != "null")
+                                        nftsDetailsWidget(
+                                          title: 'Listing Type:'.tr(),
+                                          details: assetsDetails.listingType,
+                                          isDark: themeNotifier.isDark
+                                              ? true
+                                              : false,
+                                        ),
+                                      // if(args["nftIds"] != null)
+                                      //   nftsDetailsWidget(
+                                      //     title: 'Collection Items:'.tr(),
+                                      //     details: args["nftIds"].toString(),
+                                      //     isDark: themeNotifier.isDark ? true : false,
+                                      //   ),
+                                      if (assetsDetails.standard != "null")
+                                        nftsDetailsWidget(
+                                          title: 'Collection Standard:'.tr(),
+                                          details: assetsDetails.standard,
+                                          isDark: themeNotifier.isDark
+                                              ? true
+                                              : false,
+                                        ),
+                                      if (assetsDetails.chain != "null")
+                                        nftsDetailsWidget(
+                                          title: 'Chain:'.tr(),
+                                          details: assetsDetails.chain,
+                                          isDark: themeNotifier.isDark
+                                              ? true
+                                              : false,
+                                        ),
+                                      if (assetsDetails.burnable != "null")
+                                        nftsDetailsWidget(
+                                          title: 'Burn Control:'.tr(),
+                                          details:
+                                              assetsDetails.burnable == "true"
+                                                  ? "On"
+                                                  : "Off",
+                                          isDark: themeNotifier.isDark
+                                              ? true
+                                              : false,
+                                        )
+                                    ],
+                                  )),
+                        SizedBox(height: 2.h),
+                      ],
+                    )),
           // if (isLoading)
           //   Positioned(
           //       top: 12.h,

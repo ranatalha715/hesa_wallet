@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:ui';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hesa_wallet/providers/transaction_provider.dart';
@@ -145,6 +147,10 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   @override
   void initState() {
     super.initState();
+    // Future.delayed(Duration(seconds: 1), () {
+    //   paymentRecievedDialogue();
+    // }
+    // );
     getPasscode();
     initUniLinks();
     initUniLinks1();

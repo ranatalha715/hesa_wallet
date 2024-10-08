@@ -62,6 +62,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
   bool isValidating = false;
   bool isButtonActive = false;
   bool isOtpButtonActive = false;
+  bool showNumError = false;
   var _isLoading = false;
   Timer? _timer;
   int _timeLeft = 60;
@@ -146,23 +147,19 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
     });
   }
 
-  removeRoutes(){
+  removeRoutes() {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => WalletTokensNfts()),
-          (Route<dynamic> route) => false,
-
+      (Route<dynamic> route) => false,
     );
-
   }
 
   @override
   Widget build(BuildContext context) {
-
-
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
-    final auth=Provider.of<AuthProvider>(context,listen: false);
+    final auth = Provider.of<AuthProvider>(context, listen: false);
     print('auth.otpErrorResponse');
     print(auth.otpErrorResponse);
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
@@ -226,12 +223,18 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                   TextFieldParent(
                                     child: TextFormField(
                                         controller: _numberController,
-                                        onChanged: (v){
-                                          auth.loginErrorResponse=null;
+                                        onChanged: (v) {
+                                          auth.loginErrorResponse = null;
                                         },
+                                        onEditingComplete: () => setState(() {
+                                              _numberController.text.length < 9
+                                                  ? showNumError = true
+                                                  : showNumError = false;
+                                            }),
                                         inputFormatters: [
                                           LengthLimitingTextInputFormatter(10),
-                                          FilteringTextInputFormatter.digitsOnly,
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
                                         ],
                                         scrollPadding: EdgeInsets.only(
                                             bottom: MediaQuery.of(context)
@@ -248,8 +251,14 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                             fontFamily: 'Inter'),
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.symmetric(
-                                              vertical:   OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
-                                          hintText: 'Enter your mobile number'.tr(),
+                                              vertical: OS.Platform.isIOS
+                                                  ? 14.5.sp
+                                                  : 10.0,
+                                              horizontal: OS.Platform.isIOS
+                                                  ? 10.sp
+                                                  : 16.0),
+                                          hintText:
+                                              'Enter your mobile number'.tr(),
                                           hintStyle: TextStyle(
                                               fontSize: 10.2.sp,
                                               color: AppColors.textColorGrey,
@@ -259,15 +268,30 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                               borderRadius:
                                                   BorderRadius.circular(8.0),
                                               borderSide: BorderSide(
-                                                color:  (isValidating && _numberController.text.isEmpty) || (_numberController.text.length < 9 &&
-                                                    _numberController.text.isNotEmpty  && isValidating)|| auth.loginErrorResponse.toString().contains('mobile number')
-                                                    ? AppColors.errorColor : Colors.transparent,
+                                                color: (isValidating &&
+                                                            _numberController
+                                                                .text
+                                                                .isEmpty) ||
+                                                        (_numberController.text
+                                                                    .length <
+                                                                9 &&
+                                                            _numberController
+                                                                .text
+                                                                .isNotEmpty &&
+                                                            isValidating) ||
+                                                        auth.loginErrorResponse
+                                                            .toString()
+                                                            .contains(
+                                                                'mobile number')
+                                                    ? AppColors.errorColor
+                                                    : Colors.transparent,
                                               )),
                                           focusedBorder: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(8.0),
                                               borderSide: BorderSide(
-                                                color: AppColors.focusTextFieldColor,
+                                                color: AppColors
+                                                    .focusTextFieldColor,
                                               )),
                                           prefixIcon: Padding(
                                             padding: const EdgeInsets.only(
@@ -298,8 +322,10 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                             color: AppColors.errorColor),
                                       ),
                                     ),
-                                  if (_numberController.text.length < 9 &&
-                                      _numberController.text.isNotEmpty)
+                                  if (
+                                      // _numberController.text.length < 9 &&
+                                      _numberController.text.isNotEmpty &&
+                                          showNumError)
                                     Padding(
                                       padding: EdgeInsets.only(top: 7.sp),
                                       child: Text(
@@ -310,11 +336,15 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                             color: AppColors.errorColor),
                                       ),
                                     ),
-                                  if (auth.loginErrorResponse != null && _numberController.text.isNotEmpty && isValidating && auth.loginErrorResponse.toString().contains('mobile number'))
+                                  if (auth.loginErrorResponse != null &&
+                                      _numberController.text.isNotEmpty &&
+                                      isValidating &&
+                                      auth.loginErrorResponse
+                                          .toString()
+                                          .contains('mobile number'))
                                     Padding(
                                       padding: EdgeInsets.only(top: 7.sp),
                                       child: Text(
-
                                         "*${auth.loginErrorResponse}",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
@@ -339,7 +369,8 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                           }
                                         });
                                         final result =
-                                            await Provider.of<AuthProvider>(context,
+                                            await Provider.of<AuthProvider>(
+                                                    context,
                                                     listen: false)
                                                 .sendLoginOTP(
                                           mobile: _numberController.text,
@@ -350,48 +381,57 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                         });
                                         if (result == AuthResult.success) {
                                           startTimer();
-
                                           otpDialog(
                                             incorrect: auth.otpErrorResponse,
                                             events: _events,
                                             firstBtnHandler: () async {
-                                                setState(() {
-                                                  _isLoading = true;
-                                                });
-                                                await Future.delayed(const Duration(milliseconds: 500));
-                                                print('loading popup' +
-                                                    _isLoading.toString());
-                                                final loginWithMobile= await Provider.of<AuthProvider>(
+                                              setState(() {
+                                                _isLoading = true;
+                                              });
+                                              await Future.delayed(
+                                                  const Duration(
+                                                      milliseconds: 500));
+                                              print('loading popup' +
+                                                  _isLoading.toString());
+                                              final loginWithMobile =
+                                                  await Provider.of<
+                                                              AuthProvider>(
+                                                          context,
+                                                          listen: false)
+                                                      .logInWithMobile(
+                                                mobile: _numberController.text,
+                                                context: context,
+                                                code: Provider.of<AuthProvider>(
                                                         context,
                                                         listen: false)
-                                                    .logInWithMobile(
-                                                  mobile: _numberController.text,
-                                                  context: context,
-                                                  code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes,
-                                                );
-                                                setState(() {
-                                                  _isLoading = false;
-                                                });
-                                                print('loading popup 2' +
-                                                    _isLoading.toString());
-                                                if(loginWithMobile==AuthResult.success){
-                                                  Navigator.pop(context);
-                                                }
-
+                                                    .codeFromOtpBoxes,
+                                              );
+                                              setState(() {
+                                                _isLoading = false;
+                                              });
+                                              print('loading popup 2' +
+                                                  _isLoading.toString());
+                                              if (loginWithMobile ==
+                                                  AuthResult.success) {
+                                                Navigator.pop(context);
+                                              }
                                             },
                                             secondBtnHandler: () async {
                                               if (_timeLeft == 0) {
-                                                print('resend function calling');
+                                                print(
+                                                    'resend function calling');
                                                 try {
                                                   setState(() {
                                                     _isLoadingResend = true;
                                                   });
-                                                  final result = await Provider.of<
-                                                              AuthProvider>(context,
-                                                          listen: false)
+                                                  final result = await Provider
+                                                          .of<AuthProvider>(
+                                                              context,
+                                                              listen: false)
                                                       .sendLoginOTP(
-                                                          mobile: _numberController
-                                                              .text,
+                                                          mobile:
+                                                              _numberController
+                                                                  .text,
                                                           context: context);
                                                   setState(() {
                                                     _isLoadingResend = false;
@@ -412,10 +452,11 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                               }
                                             },
                                             firstTitle: 'Confirm',
-                                            secondTitle:  'Resend code ',
+                                            secondTitle: 'Resend code ',
                                             context: context,
                                             isDark: themeNotifier.isDark,
-                                            isFirstButtonActive: isOtpButtonActive,
+                                            isFirstButtonActive:
+                                                isOtpButtonActive,
                                             isSecondButtonActive: false,
                                             otp1Controller: otp1Controller,
                                             otp2Controller: otp2Controller,
@@ -439,12 +480,14 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                                 AppColors.activeButtonColor,
                                             firstBtnTextColor:
                                                 AppColors.textColorBlack,
-                                            secondBtnBgColor: Colors.transparent,
+                                            secondBtnBgColor:
+                                                Colors.transparent,
                                             secondBtnTextColor: _timeLeft != 0
                                                 ? AppColors.textColorBlack
                                                     .withOpacity(0.8)
                                                 : AppColors.textColorWhite,
-                                            isLoading: _isLoadingResend || _isLoading,
+                                            isLoading:
+                                                _isLoadingResend || _isLoading,
                                           );
                                         }
                                       }
@@ -480,7 +523,10 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height:  OS.Platform.isIOS && !isKeyboardVisible ? 5.h : 2.h,
+                                    height:
+                                        OS.Platform.isIOS && !isKeyboardVisible
+                                            ? 5.h
+                                            : 2.h,
                                   )
                                 ],
                               ),
@@ -495,25 +541,27 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                       bottom: 0,
                       left: 0,
                       right: 0,
-                      child: KeyboardVisibilityBuilder(builder: (context, child) {
+                      child:
+                          KeyboardVisibilityBuilder(builder: (context, child) {
                         return Visibility(
                             visible: isKeyboardVisible,
                             child: GestureDetector(
-                              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                              onTap: () =>
+                                  FocusManager.instance.primaryFocus?.unfocus(),
                               child: Container(
                                   height: 3.h,
                                   color: AppColors.profileHeaderDark,
                                   child: Align(
                                       alignment: Alignment.centerRight,
                                       child: Padding(
-                                        padding:
-                                        const EdgeInsets.symmetric(horizontal: 20),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20),
                                         child: Text(
                                           'Done',
                                           style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 11.5.sp,
-                                              fontWeight: FontWeight.bold)
+                                                  color: Colors.white,
+                                                  fontSize: 11.5.sp,
+                                                  fontWeight: FontWeight.bold)
                                               .apply(fontWeightDelta: -1),
                                         ),
                                       ))),
@@ -535,5 +583,4 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
       });
     });
   }
-
 }
