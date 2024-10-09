@@ -406,7 +406,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
     return text[0].toUpperCase() + text.substring(1);
   }
 
-  //rejectFuncTosendmuamil
   rejectTransactions() {
     setState(() {
       isLoading = true;
@@ -424,9 +423,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
           "operation": operation,
           "statusCode": "300",
           "data": "$operation transaction has been cancelled by the user",
-          // "comments": "Non payable transactions response",
         },
       );
+      Navigator.pop(context);
     });
   }
 

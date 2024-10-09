@@ -21,6 +21,7 @@ import '../../providers/assets_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../widgets/app_drawer.dart';
+import '../../widgets/local_toast.dart';
 import '../connection_requests_pages/connect_dapp.dart';
 import '../signup_signin/welcome_screen.dart';
 import '../unlock/unlock.dart';
@@ -148,7 +149,10 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   void initState() {
     super.initState();
     // Future.delayed(Duration(seconds: 1), () {
-    //   paymentRecievedDialogue();
+    //   localToast(context, "This is a toast message!",
+    //       duration: 3000,
+    //
+    //   );
     // }
     // );
     getPasscode();
@@ -303,6 +307,11 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
         setState(() {
           _receivedData = link;
         });
+
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        }
+
         Uri uri = Uri.parse(link);
         String? operation = uri.queryParameters['operation'];
         if (operation != null && operation == 'MintNFT') {
@@ -519,7 +528,13 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
+    // await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
+    //   "params": paramsString,
+    //   "fees": feesString,
+    //   "operation": operation,
+    //   "walletAddress": userWalletAddress
+    // });
+    await Navigator.of(ctx).popAndPushNamed(TransactionRequest.routeName, arguments: {
       "params": paramsString,
       "fees": feesString,
       "operation": operation,

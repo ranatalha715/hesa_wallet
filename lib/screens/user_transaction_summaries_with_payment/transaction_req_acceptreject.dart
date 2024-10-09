@@ -420,6 +420,7 @@ class _TransactionRequestAcceptRejectState
           "data": "$operation transaction has been cancelled by the user",
         },
       );
+      Navigator.pop(context);
     });
   }
 

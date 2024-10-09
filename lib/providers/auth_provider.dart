@@ -13,6 +13,7 @@ import 'package:uni_links/uni_links.dart';
 import '../constants/app_deep_linking.dart';
 import '../constants/colors.dart';
 import '../constants/configs.dart';
+import '../widgets/local_toast.dart';
 
 class AuthProvider with ChangeNotifier {
   late FToast fToast;
@@ -365,15 +366,16 @@ print(json.decode(response.body));
       print('login Otp Response');
       print("${response.body}");
       final successResponse = json.decode(response.body);
+      localToast(context,  'success'+ successResponse['message']);
       loginErrorResponse= null;
       otpErrorResponse=false;
       otpSuccessResponse=false;
       return AuthResult.success;
     } else {
-      // Show an error message or handle the response as needed
       print("Something went wrong: ${response.body}");
       final errorResponse = json.decode(response.body);
       loginErrorResponse=errorResponse['message'][0]['message'];
+      localToast(context,  'failure'+ errorResponse['message'][0]['message']);
       otpErrorResponse=false;
       otpSuccessResponse=false;
       return AuthResult.failure;

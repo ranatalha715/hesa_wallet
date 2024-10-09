@@ -412,17 +412,10 @@ void otpDialog({
                                             horizontal: 22.sp),
                                         child: AppButtonForResendOtp(
                                             title:
-                                                // snapshot.data != null && snapshot.data! > 0 ?
                                                 snapshot.data! > 0
                                                     ? secondTitle +
-                                                        // "${snapshot.data.toString()}"
-
                                                         "${(snapshot.data! ~/ 60).toString().padLeft(2, '0')}:${(snapshot.data! % 60).toString().padLeft(2, '0')}"
-                                                    // :secondTitle
                                                     : secondTitle + "",
-
-                                            // secondTitle,
-                                            // isactive: isSecondButtonActive,
                                             isactive: true,
                                             handler: () {
                                               secondBtnHandler();

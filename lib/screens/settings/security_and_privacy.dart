@@ -23,7 +23,7 @@ class SecurityAndPrivacy extends StatefulWidget {
 }
 
 class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
-  bool _isSelected = true;
+  bool _isSelected = false;
   final ScrollController _scrollController = ScrollController();
   final _localAuthentication = LocalAuthentication();
   bool _isUserAuthorized = false;
@@ -66,6 +66,7 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
   }
 
   getPasscode() async {
+    print('printing');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final passcode = prefs.getString('passcode')!;
     if(passcode!=""){

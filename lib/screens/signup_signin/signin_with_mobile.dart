@@ -70,6 +70,8 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
   bool _isTimerActive = false;
   var _isLoadingResend = false;
   late StreamController<int> _events;
+  // final events = yourStream.asBroadcastStream();
+
 
   var tokenizedUserPL;
 
@@ -499,7 +501,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                   ),
                                   SizedBox(height: 2.h),
                                   GestureDetector(
-                                    onTap: () => Navigator.pushNamed(
+                                    onTap: () => Navigator.pushReplacementNamed(
                                         context, '/SigninWithEmail',
                                         arguments: {'comingFromWallet': true}),
                                     child: Container(

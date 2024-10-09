@@ -438,7 +438,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                 height: 2.h,
                               ),
                               GestureDetector(
-                                onTap: () => Navigator.push(
+                                onTap: () => Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => SigninWithMobile(),
