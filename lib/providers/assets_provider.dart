@@ -400,6 +400,9 @@ class AssetsProvider with ChangeNotifier {
   var logoImage;
   var listingType;
   var collectionItems;
+  var collectionId;
+  var collectionName;
+  var numberOfEdtions;
 
   Future<AuthResult> getNftCollectionDetails({
     required String token,
@@ -426,20 +429,23 @@ class AssetsProvider with ChangeNotifier {
 
     if (response.statusCode == 200) {
       if (response.statusCode == 200) {
-        tokenId = extractedData['id'] ?? 'Unknown ID';
-        tokenName = extractedData['name'] ?? 'Unknown Token Name';
+        tokenId = extractedData['id'] ?? 'Unknown';
+        tokenName = extractedData['name'] ?? 'Unknown';
         image = extractedData['image'] ?? 'No Image';
-        ownerName = extractedData['owner']?['userName'] ?? 'Unknown Owner';
-        ownerAddress = extractedData['owner']?['id'] ?? 'Unknown Address';
-        creatorName = extractedData['creator']?['userName'] ?? 'Unknown Creator';
-        creatorAddress = extractedData['creator']?['id'] ?? 'Unknown Address';
+        ownerName = extractedData['owner']?['userName'] ?? 'Unknown';
+        ownerAddress = extractedData['owner']?['id'] ?? 'Unknown';
+        creatorName = extractedData['creator']?['userName'] ?? 'Unknown';
+        creatorAddress = extractedData['creator']?['id'] ?? 'Unknown';
         createdAt = extractedData['createdAt'] ?? 'Unknown Date';
         isListable = extractedData['isListable']?.toString() ?? 'false';
         burnable = extractedData['burnable']?.toString() ?? 'false';
         creatorRoyalty = extractedData['creatorRoyalty']?.toString() ?? '0';
-        standard = extractedData['standard'] ?? 'Unknown Standard';
-        status = extractedData['status'] ?? 'Unknown Status';
-        chain = extractedData['chain'] ?? 'Unknown Chain';
+        standard = extractedData['standard'] ?? 'Unknown';
+        status = extractedData['status'] ?? 'Unknown';
+        chain = extractedData['chain'] ?? 'Unknown';
+        collectionId = extractedData['collectionId'] ?? 'Unknown';
+        collectionName = extractedData['collectionName'] ?? 'Unknown';
+        numberOfEdtions = extractedData['numberOfEdtions'] ?? 'Unknown';
         listingType = extractedData['listingType']?.toString() ?? '0';
         return AuthResult.success;
       } else {

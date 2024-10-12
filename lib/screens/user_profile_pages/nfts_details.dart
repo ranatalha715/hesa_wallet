@@ -137,21 +137,8 @@ class _NftsDetailsState extends State<NftsDetails> {
           Scaffold(
               backgroundColor: AppColors.backgroundColor,
               body:
-              // isLoading
-              // ? Center(
-              //     child: CircularProgressIndicator(
-              //       color: AppColors.activeButtonColor,
-              //     ),
-              //   )
               Column(
                 children: [
-                  // isLoading
-                  //     ? Container(
-                  //   height: 12.h,
-                  //   width: double.infinity,
-                  //   color:AppColors.profileHeaderDark
-                  // )
-                  //     :
               MainHeader(
                     title: isLoading
                         ? 'NFT Name'
@@ -216,20 +203,28 @@ class _NftsDetailsState extends State<NftsDetails> {
                                   _launchURL(
                                       "https://www.mjraexplorer.com/nft/" +
                                           assetsDetails.tokenId),
-                              //     Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => MjrWebviewExplored(
-                              //       url: "https://www.mjraexplorer.com/nft/" + assetsDetails.tokenId,
-                              //     ),
-                              //   ),
-                              // ),
                               details: replaceMiddleWithDotsCollectionId(
                                   assetsDetails.tokenId),
                               // replaceMiddleWithDotsCollectionId(args["tokenId"]),
                               isDark: themeNotifier.isDark ? true : false,
                               color: AppColors.textColorToska),
-
+                          if (assetsDetails.collectionId != "" && assetsDetails.collectionId !=null)
+                          nftsDetailsWidget(
+                              title: 'Collection ID:'.tr(),
+                              // func: () =>
+                              //     _launchURL(
+                              //         "https://www.mjraexplorer.com/nft/" +
+                              //             assetsDetails.collectionId),
+                              details: replaceMiddleWithDotsCollectionId(
+                                  assetsDetails.collectionId),
+                              isDark: themeNotifier.isDark ? true : false,
+                          ),
+                          if (assetsDetails.numberOfEdtions != null)
+                          nftsDetailsWidget(
+                            title: 'Editions:'.tr(),
+                            details: assetsDetails.numberOfEdtions,
+                            isDark: themeNotifier.isDark ? true : false,
+                          ),
                           if (assetsDetails.creatorName != null)
                             nftsDetailsWidget(
                               title: 'Creator:'.tr(),
@@ -277,6 +272,12 @@ class _NftsDetailsState extends State<NftsDetails> {
                             nftsDetailsWidget(
                               title: 'Listing Type:'.tr(),
                               details: assetsDetails.listingType,
+                              isDark: themeNotifier.isDark ? true : false,
+                            ),
+                          if (assetsDetails.collectionName != "null")
+                            nftsDetailsWidget(
+                              title: 'Collection Name:'.tr(),
+                              details: assetsDetails.collectionName,
                               isDark: themeNotifier.isDark ? true : false,
                             ),
                           if (assetsDetails.isListable != "null")

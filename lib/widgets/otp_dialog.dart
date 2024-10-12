@@ -18,6 +18,7 @@ import 'dialog_button.dart';
 void otpDialog({
   required BuildContext context,
   required StreamController<int> events,
+  // Stream<int> yourStream = events.stream.asBroadcastStream(),
   required Function firstBtnHandler,
   required Function secondBtnHandler,
   required String firstTitle,
@@ -64,12 +65,11 @@ void otpDialog({
                 builder: (context, transaction, child) {
               return StatefulBuilder(
                   builder: (BuildContext context, StateSetter setState) {
-                return StreamBuilder<int>(
+                return
+                  StreamBuilder<int>(
                     stream: events.stream,
                     builder:
                         (BuildContext context, AsyncSnapshot<int> snapshot) {
-                      print("otp dialoge timeleft");
-                      print(snapshot.data.toString());
                       var otpPin;
                       return Dialog(
                         shape: RoundedRectangleBorder(

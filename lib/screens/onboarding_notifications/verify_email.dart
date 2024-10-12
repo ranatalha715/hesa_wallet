@@ -101,8 +101,8 @@ class _VerifyEmailState extends State<VerifyEmail> {
           });
           print('loading popup 2' + _isLoadingOtpDialoge.toString());
           if (result == AuthResult.success) {
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                '/TermsAndConditions', (Route d) => false);
+            Navigator.of(context).popAndPushNamed(
+                '/TermsAndConditions');
           }
         } catch (error) {
           print("Error: $error");
@@ -199,9 +199,9 @@ class _VerifyEmailState extends State<VerifyEmail> {
       });
       print('loading popup 2' + _isLoadingOtpDialoge.toString());
       if (result == AuthResult.success) {
-        await Future.delayed(const Duration(milliseconds: 1000));
+        await Future.delayed(const Duration(milliseconds: 500));
         Navigator.of(context)
-            .pushNamedAndRemoveUntil('/TermsAndConditions', (Route d) => false);
+            .popAndPushNamed('/TermsAndConditions',);
       }
     } catch (error) {
       print("Error: $error");

@@ -788,19 +788,67 @@ print(json.decode(response.body));
     fToast = FToast();
     fToast.init(context);
     if (response.statusCode == 201) {
-      // Successful login, handle navigation or other actions
+      final jsonResponse = json.decode(response.body);
+      final accessToken = jsonResponse['data']['accessToken'];
+      final refreshToken = jsonResponse['data']['refreshToken'];
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('accessToken', accessToken);
+      await prefs.setString('refreshToken', refreshToken);
+      // await prefs.setString('password', password);
+      // await updateFCM(FCM: FCM, token: token, context: context)
+      print('true ya false h');
+      print(Provider.of<UserProvider>(context, listen: false)
+          .navigateToNeoForConnectWallet);
+      if (Provider.of<UserProvider>(context, listen: false)
+          .navigateToNeoForConnectWallet) {
+        await Navigator.of(context)
+            .pushNamed(ConnectDapp.routeName, arguments: {});
 
+        // await Provider.of<UserProvider>(context,listen: false).getUserDetails(context: context,
+        //     token: accessToken
+        // );
+        // await AppDeepLinking().openNftApp(
+        //   {
+        //     "operation": "connectWallet",
+        //     "walletAddress": Provider.of<UserProvider>(context,listen: false).walletAddress,
+        //     "userName": Provider.of<UserProvider>(context,listen: false).userName,
+        //     "userIcon": Provider.of<UserProvider>(context,listen: false).userAvatar,
+        //     "loginResponse":response.body.toString()
+        //   },
+        // );
+        print('go to neo');
+
+      } else {
+        // forUnlock ?   prefs.setBool('setLockScreen', false): null;
+        Future.delayed(Duration(seconds: 3), () async {
+          // This code runs after the delay
+          print('This message is printed after a 3-second delay.');
+          await Navigator.of(context).pushNamedAndRemoveUntil(
+              'nfts-page', (Route d) => false,
+              arguments: {});
+        });
+
+      }
+      // loginErrorResponse=null;
+      // return AuthResult.success;
+      loginErrorResponse=null;
       otpErrorResponse=false;
       otpSuccessResponse=false;
       notifyListeners();
       return AuthResult.success;
     } else {
-      // Show an error message or handle the response as needed
+      final errorResponse = json.decode(response.body);
+      print("Login failed: ${response.body}");
+
+      loginErrorResponse=errorResponse['message'][0]['message'];
+      //   if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
+      // }
       otpErrorResponse=false;
       otpSuccessResponse=false;
       notifyListeners();
       return AuthResult.failure;
     }
+
   }
 
 

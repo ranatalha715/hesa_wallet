@@ -85,7 +85,8 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
         children: [
           WillPopScope(
               onWillPop: () async {
-                widget.fromSignup==true ? exit(0) : Navigator.pop(context);
+                widget.fromSignup==true ? Navigator.pop(context) : Navigator.pop(context);
+                // widget.fromSignup==true ? exit(0) : Navigator.pop(context);
                 return true;
               },
             child: Scaffold(
@@ -96,7 +97,8 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                 children: [
                   MainHeader(title: 'Terms & Conditions'.tr(),
                   handler: (){
-                    widget.fromSignup==true ? exit(0) : Navigator.pop(context);
+                    widget.fromSignup==true ? Navigator.pop(context) : Navigator.pop(context);
+                    // widget.fromSignup==true ? exit(0) : Navigator.pop(context);
 
                   },
                   ),
@@ -279,19 +281,19 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                             showDialog(
                                               context: context,
                                               builder: (BuildContext context) {
-                                                void closeDialogAndNavigate() {
-                                                  Navigator.of(context)
-                                                      .pop();
-                                                  Navigator.of(context)
-                                                      .pushNamedAndRemoveUntil('/SigninWithEmail', (Route d) => false,
-                                                      arguments: {
-                                                        'comingFromWallet':false
-                                                      }
-                                                  );
-                                                }
-
-                                                Future.delayed(Duration(seconds: 2),
-                                                    closeDialogAndNavigate);
+                                                // void closeDialogAndNavigate() {
+                                                //   Navigator.of(context)
+                                                //       .pop();
+                                                //   // Navigator.of(context)
+                                                //   //     .pushNamedAndRemoveUntil('/SigninWithEmail', (Route d) => false,
+                                                //   //     arguments: {
+                                                //   //       'comingFromWallet':false
+                                                //   //     }
+                                                //   // );
+                                                // }
+                                                //
+                                                // Future.delayed(Duration(seconds: 2),
+                                                //     closeDialogAndNavigate);
                                                 return
                                                   Dialog(
                                                   shape: RoundedRectangleBorder(

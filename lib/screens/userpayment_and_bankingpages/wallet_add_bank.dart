@@ -929,6 +929,7 @@ init() async {
                                                             Navigator.pop(context);
                                                             showDialog(
                                                               context: context,
+                                                              barrierDismissible: false,
                                                               builder:
                                                                   (BuildContext context) {
                                                                 final screenWidth =
@@ -951,7 +952,7 @@ init() async {
                                                                 }
 
                                                                 Future.delayed(
-                                                                    Duration(seconds: 3),
+                                                                    Duration(seconds: 2),
                                                                     closeDialogAndNavigate);
                                                                 return StatefulBuilder(
                                                                     builder: (BuildContext

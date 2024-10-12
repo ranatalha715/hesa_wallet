@@ -123,13 +123,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
         children: [
           Scaffold(
               backgroundColor: AppColors.backgroundColor,
-              body: isLoading
-                  ? Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.activeButtonColor,
-                      ),
-                    )
-                  : Column(
+              body: Column(
                       children: [
                         MainHeader(
                           title:  isLoading
@@ -142,6 +136,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                           showSubTitle: true,
                           showLogo: true,
                           logoPath: assetsDetails.logoImage,
+                          isLoadingImage: isLoading,
                         ),
                         SizedBox(height: 3.h),
                         Expanded(
@@ -306,13 +301,13 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                         SizedBox(height: 2.h),
                       ],
                     )),
-          // if (isLoading)
-          //   Positioned(
-          //       top: 12.h,
-          //       bottom: 0,
-          //       left: 0,
-          //       right: 0,
-          //       child: LoaderBluredScreen())
+          if (isLoading)
+            Positioned(
+                top: 12.h,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: LoaderBluredScreen())
         ],
       );
     });
