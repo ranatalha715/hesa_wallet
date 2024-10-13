@@ -67,6 +67,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
   bool isOtpButtonActive = false;
   var _isLoadingResend = false;
   Timer? _timer;
+  bool showNumError = false;
   StreamController<int> _events = StreamController<int>.broadcast();
 
   bool _isTimerActive = false;
@@ -1351,8 +1352,10 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                                   9 &&
                                                               _numberController
                                                                   .text
-                                                                  .isNotEmpty &&
-                                                              isValidating) ||
+                                                                  .isNotEmpty
+                                                              // &&
+                                                              // isValidating
+                                                          ) ||
                                                           auth.registerUserErrorResponse
                                                               .toString()
                                                               .contains(

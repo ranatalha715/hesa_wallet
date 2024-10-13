@@ -228,11 +228,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                         onChanged: (v) {
                                           auth.loginErrorResponse = null;
                                         },
-                                        onEditingComplete: () => setState(() {
-                                              _numberController.text.length < 9
-                                                  ? showNumError = true
-                                                  : showNumError = false;
-                                            }),
+
                                         inputFormatters: [
                                           LengthLimitingTextInputFormatter(10),
                                           FilteringTextInputFormatter
@@ -276,11 +272,14 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                                                 .isEmpty) ||
                                                         (_numberController.text
                                                                     .length <
-                                                                9 &&
+                                                                9
+                                                            &&
                                                             _numberController
                                                                 .text
-                                                                .isNotEmpty &&
-                                                            isValidating) ||
+                                                                .isNotEmpty
+                                                            // &&
+                                                            // isValidating
+                                                        ) ||
                                                         auth.loginErrorResponse
                                                             .toString()
                                                             .contains(
@@ -325,9 +324,11 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                       ),
                                     ),
                                   if (
-                                      // _numberController.text.length < 9 &&
-                                      _numberController.text.isNotEmpty &&
-                                          showNumError)
+                                      _numberController.text.length < 9 &&
+                                      _numberController.text.isNotEmpty
+                                          // &&
+                                          // showNumError
+                                  )
                                     Padding(
                                       padding: EdgeInsets.only(top: 7.sp),
                                       child: Text(
@@ -380,6 +381,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                         );
                                         setState(() {
                                           _isLoading = false;
+                                          isValidating = false;
                                         });
                                         if (result == AuthResult.success) {
                                           startTimer();

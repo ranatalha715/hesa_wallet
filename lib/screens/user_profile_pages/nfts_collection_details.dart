@@ -138,7 +138,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                           logoPath: assetsDetails.logoImage,
                           isLoadingImage: isLoading,
                         ),
-                        SizedBox(height: 3.h),
+                        // SizedBox(height: 3.h),
                         Expanded(
                             child: isLoading
                                 ? Container(
@@ -147,7 +147,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                                     color: Colors.black,
                                   )
                                 : ListView(
-                                    padding: EdgeInsets.zero,
+                                    padding: EdgeInsets.only(top: 2.h),
                                     controller: scrollController,
                                     children: [
                                       Container(
@@ -295,10 +295,11 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                                           isDark: themeNotifier.isDark
                                               ? true
                                               : false,
-                                        )
+                                        ),
+                                      SizedBox(height: 2.h,),
                                     ],
                                   )),
-                        SizedBox(height: 2.h),
+                        // SizedBox(height: 2.h),
                       ],
                     )),
           if (isLoading)
