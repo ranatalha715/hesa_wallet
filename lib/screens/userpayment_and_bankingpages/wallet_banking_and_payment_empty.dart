@@ -1540,7 +1540,7 @@ class _WalletBankingAndPaymentEmptyState
                           height: 4.h,
                         ),
                         Text(
-                          'Are you sure you want to delete this bank account?',
+                          'Are you sure you want to delete this bank account?'.tr(),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
@@ -1707,7 +1707,7 @@ class _WalletBankingAndPaymentEmptyState
                           height: 4.h,
                         ),
                         Text(
-                          'Are you sure you want to remove this Card?',
+                          'Are you sure you want to delete this card?',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
