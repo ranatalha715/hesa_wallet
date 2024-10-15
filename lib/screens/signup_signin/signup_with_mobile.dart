@@ -644,11 +644,18 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                   !_isSelectedNationality;
                                               lastNameFocusNode.unfocus();
                                             }),
-                                            child: Container(
+                                            child:
+                                            Container(
                                               height: 6.5.h,
                                               decoration: BoxDecoration(
                                                 color: AppColors
                                                     .textFieldParentDark,
+                                                border: Border.all(
+                                                  color: !_isSelectedNationality && _selectedNationalityType ==
+                                                      '' && isValidating
+                                                      ? AppColors.errorColor
+                                                      : Colors.transparent,
+                                                ),
                                                 borderRadius: BorderRadius.only(
                                                   topLeft: Radius.circular(8.0),
                                                   topRight:
@@ -1020,7 +1027,13 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                       decoration: BoxDecoration(
                                         borderRadius:
                                             BorderRadius.circular(8.0),
+                                        border: Border.all(
+                                          color:  !_isSelected && _selectedIDType == '' && isValidating
+                                              ? AppColors.errorColor
+                                              : Colors.transparent,
+                                        ),
                                       ),
+
                                       child: Column(
                                         children: [
                                           GestureDetector(
@@ -1353,8 +1366,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                               _numberController
                                                                   .text
                                                                   .isNotEmpty
-                                                              // &&
-                                                              // isValidating
+                                                          // &&
+                                                          // isValidating
                                                           ) ||
                                                           auth.registerUserErrorResponse
                                                               .toString()

@@ -7,6 +7,9 @@ import 'package:hesa_wallet/providers/auth_provider.dart';
 import 'package:hesa_wallet/providers/bank_provider.dart';
 import 'package:hesa_wallet/providers/transaction_provider.dart';
 import 'package:hesa_wallet/providers/user_provider.dart';
+import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
+import 'package:hesa_wallet/widgets/app_header.dart';
+import 'package:hesa_wallet/widgets/main_header.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -54,7 +57,7 @@ void otpDialog({
 }) {
   showDialog(
     context: context,
-    barrierDismissible: false,
+    barrierDismissible: true,
     builder: (BuildContext context) {
       final screenWidth = MediaQuery.of(context).size.width;
       final dialogWidth = screenWidth * 0.85;
@@ -67,20 +70,42 @@ void otpDialog({
                   builder: (BuildContext context, StateSetter setState) {
                 return
                   StreamBuilder<int>(
-                    stream: events.stream,
-                    builder:
-                        (BuildContext context, AsyncSnapshot<int> snapshot) {
-                      var otpPin;
-                      return Dialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        backgroundColor: Colors.transparent,
-                        child: BackdropFilter(
-                            filter: ImageFilter.blur(
-                                sigmaX: isBlurred ? 7 : 0,
-                                sigmaY: isBlurred ? 7 : 0),
-                            child: Stack(
+                      // stream: events.stream.asBroadcastStream(), // Convert to broadcast stream
+                      stream: events.stream, // Convert to broadcast stream
+                      builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          // If the stream is waiting for data
+                          return LoaderBluredScreen();
+                        } else if (snapshot.hasError) {
+                          // If there's an error in the stream
+                          return LoaderBluredScreen();
+                        } else if (snapshot.hasData) {
+                          int countdownValue = snapshot.data!;
+                        var otpPin;
+                        return Dialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            backgroundColor: Colors.transparent,
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: isBlurred ? 7 : 0, sigmaY: isBlurred ? 7 : 0),
+                              child: Stack(
+                                // children: [
+                  // StreamBuilder<int>(
+                  //   stream: events.stream,
+                  //   builder:
+                  //       (BuildContext context, AsyncSnapshot<int> snapshot) {
+                  //     var otpPin;
+                  //     return Dialog(
+                  //       shape: RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.circular(8.0),
+                  //       ),
+                  //       backgroundColor: Colors.transparent,
+                  //       child: BackdropFilter(
+                  //           filter: ImageFilter.blur(
+                  //               sigmaX: isBlurred ? 7 : 0,
+                  //               sigmaY: isBlurred ? 7 : 0),
+                  //           child: Stack(
                               children: [
                                 Container(
                                   height: isEmailOtpDialog ? 70.h : 54.h,
@@ -302,74 +327,7 @@ void otpDialog({
                                                   : () {};
                                             }),
                                       ),
-                                      // Row(
-                                      //   mainAxisAlignment: MainAxisAlignment.center,
-                                      //   children: [
-                                      //     OtpInputBox(
-                                      //       controller: otp1Controller,
-                                      //       focusNode: firstFieldFocusNode,
-                                      //       previousFocusNode: firstFieldFocusNode,
-                                      //       handler: () => FocusScope.of(context)
-                                      //           .requestFocus(secondFieldFocusNode),
-                                      //       incorrect: auth.otpErrorResponse,
-                                      //       autoFocus: true,
-                                      //     ),
-                                      //     SizedBox(
-                                      //       width: 0.8.h,
-                                      //     ),
-                                      //     OtpInputBox(
-                                      //       controller: otp2Controller,
-                                      //       focusNode: secondFieldFocusNode,
-                                      //       previousFocusNode: firstFieldFocusNode,
-                                      //       handler: () => FocusScope.of(context)
-                                      //           .requestFocus(thirdFieldFocusNode),
-                                      //       incorrect: auth.otpErrorResponse,
-                                      //     ),
-                                      //     SizedBox(
-                                      //       width: 0.8.h,
-                                      //     ),
-                                      //     OtpInputBox(
-                                      //       controller: otp3Controller,
-                                      //       focusNode: thirdFieldFocusNode,
-                                      //       previousFocusNode: secondFieldFocusNode,
-                                      //       handler: () => FocusScope.of(context)
-                                      //           .requestFocus(forthFieldFocusNode),
-                                      //       incorrect: auth.otpErrorResponse,
-                                      //     ),
-                                      //     SizedBox(
-                                      //       width: 0.8.h,
-                                      //     ),
-                                      //     OtpInputBox(
-                                      //       controller: otp4Controller,
-                                      //       focusNode: forthFieldFocusNode,
-                                      //       previousFocusNode: thirdFieldFocusNode,
-                                      //       handler: () => FocusScope.of(context)
-                                      //           .requestFocus(fifthFieldFocusNode),
-                                      //       incorrect: auth.otpErrorResponse,
-                                      //     ),
-                                      //     SizedBox(
-                                      //       width: 0.8.h,
-                                      //     ),
-                                      //     OtpInputBox(
-                                      //       controller: otp5Controller,
-                                      //       focusNode: fifthFieldFocusNode,
-                                      //       previousFocusNode: forthFieldFocusNode,
-                                      //       handler: () => FocusScope.of(context)
-                                      //           .requestFocus(sixthFieldFocusNode),
-                                      //       incorrect: auth.otpErrorResponse,
-                                      //     ),
-                                      //     SizedBox(
-                                      //       width: 0.8.h,
-                                      //     ),
-                                      //     OtpInputBox(
-                                      //       controller: otp6Controller,
-                                      //       focusNode: sixthFieldFocusNode,
-                                      //       previousFocusNode: fifthFieldFocusNode,
-                                      //       handler: () => null,
-                                      //       incorrect: auth.otpErrorResponse,
-                                      //     ),
-                                      //   ],
-                                      // ),
+
                                       if (auth.otpErrorResponse ||
                                           user.otpErrorResponse ||
                                           bank.otpErrorResponse ||
@@ -438,17 +396,14 @@ void otpDialog({
                                     ],
                                   ),
                                 ),
-                                // if (isLoading)
-                                //   Positioned(
-                                //     child: Container(
-                                //       height: 54.h,
-                                //       color: Colors.redAccent,
-                                //       // child: LoaderBluredScreen(),
-                                //     ),
-                                //   )
+
                               ],
                             )),
                       );
+                        } else {
+                          // Fallback for other cases
+                          return LoaderBluredScreen();  // Or any placeholder
+                        }
                     });
               });
             });

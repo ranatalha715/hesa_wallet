@@ -69,6 +69,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
   bool isKeyboardVisible = false;
   bool _isTimerActive = false;
   var _isLoadingResend = false;
+  // late StreamController<int> _events;
   late StreamController<int> _events;
   // final events = yourStream.asBroadcastStream();
 
@@ -84,7 +85,9 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
   void initState() {
     super.initState();
     getTokenizedUserPayLoad();
-    _events = new StreamController<int>();
+    // _events = new StreamController<int>();
+    _events = StreamController<int>.broadcast();  // Make it a broadcast controller
+
     _events.add(60);
     _numberController.addListener(_updateButtonState);
     otp1Controller.addListener(_updateOtpButtonState);
@@ -128,6 +131,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
     otp5Controller.dispose();
     otp6Controller.dispose();
     _events.close();
+
     super.dispose();
   }
 
@@ -395,8 +399,6 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                               await Future.delayed(
                                                   const Duration(
                                                       milliseconds: 500));
-                                              print('loading popup' +
-                                                  _isLoading.toString());
                                               final loginWithMobile =
                                                   await Provider.of<
                                                               AuthProvider>(
