@@ -981,6 +981,9 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     final nftsCollectionOwnedByUser =
         Provider.of<AssetsProvider>(context, listen: false)
             .assetsCollectionOwned;
+    print('red dot logic');
+    print(Provider.of<TransactionProvider>(context, listen: false).confirmedRedDot);
+    print(Provider.of<TransactionProvider>(context, listen: false).showRedDot);
     return Consumer<UserProvider>(builder: (context, user, child) {
       return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
         return Stack(
@@ -1075,7 +1078,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                     height: 4.3.sp,
                                                     width: 4.3.sp,
                                                     decoration: BoxDecoration(
-                                                      color: trP.showRedDot
+                                                      color: trP.showRedDot && trP.confirmedRedDot
                                                           ? AppColors.errorColor
                                                           : Colors.transparent,
                                                       borderRadius:

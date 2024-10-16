@@ -161,39 +161,13 @@ class _TransactionRequestState extends State<TransactionRequest> {
                 context,
                 listen: false)
                 .totalForDialog );
-        // Provider.of<TransactionProvider>(context, listen: false)
-        //     .testDialogToCheck(
-        //         context: context,
-        //         title: '$operation',
-        //         description: paymentResultData.paymentResult.toString());
         Provider.of<TransactionProvider>(context, listen: false)
             .functionToNavigateAfterPayable(
                 paymentResultData.paymentResult.toString(), operation, context,
                 statusCode: '201');
-        // await  AppDeepLinking().openNftApp(
-        //   {
-        //     "operation": "$operation",
-        //     "data": paymentResultData.toString(),
-        //   },
-        // );
-        // await Provider.of<TransactionProvider>(context, listen: false)
-        //     .
-        // payableTransactionProcess(
-        //         token: accessToken,
-        //         paymentId:
-        //             Provider.of<TransactionProvider>(context, listen: false)
-        //                 .checkoutId,
-        //         context: context,
-        //         operation: operation);
         setState(() {
           isLoading = false;
         });
-        //delay of 1 second
-        //go to neo app WITH RESPONSE
-
-        // InAppPaymentSetting.getShopperResultUrl(
-        //     Provider.of<TransactionProvider>(context, listen: false)
-        //         .checkoutId);
         print('Payment successful');
         print('ye response ${paymentResultData}');
         // Handle success
@@ -203,17 +177,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
             context,
             listen: false)
             .totalForDialog);
-        // Provider.of<TransactionProvider>(context, listen: false)
-        //     .testDialogToCheck(
-        //         context: context,
-        //         title: '$operation',
-        //         description: paymentResultData.errorString.toString());
-        // AppDeepLinking().openNftApp(
-        //   {
-        //     "operation": "$operation",
-        //     "data": paymentResultData.errorString.toString(),
-        //   },
-        // );
         print('Failure Reason: ${paymentResultData.errorString}');
         setState(() {
           isLoading = false;
@@ -225,15 +188,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
           context,
           listen: false)
           .totalForDialog);
-      // Provider.of<TransactionProvider>(context, listen: false)
-      //     .testDialogToCheck(
-      //         context: context, title: '$operation', description: e.toString());
-      // // AppDeepLinking().openNftApp(
-      //   {
-      //     "operation": "$operation",
-      //     "data": e.toString(),
-      //   },
-      // );
       setState(() {
         isLoading = false;
       });
@@ -3383,6 +3337,13 @@ class _TransactionRequestState extends State<TransactionRequest> {
         final screenWidth = MediaQuery.of(context).size.width;
         final dialogWidth = screenWidth * 0.90;
 
+        Future.delayed(Duration(seconds: 2), () async {
+          await Navigator.of(context)
+              .pushNamedAndRemoveUntil(
+              'nfts-page', (Route d) => false,
+              arguments: {}); // Close the dialog
+        });
+
         return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
@@ -3593,6 +3554,13 @@ class _TransactionRequestState extends State<TransactionRequest> {
         final screenWidth = MediaQuery.of(context).size.width;
         final dialogWidth = screenWidth * 0.90;
 
+        Future.delayed(Duration(seconds: 2), () async {
+          await Navigator.of(context)
+              .pushNamedAndRemoveUntil(
+              'nfts-page', (Route d) => false,
+              arguments: {}); // Close the dialog
+        });
+
         return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
@@ -3780,6 +3748,13 @@ class _TransactionRequestState extends State<TransactionRequest> {
       builder: (BuildContext context) {
         final screenWidth = MediaQuery.of(context).size.width;
         final dialogWidth = screenWidth * 0.90;
+
+        Future.delayed(Duration(seconds: 2), () async {
+          await Navigator.of(context)
+              .pushNamedAndRemoveUntil(
+              'nfts-page', (Route d) => false,
+              arguments: {}); // Close the dialog
+        });
 
         return Dialog(
           shape: RoundedRectangleBorder(

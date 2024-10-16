@@ -55,7 +55,8 @@ class _WalletActivityState extends State<WalletActivity> {
       final prefs = await SharedPreferences.getInstance();
 
       // Null checks for siteUrl, logoFromNeo, connectionTime, and disconnectionTime
-      siteUrl = prefs.getString("siteUrl") ?? "";  // Fallback to an empty string if null
+      siteUrl = prefs.getString("siteUrl") ??
+          ""; // Fallback to an empty string if null
       logoFromNeo = prefs.getString("logoFromNeo") ?? "";
 
       if (logoFromNeo != null && logoFromNeo.isNotEmpty) {
@@ -73,6 +74,25 @@ class _WalletActivityState extends State<WalletActivity> {
     super.didChangeDependencies();
   }
 
+  // redDotLogic() async {
+  //   // Wait for 3 seconds
+  //   await Future.delayed(Duration(seconds: 3));
+  //
+  // }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    // redDotLogic();
+    super.initState();
+
+    Provider.of<TransactionProvider>(context, listen: false).confirmedRedDot =
+    false;
+
+    print(
+        'confirm red dot' +  Provider.of<TransactionProvider>(context, listen: false).confirmedRedDot.toString());
+
+  }
 
   String calculateTimeDifference(String createdAtStr) {
     // Parse the createdAt timestamp and ensure it's in UTC
@@ -110,14 +130,13 @@ class _WalletActivityState extends State<WalletActivity> {
 
     // Print to check if activities and connectionTime exist
 
-
     // Add the site connection data if it exists
     if (connectionTime != "" && siteUrl != "") {
       sortedActivities.add({
         'type': 'site_connection',
         'siteURL': siteUrl,
         'time': connectionTime, // The timestamp for the connection
-        'bytes':bytes,
+        'bytes': bytes,
       });
     }
     if (disconnectionTime != "") {
@@ -125,7 +144,7 @@ class _WalletActivityState extends State<WalletActivity> {
         'type': 'site_disconnection',
         'siteURL': siteUrl,
         'time': disconnectionTime, // Timestamp for the disconnection
-        'bytes':bytes,
+        'bytes': bytes,
         // 'event': 'disconnect',  // Indicate this is a disconnection event
       });
     }
@@ -221,7 +240,7 @@ class _WalletActivityState extends State<WalletActivity> {
                                       (BuildContext context, int index) {
                                     var activity = sortedActivities[index];
 
-                                    if (activity['type'] == 'site_connection' ) {
+                                    if (activity['type'] == 'site_connection') {
                                       // Custom container for the site connection
                                       return WalletActivityWidget(
                                         title: "Site Connected",
@@ -530,12 +549,13 @@ class _WalletActivityState extends State<WalletActivity> {
               ],
             ),
           ),
-          if (_isLoading) Positioned(
-              top: 12.h,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: LoaderBluredScreen())
+          if (_isLoading)
+            Positioned(
+                top: 12.h,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: LoaderBluredScreen())
         ],
       );
     });

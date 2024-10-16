@@ -27,7 +27,9 @@ class TransactionProvider with ChangeNotifier {
   String totalForDialog = '';
   var siteUrl;
   var selectedPaymentMethod='cards';
-  bool showRedDot=false;
+  // bool showRedDot=false;
+  bool _showRedDot = false;
+  bool _confirmedRedDot = false;
   bool otpErrorResponse=false;
   bool otpSuccessResponse=false;
   // var decodedMetaData;
@@ -87,8 +89,6 @@ class TransactionProvider with ChangeNotifier {
     }
   }
 
-
-
   // String calculateTimeDifference(DateTime createdAt) {
   //   DateTime now = DateTime.now();
   //   Duration difference = now.difference(createdAt);
@@ -110,6 +110,25 @@ class TransactionProvider with ChangeNotifier {
   //     return '$years y';
   //   }
   // }
+
+  bool get showRedDot => _showRedDot;
+  bool get confirmedRedDot => _confirmedRedDot;
+
+  set showRedDot(bool value) {
+    _showRedDot = value;
+    notifyListeners();
+  }
+
+  set confirmedRedDot(bool value) {
+    _confirmedRedDot = value;
+    notifyListeners();
+  }
+  // void clearRedDot() {
+  //   _showRedDot = false;
+  //   notifyListeners();
+  // }
+
+
   Future<AuthResult> getWalletActivities({
     required String accessToken,
     required BuildContext context,

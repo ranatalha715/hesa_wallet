@@ -208,7 +208,8 @@ void otpDialog({
                                       Padding(
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 10.sp),
-                                        child: Pinput(
+                                        child:
+                                        Pinput(
                                             // smsRetriever: ,
                                             controller: otp6Controller,
                                             length: 6,
