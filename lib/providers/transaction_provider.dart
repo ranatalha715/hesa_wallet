@@ -121,7 +121,7 @@ class TransactionProvider with ChangeNotifier {
 
   set confirmedRedDot(bool value) {
     _confirmedRedDot = value;
-    notifyListeners();
+    // notifyListeners();
   }
   // void clearRedDot() {
   //   _showRedDot = false;

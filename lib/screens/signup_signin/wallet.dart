@@ -89,7 +89,7 @@ class _WalletState extends State<Wallet> {
                           ),
                           SizedBox(height: 1.h),
                           Text(
-                            'The New Digital World'.tr(),
+                            'Your New Digital World'.tr(),
                             style: TextStyle(
                                 fontSize: 11.7.sp,
                                 color: AppColors.textColorGrey,

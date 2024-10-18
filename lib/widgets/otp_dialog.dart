@@ -190,7 +190,7 @@ void otpDialog({
 
                                       Text(
                                         isEmailOtpDialog
-                                            ? 'Enter verification Code'
+                                            ? 'Enter verification Code'.tr()
                                             : 'OTP verification'.tr(),
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,

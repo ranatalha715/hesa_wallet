@@ -280,12 +280,206 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
     'Zambian',
     'Zimbabwean'
   ];
+  List<String> _arabicNationalities = [
+    'افغاني',
+    'الباني',
+    'جزائري',
+    'امريكي',
+    'اندوري',
+    'انغولي',
+    'انتيغوي',
+    'ارجنتيني',
+    'ارميني',
+    'استرالي',
+    'نمساوي',
+    'اذربيجاني',
+    'باهامي',
+    'بحريني',
+    'بنغلاديشي',
+    'بربادوسي',
+    'بيلاروسي',
+    'بلجيكي',
+    'بليزي',
+    'بنيني',
+    'بوتاني',
+    'بوليفي',
+    'بوسني',
+    'بوتسواني',
+    'برازيلي',
+    'بريطاني',
+    'بروناي',
+    'بلغاري',
+    'بوركيني',
+    'بورمي',
+    'بوروندي',
+    'كيب فريدي',
+    'كمبودي',
+    'كاميروني',
+    'كندي',
+    'افريقي وسطي',
+    'تشادي',
+    'تشيلي',
+    'صيني',
+    'كولومبي',
+    'قمري',
+    'كونغولي',
+    'كوستاريكي',
+    'كرواتي',
+    'كوبي',
+    'قبرصي',
+    'تشيكي',
+    'دنماركي',
+    'جيبوتي',
+    'دومينيكاني',
+    'هولندي',
+    'تيموري شرقي',
+    'اكوادوري',
+    'مصري',
+    'اماراتي',
+    'غيني استوائي',
+    'اريتري',
+    'استوني',
+    'اثيوبي',
+    'فيجي',
+    'فنلندي',
+    'فرنسي',
+    'غابوني',
+    'غامبي',
+    'جورجي',
+    'الماني',
+    'غاني',
+    'يوناني',
+    'غرينادي',
+    'غواتيمالي',
+    'غيني',
+    'غيني بيساوي',
+    'غوياني',
+    'هايتي',
+    'هندوراسي',
+    'مجري',
+    'ايسلندي',
+    'هندي',
+    'اندونيسي',
+    'ايراني',
+    'عراقي',
+    'ايرلندي',
+    'اسرائيلي',
+    'ايطالي',
+    'ساحل العاج',
+    'جامايكي',
+    'ياباني',
+    'اردني',
+    'كازاخي',
+    'كيني',
+    'كيريباتي',
+    'كويتي',
+    'قرغيزي',
+    'لاوسي',
+    'لاتفي',
+    'لبناني',
+    'ليسوتي',
+    'ليبيري',
+    'ليبي',
+    'ليختنشتايني',
+    'لتواني',
+    'لوكسمبورغي',
+    'مقدوني',
+    'مدغشقري',
+    'مالاوي',
+    'ماليزي',
+    'مالديفي',
+    'مالي',
+    'مالطي',
+    'مارشالي',
+    'موريتاني',
+    'موريشيوسي',
+    'مكسيكي',
+    'مايكرونيزي',
+    'مولدوفي',
+    'موناكي',
+    'منغولي',
+    'مونتينيغري',
+    'مغربي',
+    'موزمبيقي',
+    'ناميبي',
+    'ناورو',
+    'نيبالي',
+    'نيوزيلندي',
+    'نيكاراغوي',
+    'نيجيري',
+    'كوري شمالي',
+    'نرويجي',
+    'عماني',
+    'باكستاني',
+    'بالاوي',
+    'بنمي',
+    'بابوا غينيا الجديد',
+    'باراغواي',
+    'بيروفي',
+    'فلبيني',
+    'بولندي',
+    'برتغالي',
+    'قطري',
+    'روماني',
+    'روسي',
+    'رواندي',
+    'سانت كيتس ونيفيس',
+    'سانت لوسي',
+    'سلفادوري',
+    'ساموي',
+    'سان ماريني',
+    'ساو تومي وبرينسيبي',
+    'سعودي',
+    'سنغالي',
+    'صربي',
+    'سيشلي',
+    'سيراليوني',
+    'سنغافوري',
+    'سلوفاكي',
+    'سلوفيني',
+    'جزر سليمان',
+    'صومالي',
+    'جنوب افريقي',
+    'كوري جنوبي',
+    'جنوب سوداني',
+    'اسباني',
+    'سريلانكي',
+    'سوداني',
+    'سورينامي',
+    'سوازي',
+    'سويدي',
+    'سويسري',
+    'سوري',
+    'تايواني',
+    'طاجيكي',
+    'تنزاني',
+    'تايلاندي',
+    'توغولي',
+    'تونغي',
+    'ترينيدادي',
+    'تونسي',
+    'تركي',
+    'تركماني',
+    'توفالي',
+    'اوغندي',
+    'اوكراني',
+    'اوروغواي',
+    'اوزبكي',
+    'فانواتي',
+    'فنزويلي',
+    'فيتنامي',
+    'يمني',
+    'زامبي',
+    'زيمبابوي'
+  ];
+
+  List<String> _currentNationalities = [];
 
   List<String> _filteredNationalities = [];
 
   void _filterSearchResults(String query) {
     if (query.isNotEmpty) {
-      List<String> filteredList = _allNationalities
+      List<String> filteredList = _currentNationalities
           .where((nationality) =>
               nationality.toLowerCase().contains(query.toLowerCase()))
           .toList();
@@ -294,13 +488,28 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
       });
     } else {
       setState(() {
-        _filteredNationalities = _allNationalities;
+        _filteredNationalities = _currentNationalities;
       });
     }
   }
 
+  void _updateNationalities() {
+    Locale currentLocale = Localizations.localeOf(context);
+    bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
+    print("isEnglish");
+    print(isEnglish);
+    setState(() {
+      _currentNationalities =
+          isEnglish ? _allNationalities : _arabicNationalities;
+    });
+  }
+
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _updateNationalities();
+      _filteredNationalities = _currentNationalities;
+    });
     super.initState();
     getAccessToken();
     _events = new StreamController<int>();
@@ -316,12 +525,28 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
     otp4Controller.addListener(_updateOtpButtonState);
     otp5Controller.addListener(_updateOtpButtonState);
     otp6Controller.addListener(_updateOtpButtonState);
-    _filteredNationalities = _allNationalities;
+
     KeyboardVisibilityController().onChange.listen((bool visible) {
       setState(() {
         isKeyboardVisible = visible;
       });
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Locale currentLocale = context.locale;
+      bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
+
+      setState(() {
+        _currentNationalities =
+            isEnglish ? _allNationalities : _arabicNationalities;
+      });
+    });
+
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
   }
 
   void _updateButtonState() {
@@ -401,6 +626,9 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
   Widget build(BuildContext context) {
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
+    _currentNationalities =
+        isEnglish ? _allNationalities : _arabicNationalities;
+
     final auth = Provider.of<AuthProvider>(context, listen: false);
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return Stack(
@@ -512,7 +740,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 7.sp),
                                         child: Text(
-                                          "*Enter first name",
+                                          "*Enter first name".tr(),
                                           style: TextStyle(
                                               fontSize: 10.sp,
                                               fontWeight: FontWeight.w400,
@@ -603,7 +831,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 7.sp),
                                         child: Text(
-                                          "*Enter last name",
+                                          "*Enter last name".tr(),
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontSize: 10.sp,
@@ -639,20 +867,26 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                       child: Column(
                                         children: [
                                           GestureDetector(
-                                            onTap: () => setState(() {
-                                              _isSelectedNationality =
-                                                  !_isSelectedNationality;
-                                              lastNameFocusNode.unfocus();
-                                            }),
-                                            child:
-                                            Container(
+                                            onTap: () {
+                                              // _updateNationalities();
+                                              // Future.delayed(Duration(seconds: 10), () {
+                                              setState(() {
+                                                _isSelectedNationality =
+                                                    !_isSelectedNationality;
+                                                lastNameFocusNode.unfocus();
+                                              });
+                                              // });
+                                            },
+                                            child: Container(
                                               height: 6.5.h,
                                               decoration: BoxDecoration(
                                                 color: AppColors
                                                     .textFieldParentDark,
                                                 border: Border.all(
-                                                  color: !_isSelectedNationality && _selectedNationalityType ==
-                                                      '' && isValidating
+                                                  color: !_isSelectedNationality &&
+                                                          _selectedNationalityType ==
+                                                              '' &&
+                                                          isValidating
                                                       ? AppColors.errorColor
                                                       : Colors.transparent,
                                                 ),
@@ -995,7 +1229,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                       Padding(
                                         padding: EdgeInsets.only(bottom: 7.sp),
                                         child: Text(
-                                          "*Nationality should not be empty",
+                                          "*Nationality should not be empty"
+                                              .tr(),
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontSize: 10.sp,
@@ -1028,12 +1263,13 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                         borderRadius:
                                             BorderRadius.circular(8.0),
                                         border: Border.all(
-                                          color:  !_isSelected && _selectedIDType == '' && isValidating
+                                          color: !_isSelected &&
+                                                  _selectedIDType == '' &&
+                                                  isValidating
                                               ? AppColors.errorColor
                                               : Colors.transparent,
                                         ),
                                       ),
-
                                       child: Column(
                                         children: [
                                           GestureDetector(
@@ -1082,12 +1318,15 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                             : _selectedIDType ==
                                                                     "NATIONAL_ID"
                                                                 ? "National ID"
+                                                                    .tr()
                                                                 : _selectedIDType ==
                                                                         "IQAMA"
                                                                     ? "Iqama"
+                                                                        .tr()
                                                                     : _selectedIDType ==
                                                                             "PASSPORT"
                                                                         ? "Passport"
+                                                                            .tr()
                                                                         : _selectedIDType,
                                                         style: TextStyle(
                                                             fontWeight:
@@ -1182,7 +1421,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 7.sp),
                                         child: Text(
-                                          "*Identification type should not be empty",
+                                          "*Identification type should not be empty"
+                                              .tr(),
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontSize: 10.sp,
@@ -1275,7 +1515,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 7.sp),
                                         child: Text(
-                                          "*Identification number should not be empty",
+                                          "*Identification number should not be empty"
+                                              .tr(),
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontSize: 10.sp,
@@ -1411,7 +1652,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 7.sp),
                                         child: Text(
-                                          "*Mobile number should not be empty",
+                                          "*Mobile number should not be empty"
+                                              .tr(),
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontSize: 10.sp,
@@ -1423,7 +1665,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 7.sp),
                                         child: Text(
-                                          "*Mobile Number should be minimum 9 Characters",
+                                          "*Mobile Number should be minimum 9 Characters"
+                                              .tr(),
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontSize: 10.sp,
@@ -1440,7 +1683,9 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 7.sp),
                                         child: Text(
-                                          "*${auth.registerUserErrorResponse}",
+                                          isEnglish
+                                              ? "*${auth.registerUserErrorResponse}"
+                                              : "رقم الجوال موجود بالفعل*",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontSize: 10.sp,
@@ -1820,11 +2065,11 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          _selectedIDType = name == 'National ID'
+          _selectedIDType = name == 'National ID' || name == 'هوية وطنية'
               ? 'NATIONAL_ID'
-              : name == 'Iqama'
+              : name == 'Iqama' || name == 'اقامة'
                   ? 'IQAMA'
-                  : name == 'Passport'
+                  : name == 'Passport' || name == 'جواز'
                       ? 'PASSPORT'
                       : name;
           _isSelected = false;
