@@ -202,8 +202,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
       builder: (BuildContext context) {
         final screenWidth = MediaQuery.of(context).size.width;
         final dialogWidth = screenWidth * 0.85;
-        void closeDialogAndNavigate() {
-        }
+        void closeDialogAndNavigate() {}
 
         Future.delayed(Duration(seconds: 3), closeDialogAndNavigate);
         return Dialog(
@@ -290,7 +289,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
-    final auth=Provider.of<AuthProvider>(context, listen: false);
+    final auth = Provider.of<AuthProvider>(context, listen: false);
     print(args['id']);
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return Stack(
@@ -343,7 +342,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                     child: TextField(
                                         focusNode: userNameFocusNode,
                                         textCapitalization:
-                                        TextCapitalization.words,
+                                            TextCapitalization.words,
                                         textInputAction: TextInputAction.next,
                                         onEditingComplete: () {
                                           emailFocusNode.requestFocus();
@@ -377,7 +376,12 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             fontFamily: 'Inter'),
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.symmetric(
-                                              vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
+                                              vertical: OS.Platform.isIOS
+                                                  ? 14.5.sp
+                                                  : 10.0,
+                                              horizontal: OS.Platform.isIOS
+                                                  ? 10.sp
+                                                  : 16.0),
                                           hintText: 'username'.tr(),
                                           hintStyle: TextStyle(
                                               fontSize: 10.2.sp,
@@ -404,14 +408,15 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                   BorderRadius.circular(8.0),
                                               borderSide: BorderSide(
                                                 color: (_usernameController
-                                                    .text.isEmpty &&
-                                                    isValidating) ||
-                                                    (!auth.userNameAvailable &&
-                                                        _usernameController
-                                                            .text
-                                                            .isNotEmpty)
-                                                    ? AppColors.errorColor : AppColors
-                                                    .focusTextFieldColor,
+                                                                .text.isEmpty &&
+                                                            isValidating) ||
+                                                        (!auth.userNameAvailable &&
+                                                            _usernameController
+                                                                .text
+                                                                .isNotEmpty)
+                                                    ? AppColors.errorColor
+                                                    : AppColors
+                                                        .focusTextFieldColor,
                                               )),
                                           suffixIcon: Padding(
                                               padding: const EdgeInsets.only(
@@ -419,7 +424,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                               child: Consumer<AuthProvider>(
                                                   builder:
                                                       (context, auth, child) {
-                                                return Text('.mjra',
+                                                return Text('.mjra'.tr(),
                                                     style: TextStyle(
                                                         fontSize: 10.2.sp,
                                                         fontWeight:
@@ -443,7 +448,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                     padding: EdgeInsets.only(top: 7.sp),
                                     child: Text(
                                       // "*This username is registered",
-                                      "*Username should not be empty",
+                                      "*Username should not be empty".tr(),
                                       style: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           fontSize: 10.sp,
@@ -457,7 +462,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                       padding: EdgeInsets.only(top: 7.sp),
                                       child: usernameLoading
                                           ? Text(
-                                              'Checking...',
+                                              'Checking...'.tr(),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 10.sp,
@@ -485,7 +490,9 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                 Text(
                                                   auth.userNameAvailable
                                                       ? "This username is available"
-                                                      : "This username is taken. Try another.",
+                                                          .tr()
+                                                      : "This username is taken. Try another."
+                                                          .tr(),
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.w400,
@@ -527,8 +534,8 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                 TextFieldParent(
                                   child: TextField(
                                       controller: _emailController,
-                                      onChanged: (v){
-                                        auth.registerUserErrorResponse=null;
+                                      onChanged: (v) {
+                                        auth.registerUserErrorResponse = null;
                                       },
                                       focusNode: emailFocusNode,
                                       textInputAction: TextInputAction.next,
@@ -546,7 +553,12 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                           fontFamily: 'Inter'),
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.symmetric(
-                                            vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
+                                            vertical: OS.Platform.isIOS
+                                                ? 14.5.sp
+                                                : 10.0,
+                                            horizontal: OS.Platform.isIOS
+                                                ? 10.sp
+                                                : 16.0),
                                         hintText:
                                             'Enter a valid email address'.tr(),
                                         hintStyle: TextStyle(
@@ -559,8 +571,21 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color: (isValidating && _emailController.text.isEmpty)  || auth.registerUserErrorResponse.toString().contains('Email')
-                                              || ((!_emailController.text.contains('@') || !_emailController.text.contains('.com')) && _emailController.text.isNotEmpty)
+                                              color: (isValidating &&
+                                                          _emailController
+                                                              .text.isEmpty) ||
+                                                      auth.registerUserErrorResponse
+                                                          .toString()
+                                                          .contains('Email') ||
+                                                      ((!_emailController.text
+                                                                  .contains(
+                                                                      '@') ||
+                                                              !_emailController
+                                                                  .text
+                                                                  .contains(
+                                                                      '.com')) &&
+                                                          _emailController
+                                                              .text.isNotEmpty)
                                                   ? AppColors.errorColor
                                                   : Colors.transparent,
                                             )),
@@ -574,12 +599,18 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                       ),
                                       cursorColor: AppColors.textColorGrey),
                                 ),
-                                if (auth.registerUserErrorResponse != null && _emailController.text.isNotEmpty && isValidating && auth.registerUserErrorResponse.toString().contains('Email'))
+                                if (auth.registerUserErrorResponse != null &&
+                                    _emailController.text.isNotEmpty &&
+                                    isValidating &&
+                                    auth.registerUserErrorResponse
+                                        .toString()
+                                        .contains('Email'))
                                   Padding(
                                     padding: EdgeInsets.only(top: 7.sp),
                                     child: Text(
-
-                                      "*${auth.registerUserErrorResponse}",
+                                      isEnglish
+                                          ? "*${auth.registerUserErrorResponse}"
+                                          : "البريد الاكتروني مسجل مسبقا*",
                                       style: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           fontSize: 10.sp,
@@ -587,32 +618,33 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                     ),
                                   ),
                                 if (_emailController.text.isNotEmpty &&
-                                    isValidating && (!_emailController.text.contains('@') || !_emailController.text.contains('.com')))
+                                    isValidating &&
+                                    (!_emailController.text.contains('@') ||
+                                        !_emailController.text
+                                            .contains('.com')))
                                   Padding(
                                     padding: EdgeInsets.only(top: 7.sp),
                                     child: Text(
                                       // "*Please enter a valid email address".tr(),
-                                      "*Enter valid email address",
+                                      "*Enter valid email address".tr(),
                                       style: TextStyle(
                                           fontSize: 10.sp,
                                           fontWeight: FontWeight.w400,
                                           color: AppColors.errorColor),
                                     ),
                                   ),
-
                                 if (_emailController.text.isEmpty &&
                                     isValidating)
                                   Padding(
                                     padding: EdgeInsets.only(top: 7.sp),
                                     child: Text(
-                                      "*Email address should not be empty",
+                                      "*Email address should not be empty".tr(),
                                       style: TextStyle(
                                           fontSize: 10.sp,
                                           fontWeight: FontWeight.w400,
                                           color: AppColors.errorColor),
                                     ),
                                   ),
-
                                 SizedBox(
                                   height: 2.h,
                                 ),
@@ -644,12 +676,13 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                       scrollPadding: EdgeInsets.only(
                                           bottom: MediaQuery.of(context)
                                                   .viewInsets
-                                                  .bottom/1.8),
+                                                  .bottom /
+                                              1.8),
                                       controller: _passwordController,
                                       obscureText: _obscurePassword,
                                       onChanged: (password) {
                                         _validatePassword(password);
-                                        auth.registerUserErrorResponse=null;
+                                        auth.registerUserErrorResponse = null;
                                       },
                                       style: TextStyle(
                                           fontSize: 10.2.sp,
@@ -661,7 +694,12 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                           fontFamily: 'Inter'),
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.symmetric(
-                                            vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
+                                            vertical: OS.Platform.isIOS
+                                                ? 14.5.sp
+                                                : 10.0,
+                                            horizontal: OS.Platform.isIOS
+                                                ? 10.sp
+                                                : 16.0),
                                         hintText: 'Enter your password'.tr(),
                                         hintStyle: TextStyle(
                                             fontSize: 10.2.sp,
@@ -674,10 +712,15 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
                                               color: (_passwordController
-                                                          .text.isEmpty &&
-                                                      isValidating) || (( !_hasUppercase || !_hasLowercase || !_hasDigits  || !_hasSpecialCharacters
-                                                  ||
-                                                  !_hasMinLength) && _passwordController.text.isNotEmpty)
+                                                              .text.isEmpty &&
+                                                          isValidating) ||
+                                                      ((!_hasUppercase ||
+                                                              !_hasLowercase ||
+                                                              !_hasDigits ||
+                                                              !_hasSpecialCharacters ||
+                                                              !_hasMinLength) &&
+                                                          _passwordController
+                                                              .text.isNotEmpty)
                                                   ? AppColors.errorColor
                                                   : Colors.transparent,
                                             )),
@@ -685,14 +728,19 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color:
-                                              (_passwordController
-                                                  .text.isEmpty &&
-                                                  isValidating) || (( !_hasUppercase || !_hasLowercase || !_hasDigits  || !_hasSpecialCharacters
-                                                  ||
-                                                  !_hasMinLength) && _passwordController.text.isNotEmpty)
+                                              color: (_passwordController
+                                                              .text.isEmpty &&
+                                                          isValidating) ||
+                                                      ((!_hasUppercase ||
+                                                              !_hasLowercase ||
+                                                              !_hasDigits ||
+                                                              !_hasSpecialCharacters ||
+                                                              !_hasMinLength) &&
+                                                          _passwordController
+                                                              .text.isNotEmpty)
                                                   ? AppColors.errorColor
-                                                  : AppColors.focusTextFieldColor,
+                                                  : AppColors
+                                                      .focusTextFieldColor,
                                             )),
                                         // labelText: 'Enter your password',
                                         suffixIcon: IconButton(
@@ -716,7 +764,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                   Padding(
                                     padding: EdgeInsets.only(top: 7.sp),
                                     child: Text(
-                                      "*Password should not be empty",
+                                      "*Password should not be empty".tr(),
                                       style: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           fontSize: 10.sp,
@@ -812,7 +860,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                       ? Alignment.centerLeft
                                       : Alignment.centerRight,
                                   child: Text(
-                                    'Confirm Password'.tr(),
+                                    'Confirm password'.tr(),
                                     style: TextStyle(
                                         fontSize: 11.7.sp,
                                         fontFamily: 'Inter',
@@ -829,8 +877,8 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                   child: TextField(
                                       focusNode: confirmPasswordFocusNode,
                                       textInputAction: TextInputAction.done,
-                                      onChanged: (v){
-                                        auth.registerUserErrorResponse=null;
+                                      onChanged: (v) {
+                                        auth.registerUserErrorResponse = null;
                                       },
                                       onEditingComplete: () {
                                         FocusManager.instance.primaryFocus
@@ -851,7 +899,12 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                           fontFamily: 'Inter'),
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.symmetric(
-                                            vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
+                                            vertical: OS.Platform.isIOS
+                                                ? 14.5.sp
+                                                : 10.0,
+                                            horizontal: OS.Platform.isIOS
+                                                ? 10.sp
+                                                : 16.0),
                                         hintText: 'Enter your password'.tr(),
                                         hintStyle: TextStyle(
                                             fontSize: 10.2.sp,
@@ -864,12 +917,17 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
                                               color: (_confirmPasswordController
-                                                          .text.isEmpty &&
-                                                      isValidating ) ||  _confirmPasswordController
-                                                  .text.isNotEmpty &&
-                                                  _passwordController.text.isNotEmpty &&
-                                                  _confirmPasswordController.text !=
-                                                      _passwordController.text
+                                                              .text.isEmpty &&
+                                                          isValidating) ||
+                                                      _confirmPasswordController.text
+                                                              .isNotEmpty &&
+                                                          _passwordController
+                                                              .text
+                                                              .isNotEmpty &&
+                                                          _confirmPasswordController
+                                                                  .text !=
+                                                              _passwordController
+                                                                  .text
                                                   ? AppColors.errorColor
                                                   : Colors.transparent,
                                             )),
@@ -877,12 +935,17 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             borderSide: BorderSide(
-                                              color:
-                                              _confirmPasswordController
-                                                  .text.isNotEmpty &&
-                                                  _passwordController.text.isNotEmpty &&
-                                                  _confirmPasswordController.text !=
-                                                      _passwordController.text ? AppColors.errorColor : AppColors.focusTextFieldColor,
+                                              color: _confirmPasswordController
+                                                          .text.isNotEmpty &&
+                                                      _passwordController
+                                                          .text.isNotEmpty &&
+                                                      _confirmPasswordController
+                                                              .text !=
+                                                          _passwordController
+                                                              .text
+                                                  ? AppColors.errorColor
+                                                  : AppColors
+                                                      .focusTextFieldColor,
                                             )),
                                         suffixIcon: IconButton(
                                           icon: Icon(
@@ -905,7 +968,8 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                   Padding(
                                     padding: EdgeInsets.only(top: 7.sp),
                                     child: Text(
-                                      "*Confirm Password should not be empty",
+                                      "*Confirm Password should not be empty"
+                                          .tr(),
                                       style: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           fontSize: 10.sp,
@@ -920,7 +984,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                   Padding(
                                     padding: EdgeInsets.only(top: 7.sp),
                                     child: Text(
-                                      "*Password doesn't match",
+                                      "*Password doesn't match".tr(),
                                       style: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           fontSize: 10.sp,
@@ -943,9 +1007,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                             setState(() {
                                               isValidating = true;
                                             });
-                                            if (isButtonActive
-
-                                                ) {
+                                            if (isButtonActive) {
                                               final String password =
                                                   _passwordController.text;
                                               final bytes =
@@ -1004,12 +1066,13 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
               ],
             ),
           ),
-          if (_isLoading)  Positioned(
-              top: 12.h,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: LoaderBluredScreen())
+          if (_isLoading)
+            Positioned(
+                top: 12.h,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: LoaderBluredScreen())
         ],
       );
     });

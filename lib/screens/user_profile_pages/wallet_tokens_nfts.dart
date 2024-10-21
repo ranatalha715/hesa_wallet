@@ -1282,7 +1282,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                     vertical: 15.h,
                                                   ),
                                                   child: Text(
-                                                    "You have no Tokens",
+                                                    "You have no Tokens".tr(),
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                         color: themeNotifier.isDark
@@ -1414,7 +1414,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                         ),
                                         SizedBox(width: 5.sp,),
                                         Text(
-                                          'Address copied!',
+                                          'Address copied!'.tr(),
                                           style: TextStyle(
                                               fontSize: 9.sp,
                                               fontWeight: FontWeight.w600,

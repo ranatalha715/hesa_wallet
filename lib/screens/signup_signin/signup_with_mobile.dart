@@ -1937,9 +1937,9 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                           }
                                                         } else {}
                                                       },
-                                                      firstTitle: 'Confirm',
+                                                      firstTitle: 'Confirm'.tr(),
                                                       secondTitle:
-                                                          'Resend code ',
+                                                          'Resend code '.tr(),
                                                       context: context,
                                                       isDark:
                                                           themeNotifier.isDark,
@@ -2030,7 +2030,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 20),
                                       child: Text(
-                                        'Done',
+                                        'Done'.tr(),
                                         style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 11.5.sp,

@@ -320,7 +320,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                     Padding(
                                       padding: EdgeInsets.only(top: 7.sp),
                                       child: Text(
-                                        "*Mobile number should not be empty",
+                                        "*Mobile number should not be empty".tr(),
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 10.sp,
@@ -336,7 +336,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                     Padding(
                                       padding: EdgeInsets.only(top: 7.sp),
                                       child: Text(
-                                        "*Mobile Number should be minimum 9 Characters",
+                                        "*Mobile Number should be minimum 9 Characters".tr(),
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 10.sp,
@@ -348,11 +348,13 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                       isValidating &&
                                       auth.loginErrorResponse
                                           .toString()
-                                          .contains('mobile number'))
+                                          .contains('mobile number') && auth.loginErrorResponse
+                                      .toString()
+                                      .contains('رقم الجوال'))
                                     Padding(
                                       padding: EdgeInsets.only(top: 7.sp),
                                       child: Text(
-                                        "*${auth.loginErrorResponse}",
+                                        isEnglish ? "*${auth.loginErrorResponse}" : "رقم الجوال غير مسجل مسبق*",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 10.sp,
@@ -457,8 +459,8 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                                 print('Timer is still running');
                                               }
                                             },
-                                            firstTitle: 'Confirm',
-                                            secondTitle: 'Resend code ',
+                                            firstTitle: 'Confirm'.tr(),
+                                            secondTitle: 'Resend code '.tr(),
                                             context: context,
                                             isDark: themeNotifier.isDark,
                                             isFirstButtonActive:

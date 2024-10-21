@@ -365,7 +365,7 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                                             ),
                                                           ),
                                                           Text(
-                                                            "Welcome to KSA’s Web3 Gateway "
+                                                            "Welcome to KSA’s Web3 Gateway"
                                                                 .tr(),
                                                             textAlign: TextAlign.center,
                                                             style: TextStyle(

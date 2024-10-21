@@ -208,7 +208,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                 Padding(
                                   padding: EdgeInsets.only(top: 7.sp),
                                   child: Text(
-                                    "*Email Address or username should not be empty",
+                                    "*Email Address or username should not be empty".tr(),
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 10.sp,
@@ -226,7 +226,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                   child: Text(
                                     auth.loginErrorResponse ==
                                             "This username is unavailable"
-                                        ? "*Email Address or username not recognized"
+                                        ? "*Email Address or username not recognized".tr()
                                         : "",
                                     // "*${auth.loginErrorResponse}",
                                     style: TextStyle(
@@ -334,7 +334,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                 Padding(
                                   padding: EdgeInsets.only(bottom: 7.sp),
                                   child: Text(
-                                    "*Password should not be empty",
+                                    "*Password should not be empty".tr(),
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 10.sp,
@@ -352,7 +352,7 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                   child: Text(
                                     auth.loginErrorResponse ==
                                             "You have entered an invalid password"
-                                        ? "*Password incorrect"
+                                        ? "*Password incorrect".tr()
                                         : "",
                                     // "*${auth.loginErrorResponse}",
                                     style: TextStyle(

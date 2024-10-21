@@ -74,10 +74,8 @@ void otpDialog({
                       stream: events.stream, // Convert to broadcast stream
                       builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {
-                          // If the stream is waiting for data
                           return LoaderBluredScreen();
                         } else if (snapshot.hasError) {
-                          // If there's an error in the stream
                           return LoaderBluredScreen();
                         } else if (snapshot.hasData) {
                           int countdownValue = snapshot.data!;
@@ -221,7 +219,7 @@ void otpDialog({
                                                       AppColors.textColorWhite,
                                                   fontSize: 18.sp,
                                                   fontWeight: FontWeight.w700,
-                                                  fontFamily: 'Blogger Sans'
+                                                  fontFamily: 'Blogger Sans',
                                                   // letterSpacing: 16,
                                                   ),
                                               decoration: BoxDecoration(

@@ -101,8 +101,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
           });
           print('loading popup 2' + _isLoadingOtpDialoge.toString());
           if (result == AuthResult.success) {
-            Navigator.of(context).popAndPushNamed(
-                '/TermsAndConditions');
+            Navigator.of(context).popAndPushNamed('/TermsAndConditions');
           }
         } catch (error) {
           print("Error: $error");
@@ -141,8 +140,8 @@ class _VerifyEmailState extends State<VerifyEmail> {
           }
         } else {}
       },
-      firstTitle: 'Verify',
-      secondTitle: 'Resend code: ',
+      firstTitle: 'Verify'.tr(),
+      secondTitle: 'Resend code '.tr(),
       context: context,
       isDark: true,
       isFirstButtonActive: isOtpButtonActive,
@@ -200,8 +199,9 @@ class _VerifyEmailState extends State<VerifyEmail> {
       print('loading popup 2' + _isLoadingOtpDialoge.toString());
       if (result == AuthResult.success) {
         await Future.delayed(const Duration(milliseconds: 500));
-        Navigator.of(context)
-            .popAndPushNamed('/TermsAndConditions',);
+        Navigator.of(context).popAndPushNamed(
+          '/TermsAndConditions',
+        );
       }
     } catch (error) {
       print("Error: $error");
@@ -268,7 +268,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                           ? AppColors.backgroundColor
                           : AppColors.textColorWhite,
                       body: Column(children: [
-                        MainHeader(title: 'Verify Email'),
+                        MainHeader(title: 'Verify Email'.tr()),
                         Expanded(
                             child: Container(
                           child: SingleChildScrollView(
@@ -284,14 +284,18 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                     borderRadius: BorderRadius.circular(10.sp),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: AppColors.textColorBlack.withOpacity(0.45), // Dark shadow color
-                                        offset: Offset(0, 0), // No offset, shadow will appear equally on all sides
-                                        blurRadius: 10, // Adjust blur for softer shadow
-                                        spreadRadius: 0.4, // Spread the shadow slightly
+                                        color: AppColors.textColorBlack
+                                            .withOpacity(0.45),
+                                        // Dark shadow color
+                                        offset: Offset(0, 0),
+                                        // No offset, shadow will appear equally on all sides
+                                        blurRadius: 10,
+                                        // Adjust blur for softer shadow
+                                        spreadRadius:
+                                            0.4, // Spread the shadow slightly
                                       ),
                                     ],
                                   ),
-
                                   child: Column(
                                     children: [
                                       SizedBox(
@@ -329,7 +333,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 20),
                                         child: Text(
-                                          'To complete the registration please \nenter the code sent to your email.'
+                                          'To complete the registration please enter the code sent to your email.'
                                               .tr(),
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
@@ -343,7 +347,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                       SizedBox(height: 2.h),
 
                                       Text(
-                                        'Enter verification Code',
+                                        'Enter verification Code'.tr(),
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: 13.sp,
@@ -380,11 +384,18 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                               decoration: BoxDecoration(
                                                 border: fromAuth
                                                     ? Border.all(
-                                                        color: auth.otpErrorResponse && !auth.otpSuccessResponse
+                                                        color: auth.otpErrorResponse &&
+                                                                !auth
+                                                                    .otpSuccessResponse
                                                             ? AppColors
                                                                 .errorColor
-                                                            : auth.otpSuccessResponse && !auth.otpErrorResponse ?  AppColors.hexaGreen
-                                                    : Colors.transparent,
+                                                            : auth.otpSuccessResponse &&
+                                                                    !auth
+                                                                        .otpErrorResponse
+                                                                ? AppColors
+                                                                    .hexaGreen
+                                                                : Colors
+                                                                    .transparent,
                                                         width: 1.sp)
                                                     : Border.all(
                                                         color: user
@@ -453,7 +464,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 15.sp),
                                           child: DialogButton(
-                                            title: 'Confirm',
+                                            title: 'Confirm'.tr(),
                                             isactive:
                                                 otp6Controller.text.length == 6,
                                             handler: () async {
@@ -473,7 +484,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                         child: AppButton(
                                             title:
                                                 // snapshot.data != null && snapshot.data! > 0 ?
-                                                'Resend code: ' +
+                                                'Resend code '.tr() +
                                                     // "${snapshot.data.toString()}"
                                                     "${(snapshot.data! ~/ 60).toString().padLeft(2, '0')}:${(snapshot.data! % 60).toString().padLeft(2, '0')}"
                                             // :secondTitle
