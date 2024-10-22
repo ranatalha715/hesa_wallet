@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hesa_wallet/screens/unlock/set_confirm_pin_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -79,7 +80,7 @@ class _PinScreenState extends State<PinScreen> {
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Text(
-                'Enter New Pin',
+                'Enter New Pin'.tr(),
                 style: TextStyle(
                     fontSize: 13.sp,
                     color: isLastFieldFilled

@@ -37,7 +37,7 @@ class _ConnectDappState extends State<ConnectDapp> {
     'Username'.tr(),
     'Display icon'.tr(),
     'NFTs and Collections (owned/created)'.tr(),
-    'Wallet activity (specific to the App)'.tr(),
+    'Wallet activity'.tr(),
     'Email'.tr(),
   ];
 
@@ -217,7 +217,7 @@ class _ConnectDappState extends State<ConnectDapp> {
                                 height: 2.h,
                               ),
                               Text(
-                                "This App has requested to connect with your wallet. Always make sure you trust this site before connecting."
+                                "This App has requested to connect with your wallet. Always make sure you trust this app before connecting."
                                     .tr(),
                                 style: TextStyle(
                                     color: AppColors.textColorWhite,

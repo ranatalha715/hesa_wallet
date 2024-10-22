@@ -211,8 +211,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Alert!'),
-          content: Text('Disconnected Successfully'),
+          title: Text('Alert!'.tr()),
+          content: Text('Disconnected Successfully'.tr()),
           actions: <Widget>[
             TextButton(
               onPressed: () {

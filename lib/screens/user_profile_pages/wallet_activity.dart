@@ -199,7 +199,7 @@ class _WalletActivityState extends State<WalletActivity> {
                         ? Padding(
                             padding: EdgeInsets.only(top: 20.h),
                             child: Text(
-                              "No activities found under this wallet ID.",
+                              "No activities found under this wallet ID.".tr(),
                               style: TextStyle(
                                   color: themeNotifier.isDark
                                       ? AppColors.textColorGreyShade2
@@ -243,8 +243,8 @@ class _WalletActivityState extends State<WalletActivity> {
                                     if (activity['type'] == 'site_connection') {
                                       // Custom container for the site connection
                                       return WalletActivityWidget(
-                                        title: "Site Connected",
-                                        subTitle: "Connect Success",
+                                        title: "Site Connected".tr(),
+                                        subTitle: "Connect Success".tr(),
                                         image:
                                             'https://images.pexels.com/photos/14354112/pexels-photo-14354112.jpeg?auto=compress&cs=tinysrgb&w=800',
                                         bytes: bytes,
@@ -261,8 +261,8 @@ class _WalletActivityState extends State<WalletActivity> {
                                         'site_disconnection') {
                                       // Custom widget for site disconnection
                                       return WalletActivityWidget(
-                                        title: "Site Disconnected",
-                                        subTitle: "Disconnect Success",
+                                        title: "Site Disconnected".tr(),
+                                        subTitle: "Disconnect Success".tr(),
                                         image:
                                             'https://images.pexels.com/photos/14354112/pexels-photo-14354112.jpeg?auto=compress&cs=tinysrgb&w=800',
                                         bytes: bytes,

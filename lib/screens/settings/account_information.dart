@@ -255,7 +255,7 @@ class _AccountInformationState extends State<AccountInformation> {
                                                     });
                                                   },
                                                   child: Text(
-                                                    'Cancel',
+                                                    'Cancel'.tr(),
                                                     style: TextStyle(
                                                       fontSize: 12,
                                                       fontWeight:
@@ -359,7 +359,7 @@ class _AccountInformationState extends State<AccountInformation> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 7.sp),
                                         child: Text(
-                                          "*Enter first name",
+                                          "*Enter first name".tr(),
                                           style: TextStyle(
                                               fontSize: 10.sp,
                                               fontWeight: FontWeight.w400,
@@ -448,7 +448,7 @@ class _AccountInformationState extends State<AccountInformation> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 7.sp),
                                         child: Text(
-                                          "*Enter last name",
+                                          "*Enter last name".tr(),
                                           style: TextStyle(
                                               fontSize: 10.sp,
                                               fontWeight: FontWeight.w400,
@@ -545,7 +545,7 @@ class _AccountInformationState extends State<AccountInformation> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 7.sp),
                                         child: Text(
-                                          "*Enter username",
+                                          "*Enter username".tr(),
                                           style: TextStyle(
                                               fontSize: 10.sp,
                                               fontWeight: FontWeight.w400,
@@ -633,7 +633,7 @@ class _AccountInformationState extends State<AccountInformation> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 7.sp),
                                         child: Text(
-                                          "*Enter Email",
+                                          "*Enter Email".tr(),
                                           style: TextStyle(
                                               fontSize: 10.sp,
                                               fontWeight: FontWeight.w400,
@@ -742,7 +742,7 @@ class _AccountInformationState extends State<AccountInformation> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 7.sp),
                                         child: Text(
-                                          "*Enter number",
+                                          "*Enter number".tr(),
                                           style: TextStyle(
                                               fontSize: 10.sp,
                                               fontWeight: FontWeight.w400,
@@ -832,7 +832,7 @@ class _AccountInformationState extends State<AccountInformation> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 7.sp),
                                         child: Text(
-                                          "*Enter Nationality",
+                                          "*Enter Nationality".tr(),
                                           style: TextStyle(
                                               fontSize: 10.sp,
                                               fontWeight: FontWeight.w400,
@@ -924,7 +924,7 @@ class _AccountInformationState extends State<AccountInformation> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 7.sp),
                                         child: Text(
-                                          "*Enter Identification Number",
+                                          "*Enter Identification Number".tr(),
                                           style: TextStyle(
                                               fontSize: 10.sp,
                                               fontWeight: FontWeight.w400,
@@ -1097,9 +1097,9 @@ class _AccountInformationState extends State<AccountInformation> {
                                                             }
                                                           } else {}
                                                         },
-                                                        firstTitle: 'Confirm',
+                                                        firstTitle: 'Confirm'.tr(),
                                                         secondTitle:
-                                                            'Resend code ',
+                                                            'Resend code '.tr(),
 
                                                         context: context,
                                                         isDark: themeNotifier
@@ -1190,7 +1190,7 @@ class _AccountInformationState extends State<AccountInformation> {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 20),
                                       child: Text(
-                                        'Done',
+                                        'Done'.tr(),
                                         style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 11.5.sp,

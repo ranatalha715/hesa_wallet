@@ -186,7 +186,7 @@ class _ConnectedSitesState extends State<ConnectedSites> {
                   Padding(
                     padding: EdgeInsets.only(top: 20.h),
                     child: Text(
-                      "You are not connected to any apps.",
+                      "You are not connected to any apps.".tr(),
                       style: TextStyle(
                           color: themeNotifier.isDark
                               ? AppColors.textColorGreyShade2
@@ -277,8 +277,7 @@ class _ConnectedSitesState extends State<ConnectedSites> {
                                                     ),
                                                     SizedBox(height: 2.5.h),
                                                     Text(
-                                                      'Are you sure you want to disconnect from this App?'
-                                                          .tr(),
+                                                      'Are you sure you want to disconnect from this App?'.tr(),
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
@@ -1210,7 +1209,7 @@ class _ConnectedSitesState extends State<ConnectedSites> {
                                   fontWeight: FontWeight.w600),
                             ),
                             Text(
-                              'Your wallet is no longer connected.',
+                              'Your wallet is no longer connected.'.tr(),
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/wallet_tokens_nfts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -69,8 +70,7 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Text(
-
-                'Confirm Pin',
+                'Confirm Pin'.tr(),
                 style: TextStyle(
                     fontSize: 13.sp,
                     color: isFirstFieldFilled

@@ -72,6 +72,7 @@ class _ResetEmailState extends State<ResetEmail> {
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context, listen: false);
     Locale currentLocale = context.locale;
+    bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return Stack(
         children: [
@@ -210,7 +211,7 @@ class _ResetEmailState extends State<ResetEmail> {
                                   Padding(
                                     padding: EdgeInsets.only(top: 7.sp),
                                     child: Text(
-                                      "*${user.emailErrorResponse}",
+                                      isEnglish ? "*${user.emailErrorResponse}": "لم يتم التعرف على الايميل المدخل*",
                                       style: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           fontSize: 10.sp,

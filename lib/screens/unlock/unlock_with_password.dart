@@ -222,7 +222,7 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              "*Password should not be empty",
+                              "*Password should not be empty".tr(),
                               /* textAlign :TextAlign.left,*/
                               style: TextStyle(
                                   fontSize: 10.sp,
@@ -242,7 +242,7 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              "*${auth.loginErrorResponse}",
+                             isEnglish ? "*${auth.loginErrorResponse}" : "*كلمة المرور غير صحيحة",
                               style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 10.sp,

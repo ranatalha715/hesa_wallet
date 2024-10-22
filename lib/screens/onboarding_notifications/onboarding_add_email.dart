@@ -170,7 +170,7 @@ class _OnboardingAddEmailState extends State<OnboardingAddEmail> {
                                   padding: EdgeInsets.only(top: 7.sp),
                                   child: Text(
                                     // "*Please enter a valid email address".tr(),
-                                    "*Email address should not be empty",
+                                    "*Email address should not be empty".tr(),
                                     style: TextStyle(
                                         fontSize: 10.sp,
                                         fontWeight: FontWeight.w400,

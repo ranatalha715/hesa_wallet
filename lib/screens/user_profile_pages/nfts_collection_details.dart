@@ -127,7 +127,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                       children: [
                         MainHeader(
                           title:  isLoading
-                              ? 'Collection Name'
+                              ? 'Collection Name'.tr()
                               : assetsDetails.tokenName,
                           subTitle:  isLoading
                               ? '.......'

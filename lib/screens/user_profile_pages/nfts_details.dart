@@ -133,7 +133,7 @@ class _NftsDetailsState extends State<NftsDetails> {
               body: Column(
                 children: [
                   MainHeader(
-                    title: isLoading ? 'NFT Name' : assetsDetails.tokenName,
+                    title: isLoading ? 'NFT Name'.tr() : assetsDetails.tokenName,
                     subTitle: isLoading
                         ? '.......'
                         : replaceMiddleWithDotsCollectionId(

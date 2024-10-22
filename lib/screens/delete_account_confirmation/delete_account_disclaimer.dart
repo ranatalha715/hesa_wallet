@@ -190,7 +190,7 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
                                 height: 2.h,
                               ),
                               Text(
-                                "Deleting your wallet means your wallet will remain inactive and become disabled. Transactions pending on other Dapps will not be able to send requests to your wallet anymore. "
+                                "Deleting your wallet means your wallet will remain inactive and become disabled. Transactions pending on other Dapps will not be able to send requests to your wallet anymore."
                                     .tr(),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -271,8 +271,7 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
                                               children: [
                                                 TextSpan(
                                                     text:
-                                                        'I agree to permanently deleting my account in accordance to Hesa Wallet’s '
-                                                            .tr(),
+                                                        'I agree to permanently deleting my account in accordance to Hesa Wallet’s'.tr(),
                                                     style: TextStyle(
                                                         color: AppColors
                                                             .textColorWhite,
@@ -284,7 +283,7 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
                                                     recognizer:
                                                         TapGestureRecognizer()
                                                           ..onTap = () {},
-                                                    text: 'Terms & Conditions'
+                                                    text: ' Terms & Conditions'
                                                         .tr(),
                                                     style: TextStyle(
                                                         height: 1.4,
@@ -421,8 +420,8 @@ class _DeleteAccountDisclaimerState extends State<DeleteAccountDisclaimer> {
                                             }
                                           } else {}
                                         },
-                                        firstTitle: 'Verify',
-                                        secondTitle: 'Resend code ',
+                                        firstTitle: 'Verify'.tr(),
+                                        secondTitle: 'Resend code '.tr(),
 
                                         context: context,
                                         isDark: themeNotifier.isDark,
