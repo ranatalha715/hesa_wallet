@@ -189,6 +189,7 @@ class _NftsDetailsState extends State<NftsDetails> {
                                   title: 'Created:'.tr(),
                                   details: formatDate(assetsDetails.createdAt),
                                   isDark: themeNotifier.isDark ? true : false,
+                                  isEnglish: isEnglish
                                 ),
                                 // // nftsDetailsWidget(
                                 // //   title: 'Status:'.tr(),
@@ -204,6 +205,7 @@ class _NftsDetailsState extends State<NftsDetails> {
                                         assetsDetails.tokenId),
                                     // replaceMiddleWithDotsCollectionId(args["tokenId"]),
                                     isDark: themeNotifier.isDark ? true : false,
+                                    isEnglish: isEnglish,
                                     color: AppColors.textColorToska),
                                 if (assetsDetails.collectionId != "" &&
                                     assetsDetails.collectionId != null)
@@ -216,12 +218,14 @@ class _NftsDetailsState extends State<NftsDetails> {
                                     details: replaceMiddleWithDotsCollectionId(
                                         assetsDetails.collectionId),
                                     isDark: themeNotifier.isDark ? true : false,
+                                    isEnglish: isEnglish,
                                   ),
                                 if (assetsDetails.numberOfEdtions != null)
                                   nftsDetailsWidget(
                                     title: 'Editions:'.tr(),
                                     details: assetsDetails.numberOfEdtions,
                                     isDark: themeNotifier.isDark ? true : false,
+                                    isEnglish: isEnglish,
                                   ),
                                 if (assetsDetails.creatorName != null)
                                   nftsDetailsWidget(
@@ -233,6 +237,7 @@ class _NftsDetailsState extends State<NftsDetails> {
                                             assetsDetails.creatorName) ??
                                         "N/A",
                                     isDark: themeNotifier.isDark ? true : false,
+                                    isEnglish: isEnglish,
                                     color: AppColors.textColorToska,
                                   ),
                                 if (assetsDetails.creatorRoyalty != "null")
@@ -240,6 +245,7 @@ class _NftsDetailsState extends State<NftsDetails> {
                                     title: 'Creator royalty:'.tr(),
                                     details: assetsDetails.creatorRoyalty + '%',
                                     isDark: themeNotifier.isDark ? true : false,
+                                    isEnglish: isEnglish,
                                   ),
                                 if (assetsDetails.ownerName != "null")
                                   nftsDetailsWidget(
@@ -251,6 +257,7 @@ class _NftsDetailsState extends State<NftsDetails> {
                                     // replaceMiddleWithDots(args["ownerId"]) ?? "N/A",
                                     isDark: themeNotifier.isDark ? true : false,
                                     color: AppColors.textColorToska,
+                                    isEnglish: isEnglish,
                                   ),
                                 // // if (args["nftIds"] != "null")
                                 // //   nftsDetailsWidget(
@@ -263,34 +270,40 @@ class _NftsDetailsState extends State<NftsDetails> {
                                     title: 'Token Status:'.tr(),
                                     details: assetsDetails.status,
                                     isDark: themeNotifier.isDark ? true : false,
+                                    isEnglish: isEnglish,
                                   ),
                                 if (assetsDetails.listingType != "null")
                                   nftsDetailsWidget(
                                     title: 'Listing Type:'.tr(),
                                     details: assetsDetails.listingType,
                                     isDark: themeNotifier.isDark ? true : false,
+                                    isEnglish: isEnglish,
                                   ),
                                 if (assetsDetails.collectionName != "null")
                                   nftsDetailsWidget(
                                     title: 'Collection Name:'.tr(),
                                     details: assetsDetails.collectionName,
                                     isDark: themeNotifier.isDark ? true : false,
+                                    isEnglish: isEnglish,
                                   ),
                                 if (assetsDetails.isListable != "null")
                                   nftsDetailsWidget(
                                     title: 'Is Listable:'.tr(),
                                     details: assetsDetails.isListable,
                                     isDark: themeNotifier.isDark ? true : false,
+                                    isEnglish: isEnglish,
                                   ),
                                 nftsDetailsWidget(
                                   title: 'Token Standard:'.tr(),
                                   details: assetsDetails.standard,
                                   isDark: themeNotifier.isDark ? true : false,
+                                  isEnglish: isEnglish,
                                 ),
                                 nftsDetailsWidget(
                                   title: 'Chain:'.tr(),
                                   details: assetsDetails.chain,
                                   isDark: themeNotifier.isDark ? true : false,
+                                  isEnglish: isEnglish,
                                 ),
                                 if (assetsDetails.burnable != "null")
                                   nftsDetailsWidget(
@@ -299,6 +312,7 @@ class _NftsDetailsState extends State<NftsDetails> {
                                         ? "On"
                                         : "Off",
                                     isDark: themeNotifier.isDark ? true : false,
+                                    isEnglish: isEnglish,
                                   ),
                                 SizedBox(height: 2.h,),
                               ],
@@ -325,6 +339,7 @@ class _NftsDetailsState extends State<NftsDetails> {
       required String details,
       Color? color,
       bool isDark = true,
+      bool isEnglish = true,
       Function? func}) {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.sp, left: 20.sp, right: 20.sp),
@@ -332,7 +347,6 @@ class _NftsDetailsState extends State<NftsDetails> {
         children: [
           Container(
             width: 38.w,
-            // color: Colors.red,
             child: Text(
               title,
               style: TextStyle(
@@ -348,9 +362,8 @@ class _NftsDetailsState extends State<NftsDetails> {
             onTap: () => func!(),
             child: Container(
               width: 45.w,
-              // color: Colors.yellow,
               child: Align(
-                alignment: Alignment.centerRight,
+                alignment: isEnglish ? Alignment.centerRight:Alignment.centerLeft,
                 child: Text(
                   details,
                   textAlign: TextAlign.right,

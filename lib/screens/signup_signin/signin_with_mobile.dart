@@ -69,10 +69,11 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
   bool isKeyboardVisible = false;
   bool _isTimerActive = false;
   var _isLoadingResend = false;
+
   // late StreamController<int> _events;
   late StreamController<int> _events;
-  // final events = yourStream.asBroadcastStream();
 
+  // final events = yourStream.asBroadcastStream();
 
   var tokenizedUserPL;
 
@@ -86,7 +87,8 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
     super.initState();
     getTokenizedUserPayLoad();
     // _events = new StreamController<int>();
-    _events = StreamController<int>.broadcast();  // Make it a broadcast controller
+    _events =
+    StreamController<int>.broadcast(); // Make it a broadcast controller
 
     _events.add(60);
     _numberController.addListener(_updateButtonState);
@@ -157,7 +159,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => WalletTokensNfts()),
-      (Route<dynamic> route) => false,
+          (Route<dynamic> route) => false,
     );
   }
 
@@ -229,19 +231,20 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                   TextFieldParent(
                                     child: TextFormField(
                                         controller: _numberController,
+                                        textAlign: TextAlign.left,
                                         onChanged: (v) {
                                           auth.loginErrorResponse = null;
                                         },
-
                                         inputFormatters: [
                                           LengthLimitingTextInputFormatter(10),
                                           FilteringTextInputFormatter
                                               .digitsOnly,
                                         ],
                                         scrollPadding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                    .viewInsets
-                                                    .bottom +
+                                            bottom: MediaQuery
+                                                .of(context)
+                                                .viewInsets
+                                                .bottom +
                                                 150),
                                         keyboardType: TextInputType.number,
                                         style: TextStyle(
@@ -260,7 +263,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                                   ? 10.sp
                                                   : 16.0),
                                           hintText:
-                                              'Enter your mobile number'.tr(),
+                                          'Enter your mobile number'.tr(),
                                           hintStyle: TextStyle(
                                               fontSize: 10.2.sp,
                                               color: AppColors.textColorGrey,
@@ -268,50 +271,78 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                               fontFamily: 'Inter'),
                                           enabledBorder: OutlineInputBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(8.0),
+                                              BorderRadius.circular(8.0),
                                               borderSide: BorderSide(
                                                 color: (isValidating &&
-                                                            _numberController
-                                                                .text
-                                                                .isEmpty) ||
-                                                        (_numberController.text
-                                                                    .length <
-                                                                9
-                                                            &&
-                                                            _numberController
-                                                                .text
-                                                                .isNotEmpty
-                                                            // &&
-                                                            // isValidating
-                                                        ) ||
-                                                        auth.loginErrorResponse
-                                                            .toString()
-                                                            .contains(
-                                                                'mobile number')
+                                                    _numberController
+                                                        .text
+                                                        .isEmpty) ||
+                                                    (_numberController.text
+                                                        .length <
+                                                        9 &&
+                                                        _numberController
+                                                            .text.isNotEmpty
+                                                        // &&
+                                                        // isValidating
+                                                    ) ||
+                                                    auth.loginErrorResponse
+                                                        .toString()
+                                                        .contains(
+                                                        'mobile number')
                                                     ? AppColors.errorColor
                                                     : Colors.transparent,
                                               )),
                                           focusedBorder: OutlineInputBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(8.0),
+                                              BorderRadius.circular(8.0),
                                               borderSide: BorderSide(
                                                 color: AppColors
                                                     .focusTextFieldColor,
                                               )),
-                                          prefixIcon: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10, top: 14, right: 12),
+                                          prefixIcon: isEnglish
+                                              ? Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 10,
+                                                top: 14,
+                                                right: 12),
                                             child: Text(
                                               '+966',
                                               style: TextStyle(
-                                                color: themeNotifier.isDark
-                                                    ? AppColors.textColorWhite
-                                                    : AppColors.textColorBlack,
-                                                fontWeight: FontWeight.w400,
+                                                color: themeNotifier
+                                                    .isDark
+                                                    ? AppColors
+                                                    .textColorWhite
+                                                    : AppColors
+                                                    .textColorBlack,
+                                                fontWeight:
+                                                FontWeight.w400,
                                                 fontSize: 14,
                                               ),
                                             ),
-                                          ),
+                                          )
+                                              : null,
+                                          suffixIcon: !isEnglish
+                                              ? Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 10,
+                                                top: 14,
+                                                right: 12),
+                                            child: Text(
+                                              '+966',
+                                              style: TextStyle(
+                                                color: themeNotifier
+                                                    .isDark
+                                                    ? AppColors
+                                                    .textColorWhite
+                                                    : AppColors
+                                                    .textColorBlack,
+                                                fontWeight:
+                                                FontWeight.w400,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          )
+                                              : null,
                                         ),
                                         cursorColor: AppColors.textColorGrey),
                                   ),
@@ -320,23 +351,24 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                     Padding(
                                       padding: EdgeInsets.only(top: 7.sp),
                                       child: Text(
-                                        "*Mobile number should not be empty".tr(),
+                                        "*Mobile number should not be empty"
+                                            .tr(),
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 10.sp,
                                             color: AppColors.errorColor),
                                       ),
                                     ),
-                                  if (
-                                      _numberController.text.length < 9 &&
+                                  if (_numberController.text.length < 9 &&
                                       _numberController.text.isNotEmpty
-                                          // &&
-                                          // showNumError
+                                  // &&
+                                  // showNumError
                                   )
                                     Padding(
                                       padding: EdgeInsets.only(top: 7.sp),
                                       child: Text(
-                                        "*Mobile Number should be minimum 9 Characters".tr(),
+                                        "*Mobile Number should be minimum 9 Characters"
+                                            .tr(),
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 10.sp,
@@ -348,13 +380,16 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                       isValidating &&
                                       auth.loginErrorResponse
                                           .toString()
-                                          .contains('mobile number') && auth.loginErrorResponse
-                                      .toString()
-                                      .contains('رقم الجوال'))
+                                          .contains('mobile number') &&
+                                      auth.loginErrorResponse
+                                          .toString()
+                                          .contains('رقم الجوال'))
                                     Padding(
                                       padding: EdgeInsets.only(top: 7.sp),
                                       child: Text(
-                                        isEnglish ? "*${auth.loginErrorResponse}" : "رقم الجوال غير مسجل مسبق*",
+                                        isEnglish
+                                            ? "*${auth.loginErrorResponse}"
+                                            : "رقم الجوال غير مسجل مسبق*",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 10.sp,
@@ -378,10 +413,10 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                           }
                                         });
                                         final result =
-                                            await Provider.of<AuthProvider>(
-                                                    context,
-                                                    listen: false)
-                                                .sendLoginOTP(
+                                        await Provider.of<AuthProvider>(
+                                            context,
+                                            listen: false)
+                                            .sendLoginOTP(
                                           mobile: _numberController.text,
                                           context: context,
                                         );
@@ -402,16 +437,17 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                                   const Duration(
                                                       milliseconds: 500));
                                               final loginWithMobile =
-                                                  await Provider.of<
-                                                              AuthProvider>(
-                                                          context,
-                                                          listen: false)
-                                                      .logInWithMobile(
+                                              await Provider.of<
+                                                  AuthProvider>(
+                                                  context,
+                                                  listen: false)
+                                                  .logInWithMobile(
                                                 mobile: _numberController.text,
                                                 context: context,
-                                                code: Provider.of<AuthProvider>(
-                                                        context,
-                                                        listen: false)
+                                                code: Provider
+                                                    .of<AuthProvider>(
+                                                    context,
+                                                    listen: false)
                                                     .codeFromOtpBoxes,
                                               );
                                               setState(() {
@@ -433,14 +469,14 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                                     _isLoadingResend = true;
                                                   });
                                                   final result = await Provider
-                                                          .of<AuthProvider>(
-                                                              context,
-                                                              listen: false)
+                                                      .of<AuthProvider>(
+                                                      context,
+                                                      listen: false)
                                                       .sendLoginOTP(
-                                                          mobile:
-                                                              _numberController
-                                                                  .text,
-                                                          context: context);
+                                                      mobile:
+                                                      _numberController
+                                                          .text,
+                                                      context: context);
                                                   setState(() {
                                                     _isLoadingResend = false;
                                                   });
@@ -464,7 +500,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                             context: context,
                                             isDark: themeNotifier.isDark,
                                             isFirstButtonActive:
-                                                isOtpButtonActive,
+                                            isOtpButtonActive,
                                             isSecondButtonActive: false,
                                             otp1Controller: otp1Controller,
                                             otp2Controller: otp2Controller,
@@ -473,29 +509,29 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                             otp5Controller: otp5Controller,
                                             otp6Controller: otp6Controller,
                                             firstFieldFocusNode:
-                                                firstFieldFocusNode,
+                                            firstFieldFocusNode,
                                             secondFieldFocusNode:
-                                                secondFieldFocusNode,
+                                            secondFieldFocusNode,
                                             thirdFieldFocusNode:
-                                                thirdFieldFocusNode,
+                                            thirdFieldFocusNode,
                                             forthFieldFocusNode:
-                                                forthFieldFocusNode,
+                                            forthFieldFocusNode,
                                             fifthFieldFocusNode:
-                                                fifthFieldFocusNode,
+                                            fifthFieldFocusNode,
                                             sixthFieldFocusNode:
-                                                sixthFieldFocusNode,
+                                            sixthFieldFocusNode,
                                             firstBtnBgColor:
-                                                AppColors.activeButtonColor,
+                                            AppColors.activeButtonColor,
                                             firstBtnTextColor:
-                                                AppColors.textColorBlack,
+                                            AppColors.textColorBlack,
                                             secondBtnBgColor:
-                                                Colors.transparent,
+                                            Colors.transparent,
                                             secondBtnTextColor: _timeLeft != 0
                                                 ? AppColors.textColorBlack
-                                                    .withOpacity(0.8)
+                                                .withOpacity(0.8)
                                                 : AppColors.textColorWhite,
                                             isLoading:
-                                                _isLoadingResend || _isLoading,
+                                            _isLoadingResend || _isLoading,
                                           );
                                         }
                                       }
@@ -507,9 +543,12 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                   ),
                                   SizedBox(height: 2.h),
                                   GestureDetector(
-                                    onTap: () => Navigator.pushReplacementNamed(
-                                        context, '/SigninWithEmail',
-                                        arguments: {'comingFromWallet': true}),
+                                    onTap: () =>
+                                        Navigator.pushReplacementNamed(
+                                            context, '/SigninWithEmail',
+                                            arguments: {
+                                              'comingFromWallet': true
+                                            }),
                                     child: Container(
                                       width: double.infinity,
                                       height: 4.h,
@@ -532,9 +571,9 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                   ),
                                   SizedBox(
                                     height:
-                                        OS.Platform.isIOS && !isKeyboardVisible
-                                            ? 5.h
-                                            : 2.h,
+                                    OS.Platform.isIOS && !isKeyboardVisible
+                                        ? 5.h
+                                        : 2.h,
                                   )
                                 ],
                               ),
@@ -550,7 +589,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                       left: 0,
                       right: 0,
                       child:
-                          KeyboardVisibilityBuilder(builder: (context, child) {
+                      KeyboardVisibilityBuilder(builder: (context, child) {
                         return Visibility(
                             visible: isKeyboardVisible,
                             child: GestureDetector(
@@ -567,9 +606,9 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                         child: Text(
                                           'Done',
                                           style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 11.5.sp,
-                                                  fontWeight: FontWeight.bold)
+                                              color: Colors.white,
+                                              fontSize: 11.5.sp,
+                                              fontWeight: FontWeight.bold)
                                               .apply(fontWeightDelta: -1),
                                         ),
                                       ))),

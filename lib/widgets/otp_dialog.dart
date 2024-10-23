@@ -210,8 +210,10 @@ void otpDialog({
                                         Pinput(
                                             // smsRetriever: ,
                                             controller: otp6Controller,
+
                                             length: 6,
                                             defaultPinTheme: PinTheme(
+
                                               width: 9.8.w,
                                               height: 8.h,
                                               textStyle: TextStyle(
@@ -220,7 +222,6 @@ void otpDialog({
                                                   fontSize: 18.sp,
                                                   fontWeight: FontWeight.w700,
                                                   fontFamily: 'Blogger Sans',
-                                                  // letterSpacing: 16,
                                                   ),
                                               decoration: BoxDecoration(
                                                 border: fromAuth &&

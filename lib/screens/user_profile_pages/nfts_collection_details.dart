@@ -62,7 +62,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
 
   String formatDate(String dateString) {
     final DateTime dateTime = DateTime.parse(dateString);
-    final DateFormat formatter = DateFormat('MMM dd, yyyy HH:mm:ss');
+    final DateFormat formatter = DateFormat('MMM dd, yyyy');
     return formatter.format(dateTime);
   }
 
@@ -184,6 +184,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                                             formatDate(assetsDetails.createdAt),
                                         isDark:
                                             themeNotifier.isDark ? true : false,
+                                          isEnglish: isEnglish,
                                       ),
                                       nftsDetailsWidget(
                                         title: 'Collection ID:'.tr(),
@@ -196,6 +197,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                                         isDark:
                                             themeNotifier.isDark ? true : false,
                                         color: AppColors.textColorToska,
+                                        isEnglish: isEnglish,
                                       ),
                                       if (assetsDetails.creatorName != null)
                                         nftsDetailsWidget(
@@ -210,6 +212,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                                               ? true
                                               : false,
                                           color: AppColors.textColorToska,
+                                          isEnglish: isEnglish,
                                         ),
                                       if (assetsDetails.creatorRoyalty !=
                                           "null")
@@ -222,6 +225,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                                           isDark: themeNotifier.isDark
                                               ? true
                                               : false,
+                                          isEnglish: isEnglish,
                                         ),
                                       if (assetsDetails.ownerName != "null")
                                         nftsDetailsWidget(
@@ -236,11 +240,12 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                                               ? true
                                               : false,
                                           color: AppColors.textColorToska,
+                                          isEnglish: isEnglish,
                                         ),
                                       if (assetsDetails.collectionItems !=
                                           "null")
                                         nftsDetailsWidget(
-                                          title: 'collection Items:'.tr(),
+                                          title: 'Collection Items:'.tr(),
                                           details: replaceMiddleWithDots(
                                                   assetsDetails
                                                       .collectionItems) ??
@@ -248,12 +253,14 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                                           isDark: themeNotifier.isDark
                                               ? true
                                               : false,
+                                          isEnglish: isEnglish,
                                         ),
                                       nftsDetailsWidget(
                                         title: 'Collection Status:'.tr(),
                                         details: assetsDetails.status,
                                         isDark:
                                             themeNotifier.isDark ? true : false,
+                                        isEnglish: isEnglish,
                                       ),
                                       if (assetsDetails.listingType != "null")
                                         nftsDetailsWidget(
@@ -262,6 +269,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                                           isDark: themeNotifier.isDark
                                               ? true
                                               : false,
+                                          isEnglish: isEnglish,
                                         ),
                                       // if(args["nftIds"] != null)
                                       //   nftsDetailsWidget(
@@ -276,6 +284,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                                           isDark: themeNotifier.isDark
                                               ? true
                                               : false,
+                                          isEnglish: isEnglish,
                                         ),
                                       if (assetsDetails.chain != "null")
                                         nftsDetailsWidget(
@@ -284,6 +293,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                                           isDark: themeNotifier.isDark
                                               ? true
                                               : false,
+                                          isEnglish: isEnglish,
                                         ),
                                       if (assetsDetails.burnable != "null")
                                         nftsDetailsWidget(
@@ -295,6 +305,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                                           isDark: themeNotifier.isDark
                                               ? true
                                               : false,
+                                          isEnglish: isEnglish,
                                         ),
                                       SizedBox(height: 2.h,),
                                     ],
@@ -319,6 +330,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
     required String details,
     Color? color,
     bool isDark = true,
+    bool isEnglish = true,
     Function? func,
   }) {
     return Padding(
@@ -345,7 +357,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
               width: 45.w,
               // color: Colors.yellow,
               child: Align(
-                alignment: Alignment.centerRight,
+                alignment: isEnglish ? Alignment.centerRight:Alignment.centerLeft,
                 child: Text(
                   details,
                   textAlign: TextAlign.right,
