@@ -507,7 +507,7 @@ class _WalletBankingAndPaymentEmptyState
       }
       for (var bank in banks) {
         if (bank.isPrimary == "true") {
-          bankpro.selectedBankName = bank.bankName!;
+          bankpro.selectedBankName = isEnglish ? bank.bankName!:bank.bankNameAr!;
           break;
         }
       }
@@ -933,14 +933,19 @@ class _WalletBankingAndPaymentEmptyState
                                                     horizontal: 6.0),
                                             child: banks.isNotEmpty
                                                 ?   Text(
-                                                    " **** " +
+                                                    isEnglish ? " **** " +
                                                         bankpro.selectedBank
                                                             .substring(
                                                           bankpro.selectedBank
                                                                   .length -
                                                               4,
-                                                        ),
-                                                    // 'Banking Details'.tr(),
+                                                        ) :
+                                                        bankpro.selectedBank
+                                                            .substring(
+                                                          bankpro.selectedBank
+                                                              .length -
+                                                              4,
+                                                        ) + " **** " ,
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.w500,
@@ -1041,7 +1046,7 @@ class _WalletBankingAndPaymentEmptyState
                                             print(bankpro.selectedBankName);
                                             return bankingDetailsWidget(
                                               accountNumber:
-                                                  "**** " + lastFourDigits,
+                                                 isEnglish ? "**** " + lastFourDigits : lastFourDigits   + " ****",
                                               fullAccountNumber:
                                                   banks[index].ibanNumber,
                                               isLast: isLast,
@@ -1121,7 +1126,7 @@ class _WalletBankingAndPaymentEmptyState
                                                   ? true
                                                   : false,
                                               selectedBankName:
-                                                  banks[index].bankName!,
+                                                 isEnglish ? banks[index].bankName! : banks[index].bankNameAr!,
                                               selectedBic: banks[index].bic!,
                                               selectedAccTitle:
                                                   banks[index].accountTitle ??
@@ -1185,7 +1190,7 @@ class _WalletBankingAndPaymentEmptyState
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (english)
+                // if (english)
                   cardBrand == 'VISA'
                       ? Image.asset(
                           "assets/images/Visa.png",
@@ -1210,19 +1215,19 @@ class _WalletBankingAndPaymentEmptyState
                             ),
                           ),
                         ),
-                if (!english)
-                  GestureDetector(
-                    onTap: () => showPopupCardRemove(
-                        isDark, cardNum, regNum, cardBrand, last4Digits),
-                    child: Image.asset(
-                      "assets/images/cancel.png",
-                      height: 16.sp,
-                      color: isDark
-                          ? AppColors.textColorWhite
-                          : AppColors.textColorBlack,
-                    ),
-                  ),
-                if (!english) Spacer(),
+                // if (!english)
+                //   GestureDetector(
+                //     onTap: () => showPopupCardRemove(
+                //         isDark, cardNum, regNum, cardBrand, last4Digits),
+                //     child: Image.asset(
+                //       "assets/images/cancel.png",
+                //       height: 16.sp,
+                //       color: isDark
+                //           ? AppColors.textColorWhite
+                //           : AppColors.textColorBlack,
+                //     ),
+                //   ),
+                // if (!english) Spacer(),
                 // SizedBox(
                 //   width: 0.5.h,
                 // ),
@@ -1242,39 +1247,40 @@ class _WalletBankingAndPaymentEmptyState
                         : AppColors.textColorBlack,
                   ),
                 ),
-                if (english) Spacer(),
-                if (english)
+                // if (english)
+                  Spacer(),
+                // if (english)
                   GestureDetector(
                     onTap: () => showPopupCardRemove(
-                        isDark, cardNum, regNum, cardBrand, last4Digits),
+                        isDark, english , cardNum, regNum, cardBrand, last4Digits ),
                     child: Image.asset(
                       "assets/images/cancel.png",
                       height: 16.sp,
                     ),
                   ),
-                if (!english)
-                  cardBrand == 'VISA'
-                      ? Image.asset(
-                          "assets/images/Visa.png",
-                          height: 18.sp,
-                        )
-                      : Container(
-                          decoration: BoxDecoration(
-                            color:
-                                AppColors.textColorGreyShade2.withOpacity(0.27),
-                            borderRadius: BorderRadius.circular(3),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 5.2.sp, vertical: 1.5.sp),
-                            child: Image.asset(
-                              cardBrand == 'MASTER'
-                                  ? "assets/images/master2.png"
-                                  : "assets/images/mada_pay.png",
-                              height: 16.sp,
-                            ),
-                          ),
-                        ),
+                // if (!english)
+                //   cardBrand == 'VISA'
+                //       ? Image.asset(
+                //           "assets/images/Visa.png",
+                //           height: 18.sp,
+                //         )
+                //       : Container(
+                //           decoration: BoxDecoration(
+                //             color:
+                //                 AppColors.textColorGreyShade2.withOpacity(0.27),
+                //             borderRadius: BorderRadius.circular(3),
+                //           ),
+                //           child: Padding(
+                //             padding: EdgeInsets.symmetric(
+                //                 horizontal: 5.2.sp, vertical: 1.5.sp),
+                //             child: Image.asset(
+                //               cardBrand == 'MASTER'
+                //                   ? "assets/images/master2.png"
+                //                   : "assets/images/mada_pay.png",
+                //               height: 16.sp,
+                //             ),
+                //           ),
+                //         ),
               ],
             ),
           ),
@@ -1665,6 +1671,7 @@ class _WalletBankingAndPaymentEmptyState
 
   Future showPopupCardRemove(
     bool isDark,
+    bool isEnglish,
     String cardNum,
     String regNum,
     String cardBrand,
@@ -1707,7 +1714,7 @@ class _WalletBankingAndPaymentEmptyState
                           height: 4.h,
                         ),
                         Text(
-                          'Are you sure you want to delete this card?',
+                          'Are you sure you want to delete this card?'.tr(),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
@@ -1734,7 +1741,7 @@ class _WalletBankingAndPaymentEmptyState
                               children: [
                                 Spacer(),
                                 Text(
-                                  ' **** ' + last4digits,
+                                 isEnglish ? ' **** ' + last4digits : last4digits + ' **** ' ,
                                   style: TextStyle(
                                     fontSize: 11.5.sp,
                                     fontFamily: 'Inter',
@@ -1768,6 +1775,7 @@ class _WalletBankingAndPaymentEmptyState
                                                 ? "assets/images/master_card.png"
                                                 : "assets/images/mada_pay.png",
                                             height: 16.sp,
+                                            width: 18.sp,
                                           ),
                                         ),
                                       ),

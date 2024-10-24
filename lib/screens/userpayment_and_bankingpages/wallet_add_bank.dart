@@ -419,9 +419,9 @@ init() async {
                                                                 return
 
                                                                 addBankslist(
-                                                                  bankName:
-                                                                  _filteredBanks[index]
-                                                                          .bankName!,
+                                                                  bankName: isEnglish ? _filteredBanks[index]
+                                                                          .bankName : _filteredBanks[index]
+                                                                      .bankNameAr,
                                                                   english: isEnglish
                                                                       ? true
                                                                       : false,
@@ -534,7 +534,7 @@ init() async {
                                         Padding(
                                           padding: EdgeInsets.only(top: 7.sp),
                                           child: Text(
-                                            "*Please select atleast one bank",
+                                            "*Please select atleast one bank".tr(),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w400,
                                                 fontSize: 10.sp,
@@ -626,7 +626,7 @@ init() async {
                                         Padding(
                                           padding: EdgeInsets.only(top: 7.sp),
                                           child: Text(
-                                            "*IBAN number should not be empty",
+                                            "*IBAN number should not be empty".tr(),
                                             style: TextStyle(
                                                 fontSize: 10.sp,
                                                 fontWeight: FontWeight.w400,
@@ -725,7 +725,7 @@ init() async {
                                         Padding(
                                           padding: EdgeInsets.only(top: 7.sp),
                                           child: Text(
-                                            "*Name should not be empty",
+                                            "*Name should not be empty".tr(),
                                             style: TextStyle(
                                                 fontSize: 10.sp,
                                                 fontWeight: FontWeight.w400,
@@ -798,18 +798,20 @@ init() async {
                                                       ),
                                                     ),
                                                   ),
+                                                  SizedBox(width: 2.w,),
                                                   Expanded(
                                                     child: Container(
                                                       margin:
                                                       EdgeInsets.only(bottom: 3.sp),
                                                       child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           RichText(
                                                             text: TextSpan(
                                                               children: [
                                                                 TextSpan(
                                                                     text:
-                                                                    'I Agree to the Hesa Wallet '
+                                                                    'I Agree to the Hesa Wallet'
                                                                         .tr(),
                                                                     style: TextStyle(
                                                                         color: AppColors
@@ -827,7 +829,7 @@ init() async {
 
                                                                       },
                                                                     text:
-                                                                    'Terms & Conditions'
+                                                                    ' Terms & Conditions'
                                                                         .tr(),
                                                                     style: TextStyle(
                                                                         color: themeNotifier.isDark
@@ -835,9 +837,9 @@ init() async {
                                                                             .textColorToska
                                                                             : AppColors
                                                                             .textColorBlack,
-                                                                        decoration:
-                                                                        TextDecoration
-                                                                            .underline,
+                                                                        // decoration:
+                                                                        // TextDecoration
+                                                                        //     .underline,
                                                                         fontWeight:
                                                                         FontWeight
                                                                             .w600,
@@ -1087,8 +1089,8 @@ init() async {
                                                             }
                                                           } else {}
                                                         },
-                                                        firstTitle: 'Verify',
-                                                        secondTitle: 'Resend code ',
+                                                        firstTitle: 'Verify'.tr(),
+                                                        secondTitle: 'Resend code '.tr(),
                                                         context: context,
                                                         isDark: themeNotifier.isDark,
                                                         isFirstButtonActive:
@@ -1168,7 +1170,7 @@ init() async {
                                           padding:
                                           const EdgeInsets.symmetric(horizontal: 20),
                                           child: Text(
-                                            'Done',
+                                            'Done'.tr(),
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 11.5.sp,
@@ -1234,7 +1236,7 @@ init() async {
                 padding: EdgeInsets.symmetric(horizontal: 10.sp),
                 child: Row(
                   mainAxisAlignment:
-                      english ? MainAxisAlignment.start : MainAxisAlignment.end,
+                      english ? MainAxisAlignment.start : MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(

@@ -321,7 +321,7 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                                       });
                                                     },
                                                     child: Text(
-                                                      'Cancel',
+                                                      'Cancel'.tr(),
                                                       style: TextStyle(
                                                         fontSize: 12,
                                                         fontWeight: FontWeight.w400,
@@ -617,8 +617,9 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
 
                                                                   addBankslist(
                                                                     bankName:
-                                                                    _filteredBanks[index]
-                                                                        .bankName!,
+                                                                    isEnglish ? _filteredBanks[index]
+                                                                        .bankName : _filteredBanks[index]
+                                                                        .bankNameAr,
                                                                     english: isEnglish
                                                                         ? true
                                                                         : false,
@@ -858,7 +859,7 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                           padding: EdgeInsets.only(top: 7.sp),
                                           child: Text(
                                             // "*Please enter a valid email address".tr(),
-                                            "*IBAN number should not be empty",
+                                            "*IBAN number should not be empty".tr(),
                                             style: TextStyle(
                                                 fontSize: 10.sp,
                                                 fontWeight: FontWeight.w400,
@@ -890,7 +891,7 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                           _accountholdernamerController
                                                       .text.length >=
                                                   3
-                                              ? 'Account holder name'
+                                              ? 'Account holder name'.tr()
                                               : 'Account Beneficiary Name'.tr(),
                                           style: TextStyle(
                                               fontSize: 10.2.sp,
@@ -963,7 +964,7 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                           padding: EdgeInsets.only(top: 7.sp),
                                           child: Text(
                                             // "*Please enter a valid email address".tr(),
-                                            "*Name should not be empty",
+                                            "*Name should not be empty".tr(),
                                             style: TextStyle(
                                                 fontSize: 10.sp,
                                                 fontWeight: FontWeight.w400,
@@ -1039,21 +1040,22 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                                         ),
                                                       ),
                                                     ),
-                                                    // SizedBox(
-                                                    //   width: 2.w,
-                                                    // ),
+                                                    SizedBox(
+                                                      width: 2.w,
+                                                    ),
                                                     Expanded(
                                                       child: Container(
                                                         margin:
                                                         EdgeInsets.only(bottom: 3.sp),
                                                         child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             RichText(
                                                               text: TextSpan(
                                                                 children: [
                                                                   TextSpan(
                                                                       text:
-                                                                      'I Agree to the Hesa Wallet '
+                                                                      'I Agree to the Hesa Wallet'
                                                                           .tr(),
                                                                       style: TextStyle(
                                                                           color: AppColors
@@ -1071,7 +1073,7 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
 
                                                                         },
                                                                       text:
-                                                                      'Terms & Conditions'
+                                                                      ' Terms & Conditions'
                                                                           .tr(),
                                                                       style: TextStyle(
                                                                           color: themeNotifier.isDark
@@ -1079,9 +1081,9 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                                                               .textColorToska
                                                                               : AppColors
                                                                               .textColorBlack,
-                                                                          decoration:
-                                                                          TextDecoration
-                                                                              .underline,
+                                                                          // decoration:
+                                                                          // TextDecoration
+                                                                          //     .underline,
                                                                           fontWeight:
                                                                           FontWeight
                                                                               .w600,
@@ -1309,7 +1311,7 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                                           padding:
                                           const EdgeInsets.symmetric(horizontal: 20),
                                           child: Text(
-                                            'Done',
+                                            'Done'.tr(),
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 11.5.sp,
@@ -1386,7 +1388,7 @@ class _WalletUpdateBankState extends State<WalletUpdateBank> {
                 padding: EdgeInsets.symmetric(horizontal: 10.sp),
                 child: Row(
                   mainAxisAlignment:
-                      english ? MainAxisAlignment.start : MainAxisAlignment.end,
+                      english ? MainAxisAlignment.start : MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(

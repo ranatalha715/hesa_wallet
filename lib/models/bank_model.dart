@@ -1,5 +1,6 @@
 class Bank {
   final String? bankName;
+  final String? bankNameAr;
   final String? accountTitle;
   final String ibanNumber;
   final String bic;
@@ -9,6 +10,7 @@ class Bank {
 
   Bank({
     this.bankName,
+    this.bankNameAr,
     required this.ibanNumber,
      this.accountTitle,
     required this.bic,
@@ -19,6 +21,7 @@ class Bank {
   factory Bank.fromJson(Map<String, dynamic> json) {
     return Bank(
       bankName: json['bankName'],
+      bankNameAr: json['bankNameAr'],
       ibanNumber: json['accountNumber'],
       bic: json['bic'],
       isPrimary: json['isPrimary'].toString(),
@@ -32,6 +35,7 @@ class BankName {
   final String id;
   final String bic;
   final String bankName;
+  final String bankNameAr;
 
   // final String beneficiaryName;
 
@@ -40,6 +44,7 @@ class BankName {
     required this.id,
     required this.bic,
     required this.bankName,
+    required this.bankNameAr,
     // required this.beneficiaryName,
   });
 
@@ -49,6 +54,7 @@ class BankName {
       id: json['_id'],
       bic: json['bic'],
       bankName: json['bankName'],
+      bankNameAr: json['bankNameAr'],
       // beneficiaryName: json['beneficiaryName'],
     );
   }

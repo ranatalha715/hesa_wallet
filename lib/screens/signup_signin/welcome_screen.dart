@@ -117,7 +117,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Text(
-                _pinError ? 'Enter PIN again' : 'Enter PIN to unlock',
+                _pinError ? 'Enter PIN again'.tr() : 'Enter PIN to unlock'.tr(),
                 style: TextStyle(
                     fontSize: 13.sp,
                     color: isFirstFieldFilled
@@ -207,7 +207,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         // color: Colors.red,
                         child: Center(
                           child: Text(
-                            'Forgot PIN',
+                            'Forgot PIN'.tr(),
                             maxLines: 1,
                             style: TextStyle(
                                 fontSize: 13.sp,
