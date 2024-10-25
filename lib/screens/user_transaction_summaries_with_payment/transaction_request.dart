@@ -526,11 +526,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
     try {
       // Convert the string to a number (num handles both int and double)
       num number = num.parse(numberString);
-
-      // Create a NumberFormat object for Saudi currency style
       final formatter = NumberFormat("#,##0.##", "en_US");
-
-      // Format the number with commas
       return formatter.format(number);
     } catch (e) {
       // Handle any format exceptions and return a fallback
@@ -543,7 +539,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
     if (args != null) {
-      // Your code here
       print('args params' + args['params']);
       params = args['params'] ?? "N/A";
       paramsMap = jsonDecode(params);
@@ -568,9 +563,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
     final formattedText = addSpacesToText(displayedText);
-
     List<dynamic> feeses = feesMap!.values.toList();
-
     final paymentCards =
         Provider.of<UserProvider>(context, listen: false).paymentCards;
     var trPro = Provider.of<TransactionProvider>(context, listen: false);
@@ -586,10 +579,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
         trPro.selectedCardTokenId = paymentCards[0].id;
       }
     }
-    print("apple pay h k nhe" +
-        Provider.of<TransactionProvider>(context, listen: false)
-            .selectedPaymentMethod
-            .toString());
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       setThemeDark = themeNotifier.isDark;
       return Stack(
@@ -725,7 +714,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                 ),
                                 transactionDetailsWidget(
                                   title: 'Timestamp'.tr(),
-                                  details: DateFormat('MMMM dd, yyyy')
+                                  details: DateFormat('MMMM dd, yyyy', 'ar')
                                       .format(unformatted),
                                   isDark: themeNotifier.isDark ? true : false,
                                 ),
@@ -908,8 +897,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                           operation != "acceptCounterOffer" &&
                                                   operation !=
                                                       "acceptCollectionCounterOffer"
-                                              ? 'The transaction request is automatically signed and submitted to the Blockchain once this transaction is paid.'
-                                              : 'Your original offer amount will be fully refunded once the counter offer amount is confirmed.'
+                                              ? 'The transaction request is automatically signed and submitted to the Blockchain once this transaction is paid.'.tr()
+                                              : 'Your original offer amount will be fully refunded once the counter offer amount is confirmed.'.tr()
                                                   .tr(),
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
@@ -1330,7 +1319,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     //         trPro.selectedCardNum ==
                                                     //             null
                                                     paymentCards.isEmpty
-                                                        ? "Add payment method"
+                                                        ? "Add payment method".tr()
                                                         : trPro.selectedCardNum +
                                                             " **********",
                                                     // "2561 **** **** 1234",
@@ -1622,7 +1611,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                 children: [
                                                   TextSpan(
                                                       text:
-                                                          'By continuing you agree to the  '
+                                                          'By continuing you agree to the'
                                                               .tr(),
                                                       style: TextStyle(
                                                           // height: 2,
@@ -1644,13 +1633,13 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                               //               TermsAndConditions()),
                                                               // );
                                                             },
-                                                      text: 'Terms & Conditions'
+                                                      text: ' Terms & Conditions'
                                                               .tr() +
                                                           " ",
                                                       style: TextStyle(
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline,
+                                                          // decoration:
+                                                          //     TextDecoration
+                                                          //         .underline,
                                                           height: 1.5,
                                                           color: AppColors
                                                               .textColorToska,

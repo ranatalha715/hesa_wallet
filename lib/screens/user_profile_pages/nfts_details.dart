@@ -64,7 +64,7 @@ class _NftsDetailsState extends State<NftsDetails> {
 
   String formatDate(String dateString) {
     final DateTime dateTime = DateTime.parse(dateString);
-    final DateFormat formatter = DateFormat('MMM dd, yyyy');
+    final DateFormat formatter = DateFormat('MMM dd, yyyy', 'ar');
     return formatter.format(dateTime);
   }
 

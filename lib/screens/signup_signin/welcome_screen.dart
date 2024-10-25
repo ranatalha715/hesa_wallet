@@ -51,7 +51,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     super.initState();
     _timer = Timer.periodic(Duration(milliseconds: 500), (timer) {
       setState(() {
-
         for (int i = 0; i < numbers.length; i++) {
           if (numbers[i].isNotEmpty) {
             numbers[i] = '*';
@@ -72,7 +71,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       }
     });
   }
-
 
   @override
   void dispose() {
@@ -137,14 +135,23 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  circularTextField(0, isMatched),
-                  circularTextField(1, isMatched),
-                  circularTextField(2, isMatched),
-                  circularTextField(3, isMatched),
-                  circularTextField(4, isMatched),
-                  circularTextField(5, isMatched),
-                ],
+                children: isEnglish
+                    ? [
+                        circularTextField(0, isMatched),
+                        circularTextField(1, isMatched),
+                        circularTextField(2, isMatched),
+                        circularTextField(3, isMatched),
+                        circularTextField(4, isMatched),
+                        circularTextField(5, isMatched),
+                      ]
+                    : [
+                        circularTextField(5, isMatched),
+                        circularTextField(4, isMatched),
+                        circularTextField(3, isMatched),
+                        circularTextField(2, isMatched),
+                        circularTextField(1, isMatched),
+                        circularTextField(0, isMatched),
+                      ],
               ),
             ),
           ),
@@ -157,38 +164,67 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      digitBox('1'),
-                      digitBox('2'),
-                      digitBox('3'),
-                    ],
+                    children: isEnglish
+                        ? [
+                            digitBox('1'),
+                            digitBox('2'),
+                            digitBox('3'),
+                          ]
+                        : [
+                            digitBox('3'),
+                            digitBox('2'),
+                            digitBox('1'),
+                          ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      digitBox('4'),
-                      digitBox('5'),
-                      digitBox('6'),
-                    ],
+                    children: isEnglish
+                        ? [
+                            digitBox('4'),
+                            digitBox('5'),
+                            digitBox('6'),
+                          ]
+                        : [
+                            digitBox('6'),
+                            digitBox('5'),
+                            digitBox('4'),
+                          ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      digitBox('7'),
-                      digitBox('8'),
-                      digitBox('9'),
-                    ],
+                    children: isEnglish
+                        ? [
+                            digitBox('7'),
+                            digitBox('8'),
+                            digitBox('9'),
+                          ]
+                        : [
+                            digitBox('9'),
+                            digitBox('8'),
+                            digitBox('7'),
+                          ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      digitBox(''),
-                      digitBox('0'),
-                      digitBox(
-                        '',
-                        imagePath: 'assets/images/remove_button.png',
-                      ),
-                    ],
+                    children: isEnglish
+                        ? [
+                            digitBox(''),
+                            digitBox('0'),
+                            digitBox(
+                              '',
+                              imagePath: 'assets/images/remove_button.png',
+                            ),
+                          ]
+                        : [
+                            digitBox(
+                              '',
+                              imagePath: 'assets/images/remove_button.png',
+                            ),
+                            digitBox('0'),
+                            digitBox(
+                              '',
+                            ),
+                          ],
                   ),
                   SizedBox(
                     height: 0.5.h,
@@ -226,7 +262,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ],
       ),
     );
-
   }
 
   Widget digitBox(
@@ -235,7 +270,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }) {
     return InkWell(
       hoverColor: Colors.grey.withOpacity(0.2),
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(50.sp),
       onLongPress: () {
         setState(() {
           for (int i = 0; i < numbers.length; i++) {
@@ -257,8 +292,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     result += number;
                     break;
                   } else {
-                    result +=
-                        numbers[i];
+                    result += numbers[i];
                   }
                 }
                 for (int i = 0; i < numbersToSave.length; i++) {
@@ -267,8 +301,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     resultToSave += number;
                     break;
                   } else {
-                    resultToSave += numbersToSave[
-                        i];
+                    resultToSave += numbersToSave[i];
                   }
                 }
                 print("passcode" + resultToSave);
@@ -305,7 +338,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 }
               })
             : setState(() {
-
                 for (int i = numbers.length - 1; i >= 0; i--) {
                   if (numbers[i].isNotEmpty) {
                     numbers[i] = '';
@@ -324,7 +356,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         height: 7.h,
         width: 7.h,
         decoration: BoxDecoration(
-          // color: Colors.red,
+            // color: Colors.red,
             ),
         child: Center(
           child: imagePath == null

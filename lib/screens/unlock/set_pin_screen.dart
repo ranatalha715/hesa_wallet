@@ -17,6 +17,7 @@ class PinScreen extends StatefulWidget {
 class _PinScreenState extends State<PinScreen> {
   late Timer _timer;
   String selectedNumber = '';
+
   // List<String> numbers = List.filled(6, '');
   // List<String> numbersToSave = List.filled(6, '');
   List<String> numbers = List.generate(6, (index) => '');
@@ -39,6 +40,7 @@ class _PinScreenState extends State<PinScreen> {
       });
     });
   }
+
   Future<void> savePasscode(String passcode) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString("passcode", passcode);
@@ -70,6 +72,8 @@ class _PinScreenState extends State<PinScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Locale currentLocale = context.locale;
+    bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       body: Column(
@@ -99,13 +103,20 @@ class _PinScreenState extends State<PinScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
+                children: isEnglish?  [
                   circularTextField(0),
                   circularTextField(1),
                   circularTextField(2),
                   circularTextField(3),
                   circularTextField(4),
                   circularTextField(5),
+                ] :  [
+                  circularTextField(5),
+                  circularTextField(4),
+                  circularTextField(3),
+                  circularTextField(2),
+                  circularTextField(1),
+                  circularTextField(0),
                 ],
               ),
             ),
@@ -120,38 +131,60 @@ class _PinScreenState extends State<PinScreen> {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      digitBox('1'),
-                      digitBox('2'),
-                      digitBox('3'),
-                    ],
+                    children: isEnglish
+                        ? [
+                            digitBox('1'),
+                            digitBox('2'),
+                            digitBox('3'),
+                          ]
+                        : [
+                            digitBox('3'),
+                            digitBox('2'),
+                            digitBox('1'),
+                          ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
+                    children: isEnglish ? [
                       digitBox('4'),
                       digitBox('5'),
                       digitBox('6'),
+                    ] : [
+                      digitBox('6'),
+                      digitBox('5'),
+                      digitBox('4'),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
+                    children: isEnglish ? [
                       digitBox('7'),
                       digitBox('8'),
                       digitBox('9'),
+                    ] : [
+                      digitBox('9'),
+                      digitBox('8'),
+                      digitBox('7'),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
+                    children: isEnglish ? [
                       digitBox(''),
                       digitBox('0'),
                       digitBox(
                         '',
                         imagePath: 'assets/images/remove_button.png',
                       ),
-                    ],
+                    ] : [
+
+                      digitBox('', imagePath: 'assets/images/remove_button.png',),
+                      digitBox('0'),
+                      digitBox(
+                        '',
+
+                      ),
+                    ] ,
                   ),
                   // SizedBox(height: 2.h,)
                   // Align(
@@ -233,7 +266,7 @@ class _PinScreenState extends State<PinScreen> {
   Widget digitBox(String number, {String? imagePath}) {
     return InkWell(
       hoverColor: Colors.grey.withOpacity(0.2),
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(50.sp),
       onLongPress: () {
         setState(() {
           for (int i = 0; i < numbers.length; i++) {
@@ -246,7 +279,7 @@ class _PinScreenState extends State<PinScreen> {
       },
       onTap: () {
         imagePath == null
-            ? setState(()  {
+            ? setState(() {
                 // Create a variable to store the six values
                 String result = '';
                 String resultToSave = '';
@@ -268,8 +301,8 @@ class _PinScreenState extends State<PinScreen> {
                     resultToSave += number; // Append the digit to the result
                     break; // Stop after adding the digit to the first empty box
                   } else {
-                    resultToSave +=
-                    numbersToSave[i]; // Append the existing number to the result
+                    resultToSave += numbersToSave[
+                        i]; // Append the existing number to the result
                   }
                 }
                 print("passcode" + resultToSave);
@@ -282,8 +315,6 @@ class _PinScreenState extends State<PinScreen> {
                           'passcode': resultToSave,
                         });
                   });
-
-
                 }
 
                 // Print the result after the loop breaks
@@ -312,6 +343,7 @@ class _PinScreenState extends State<PinScreen> {
           child: imagePath == null
               ? Text(
                   number,
+                  // locale: Locale('en'),
                   style: TextStyle(
                     fontSize: 24.sp,
                     color: AppColors.textColorWhite,
@@ -319,14 +351,12 @@ class _PinScreenState extends State<PinScreen> {
                     fontFamily: 'ArialASDCF',
                   ),
                 )
-              :
-          Image.asset(
-            "assets/images/delete_button.png",
-            height: 21.sp,
-            width: 21.sp,
-            color:
-                AppColors.textColorWhite,
-          ),
+              : Image.asset(
+                  "assets/images/delete_button.png",
+                  height: 21.sp,
+                  width: 21.sp,
+                  color: AppColors.textColorWhite,
+                ),
           // Image.asset(
           //         imagePath,
           //         height: 13.sp,
