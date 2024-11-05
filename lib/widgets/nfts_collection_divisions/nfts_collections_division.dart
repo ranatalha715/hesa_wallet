@@ -57,7 +57,7 @@ class _NftsCollectionDivisionState extends State<NftsCollectionDivision> {
                       padding:  EdgeInsets.symmetric(vertical: 7.h, horizontal: 20.w),
                       child:
                       Text(
-                        "You have no NFT Collections",
+                        "You have no NFT Collections".tr(),
                         style: TextStyle(
                             color: themeNotifier.isDark
                                 ? AppColors.textColorGreyShade2
@@ -109,7 +109,7 @@ class _NftsCollectionDivisionState extends State<NftsCollectionDivision> {
                     child: Padding(
                       padding:  EdgeInsets.symmetric(vertical: 7.h, horizontal: 20.w),
                       child: Text(
-                        "You have no NFTs",
+                        "You have no NFTs".tr(),
                         style: TextStyle(
                             color: themeNotifier.isDark
                                 ? AppColors.textColorGreyShade2

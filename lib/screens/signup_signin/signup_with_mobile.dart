@@ -1613,7 +1613,10 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                           auth.registerUserErrorResponse
                                                               .toString()
                                                               .contains(
-                                                                  'Mobile number')
+                                                                  'Mobile number')  ||
+                                                      auth.registerUserErrorResponse
+                                                          .toString()
+                                                          .contains('رقم الهاتف')
                                                       ? AppColors.errorColor
                                                       : Colors.transparent,
                                                 )),
@@ -1679,13 +1682,18 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                         isValidating &&
                                         auth.registerUserErrorResponse
                                             .toString()
-                                            .contains('Mobile number'))
+                                            .contains('Mobile number') ||
+                                        auth.registerUserErrorResponse
+                                            .toString()
+                                            .contains('رقم الهاتف')
+                                    )
                                       Padding(
                                         padding: EdgeInsets.only(top: 7.sp),
                                         child: Text(
-                                          isEnglish
-                                              ? "*${auth.registerUserErrorResponse}"
-                                              : "رقم الجوال موجود بالفعل*",
+                                          // isEnglish
+                                          //     ?
+                                          "*${auth.registerUserErrorResponse}",
+                                          // : "رقم الجوال موجود بالفعل*",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontSize: 10.sp,
@@ -1815,6 +1823,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                     mobileNumber:
                                                         _numberController.text,
                                                     context: context,
+                                                    isEnglish: isEnglish,
                                                   );
                                                   setState(() {
                                                     _isLoading = false;
@@ -1937,7 +1946,8 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                                           }
                                                         } else {}
                                                       },
-                                                      firstTitle: 'Confirm'.tr(),
+                                                      firstTitle:
+                                                          'Confirm'.tr(),
                                                       secondTitle:
                                                           'Resend code '.tr(),
                                                       context: context,

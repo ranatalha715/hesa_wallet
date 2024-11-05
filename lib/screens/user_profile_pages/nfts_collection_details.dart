@@ -62,7 +62,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
 
   String formatDate(String dateString) {
     final DateTime dateTime = DateTime.parse(dateString);
-    final DateFormat formatter = DateFormat('MMM dd, yyyy', 'ar');
+    final DateFormat formatter = DateFormat('MMM dd, yyyy');
     return formatter.format(dateTime);
   }
 
@@ -94,12 +94,14 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
     setState(() {
       isLoading = true;
     });
-
+    Locale currentLocale = context.locale;
+    bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
     await Provider.of<AssetsProvider>(context, listen: false)
         .getCollectionDetails(
       token: accessToken,
       type: 'collection',
       id: args["collectionId"],
+      isEnglish:isEnglish,
     );
 
     setState(() {

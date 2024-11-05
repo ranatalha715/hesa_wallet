@@ -169,7 +169,6 @@ class _OnboardingAddEmailState extends State<OnboardingAddEmail> {
                                 Padding(
                                   padding: EdgeInsets.only(top: 7.sp),
                                   child: Text(
-                                    // "*Please enter a valid email address".tr(),
                                     "*Email address should not be empty".tr(),
                                     style: TextStyle(
                                         fontSize: 10.sp,
@@ -209,6 +208,7 @@ class _OnboardingAddEmailState extends State<OnboardingAddEmail> {
                                     email: _emailController.text,
                                     context: context,
                                     token: accessToken,
+                                    isEnglish:isEnglish,
                                   );
 
                                   setState(() {

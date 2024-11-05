@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hesa_wallet/providers/transaction_provider.dart';
 import 'package:hesa_wallet/screens/settings/security_and_privacy.dart';
+import 'package:hesa_wallet/widgets/main_header.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +81,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     });
 
     await getAccessToken();
-
+    Locale currentLocale = context.locale;
+    bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
     var user = await Provider.of<UserProvider>(context, listen: false);
@@ -91,6 +93,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       walletAddress: user.walletAddress!,
       ownerType: 'owner',
       type: 'all',
+      isEnglish:isEnglish,
     );
     await Provider.of<AssetsProvider>(context, listen: false).getCreatedAssets(
       token: accessToken,
@@ -98,6 +101,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       walletAddress: user.walletAddress!,
       ownerType: 'creator',
       type: 'all',
+      isEnglish:isEnglish,
     );
     await Provider.of<AssetsProvider>(context, listen: false).getOwnedAssets(
       token: accessToken,
@@ -105,6 +109,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       walletAddress: user.walletAddress!,
       ownerType: 'owner',
       type: 'all',
+      isEnglish:isEnglish,
     );
     await Provider.of<AssetsProvider>(context, listen: false).getAllAssets(
       token: accessToken,
@@ -112,6 +117,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       walletAddress: user.walletAddress!,
       ownerType: 'both',
       type: 'all',
+      isEnglish:isEnglish,
     );
     setState(() {
       _isloading = false;
@@ -132,14 +138,15 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('setLockScreen', value);
   }
-  bool _isPasscodeSet =false;
+
+  bool _isPasscodeSet = false;
+
   getPasscode() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final passcode = prefs.getString('passcode')!;
-    if(passcode!=""){
+    if (passcode != "") {
       _isPasscodeSet = true;
-    }
-    else{
+    } else {
       _isPasscodeSet = false;
     }
     print("ispasscodeset" + _isPasscodeSet.toString());
@@ -198,14 +205,12 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       selectedCategoryIndex = index;
     });
   }
-  void handleDisconnection() async {
-    final prefs =
-    await SharedPreferences.getInstance();
-    await prefs.setString('disconnectionTime', DateTime.now().toString());
-    await  prefs.setBool('isConnected', false);
-    setState(() {
 
-    });
+  void handleDisconnection() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('disconnectionTime', DateTime.now().toString());
+    await prefs.setBool('isConnected', false);
+    setState(() {});
     await Future.delayed(Duration(seconds: 2), () {});
     await showDialog(
       context: context,
@@ -225,6 +230,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       },
     );
   }
+
   Future<void> initUniLinks1() async {
     try {
       print('trying');
@@ -243,10 +249,12 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
 
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => ConnectDapp()),
-                  (Route<dynamic> route) => false,
+              (Route<dynamic> route) => false,
             );
-            Provider.of<TransactionProvider>(context,listen: false).logoFromNeo=logoFromNeo;
-            Provider.of<TransactionProvider>(context,listen: false).siteUrl=siteUrl;
+            Provider.of<TransactionProvider>(context, listen: false)
+                .logoFromNeo = logoFromNeo;
+            Provider.of<TransactionProvider>(context, listen: false).siteUrl =
+                siteUrl;
             // setState(() {
             //   isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
             //       .navigateToNeoForConnectWallet;  // Set overlay visibility to true
@@ -256,11 +264,9 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                 Provider.of<UserProvider>(context, listen: false)
                     .navigateToNeoForConnectWallet
                     .toString());
-          }
-          else if(operation != null && operation == 'DisconnectWallet') {
+          } else if (operation != null && operation == 'DisconnectWallet') {
             handleDisconnection();
-          }
-          else {
+          } else {
             Provider.of<UserProvider>(context, listen: false)
                 .navigateToNeoForConnectWallet = false;
 
@@ -270,7 +276,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
             // });
           }
           return true; // Exit the loop after processing
-        } else{
+        } else {
           Provider.of<UserProvider>(context, listen: false)
               .navigateToNeoForConnectWallet = false;
 
@@ -278,7 +284,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
           //   isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
           //       .navigateToNeoForConnectWallet;  // Set overlay visibility to false
           // });
-
         }
 
         return false;
@@ -534,7 +539,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     //   "operation": operation,
     //   "walletAddress": userWalletAddress
     // });
-    await Navigator.of(ctx).popAndPushNamed(TransactionRequest.routeName, arguments: {
+    await Navigator.of(ctx)
+        .popAndPushNamed(TransactionRequest.routeName, arguments: {
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
@@ -982,7 +988,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
         Provider.of<AssetsProvider>(context, listen: false)
             .assetsCollectionOwned;
     print('red dot logic');
-    print(Provider.of<TransactionProvider>(context, listen: false).confirmedRedDot);
+    print(Provider.of<TransactionProvider>(context, listen: false)
+        .confirmedRedDot);
     print(Provider.of<TransactionProvider>(context, listen: false).showRedDot);
     return Consumer<UserProvider>(builder: (context, user, child) {
       return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
@@ -1004,9 +1011,9 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                           // &&
                           // passcode != null &&
                           // passcode.isNotEmpty
-                      ) {
+                          ) {
                         return Unlock();
-                          // return WelcomeScreen(handler: (){});
+                        // return WelcomeScreen(handler: (){});
                         // Navigate to the pin screen
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           // Navigator.pushReplacement(
@@ -1016,7 +1023,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                           //             handler: () {},
                           //           )),
                           // );
-
                         });
                       }
                     }
@@ -1027,408 +1033,740 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                     backgroundColor: themeNotifier.isDark
                         ? AppColors.backgroundColor
                         : AppColors.textColorWhite,
-                    body: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 35.h,
-                            width: double.infinity,
-                            color: themeNotifier.isDark
-                                ? AppColors.backgroundColor
-                                : AppColors.textColorWhite,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: 12.h,
-                                  color: themeNotifier.isDark
-                                      ? AppColors.profileHeaderDark
-                                      : AppColors.whiteShade,
-                                  child: Padding(
+                    body: SafeArea(
+                      child: NestedScrollView(
+                        headerSliverBuilder: (context, innerBoxIsScrolled) =>
+                            [
+                          SliverOverlapAbsorber(
+                              handle: NestedScrollView
+                                  .sliverOverlapAbsorberHandleFor(context),
+                              sliver: SliverSafeArea(
+                                top: false,
+                                sliver:
+                                SliverAppBar(
+                                  expandedHeight: 29.h,
+                                  backgroundColor:
+                                  AppColors.backgroundColor,
+                                  foregroundColor: AppColors.profileHeaderDark,
+                                  pinned: true,
+                                  leading: Padding(
                                     padding: EdgeInsets.only(
-                                        left: 14.sp,
-                                        right: 20.sp,
-                                        bottom: 8.sp),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () =>
-                                              _key.currentState!.openDrawer(),
-                                          child: Stack(
-                                            children: [
-                                              Icon(
-                                                Icons.menu_rounded,
-                                                color: themeNotifier.isDark
-                                                    ? AppColors.textColorWhite
-                                                    : AppColors.textColorBlack,
-                                                size: 25.sp,
-                                              ),
-                                              Consumer<TransactionProvider>(
-                                                  builder: (context,
-                                                      TransactionProvider trP,
-                                                      _) {
-                                                return Positioned(
-                                                  right: 1,
-                                                  // bottom: 2.sp,
-                                                  child: Container(
-                                                    height: 4.3.sp,
-                                                    width: 4.3.sp,
-                                                    decoration: BoxDecoration(
-                                                      color: trP.showRedDot && trP.confirmedRedDot
-                                                          ? AppColors.errorColor
-                                                          : Colors.transparent,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10.sp),
-                                                    ),
-                                                  ),
-                                                );
-                                              }),
-                                            ],
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            setLockScreenStatus(true);
-                                            // _isPasscodeSet ?
-                                            Navigator.pushAndRemoveUntil(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => Unlock()),
-                                                  (Route<dynamic> route) => false, // This predicate removes all previous routes
-                                            );
-
-
-                                          },
-                                          child: Padding(
-                                            padding:
-                                                EdgeInsets.only(bottom: 5.sp),
-                                            child:
-                                            Image.asset(
-                                              "assets/images/lock.png",
-                                              height: 19.sp,
-                                              width: 19.sp,
-                                              color: themeNotifier.isDark
-                                                  ? AppColors.textColorWhite
-                                                  : AppColors.textColorBlack,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                      top: 10.sp,
+                                      left: 14.sp,
+                                      right: 20.sp,
+                                      bottom: 8.sp,
                                     ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 4.h,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                      color: AppColors.textColorGrey,
-                                      borderRadius: BorderRadius.circular(100)),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(1.sp),
-                                    child: Container(
-                                      height: 60.sp,
-                                      width: 60.sp,
-                                      decoration: BoxDecoration(
-                                          color: AppColors.backgroundColor,
-                                          borderRadius:
-                                              BorderRadius.circular(100)),
-                                      child: Padding(
-                                        padding: EdgeInsets.all(1.sp),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          child:
-                                          user.userAvatar != null
-                                              ?
-                                          Image.network(
-                                                  user.userAvatar!,
-                                                  fit: BoxFit.cover,
-
-                                                )
-                                              :
-                                          Padding(
-                                            padding:  EdgeInsets.all(4.sp),
-                                            child: Image.asset(
-                                                    "assets/images/user_placeholder.png",
-                                              color: AppColors.textColorGrey,
-                                                  ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 2.h,
-                                ),
-                                Text(
-                                  user.userName != null
-                                      ? user.userName!
-                                      : 'username.mjra'.tr(),
-                                  style: TextStyle(
-                                      fontSize: 11.7.sp,
-                                      fontFamily: 'Blogger Sans',
-                                      fontWeight: FontWeight.w700,
-                                      color: themeNotifier.isDark
-                                          ? AppColors.textColorWhite
-                                          : AppColors.textColorBlack),
-                                ),
-                                SizedBox(
-                                  height: 0.5.h,
-                                ),
-                                // if(user.walletAddress != null)
-                                GestureDetector(
-                                  onTap: () =>
-                                      _copyToClipboard(user.walletAddress!),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        user.walletAddress != null
-                                            ? replaceMiddleWithDots(
-                                                user.walletAddress!)
-                                            : "...",
-                                        // '0x1647f...87332',
-                                        style: TextStyle(
-                                            fontSize: 9.5.sp,
-                                            fontFamily: 'Blogger Sans',
-                                            fontWeight: FontWeight.w500,
-                                            color: AppColors.textColorGrey),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Stack(
-                            children: [
-                              Container(
-                                height: 65.h,
-                                width: double.infinity,
-                                color: themeNotifier.isDark
-                                    ? AppColors.backgroundColor
-                                    : AppColors.textColorWhite,
-                                child: Column(
-                                  children: [
-                                    PreferredSize(
-                                      preferredSize:
-                                          Size.fromHeight(kToolbarHeight + 10),
+                                    child: GestureDetector(
+                                      onTap: () =>
+                                          _key.currentState!.openDrawer(),
                                       child: Stack(
                                         children: [
-                                          Positioned(
-                                            bottom: 0,
-                                            left: 0,
-                                            right: 0,
-                                            child: Container(
-                                              height: 1.sp,
-                                              color: themeNotifier.isDark
-                                                  ? AppColors
-                                                      .transactionSummNeoBorder
-                                                  : AppColors
-                                                      .tabUnselectedClorLight,
-                                            ),
+                                          Icon(
+                                            Icons.menu_rounded,
+                                            color: themeNotifier.isDark
+                                                ? AppColors.textColorWhite
+                                                : AppColors.textColorBlack,
+                                            size: 25.sp,
                                           ),
-                                          Container(
-                                            color: Colors.transparent,
-                                            // Background color of the TabBar
-
-                                            child:
-                                            TabBar(
-                                              controller: _tabController,
-                                              // indicatorPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                                              indicatorColor:
-                                                  AppColors.activeButtonColor,
-                                              unselectedLabelColor:
-                                                  AppColors.textColorGrey,
-                                              labelColor: themeNotifier.isDark
-                                                  ? AppColors.textColorWhite
-                                                  : AppColors.textColorBlack,
-                                              labelStyle: TextStyle(
-                                                  color: themeNotifier.isDark
-                                                      ? AppColors.textColorWhite
-                                                      : AppColors.textColorBlack,
-                                                  fontSize: 11.5.sp,
-                                                  fontWeight: FontWeight.w600),
-                                              tabs: [
-                                                Tab(text: "     " + 'Tokens'.tr() +"     "),
-                                                Tab(text: "      " + 'NFTs'.tr() + "       "),
-                                              ],
-                                            ),
-                                          ),
+                                          Consumer<TransactionProvider>(
+                                              builder: (context,
+                                                  TransactionProvider trP,
+                                                  _) {
+                                            return Positioned(
+                                              right: 1,
+                                              // bottom: 2.sp,
+                                              child: Container(
+                                                height: 4.3.sp,
+                                                width: 4.3.sp,
+                                                decoration: BoxDecoration(
+                                                  color: trP.showRedDot &&
+                                                          trP.confirmedRedDot
+                                                      ? AppColors.errorColor
+                                                      : Colors.transparent,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.sp),
+                                                ),
+                                              ),
+                                            );
+                                          }),
                                         ],
                                       ),
                                     ),
-                                    _isloading
-                                        ? Padding(
-                                            padding: EdgeInsets.only(top: 25.h),
-                                            child: Center(
-                                              child: CircularProgressIndicator(
-                                                color: AppColors.activeButtonColor,
-                                              ),
-                                            ),
-                                          )
-                                        : Expanded(
-                                            child: TabBarView(
-                                              controller: _tabController,
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                    vertical: 15.h,
-                                                  ),
-                                                  child: Text(
-                                                    "You have no Tokens".tr(),
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        color: themeNotifier.isDark
-                                                            ? AppColors
-                                                                .textColorGreyShade2
-                                                            : AppColors
-                                                                .textColorBlack,
-                                                        fontWeight: FontWeight.w500,
-                                                        fontSize: 12.sp,
-                                                        fontFamily: 'Blogger Sans'),
-                                                  ),
-                                                ),
-                                                Column(
-                                                  children: [
-                                                    Container(
-                                                        height: 8.h,
-                                                        width: 100.w,
-                                                        color: themeNotifier.isDark
-                                                            ? AppColors
-                                                                .backgroundColor
-                                                            : AppColors
-                                                                .textColorWhite,
-                                                        child:
-                                                            SingleChildScrollView(
-                                                          scrollDirection:
-                                                              Axis.horizontal,
+                                  ),
+                                  actions: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        setLockScreenStatus(true);
+                                        // _isPasscodeSet ?
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Unlock()),
+                                          (Route<dynamic> route) =>
+                                              false, // This predicate removes all previous routes
+                                        );
+                                      },
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            bottom: 5.sp, right: 15.sp),
+                                        child: Image.asset(
+                                          "assets/images/lock.png",
+                                          height: 19.sp,
+                                          width: 19.sp,
+                                          color: themeNotifier.isDark
+                                              ? AppColors.textColorWhite
+                                              : AppColors.textColorBlack,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                  flexibleSpace: FlexibleSpaceBar(
+                                      background: Stack(
+                                        children:[
+                                        Positioned(
+                                            top: 0,
+                                            left: 0,
+                                            right: 0,
+                                            child: Container(
+                                              color: AppColors.profileHeaderDark,
+                                              height: 7.h,
+                                            )),
+                                          Column(
+                                            children: [
+                                              SizedBox(height: 10.h,),
+                                                        Container(
+                                                          decoration: BoxDecoration(
+                                                              color: AppColors.textColorGrey,
+                                                              borderRadius: BorderRadius.circular(100)),
                                                           child: Padding(
-                                                            padding: EdgeInsets
-                                                                .symmetric(
-                                                              horizontal: 16.sp,
-                                                            ),
-                                                            // vertical: 10.sp),
-                                                            child: Row(
-                                                              children: [
-                                                                NFTCategoryWidget(
-                                                                  title: "All".tr(),
-                                                                  // image: "",
-                                                                  isFirst: true,
-                                                                  index: 0,
-                                                                  handler: () =>
-                                                                      onCategorySelected(
-                                                                          0),
+                                                            padding: EdgeInsets.all(1.sp),
+                                                            child: Container(
+                                                              height: 60.sp,
+                                                              width: 60.sp,
+                                                              decoration: BoxDecoration(
+                                                                  color: AppColors.backgroundColor,
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(100)),
+                                                              child: Padding(
+                                                                padding: EdgeInsets.all(1.sp),
+                                                                child: ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(100),
+                                                                  child: user.userAvatar != null
+                                                                      ? Image.network(
+                                                                          user.userAvatar!,
+                                                                          fit: BoxFit.cover,
+                                                                        )
+                                                                      : Padding(
+                                                                          padding: EdgeInsets.all(4.sp),
+                                                                          child: Image.asset(
+                                                                            "assets/images/user_placeholder.png",
+                                                                            color:
+                                                                                AppColors.textColorGrey,
+                                                                          ),
+                                                                        ),
                                                                 ),
-                                                                NFTCategoryWidget(
-                                                                    title: "Owned"
-                                                                        .tr(),
-                                                                    // image:
-                                                                    //     'assets/images/cat_dig_art.png',
-                                                                    index: 1,
-                                                                    handler: () {
-                                                                      setState(() {
-                                                                        _isloading =
-                                                                            true;
-                                                                      });
-                                                                      onCategorySelected(
-                                                                          1);
-                                                                      setState(() {
-                                                                        _isloading =
-                                                                            false;
-                                                                      });
-                                                                    }),
-                                                                NFTCategoryWidget(
-                                                                  title: "Created"
-                                                                      .tr(),
-                                                                  // image:
-                                                                  //     'assets/images/cat_sports.png',
-                                                                  index: 2,
-                                                                  handler: () =>
-                                                                      onCategorySelected(
-                                                                          2),
-                                                                ),
-                                                                NFTCategoryWidget(
-                                                                  title:
-                                                                      "Listed".tr(),
-                                                                  // image:
-                                                                  //     'assets/images/cat_animals.png',
-                                                                  index: 3,
-                                                                  handler: () =>
-                                                                      onCategorySelected(
-                                                                          3),
-                                                                ),
-                                                              ],
+                                                              ),
                                                             ),
                                                           ),
-                                                        )),
-                                                    Expanded(
-                                                        child: bottomSpaceContent(
-                                                            nftsCollectionAll,
-                                                            nftsAll,
-                                                            nftsCollectionOwnedByUser,
-                                                            nftsOwned,
-                                                            themeNotifier.isDark,
-                                                            nftsCollectionCreated,
-                                                            nftsCreated,
-                                                            nftsListed,
-                                                            collectionListed))
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                  ],
-                                ),
-                              ),
-                              if(showCopiedMsg)
-                              Positioned(
-                                left: 10,
-                                right: 10,
-                                bottom: 40,
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    height: 4.h,
-                                    width: 35.w,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5.sp),
-                                      color: AppColors.profileHeaderDark,
-                                    ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 2.h,
+                                                        ),
 
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Image.asset(
-                                          "assets/images/hesa_wallet_logo.png",
-                                          fit: BoxFit.cover,
-                                          height: 12.sp,
-                                          width: 12.sp,
-                                        ),
-                                        SizedBox(width: 5.sp,),
-                                        Text(
-                                          'Address copied!'.tr(),
-                                          style: TextStyle(
-                                              fontSize: 9.sp,
-                                              fontWeight: FontWeight.w600,
-                                              color: AppColors.textColorWhite,
-                                              fontFamily: 'Blogger Sans'
-                                          ),)
-                                      ],
+                                                        Text(
+                                                          user.userName != null
+                                                              ? user.userName!
+                                                              : 'username.mjra'.tr(),
+                                                          style: TextStyle(
+                                                              fontSize: 11.7.sp,
+                                                              fontFamily: 'Blogger Sans',
+                                                              fontWeight: FontWeight.w700,
+                                                              color: themeNotifier.isDark
+                                                                  ? AppColors.textColorWhite
+                                                                  : AppColors.textColorBlack),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 0.5.h,
+                                                        ),
+                                                        // if(user.walletAddress != null)
+                                                        GestureDetector(
+                                                          onTap: () =>
+                                                              _copyToClipboard(user.walletAddress!),
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [
+                                                              Text(
+                                                                user.walletAddress != null
+                                                                    ? replaceMiddleWithDots(
+                                                                        user.walletAddress!)
+                                                                    : "...",
+                                                                // '0x1647f...87332',
+                                                                style: TextStyle(
+                                                                    fontSize: 9.5.sp,
+                                                                    fontFamily: 'Blogger Sans',
+                                                                    fontWeight: FontWeight.w500,
+                                                                    color: AppColors.textColorGrey),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+
+
+
+                                            ],
+                                          ),
+                                        ],
+                                      )
+                                      // ProfileAppBar(
+                                      //   isOwn: true,
+                                      //   controller: scrollcontroller,
+                                      //   isProfile: true,
+                                      // ),
+                                      ),
+                                ),
+                              )),
+                          SliverPersistentHeader(
+                              pinned: true,
+                              delegate: FixedHeaderDelegate(
+                                  tabController: _tabController)),
+                        ],
+                        body:
+                            TabBarView(controller: _tabController, children: [
+                          CustomScrollView(
+                            slivers: [
+                              SliverList(
+                                delegate: SliverChildListDelegate([
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 8.h,
+                                    ),
+                                    child: Text(
+                                      "You have no Tokens".tr(),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: themeNotifier.isDark
+                                              ? AppColors.textColorGreyShade2
+                                              : AppColors.textColorBlack,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 12.sp,
+                                          fontFamily: 'Blogger Sans'),
                                     ),
                                   ),
-                                ),
-                              )
+                                ]),
+                              ),
                             ],
                           ),
-                        ],
+                          // First tab content
+                          CustomScrollView(
+                            slivers: [
+                              SliverList(
+                                delegate: SliverChildListDelegate([
+                                  // Container(height: 12.h, color: Colors.green,),
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                          height: 8.h,
+                                          width: 100.w,
+                                          color: themeNotifier.isDark
+                                              ? AppColors.backgroundColor
+                                              : AppColors.textColorWhite,
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 16.sp,
+                                              ),
+                                              // vertical: 10.sp),
+                                              child: Row(
+                                                children: [
+                                                  NFTCategoryWidget(
+                                                    title: "All".tr(),
+                                                    // image: "",
+                                                    isFirst: true,
+                                                    index: 0,
+                                                    handler: () =>
+                                                        onCategorySelected(0),
+                                                  ),
+                                                  NFTCategoryWidget(
+                                                      title: "Owned".tr(),
+                                                      // image:
+                                                      //     'assets/images/cat_dig_art.png',
+                                                      index: 1,
+                                                      handler: () {
+                                                        setState(() {
+                                                          _isloading = true;
+                                                        });
+                                                        onCategorySelected(1);
+                                                        setState(() {
+                                                          _isloading = false;
+                                                        });
+                                                      }),
+                                                  NFTCategoryWidget(
+                                                    title: "Created".tr(),
+                                                    // image:
+                                                    //     'assets/images/cat_sports.png',
+                                                    index: 2,
+                                                    handler: () =>
+                                                        onCategorySelected(2),
+                                                  ),
+                                                  NFTCategoryWidget(
+                                                    title: "Listed".tr(),
+                                                    // image:
+                                                    //     'assets/images/cat_animals.png',
+                                                    index: 3,
+                                                    handler: () =>
+                                                        onCategorySelected(3),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          )),
+                                      bottomSpaceContent(
+                                        nftsCollectionAll,
+                                        nftsAll,
+                                        nftsCollectionOwnedByUser,
+                                        nftsOwned,
+                                        themeNotifier.isDark,
+                                        nftsCollectionCreated,
+                                        nftsCreated,
+                                        nftsListed,
+                                        collectionListed,
+                                      ),
+                                    ],
+                                  ),
+                                ]),
+                              ),
+                            ],
+                          ),
+                          // Second tab content
+                        ]),
+                        // Column(
+                        //   children: [
+                        //     Container(
+                        //       height: 35.h,
+                        //       width: double.infinity,
+                        //       color: themeNotifier.isDark
+                        //           ? AppColors.backgroundColor
+                        //           : AppColors.textColorWhite,
+                        //       child: Column(
+                        //         mainAxisAlignment: MainAxisAlignment.start,
+                        //         children: [
+                        //           Container(
+                        //             height: 12.h,
+                        //             color: themeNotifier.isDark
+                        //                 ? AppColors.profileHeaderDark
+                        //                 : AppColors.whiteShade,
+                        //             child: Padding(
+                        //               padding: EdgeInsets.only(
+                        //                   left: 14.sp,
+                        //                   right: 20.sp,
+                        //                   bottom: 8.sp),
+                        //               child: Row(
+                        //                 mainAxisAlignment:
+                        //                     MainAxisAlignment.spaceBetween,
+                        //                 crossAxisAlignment:
+                        //                     CrossAxisAlignment.end,
+                        //                 children: [
+                        //                   GestureDetector(
+                        //                     onTap: () =>
+                        //                         _key.currentState!.openDrawer(),
+                        //                     child: Stack(
+                        //                       children: [
+                        //                         Icon(
+                        //                           Icons.menu_rounded,
+                        //                           color: themeNotifier.isDark
+                        //                               ? AppColors.textColorWhite
+                        //                               : AppColors.textColorBlack,
+                        //                           size: 25.sp,
+                        //                         ),
+                        //                         Consumer<TransactionProvider>(
+                        //                             builder: (context,
+                        //                                 TransactionProvider trP,
+                        //                                 _) {
+                        //                           return Positioned(
+                        //                             right: 1,
+                        //                             // bottom: 2.sp,
+                        //                             child: Container(
+                        //                               height: 4.3.sp,
+                        //                               width: 4.3.sp,
+                        //                               decoration: BoxDecoration(
+                        //                                 color: trP.showRedDot &&
+                        //                                         trP.confirmedRedDot
+                        //                                     ? AppColors.errorColor
+                        //                                     : Colors.transparent,
+                        //                                 borderRadius:
+                        //                                     BorderRadius.circular(
+                        //                                         10.sp),
+                        //                               ),
+                        //                             ),
+                        //                           );
+                        //                         }),
+                        //                       ],
+                        //                     ),
+                        //                   ),
+                        //                   GestureDetector(
+                        //                     onTap: () {
+                        //                       setLockScreenStatus(true);
+                        //                       // _isPasscodeSet ?
+                        //                       Navigator.pushAndRemoveUntil(
+                        //                         context,
+                        //                         MaterialPageRoute(
+                        //                             builder: (context) =>
+                        //                                 Unlock()),
+                        //                         (Route<dynamic> route) =>
+                        //                             false, // This predicate removes all previous routes
+                        //                       );
+                        //                     },
+                        //                     child: Padding(
+                        //                       padding:
+                        //                           EdgeInsets.only(bottom: 5.sp),
+                        //                       child: Image.asset(
+                        //                         "assets/images/lock.png",
+                        //                         height: 19.sp,
+                        //                         width: 19.sp,
+                        //                         color: themeNotifier.isDark
+                        //                             ? AppColors.textColorWhite
+                        //                             : AppColors.textColorBlack,
+                        //                       ),
+                        //                     ),
+                        //                   ),
+                        //                 ],
+                        //               ),
+                        //             ),
+                        //           ),
+                        //           SizedBox(
+                        //             height: 4.h,
+                        //           ),
+                        //           Container(
+                        //             decoration: BoxDecoration(
+                        //                 color: AppColors.textColorGrey,
+                        //                 borderRadius: BorderRadius.circular(100)),
+                        //             child: Padding(
+                        //               padding: EdgeInsets.all(1.sp),
+                        //               child: Container(
+                        //                 height: 60.sp,
+                        //                 width: 60.sp,
+                        //                 decoration: BoxDecoration(
+                        //                     color: AppColors.backgroundColor,
+                        //                     borderRadius:
+                        //                         BorderRadius.circular(100)),
+                        //                 child: Padding(
+                        //                   padding: EdgeInsets.all(1.sp),
+                        //                   child: ClipRRect(
+                        //                     borderRadius:
+                        //                         BorderRadius.circular(100),
+                        //                     child: user.userAvatar != null
+                        //                         ? Image.network(
+                        //                             user.userAvatar!,
+                        //                             fit: BoxFit.cover,
+                        //                           )
+                        //                         : Padding(
+                        //                             padding: EdgeInsets.all(4.sp),
+                        //                             child: Image.asset(
+                        //                               "assets/images/user_placeholder.png",
+                        //                               color:
+                        //                                   AppColors.textColorGrey,
+                        //                             ),
+                        //                           ),
+                        //                   ),
+                        //                 ),
+                        //               ),
+                        //             ),
+                        //           ),
+                        //           SizedBox(
+                        //             height: 2.h,
+                        //           ),
+                        //           Text(
+                        //             user.userName != null
+                        //                 ? user.userName!
+                        //                 : 'username.mjra'.tr(),
+                        //             style: TextStyle(
+                        //                 fontSize: 11.7.sp,
+                        //                 fontFamily: 'Blogger Sans',
+                        //                 fontWeight: FontWeight.w700,
+                        //                 color: themeNotifier.isDark
+                        //                     ? AppColors.textColorWhite
+                        //                     : AppColors.textColorBlack),
+                        //           ),
+                        //           SizedBox(
+                        //             height: 0.5.h,
+                        //           ),
+                        //           // if(user.walletAddress != null)
+                        //           GestureDetector(
+                        //             onTap: () =>
+                        //                 _copyToClipboard(user.walletAddress!),
+                        //             child: Row(
+                        //               mainAxisAlignment: MainAxisAlignment.center,
+                        //               children: [
+                        //                 Text(
+                        //                   user.walletAddress != null
+                        //                       ? replaceMiddleWithDots(
+                        //                           user.walletAddress!)
+                        //                       : "...",
+                        //                   // '0x1647f...87332',
+                        //                   style: TextStyle(
+                        //                       fontSize: 9.5.sp,
+                        //                       fontFamily: 'Blogger Sans',
+                        //                       fontWeight: FontWeight.w500,
+                        //                       color: AppColors.textColorGrey),
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //     Stack(
+                        //       children: [
+                        //         Container(
+                        //           height: 65.h,
+                        //           width: double.infinity,
+                        //           color: themeNotifier.isDark
+                        //               ? AppColors.backgroundColor
+                        //               : AppColors.textColorWhite,
+                        //           child: Column(
+                        //             children: [
+                        //               PreferredSize(
+                        //                 preferredSize:
+                        //                     Size.fromHeight(kToolbarHeight + 10),
+                        //                 child: Stack(
+                        //                   children: [
+                        //                     Positioned(
+                        //                       bottom: 0,
+                        //                       left: 0,
+                        //                       right: 0,
+                        //                       child: Container(
+                        //                         height: 1.sp,
+                        //                         color: themeNotifier.isDark
+                        //                             ? AppColors
+                        //                                 .transactionSummNeoBorder
+                        //                             : AppColors
+                        //                                 .tabUnselectedClorLight,
+                        //                       ),
+                        //                     ),
+                        //                     Container(
+                        //                       color: Colors.transparent,
+                        //                       // Background color of the TabBar
+                        //
+                        //                       child: TabBar(
+                        //                         controller: _tabController,
+                        //                         // indicatorPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                        //                         indicatorColor:
+                        //                             AppColors.activeButtonColor,
+                        //                         unselectedLabelColor:
+                        //                             AppColors.textColorGrey,
+                        //                         labelColor: themeNotifier.isDark
+                        //                             ? AppColors.textColorWhite
+                        //                             : AppColors.textColorBlack,
+                        //                         labelStyle: TextStyle(
+                        //                             color: themeNotifier.isDark
+                        //                                 ? AppColors.textColorWhite
+                        //                                 : AppColors
+                        //                                     .textColorBlack,
+                        //                             fontSize: 11.5.sp,
+                        //                             fontWeight: FontWeight.w600),
+                        //                         tabs: [
+                        //                           Tab(
+                        //                               text: "     " +
+                        //                                   'Tokens'.tr() +
+                        //                                   "     "),
+                        //                           Tab(
+                        //                               text: "      " +
+                        //                                   'NFTs'.tr() +
+                        //                                   "       "),
+                        //                         ],
+                        //                       ),
+                        //                     ),
+                        //                   ],
+                        //                 ),
+                        //               ),
+                        //               _isloading
+                        //                   ? Padding(
+                        //                       padding: EdgeInsets.only(top: 25.h),
+                        //                       child: Center(
+                        //                         child: CircularProgressIndicator(
+                        //                           color:
+                        //                               AppColors.activeButtonColor,
+                        //                         ),
+                        //                       ),
+                        //                     )
+                        //                   : Expanded(
+                        //                       child: TabBarView(
+                        //                         controller: _tabController,
+                        //                         children: [
+                        //                           Padding(
+                        //                             padding: EdgeInsets.symmetric(
+                        //                               vertical: 15.h,
+                        //                             ),
+                        //                             child: Text(
+                        //                               "You have no Tokens".tr(),
+                        //                               textAlign: TextAlign.center,
+                        //                               style: TextStyle(
+                        //                                   color: themeNotifier
+                        //                                           .isDark
+                        //                                       ? AppColors
+                        //                                           .textColorGreyShade2
+                        //                                       : AppColors
+                        //                                           .textColorBlack,
+                        //                                   fontWeight:
+                        //                                       FontWeight.w500,
+                        //                                   fontSize: 12.sp,
+                        //                                   fontFamily:
+                        //                                       'Blogger Sans'),
+                        //                             ),
+                        //                           ),
+                        //                           Column(
+                        //                             children: [
+                        //                               Container(
+                        //                                   height: 8.h,
+                        //                                   width: 100.w,
+                        //                                   color: themeNotifier
+                        //                                           .isDark
+                        //                                       ? AppColors
+                        //                                           .backgroundColor
+                        //                                       : AppColors
+                        //                                           .textColorWhite,
+                        //                                   child:
+                        //                                       SingleChildScrollView(
+                        //                                     scrollDirection:
+                        //                                         Axis.horizontal,
+                        //                                     child: Padding(
+                        //                                       padding: EdgeInsets
+                        //                                           .symmetric(
+                        //                                         horizontal: 16.sp,
+                        //                                       ),
+                        //                                       // vertical: 10.sp),
+                        //                                       child: Row(
+                        //                                         children: [
+                        //                                           NFTCategoryWidget(
+                        //                                             title: "All"
+                        //                                                 .tr(),
+                        //                                             // image: "",
+                        //                                             isFirst: true,
+                        //                                             index: 0,
+                        //                                             handler: () =>
+                        //                                                 onCategorySelected(
+                        //                                                     0),
+                        //                                           ),
+                        //                                           NFTCategoryWidget(
+                        //                                               title: "Owned"
+                        //                                                   .tr(),
+                        //                                               // image:
+                        //                                               //     'assets/images/cat_dig_art.png',
+                        //                                               index: 1,
+                        //                                               handler:
+                        //                                                   () {
+                        //                                                 setState(
+                        //                                                     () {
+                        //                                                   _isloading =
+                        //                                                       true;
+                        //                                                 });
+                        //                                                 onCategorySelected(
+                        //                                                     1);
+                        //                                                 setState(
+                        //                                                     () {
+                        //                                                   _isloading =
+                        //                                                       false;
+                        //                                                 });
+                        //                                               }),
+                        //                                           NFTCategoryWidget(
+                        //                                             title:
+                        //                                                 "Created"
+                        //                                                     .tr(),
+                        //                                             // image:
+                        //                                             //     'assets/images/cat_sports.png',
+                        //                                             index: 2,
+                        //                                             handler: () =>
+                        //                                                 onCategorySelected(
+                        //                                                     2),
+                        //                                           ),
+                        //                                           NFTCategoryWidget(
+                        //                                             title:
+                        //                                                 "Listed"
+                        //                                                     .tr(),
+                        //                                             // image:
+                        //                                             //     'assets/images/cat_animals.png',
+                        //                                             index: 3,
+                        //                                             handler: () =>
+                        //                                                 onCategorySelected(
+                        //                                                     3),
+                        //                                           ),
+                        //                                         ],
+                        //                                       ),
+                        //                                     ),
+                        //                                   )),
+                        //                               Expanded(
+                        //                                   child: bottomSpaceContent(
+                        //                                       nftsCollectionAll,
+                        //                                       nftsAll,
+                        //                                       nftsCollectionOwnedByUser,
+                        //                                       nftsOwned,
+                        //                                       themeNotifier
+                        //                                           .isDark,
+                        //                                       nftsCollectionCreated,
+                        //                                       nftsCreated,
+                        //                                       nftsListed,
+                        //                                       collectionListed))
+                        //                             ],
+                        //                           ),
+                        //                         ],
+                        //                       ),
+                        //                     )
+                        //             ],
+                        //           ),
+                        //         ),
+                        //         if (showCopiedMsg)
+                        //           Positioned(
+                        //             left: 10,
+                        //             right: 10,
+                        //             bottom: 40,
+                        //             child: Align(
+                        //               alignment: Alignment.center,
+                        //               child: Container(
+                        //                 height: 4.h,
+                        //                 width: 35.w,
+                        //                 decoration: BoxDecoration(
+                        //                   borderRadius:
+                        //                       BorderRadius.circular(5.sp),
+                        //                   color: AppColors.profileHeaderDark,
+                        //                 ),
+                        //                 child: Row(
+                        //                   mainAxisAlignment:
+                        //                       MainAxisAlignment.center,
+                        //                   crossAxisAlignment:
+                        //                       CrossAxisAlignment.center,
+                        //                   children: [
+                        //                     Image.asset(
+                        //                       "assets/images/hesa_wallet_logo.png",
+                        //                       fit: BoxFit.cover,
+                        //                       height: 12.sp,
+                        //                       width: 12.sp,
+                        //                     ),
+                        //                     SizedBox(
+                        //                       width: 5.sp,
+                        //                     ),
+                        //                     Text(
+                        //                       'Address copied!'.tr(),
+                        //                       style: TextStyle(
+                        //                           fontSize: 9.sp,
+                        //                           fontWeight: FontWeight.w600,
+                        //                           color: AppColors.textColorWhite,
+                        //                           fontFamily: 'Blogger Sans'),
+                        //                     )
+                        //                   ],
+                        //                 ),
+                        //               ),
+                        //             ),
+                        //           )
+                        //       ],
+                        //     ),
+                        //   ],
+                        // ),
                       ),
                     ),
                   );
@@ -1536,20 +1874,165 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     }
   }
 
-
-
   void _copyToClipboard(String text) {
     Clipboard.setData(ClipboardData(text: text));
     setState(() {
-      showCopiedMsg=true;
+      showCopiedMsg = true;
     });
     Future.delayed(Duration(milliseconds: 3000), () {
       setState(() {
-        showCopiedMsg=false;
+        showCopiedMsg = false;
       });
     });
     // fToast = FToast();
     // fToast.init(context);
-
   }
+}
+
+class ProfileAppBar extends StatelessWidget {
+  final bool isOwn;
+  final ScrollController controller;
+  final bool isProfile;
+  final String? userAvatar;
+  final String? userName;
+  final String? walletAddress;
+  final bool isDarkTheme;
+  final void Function(String)? copyToClipboardCallback;
+
+  ProfileAppBar({
+    required this.isOwn,
+    required this.controller,
+    required this.isProfile,
+    this.userAvatar,
+    this.userName,
+    this.walletAddress,
+    this.isDarkTheme = false,
+    this.copyToClipboardCallback,
+  });
+
+  String replaceMiddleWithDots(String text, {int start = 5, int end = 4}) {
+    if (text.length <= start + end) return text;
+    return text.substring(0, start) + "..." + text.substring(text.length - end);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: AppColors.textColorGrey,
+            borderRadius: BorderRadius.circular(100),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(1.sp),
+            child: Container(
+              height: 60.sp,
+              width: 60.sp,
+              decoration: BoxDecoration(
+                color: AppColors.backgroundColor,
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(1.sp),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: userAvatar != null
+                      ? Image.network(
+                          userAvatar!,
+                          fit: BoxFit.cover,
+                        )
+                      : Padding(
+                          padding: EdgeInsets.all(4.sp),
+                          child: Image.asset(
+                            "assets/images/user_placeholder.png",
+                            color: AppColors.textColorGrey,
+                          ),
+                        ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 2.h),
+        Text(
+          userName ?? 'username.mjra'.tr(),
+          style: TextStyle(
+            fontSize: 11.7.sp,
+            fontFamily: 'Blogger Sans',
+            fontWeight: FontWeight.w700,
+            color: isDarkTheme
+                ? AppColors.textColorWhite
+                : AppColors.textColorBlack,
+          ),
+        ),
+        SizedBox(height: 0.5.h),
+        GestureDetector(
+          onTap: () {
+            if (walletAddress != null && copyToClipboardCallback != null) {
+              copyToClipboardCallback!(walletAddress!);
+            }
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                walletAddress != null
+                    ? replaceMiddleWithDots(walletAddress!)
+                    : "...",
+                style: TextStyle(
+                  fontSize: 9.5.sp,
+                  fontFamily: 'Blogger Sans',
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.textColorGrey,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class FixedHeaderDelegate extends SliverPersistentHeaderDelegate {
+  TabController tabController;
+
+  FixedHeaderDelegate({required this.tabController});
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      color: AppColors.backgroundColor,
+      // height: 25.h,
+      child: Column(
+        children: [
+          TabBar(
+            controller: tabController,
+            // indicatorPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+            indicatorColor: AppColors.activeButtonColor,
+            unselectedLabelColor: AppColors.textColorGrey,
+            labelColor: AppColors.textColorWhite,
+            labelStyle: TextStyle(
+                color: AppColors.textColorWhite,
+                fontSize: 11.5.sp,
+                fontWeight: FontWeight.w600),
+            tabs: [
+              Tab(text: "     " + 'Tokens'.tr() + "     "),
+              Tab(text: "      " + 'NFTs'.tr() + "       "),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  double get maxExtent => kToolbarHeight; // Sets the height to just the TabBar
+  @override
+  double get minExtent => kToolbarHeight;  // Minimum height when pinned (no collapsing)
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      false;
 }

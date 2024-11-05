@@ -529,7 +529,7 @@ class _WalletBankingAndPaymentEmptyState
                 children: [
                   MainHeader(title: 'Banking & payments'.tr()),
                   Container(
-                    height: 85.h,
+                    height: 89.h,
                     width: double.infinity,
                     child: Padding(
                       padding: EdgeInsets.symmetric(

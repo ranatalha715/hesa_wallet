@@ -175,7 +175,10 @@ class _ResetEmailState extends State<ResetEmail> {
                                                               .text.isEmpty) ||
                                                       user.emailErrorResponse
                                                           .toString()
-                                                          .contains('Email')
+                                                          .contains('Email') ||
+                                                  user.emailErrorResponse
+                                                      .toString()
+                                                      .contains('عنوان البريد الإلكتروني ')
                                                   ? AppColors.errorColor
                                                   : Colors.transparent,
                                             )),
@@ -203,15 +206,19 @@ class _ResetEmailState extends State<ResetEmail> {
                                     ),
                                   ),
                                 if (user.emailErrorResponse != null &&
-                                    _emailController.text.isNotEmpty &&
-                                    isValidating &&
+                                        _emailController.text.isNotEmpty &&
+                                        isValidating &&
+                                        user.emailErrorResponse
+                                            .toString()
+                                            .contains('Email') ||
                                     user.emailErrorResponse
                                         .toString()
-                                        .contains('Email'))
+                                        .contains('عنوان البريد الإلكتروني ')
+                                )
                                   Padding(
                                     padding: EdgeInsets.only(top: 7.sp),
                                     child: Text(
-                                      isEnglish ? "*${user.emailErrorResponse}": "لم يتم التعرف على الايميل المدخل*",
+                                      "*${user.emailErrorResponse}",
                                       style: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           fontSize: 10.sp,
@@ -252,6 +259,7 @@ class _ResetEmailState extends State<ResetEmail> {
                                 ).forgotPassword(
                                   email: _emailController.text,
                                   context: context,
+                                  isEnglish: isEnglish,
                                 );
                                 setState(() {
                                   isLoading = false;

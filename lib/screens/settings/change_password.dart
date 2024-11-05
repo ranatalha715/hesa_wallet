@@ -321,7 +321,10 @@ class _ChangePasswordState extends State<ChangePassword> {
                                                         auth.changePasswordError
                                                             .toString()
                                                             .contains(
-                                                                'Old Password')
+                                                                'Old Password') ||
+                                                    auth.changePasswordError
+                                                        .toString()
+                                                        .contains('كلمة المرور')
                                                     ? AppColors.errorColor
                                                     : Colors.transparent,
                                                 // Off-white color
@@ -370,13 +373,15 @@ class _ChangePasswordState extends State<ChangePassword> {
                                       isValidating &&
                                       auth.changePasswordError
                                           .toString()
-                                          .contains('Old Password'))
+                                          .contains('Old Password') ||
+                                      auth.changePasswordError
+                                          .toString()
+                                          .contains('كلمة المرور')
+                                  )
                                     Padding(
                                       padding: EdgeInsets.only(top: 7.sp),
                                       child: Text(
-                                        isEnglish
-                                            ? "*${auth.changePasswordError}"
-                                            : "*كلمة المرور غير صحيحة",
+                                         "*${auth.changePasswordError}",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 10.sp,
@@ -710,7 +715,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                                       child: Text(
                                         isEnglish
                                             ? "*${auth.changePasswordError}"
-                                            : "كلمة المرور غير متطابقة*",
+                                            : "*كلمة المرور غير متطابقة",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 10.sp,
@@ -769,6 +774,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                                                           _confirmPasswordController
                                                               .text,
                                                       context: context,
+                                                      isEnglish:isEnglish,
                                                       token: accessToken);
                                               setState(() {
                                                 _isLoading = false;

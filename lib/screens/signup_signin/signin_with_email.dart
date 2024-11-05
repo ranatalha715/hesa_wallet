@@ -418,7 +418,9 @@ class _SigninWithEmailState extends State<SigninWithEmail> {
                                                 password:
                                                 sha512String,
                                                 // sha512String,
-                                                context: context);
+                                                context: context,
+                                          isEnglish:isEnglish,
+                                        );
                                     setState(() {
                                       _isLoading = false;
                                     });

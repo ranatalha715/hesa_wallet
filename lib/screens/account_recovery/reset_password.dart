@@ -426,6 +426,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                                             _confirmPasswordController.text,
                                         confirmPassword: _confirmPasswordController.text,
                                         context: context,
+                                        // isEnglish: isEnglish,
                                         token: '');
                                 setState(() {
                                   isLoading = false;

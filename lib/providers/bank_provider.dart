@@ -88,6 +88,7 @@ class BankProvider with ChangeNotifier{
     required String ibanNumber,
     required String bankBic,
     required String accountTitle,
+    bool isEnglish =true,
     required BuildContext context,
   }) async {
     final String url = BASE_URL + '/user/bank-account/add/step1';
@@ -104,6 +105,7 @@ class BankProvider with ChangeNotifier{
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
+        'accept-language': isEnglish ? 'eng' : 'ar',
       },
     );
     fToast = FToast();

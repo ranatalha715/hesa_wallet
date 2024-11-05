@@ -19,9 +19,9 @@ class AuthProvider with ChangeNotifier {
   late FToast fToast;
   bool isOverlayVisible = false;
   var uniqueIdFromStep1;
-  var codeFromOtpBoxes='';
-bool otpErrorResponse=false;
-bool otpSuccessResponse=false;
+  var codeFromOtpBoxes = '';
+  bool otpErrorResponse = false;
+  bool otpSuccessResponse = false;
 
   Future<AuthResult> logInWithMobile({
     required String mobile,
@@ -35,7 +35,8 @@ bool otpSuccessResponse=false;
         "code": code,
       };
 
-      final response = await http.post(url, body: body);
+      final response = await http.post(url,
+          body: body);
       fToast = FToast();
       fToast.init(context);
       print('loginwithmobileresponse');
@@ -50,8 +51,8 @@ bool otpSuccessResponse=false;
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('accessToken', accessToken);
         await prefs.setString('refreshToken', refreshToken);
-        otpErrorResponse=false;
-        otpSuccessResponse=true;
+        otpErrorResponse = false;
+        otpSuccessResponse = true;
         notifyListeners();
         // await prefs.setString('password', password);
         print('true ya false h');
@@ -93,63 +94,65 @@ bool otpSuccessResponse=false;
                     .navigateToNeoForConnectWallet = true;
 
                 // setState(() {
-                  isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
-                      .navigateToNeoForConnectWallet;  // Set overlay visibility to true
+                isOverlayVisible = Provider.of<UserProvider>(context,
+                        listen: false)
+                    .navigateToNeoForConnectWallet; // Set overlay visibility to true
                 // });
 
                 print("check kro" +
                     Provider.of<UserProvider>(context, listen: false)
                         .navigateToNeoForConnectWallet
                         .toString());
-                 Future.delayed(const Duration(milliseconds: 500));
+                Future.delayed(const Duration(milliseconds: 500));
                 Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => ConnectDapp()),
-                      (Route<dynamic> route) => false,
+                  (Route<dynamic> route) => false,
                 );
               } else {
                 Provider.of<UserProvider>(context, listen: false)
                     .navigateToNeoForConnectWallet = false;
 
                 // setState(() {
-                  isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
-                      .navigateToNeoForConnectWallet;  // Set overlay visibility to false
+                isOverlayVisible = Provider.of<UserProvider>(context,
+                        listen: false)
+                    .navigateToNeoForConnectWallet; // Set overlay visibility to false
                 // });
               }
               return true; // Exit the loop after processing
-            } else{
+            } else {
               Provider.of<UserProvider>(context, listen: false)
                   .navigateToNeoForConnectWallet = false;
 
               // setState(() {
-                isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
-                    .navigateToNeoForConnectWallet;  // Set overlay visibility to false
+              isOverlayVisible = Provider.of<UserProvider>(context,
+                      listen: false)
+                  .navigateToNeoForConnectWallet; // Set overlay visibility to false
               // });
-
             }
 
             return false;
           });
         }
-        otpErrorResponse=false;
-        otpSuccessResponse=true;
+        otpErrorResponse = false;
+        otpSuccessResponse = true;
         notifyListeners();
 
         return AuthResult.success;
       } else {
         print("Login failed: ${response.body}");
-        otpErrorResponse=true;
-        otpSuccessResponse=false;
+        otpErrorResponse = true;
+        otpSuccessResponse = false;
         notifyListeners();
         return AuthResult.failure;
       }
     } on TimeoutException catch (e) {
-      otpErrorResponse=true;
-      otpSuccessResponse=false;
+      otpErrorResponse = true;
+      otpSuccessResponse = false;
       print("TimeoutException during login: $e");
       return AuthResult.failure;
     } catch (e) {
-      otpErrorResponse=true;
-      otpSuccessResponse=false;
+      otpErrorResponse = true;
+      otpSuccessResponse = false;
       print("Exception during login: $e");
       return AuthResult.failure;
     }
@@ -206,16 +209,13 @@ bool otpSuccessResponse=false;
     }
   }
 
-
   Future<AuthResult> deleteAccountStep1({
     required String token,
     required String termsAndConditions,
     required BuildContext context,
   }) async {
     final url = Uri.parse(BASE_URL + '/user/delete/step1');
-    final body = {
-      "termsAndConditions": termsAndConditions
-    };
+    final body = {"termsAndConditions": termsAndConditions};
 
     final response = await http.post(url, body: body, headers: {
       'Authorization': 'Bearer $token',
@@ -223,15 +223,15 @@ bool otpSuccessResponse=false;
 
     final fToast = FToast();
     fToast.init(context);
-print('delete account');
-print(json.decode(response.body));
+    print('delete account');
+    print(json.decode(response.body));
     if (response.statusCode == 201) {
-      otpErrorResponse=false;
-      otpSuccessResponse=false;
+      otpErrorResponse = false;
+      otpSuccessResponse = false;
       return AuthResult.success;
     } else {
-      otpErrorResponse=false;
-      otpSuccessResponse=false;
+      otpErrorResponse = false;
+      otpSuccessResponse = false;
       return AuthResult.failure;
     }
   }
@@ -239,19 +239,21 @@ print(json.decode(response.body));
   Future<AuthResult> deleteAccountStep2({
     required String code,
     required String token,
-
     required BuildContext context,
   }) async {
     final url = Uri.parse(BASE_URL + '/user/delete/step2');
 
     final body = {
       "code": code,
-
     };
 
-    final response = await http.post(url, body: body,  headers: {
-      'Authorization': 'Bearer $token',
-    },);
+    final response = await http.post(
+      url,
+      body: body,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
     print('sending code' + code.toString());
     print('sending unique id' + uniqueIdFromStep1.toString());
     print('deleteaccountatep2 Response');
@@ -259,18 +261,17 @@ print(json.decode(response.body));
     fToast = FToast();
     fToast.init(context);
     if (response.statusCode == 201) {
-      otpErrorResponse=false;
-      otpSuccessResponse=true;
+      otpErrorResponse = false;
+      otpSuccessResponse = true;
       notifyListeners();
       return AuthResult.success;
     } else {
-      otpErrorResponse=true;
-      otpSuccessResponse=false;
+      otpErrorResponse = true;
+      otpSuccessResponse = false;
       notifyListeners();
       return AuthResult.failure;
     }
   }
-
 
   // Future<AuthResult> logoutUser({
   //   required String token,
@@ -331,11 +332,9 @@ print(json.decode(response.body));
       // print('Logout token: $token');
 
       if (response.statusCode == 204) {
-
-          // final jsonResponse = json.decode(response.body);
-          // final msg = jsonResponse['message'];
-          print('logout success'); // Print the message
-
+        // final jsonResponse = json.decode(response.body);
+        // final msg = jsonResponse['message'];
+        print('logout success'); // Print the message
 
         return AuthResult.success;
       } else {
@@ -348,17 +347,23 @@ print(json.decode(response.body));
     }
   }
 
-
   Future<AuthResult> sendLoginOTP({
     required String mobile,
     required BuildContext context,
+    bool isEnglish =true,
   }) async {
     final url = Uri.parse(BASE_URL + '/auth/send-login-otp');
     final body = {
       "to": "+966" + mobile,
     };
 
-    final response = await http.post(url, body: body);
+    final response = await http.post(url, body: body,
+      headers: {
+        // "Content-type": "application/json",
+        // "Accept": "application/json",
+        'accept-language': isEnglish ? 'eng' : 'ar',
+      },
+    );
     fToast = FToast();
     fToast.init(context);
     print('send login otp' + response.body);
@@ -367,17 +372,17 @@ print(json.decode(response.body));
       print("${response.body}");
       final successResponse = json.decode(response.body);
       // localToast(context,  'success'+ successResponse['message']);
-      loginErrorResponse= null;
-      otpErrorResponse=false;
-      otpSuccessResponse=false;
+      loginErrorResponse = null;
+      otpErrorResponse = false;
+      otpSuccessResponse = false;
       return AuthResult.success;
     } else {
       print("Something went wrong: ${response.body}");
       final errorResponse = json.decode(response.body);
-      loginErrorResponse=errorResponse['message'][0]['message'];
+      loginErrorResponse = errorResponse['message'][0]['message'];
       // localToast(context,  'failure'+ errorResponse['message'][0]['message']);
-      otpErrorResponse=false;
-      otpSuccessResponse=false;
+      otpErrorResponse = false;
+      otpSuccessResponse = false;
       return AuthResult.failure;
     }
   }
@@ -405,21 +410,21 @@ print(json.decode(response.body));
       print('send otp' + response.body);
 
       if (response.statusCode == 201) {
-        otpErrorResponse=false;
-        otpSuccessResponse=false;
+        otpErrorResponse = false;
+        otpSuccessResponse = false;
         return AuthResult.success;
       } else {
         // Show an error message or handle the response as needed
         print("Something went wrong: ${response.body}");
-        otpErrorResponse=false;
-        otpSuccessResponse=false;
+        otpErrorResponse = false;
+        otpSuccessResponse = false;
         return AuthResult.failure;
       }
     } catch (e) {
       // Handle the exception
       print("Exception occurred: $e");
-      otpErrorResponse=false;
-      otpSuccessResponse=false;
+      otpErrorResponse = false;
+      otpSuccessResponse = false;
       return AuthResult.failure;
     }
   }
@@ -460,25 +465,26 @@ print(json.decode(response.body));
     required String token,
     required String medium,
     required BuildContext context,
-
   }) async {
     final url = Uri.parse(BASE_URL + '/register/resend-otp');
 
-    final body = {
-      "medium" : medium
-    };
+    final body = {"medium": medium};
 
-    final response = await http.post(url, body: body,  headers: {
-      'X-Unique-Id': '$uniqueIdFromStep1',
-      'Authorization': 'Bearer $token',
-    },);
+    final response = await http.post(
+      url,
+      body: body,
+      headers: {
+        'X-Unique-Id': '$uniqueIdFromStep1',
+        'Authorization': 'Bearer $token',
+      },
+    );
     print('sending unique id' + uniqueIdFromStep1.toString());
     print('registerNumResendOtp Response');
     print(response.body);
     fToast = FToast();
     fToast.init(context);
     if (response.statusCode == 201) {
-      otpErrorResponse=false;
+      otpErrorResponse = false;
       notifyListeners();
       return AuthResult.success;
     } else {
@@ -488,30 +494,30 @@ print(json.decode(response.body));
     }
   }
 
-
   Future<AuthResult> registerEmailResendOtp({
     required String token,
     required String medium,
     required BuildContext context,
-
   }) async {
     final url = Uri.parse(BASE_URL + '/register/resend-otp');
 
-    final body = {
-      "medium" : medium
-    };
+    final body = {"medium": medium};
 
-    final response = await http.post(url, body: body,  headers: {
-      'X-Unique-Id': '$uniqueIdFromStep1',
-      'Authorization': 'Bearer $token',
-    },);
+    final response = await http.post(
+      url,
+      body: body,
+      headers: {
+        'X-Unique-Id': '$uniqueIdFromStep1',
+        'Authorization': 'Bearer $token',
+      },
+    );
     print('sending unique id' + uniqueIdFromStep1.toString());
     print('registerEmailResendOtp Response');
     print(response.body);
     fToast = FToast();
     fToast.init(context);
     if (response.statusCode == 201) {
-      otpErrorResponse=false;
+      otpErrorResponse = false;
       notifyListeners();
       return AuthResult.success;
     } else {
@@ -531,6 +537,7 @@ print(json.decode(response.body));
     required String idNumber,
     required String mobileNumber,
     required BuildContext context,
+    bool isEnglish=true,
   }) async {
     final url = Uri.parse('$BASE_URL/register/step1');
     final body = {
@@ -544,6 +551,7 @@ print(json.decode(response.body));
 
     final headers = {
       'Content-Type': 'application/json',
+      'accept-language': isEnglish ? 'eng' : 'ar',
       // Add any other headers here (e.g., authentication headers)
     };
 
@@ -565,28 +573,28 @@ print(json.decode(response.body));
         final uniqueId = jsonResponse['data']['uniqueId'];
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('uniqueId', uniqueId);
-        uniqueIdFromStep1=uniqueId;
-        otpErrorResponse=false;
-        otpSuccessResponse=false;
+        uniqueIdFromStep1 = uniqueId;
+        otpErrorResponse = false;
+        otpSuccessResponse = false;
         notifyListeners();
         print("uniqueId" + uniqueId);
         final successResponse = json.decode(response.body);
-        registerUserErrorResponse= null;
+        registerUserErrorResponse = null;
         return AuthResult.success;
       } else {
         final errorResponse = json.decode(response.body);
         print("Registration failed: ${response.body}");
         registerUserErrorResponse = errorResponse['message'][0]['message'];
-        otpErrorResponse=false;
-        otpSuccessResponse=false;
+        otpErrorResponse = false;
+        otpSuccessResponse = false;
         return AuthResult.failure;
       }
     } catch (e) {
       // Handle network or other errors
       print("Error during registration: $e");
 
-      otpErrorResponse=false;
-      otpSuccessResponse=false;
+      otpErrorResponse = false;
+      otpSuccessResponse = false;
       return AuthResult.failure;
     }
   }
@@ -636,12 +644,15 @@ print(json.decode(response.body));
 
     final body = {
       "code": code,
-
     };
 
-    final response = await http.post(url, body: body,  headers: {
-      'X-Unique-Id': '$uniqueIdFromStep1',
-    },);
+    final response = await http.post(
+      url,
+      body: body,
+      headers: {
+        'X-Unique-Id': '$uniqueIdFromStep1',
+      },
+    );
     print('sending code' + code.toString());
     print('sending unique id' + uniqueIdFromStep1.toString());
     print('registerUserStep2 Response');
@@ -649,23 +660,23 @@ print(json.decode(response.body));
     fToast = FToast();
     fToast.init(context);
     if (response.statusCode == 201) {
-      otpErrorResponse=false;
-      otpSuccessResponse=true;
+      otpErrorResponse = false;
+      otpSuccessResponse = true;
       notifyListeners();
       return AuthResult.success;
     } else {
-      otpErrorResponse=true;
-      otpSuccessResponse=false;
+      otpErrorResponse = true;
+      otpSuccessResponse = false;
       notifyListeners();
       return AuthResult.failure;
     }
   }
 
   Future<AuthResult> registerUserStep3({
-
     required String username,
     required String email,
     required String password,
+    bool isEnglish=true,
     required BuildContext context,
   }) async {
     final url = Uri.parse('$BASE_URL/register/step3');
@@ -673,13 +684,12 @@ print(json.decode(response.body));
       "username": username,
       "email": email,
       "password": password,
-
     };
 
     final headers = {
       'Content-Type': 'application/json',
-
-        'X-Unique-Id': '$uniqueIdFromStep1',
+      'X-Unique-Id': '$uniqueIdFromStep1',
+      'accept-language': isEnglish ? 'eng' : 'ar',
 
       // Add any other headers here (e.g., authentication headers)
     };
@@ -706,21 +716,21 @@ print(json.decode(response.body));
         // final prefs = await SharedPreferences.getInstance();
         // await prefs.setString('uniqueId', uniqueId);
         // uniqueIdFromStep1=uniqueId;
-        otpErrorResponse=false;
-        otpSuccessResponse=false;
+        otpErrorResponse = false;
+        otpSuccessResponse = false;
         notifyListeners();
 
         // print("uniqueId" + uniqueId);
         // final successResponse = json.decode(response.body);
-        registerUserErrorResponse=null;
+        registerUserErrorResponse = null;
         return AuthResult.success;
       } else {
         final errorResponse = json.decode(response.body);
         registerUserErrorResponse = errorResponse['message'][0]['message'];
         // Registration failed
         print("Registration failed: ${response.body}");
-        otpErrorResponse=false;
-        otpSuccessResponse=false;
+        otpErrorResponse = false;
+        otpSuccessResponse = false;
         notifyListeners();
         return AuthResult.failure;
       }
@@ -733,32 +743,34 @@ print(json.decode(response.body));
 
   Future<AuthResult> registerUserStep4({
     required String code,
-
     required BuildContext context,
   }) async {
     final url = Uri.parse(BASE_URL + '/register/step4');
     final body = {
       "code": code,
-
     };
 
-    final response = await http.post(url, body: body,  headers: {
-      'X-Unique-Id': '$uniqueIdFromStep1',
-    },);
+    final response = await http.post(
+      url,
+      body: body,
+      headers: {
+        'X-Unique-Id': '$uniqueIdFromStep1',
+      },
+    );
     print('registerUserStep4 Response');
     print(response.body);
     fToast = FToast();
     fToast.init(context);
     if (response.statusCode == 201) {
       // Successful login, handle navigation or other actions
-      otpErrorResponse=false;
-      otpSuccessResponse=true;
+      otpErrorResponse = false;
+      otpSuccessResponse = true;
       notifyListeners();
       return AuthResult.success;
     } else {
       // Show an error message or handle the response as needed
-      otpErrorResponse=true;
-      otpSuccessResponse=false;
+      otpErrorResponse = true;
+      otpSuccessResponse = false;
       notifyListeners();
       return AuthResult.failure;
     }
@@ -771,15 +783,17 @@ print(json.decode(response.body));
   }) async {
     final url = Uri.parse(BASE_URL + '/register/step5');
     final body = {
-      "termsAndConditions":
-      termsAndConditions == "true" ? "true":"false",
+      "termsAndConditions": termsAndConditions == "true" ? "true" : "false",
       "deviceToken": deviceToken,
-
     };
 
-    final response = await http.post(url, body: body,  headers: {
-      'X-Unique-Id': '$uniqueIdFromStep1',
-    },);
+    final response = await http.post(
+      url,
+      body: body,
+      headers: {
+        'X-Unique-Id': '$uniqueIdFromStep1',
+      },
+    );
     print('step 5 body');
     print(uniqueIdFromStep1);
     print(deviceToken);
@@ -817,7 +831,6 @@ print(json.decode(response.body));
         //   },
         // );
         print('go to neo');
-
       } else {
         // forUnlock ?   prefs.setBool('setLockScreen', false): null;
         Future.delayed(Duration(seconds: 3), () async {
@@ -827,36 +840,34 @@ print(json.decode(response.body));
               'nfts-page', (Route d) => false,
               arguments: {});
         });
-
       }
       // loginErrorResponse=null;
       // return AuthResult.success;
-      loginErrorResponse=null;
-      otpErrorResponse=false;
-      otpSuccessResponse=false;
+      loginErrorResponse = null;
+      otpErrorResponse = false;
+      otpSuccessResponse = false;
       notifyListeners();
       return AuthResult.success;
     } else {
       final errorResponse = json.decode(response.body);
       print("Login failed: ${response.body}");
 
-      loginErrorResponse=errorResponse['message'][0]['message'];
+      loginErrorResponse = errorResponse['message'][0]['message'];
       //   if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
       // }
-      otpErrorResponse=false;
-      otpSuccessResponse=false;
+      otpErrorResponse = false;
+      otpSuccessResponse = false;
       notifyListeners();
       return AuthResult.failure;
     }
-
   }
-
 
   var loginErrorResponse;
 
   Future<AuthResult> loginWithUsername({
     required String username,
-    bool forUnlock=false,
+    bool forUnlock = false,
+    bool isEnglish = true,
     required String password,
     required BuildContext context,
   }) async {
@@ -868,7 +879,13 @@ print(json.decode(response.body));
       };
 
       final response = await http
-          .post(url, body: body)
+          .post(url,
+              headers: {
+                // "Content-type": "application/json",
+                // "Accept": "application/json",
+                'accept-language': isEnglish ? 'eng' : 'ar',
+              },
+              body: body)
           .timeout(Duration(seconds: 30)); // Timeout set to 10 seconds
       fToast = FToast();
       fToast.init(context);
@@ -905,7 +922,7 @@ print(json.decode(response.body));
           // );
           print('go to neo');
         } else {
-          forUnlock ?   prefs.setBool('setLockScreen', false): null;
+          forUnlock ? prefs.setBool('setLockScreen', false) : null;
           Future.delayed(Duration(seconds: 1), () {
             // This code runs after the delay
             print('This message is printed after a 3-second delay.');
@@ -914,20 +931,20 @@ print(json.decode(response.body));
               'nfts-page', (Route d) => false,
               arguments: {});
         }
-        loginErrorResponse=null;
+        loginErrorResponse = null;
         return AuthResult.success;
       } else {
         final errorResponse = json.decode(response.body);
         print("Login failed: ${response.body}");
 
-        loginErrorResponse=errorResponse['message'][0]['message'];
+        loginErrorResponse = errorResponse['message'][0]['message'];
         //   if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet){
         // }
         return AuthResult.failure;
       }
     } on TimeoutException catch (e) {
       print("TimeoutException during login: $e");
-      loginErrorResponse=e.toString();
+      loginErrorResponse = e.toString();
       // if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet) {
       //   await AppDeepLinking().openNftApp(
       //     {
@@ -945,7 +962,7 @@ print(json.decode(response.body));
     } catch (e) {
       // Catching any other exception that might occur during the login process
       print("Exception during login: $e");
-      loginErrorResponse=e.toString();
+      loginErrorResponse = e.toString();
       // if(Provider.of<UserProvider>(context,listen: false).navigateToNeoForConnectWallet) {
       //   await AppDeepLinking().openNftApp(
       //     {
@@ -1082,6 +1099,7 @@ print(json.decode(response.body));
     required String oldPassword,
     required String newPassword,
     required String confirmPassword,
+    bool isEnglish =true,
     required BuildContext context,
   }) async {
     final url = Uri.parse(BASE_URL + '/user/change/password/step1');
@@ -1096,6 +1114,7 @@ print(json.decode(response.body));
       body: body,
       headers: {
         'Authorization': 'Bearer $token',
+        'accept-language': isEnglish ? 'eng' : 'ar',
       },
     );
     fToast = FToast();
@@ -1104,17 +1123,17 @@ print(json.decode(response.body));
     if (response.statusCode == 201) {
       // Successful login, handle navigation or other actions
       print("Password updated successfully!");
-      changePasswordError=null;
-      otpErrorResponse=false;
-      otpSuccessResponse=false;
+      changePasswordError = null;
+      otpErrorResponse = false;
+      otpSuccessResponse = false;
       return AuthResult.success;
     } else {
       print("Password updation failed: ${response.body}");
       final errorResponse = json.decode(response.body);
       print("Registration failed: ${response.body}");
       changePasswordError = errorResponse['message'][0]['message'];
-      otpErrorResponse=false;
-      otpSuccessResponse=false;
+      otpErrorResponse = false;
+      otpSuccessResponse = false;
       return AuthResult.failure;
     }
   }
@@ -1130,20 +1149,24 @@ print(json.decode(response.body));
       "code": code,
     };
 
-    final response = await http.post(url, body: body,  headers: {
-      'Authorization': 'Bearer $token',
-    },);
+    final response = await http.post(
+      url,
+      body: body,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
     print('sending code' + code.toString());
     print('changePasswordstep2 Response');
     print(response.body);
     if (response.statusCode == 201) {
-      otpErrorResponse=false;
-      otpSuccessResponse=true;
+      otpErrorResponse = false;
+      otpSuccessResponse = true;
       notifyListeners();
       return AuthResult.success;
     } else {
-      otpErrorResponse=true;
-      otpSuccessResponse=false;
+      otpErrorResponse = true;
+      otpSuccessResponse = false;
       notifyListeners();
       return AuthResult.failure;
     }

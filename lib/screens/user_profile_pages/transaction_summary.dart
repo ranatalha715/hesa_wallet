@@ -72,10 +72,12 @@ class _TransactionSummaryState extends State<TransactionSummary> {
         await getAccessToken();
         await Provider.of<TransactionProvider>(context, listen: false)
             .clearTxSummaryData();
+        Locale currentLocale = context.locale;
+        bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
         await Future.delayed(Duration(milliseconds: 500), () {});
         await Provider.of<TransactionProvider>(context, listen: false)
             .getTransactionSummary(
-                accessToken: accessToken, id: id, type: type, context: context);
+                accessToken: accessToken, id: id, type: type, context: context, isEnglish: isEnglish);
         print('this is type' + type);
         setState(() {
           _isLoading = false;
@@ -404,7 +406,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                       Text(
                                         formatCurrency(transactionSummary
                                                 .txTotalAmount) +
-                                            ' SAR',
+                                            'SAR'.tr(),
                                         style: TextStyle(
                                           fontSize: 26.5.sp,
                                           fontWeight: FontWeight.w700,
@@ -739,11 +741,12 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                                       transactionFeesWidget(
                                                         title:
                                                             secondValue ?? "",
-                                                        details: value + ' SAR',
+                                                        details: value + ' SAR'.tr(),
                                                         isDark:
                                                             themeNotifier.isDark
                                                                 ? true
                                                                 : false,
+                                                        isEnglish: isEnglish,
                                                       ),
                                                     ],
                                                   );
@@ -855,6 +858,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
     required String title,
     required String details,
     bool isDark = true,
+    bool isEnglish =true,
   }) {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.sp),
@@ -883,8 +887,8 @@ class _TransactionSummaryState extends State<TransactionSummary> {
             child: Text(
               details,
               maxLines: 1,
-              // overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.right,
+              overflow: TextOverflow.ellipsis,
+              textAlign: isEnglish ? TextAlign.right : TextAlign.left,
               style: TextStyle(
                   color: isDark
                       ? AppColors.textColorWhite

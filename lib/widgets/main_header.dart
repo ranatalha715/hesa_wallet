@@ -110,6 +110,8 @@ class _MainHeaderState extends State<MainHeader> {
                         ),
                       ),
                     ),
+                  if(!isEnglish)
+                  SizedBox(width: 2.w,),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,6 +141,7 @@ class _MainHeaderState extends State<MainHeader> {
                       if (widget.showSubTitle)
                         Container(
                           width: 50.w,
+                          // color: Colors.yellow,
                           child: Text(
                             widget.subTitle!,
                             maxLines: 1,

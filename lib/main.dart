@@ -176,7 +176,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     // Fetch the wallet activities (make sure this is correct)
     await Provider.of<TransactionProvider>(context, listen: false)
         .getWalletActivities(
-        accessToken: accessToken, context: context, refresh: true);
+        accessToken: accessToken, context: context, refresh: true, isEnglish:true);
 
     // Get the current number of activities from the provider
     var currentActivitiesLength = Provider.of<TransactionProvider>(context, listen: false)
@@ -218,7 +218,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     // Call the API to fetch activities or detect new activity.
     await Provider.of<TransactionProvider>(context, listen: false)
         .getWalletActivities(
-        accessToken: accessToken, context: context, refresh: true);
+        accessToken: accessToken, context: context, refresh: true, isEnglish:true);
 
     // Call your red dot logic
     await callRedDotLogic();

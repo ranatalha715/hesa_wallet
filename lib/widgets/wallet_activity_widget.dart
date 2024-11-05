@@ -304,7 +304,7 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                               // widget.priceNormal == null
                               )
                             Text(
-                              "${formatCurrency(widget.priceUp)} SAR",
+                              "${formatCurrency(widget.priceUp)} "+ "SAR".tr(),
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 10.2.sp,
@@ -319,10 +319,10 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                               // color: Colors.blue,
                               width: 23.w,
                               child: Text(
-                                "${formatCurrency(widget.priceDown)} SAR",
+                                "${formatCurrency(widget.priceDown)} "+ "SAR".tr(),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.right,
+                                textAlign: isEnglish ? TextAlign.right : TextAlign.left,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 10.2.sp,

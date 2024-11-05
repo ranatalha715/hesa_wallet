@@ -75,6 +75,7 @@ class AssetsProvider with ChangeNotifier {
     required BuildContext context,
     required String ownerType,
     required String type,
+    bool isEnglish = true,
   }) async {
     final url = Uri.parse(BASE_URL +
         '/user/assets/?ownerType=$ownerType&limit=10&page=1&type=$type&walletAddress=$walletAddress&filter=FOR_SALE');
@@ -89,6 +90,7 @@ class AssetsProvider with ChangeNotifier {
         "Content-type": "application/json",
         "Accept": "application/json",
         'Authorization': 'Bearer $token',
+        'accept-language': isEnglish ? 'eng' :'ar',
       },
     );
     fToast = FToast();
@@ -152,6 +154,7 @@ class AssetsProvider with ChangeNotifier {
     required BuildContext context,
     required String ownerType,
     required String type,
+    bool isEnglish=true,
   }) async {
     final url = Uri.parse(BASE_URL +
         '/user/assets/?ownerType=$ownerType&limit=10&page=1&type=$type&walletAddress=$walletAddress'
@@ -168,6 +171,7 @@ class AssetsProvider with ChangeNotifier {
         "Content-type": "application/json",
         "Accept": "application/json",
         'Authorization': 'Bearer $token',
+        'accept-language': isEnglish ? 'eng' :'ar',
       },
     );
     fToast = FToast();
@@ -230,6 +234,7 @@ class AssetsProvider with ChangeNotifier {
     required BuildContext context,
     required String ownerType,
     required String type,
+    bool isEnglish=true,
   }) async {
     final url = Uri.parse(BASE_URL +
         '/user/assets/?ownerType=$ownerType&limit=10&page=1&type=$type&walletAddress=$walletAddress');
@@ -244,6 +249,7 @@ class AssetsProvider with ChangeNotifier {
         "Content-type": "application/json",
         "Accept": "application/json",
         'Authorization': 'Bearer $token',
+        'accept-language': isEnglish ? 'eng' :'ar',
       },
     );
     fToast = FToast();
@@ -306,6 +312,7 @@ class AssetsProvider with ChangeNotifier {
     required BuildContext context,
     required String ownerType,
     required String type,
+    bool isEnglish=true,
   }) async {
     final url = Uri.parse(BASE_URL +
         '/user/assets/?ownerType=$ownerType&limit=10&page=1&type=$type&walletAddress=$walletAddress');
@@ -320,6 +327,7 @@ class AssetsProvider with ChangeNotifier {
         "Content-type": "application/json",
         "Accept": "application/json",
         'Authorization': 'Bearer $token',
+        'accept-language': isEnglish ? 'eng' :'ar',
       },
     );
     fToast = FToast();
@@ -408,7 +416,7 @@ class AssetsProvider with ChangeNotifier {
     required String token,
     required String type,
     required String id,
-
+    bool isEnglish = true,
   }) async {
     final url = Uri.parse(BASE_URL +
         '/user/assets/$type/$id');
@@ -420,6 +428,7 @@ class AssetsProvider with ChangeNotifier {
         "Content-type": "application/json",
         "Accept": "application/json",
         'Authorization': 'Bearer $token',
+        'accept-language': isEnglish ? 'eng' :'ar',
       },
     );
 
@@ -461,7 +470,7 @@ class AssetsProvider with ChangeNotifier {
     required String token,
     required String type,
     required String id,
-
+    bool isEnglish = true,
   }) async {
     final url = Uri.parse(BASE_URL +
         '/user/assets/$type/$id');
@@ -473,6 +482,7 @@ class AssetsProvider with ChangeNotifier {
         "Content-type": "application/json",
         "Accept": "application/json",
         'Authorization': 'Bearer $token',
+        'accept-language': isEnglish ? 'eng' :'ar',
       },
     );
 

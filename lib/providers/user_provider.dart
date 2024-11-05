@@ -52,6 +52,7 @@ class UserProvider with ChangeNotifier {
   Future<AuthResult> getUserDetails({
     required String token,
     required BuildContext context,
+    bool isEnglish=true,
   }) async {
     final url = Uri.parse(BASE_URL + '/user');
     // final body = {};
@@ -61,11 +62,11 @@ class UserProvider with ChangeNotifier {
 
     final response = await http.get(
       url,
-      // body: body,
       headers: {
         "Content-type": "application/json",
         "Accept": "application/json",
         'Authorization': 'Bearer $token',
+        'accept-language': isEnglish ? 'eng' :'ar',
       },
     );
 print('userdetails' + response.statusCode.toString());
@@ -182,6 +183,7 @@ print('userdetails' + response.statusCode.toString());
     required String email,
     required BuildContext context,
     required String token,
+    bool isEnglish=true,
   }) async {
     final url = Uri.parse(BASE_URL + '/user/update/step1');
     final body = {
@@ -198,6 +200,7 @@ print('userdetails' + response.statusCode.toString());
         // "Content-type": "application/json",
         "Accept": "application/json",
         'Authorization': 'Bearer $token',
+        'accept-language': isEnglish ? 'eng' :'ar',
       },
     );
     print('userupdatestep1' + response.body);
@@ -363,6 +366,7 @@ print('userdetails' + response.statusCode.toString());
     required String email,
     required BuildContext context,
     required String token,
+    bool isEnglish=true,
   }) async {
     try {
       final url = Uri.parse(BASE_URL + '/user/verify-email');
@@ -375,6 +379,7 @@ print('userdetails' + response.statusCode.toString());
           // "Content-type": "application/json",
           "Accept": "application/json",
           'Authorization': 'Bearer $token',
+          'accept-language': isEnglish ? 'eng' : 'ar',
         },
 
       );
@@ -405,7 +410,7 @@ print('userdetails' + response.statusCode.toString());
   Future<AuthResult> forgotPassword({
     required String email,
     required BuildContext context,
-    // required String token,
+    bool isEnglish=true,
   }) async {
     try {
       final url = Uri.parse(BASE_URL + '/user/forgot-password');
@@ -413,6 +418,9 @@ print('userdetails' + response.statusCode.toString());
 
       final response = await http.post(
         url,
+        headers: {
+          'accept-language': isEnglish ? 'eng' : 'ar',
+        },
         body: body,
       );
       fToast = FToast();

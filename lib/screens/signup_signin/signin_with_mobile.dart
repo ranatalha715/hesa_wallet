@@ -269,6 +269,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                               color: AppColors.textColorGrey,
                                               fontWeight: FontWeight.w400,
                                               fontFamily: 'Inter'),
+                                          // hintTextDirection:  TextDirection.LTR,
                                           enabledBorder: OutlineInputBorder(
                                               borderRadius:
                                               BorderRadius.circular(8.0),
@@ -288,7 +289,10 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                                     auth.loginErrorResponse
                                                         .toString()
                                                         .contains(
-                                                        'mobile number')
+                                                        'mobile number') ||
+                                                        auth.loginErrorResponse
+                                                            .toString()
+                                                            .contains('رقم الهاتف')
                                                     ? AppColors.errorColor
                                                     : Colors.transparent,
                                               )),
@@ -377,19 +381,21 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                     ),
                                   if (auth.loginErrorResponse != null &&
                                       _numberController.text.isNotEmpty &&
-                                      isValidating &&
+                                      // isValidating
+                                      // &&
                                       auth.loginErrorResponse
                                           .toString()
-                                          .contains('mobile number') &&
+                                          .contains('mobile number') ||
                                       auth.loginErrorResponse
                                           .toString()
-                                          .contains('رقم الجوال'))
+                                          .contains('رقم الهاتف'))
                                     Padding(
                                       padding: EdgeInsets.only(top: 7.sp),
                                       child: Text(
-                                        isEnglish
-                                            ? "*${auth.loginErrorResponse}"
-                                            : "رقم الجوال غير مسجل مسبق*",
+                                        // isEnglish
+                                        //     ?
+                                      "*${auth.loginErrorResponse}",
+                                            // : "رقم الجوال غير مسجل مسبق*",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 10.sp,
@@ -419,6 +425,7 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
                                             .sendLoginOTP(
                                           mobile: _numberController.text,
                                           context: context,
+                                          isEnglish:isEnglish,
                                         );
                                         setState(() {
                                           _isLoading = false;

@@ -64,7 +64,7 @@ class _NftsDetailsState extends State<NftsDetails> {
 
   String formatDate(String dateString) {
     final DateTime dateTime = DateTime.parse(dateString);
-    final DateFormat formatter = DateFormat('MMM dd, yyyy', 'ar');
+    final DateFormat formatter = DateFormat('MMM dd, yyyy');
     return formatter.format(dateTime);
   }
 
@@ -103,11 +103,14 @@ class _NftsDetailsState extends State<NftsDetails> {
       final args = await ModalRoute.of(context)!.settings.arguments
           as Map<String, dynamic>?;
       await getAccessToken();
+      Locale currentLocale = context.locale;
+      bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
       await Provider.of<AssetsProvider>(context, listen: false)
           .getNftCollectionDetails(
         token: accessToken,
         type: 'nft',
         id: args!["tokenId"],
+        isEnglish:isEnglish,
       );
     }
     _isInit = false;

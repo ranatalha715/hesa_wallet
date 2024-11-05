@@ -576,7 +576,11 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                               .text.isEmpty) ||
                                                       auth.registerUserErrorResponse
                                                           .toString()
-                                                          .contains('Email') ||
+                                                          .contains('Email')
+                                                  ||
+                                                  auth.registerUserErrorResponse
+                                                      .toString()
+                                                      .contains('البريد الإلكتروني')||
                                                       ((!_emailController.text
                                                                   .contains(
                                                                       '@') ||
@@ -604,13 +608,18 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                     isValidating &&
                                     auth.registerUserErrorResponse
                                         .toString()
-                                        .contains('Email'))
+                                        .contains('Email')  ||
+                                    auth.registerUserErrorResponse
+                                        .toString()
+                                        .contains('البريد الإلكتروني')
+                                )
                                   Padding(
                                     padding: EdgeInsets.only(top: 7.sp),
                                     child: Text(
-                                      isEnglish
-                                          ? "*${auth.registerUserErrorResponse}"
-                                          : "البريد الاكتروني مسجل مسبقا*",
+                                      // isEnglish
+                                      //     ?
+                                      "*${auth.registerUserErrorResponse}",
+                                      // : "البريد الاكتروني مسجل مسبقا*",
                                       style: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           fontSize: 10.sp,
@@ -1028,13 +1037,13 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                           AuthProvider>(context,
                                                       listen: false)
                                                   .registerUserStep3(
-                                                      context: context,
-                                                      email:
-                                                          _emailController.text,
-                                                      username:
-                                                          _usernameController
-                                                              .text,
-                                                      password: sha512String);
+                                                context: context,
+                                                email: _emailController.text,
+                                                username:
+                                                    _usernameController.text,
+                                                password: sha512String,
+                                                isEnglish: isEnglish,
+                                              );
                                               setState(() {
                                                 _isLoading = false;
                                               });

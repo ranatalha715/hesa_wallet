@@ -133,6 +133,7 @@ class TransactionProvider with ChangeNotifier {
     required String accessToken,
     required BuildContext context,
     bool refresh = false,
+    bool isEnglish = true,
   }) async {
     final url = Uri.parse(
       BASE_URL + '/user/wallet-activity?limit=10&page=1',
@@ -143,11 +144,12 @@ class TransactionProvider with ChangeNotifier {
       headers: {
         "Accept": "application/json",
         'Authorization': 'Bearer $accessToken',
+        'accept-language': isEnglish ? 'eng' :'ar',
       },
     );
 
     final jsonData = json.decode(response.body);
-    print('jsonData' + response.body);
+    print('Get Wallet Activities' + response.body);
 
     if (response.statusCode == 200) {
       if (jsonData != null) {
@@ -400,6 +402,7 @@ class TransactionProvider with ChangeNotifier {
     required String accessToken,
     required String id,
     required String type,
+    bool isEnglish = true,
     required BuildContext context,
   }) async {
     try {
@@ -412,6 +415,7 @@ class TransactionProvider with ChangeNotifier {
           // "Content-type": "application/json",
           "Accept": "application/json",
           'Authorization': 'Bearer $accessToken',
+          'accept-language': isEnglish ? 'eng' :'ar',
         },
       );
 

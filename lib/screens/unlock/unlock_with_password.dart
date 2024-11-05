@@ -167,9 +167,9 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                                 fontWeight: FontWeight.w400,
                                 fontFamily: 'Inter'),
                             decoration: InputDecoration(
-
                               contentPadding: EdgeInsets.symmetric(
-                                  vertical: OS.Platform.isIOS ? 14.5.sp : 10.0, horizontal:   OS.Platform.isIOS ? 10.sp :16.0),
+                                  vertical: OS.Platform.isIOS ? 14.5.sp : 10.0,
+                                  horizontal: OS.Platform.isIOS ? 10.sp : 16.0),
                               hintText: 'Enter your password'.tr(),
                               hintStyle: TextStyle(
                                   fontSize: 10.2.sp,
@@ -242,7 +242,10 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                             isEnglish ? "*${auth.loginErrorResponse}" : "*كلمة المرور غير صحيحة",
+                              auth.loginErrorResponse ==
+                                      "You have entered an invalid password"
+                                  ? "*Password incorrect".tr()
+                                  : "",
                               style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 10.sp,
@@ -305,6 +308,7 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                                       username: user.userName!,
                                       password: sha512String,
                                       context: context,
+                                      isEnglish: isEnglish,
                                       forUnlock: true);
                               setState(() {
                                 _isLoading = false;
@@ -312,7 +316,6 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                               if (result == AuthResult.success) {
                                 setLockScreenStatus(false);
                               }
-
                             }
                           },
                           isGradient: true,

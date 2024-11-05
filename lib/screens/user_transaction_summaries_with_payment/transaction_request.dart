@@ -714,7 +714,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                 ),
                                 transactionDetailsWidget(
                                   title: 'Timestamp'.tr(),
-                                  details: DateFormat('MMMM dd, yyyy', 'ar')
+                                  details: DateFormat('MMMM dd, yyyy')
                                       .format(unformatted),
                                   isDark: themeNotifier.isDark ? true : false,
                                 ),

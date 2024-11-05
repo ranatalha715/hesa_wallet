@@ -101,8 +101,10 @@ class _AccountInformationState extends State<AccountInformation> {
     setState(() {
       _isLoading = true;
     });
+    Locale currentLocale = context.locale;
+    bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
     await Provider.of<UserProvider>(context, listen: false)
-        .getUserDetails(token: accessToken, context: context);
+        .getUserDetails(token: accessToken, context: context, isEnglish:isEnglish);
     setState(() {
       _isLoading = false;
     });
@@ -176,8 +178,10 @@ class _AccountInformationState extends State<AccountInformation> {
     setState(() {
       _isLoading = true;
     });
+    Locale currentLocale = context.locale;
+    bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
     Provider.of<UserProvider>(context, listen: false)
-        .getUserDetails(token: accessToken, context: context);
+        .getUserDetails(token: accessToken, context: context, isEnglish:isEnglish);
 
     setState(() {
       _isLoading = false;
@@ -297,15 +301,11 @@ class _AccountInformationState extends State<AccountInformation> {
                                       height: 1.h,
                                     ),
                                     TextFieldParent(
-                                      child: TextField(
+                                      child:
+                                      TextField(
                                           readOnly: isEditAble ? false : true,
                                           controller: _firstnameController,
                                           keyboardType: TextInputType.name,
-                                          // scrollPadding: EdgeInsets.only(
-                                          //     bottom: MediaQuery.of(context)
-                                          //             .viewInsets
-                                          //             .bottom +
-                                          //         200),
                                           style: TextStyle(
                                               fontSize: 10.2.sp,
                                               color: themeNotifier.isDark
@@ -323,7 +323,6 @@ class _AccountInformationState extends State<AccountInformation> {
                                                         OS.Platform.isIOS
                                                             ? 10.sp
                                                             : 16.0),
-                                            // hintText: 'No payment card have been added',
                                             hintStyle: TextStyle(
                                                 fontSize: 10.2.sp,
                                                 color: AppColors.textColorGrey,
@@ -731,6 +730,7 @@ class _AccountInformationState extends State<AccountInformation> {
                                                           .textColorBlack,
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 14,
+
                                                 ),
                                               ),
                                             ),
@@ -983,6 +983,7 @@ class _AccountInformationState extends State<AccountInformation> {
                                                               .text,
                                                       context: context,
                                                       token: accessToken,
+                                                      isEnglish:isEnglish
                                                     );
                                                     await Future.delayed(
                                                         Duration(

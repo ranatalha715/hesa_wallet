@@ -49,8 +49,10 @@ class _WalletActivityState extends State<WalletActivity> {
 
       await Provider.of<UserProvider>(context, listen: false)
           .getUserDetails(token: accessToken, context: context);
+      Locale currentLocale = context.locale;
+      bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
       await Provider.of<TransactionProvider>(context, listen: false)
-          .getWalletActivities(accessToken: accessToken, context: context);
+          .getWalletActivities(accessToken: accessToken, context: context, isEnglish:isEnglish);
 
       final prefs = await SharedPreferences.getInstance();
 
@@ -183,6 +185,8 @@ class _WalletActivityState extends State<WalletActivity> {
   Widget build(BuildContext context) {
     final activities =
         Provider.of<TransactionProvider>(context, listen: false).activities;
+    Locale currentLocale = context.locale;
+    bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       return Stack(
         children: [
@@ -230,7 +234,8 @@ class _WalletActivityState extends State<WalletActivity> {
                                       .getWalletActivities(
                                           accessToken: accessToken,
                                           context: context,
-                                          refresh: true);
+                                          refresh: true,
+                                  isEnglish:isEnglish);
                                 },
                                 child: ListView.builder(
                                   padding: EdgeInsets.zero,
