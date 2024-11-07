@@ -24,6 +24,7 @@ class TransactionProvider with ChangeNotifier {
   var selectedCardLast4Digits;
   var selectedCardBrand;
   var logoFromNeo;
+  var payloadTnxParam;
   String totalForDialog = '';
   var siteUrl;
   var selectedPaymentMethod='cards';
@@ -2549,6 +2550,7 @@ class TransactionProvider with ChangeNotifier {
           "operation": operation,
           "statusCode": statusCode.toString(),
           "data": response,
+          "payload": payloadTnxParam,
           "comments": "Non payable transactions response",
         },
       );
@@ -2565,11 +2567,13 @@ class TransactionProvider with ChangeNotifier {
     Future.delayed(Duration(seconds: 2), () async {
       //reme later
       print('statusCode' + statusCode.toString());
+      print('PayloadTnx' + payloadTnxParam);
       AppDeepLinking().openNftApp(
         {
           "operation": operation,
           "statusCode": statusCode.toString(),
           "data": response,
+          "payload" : payloadTnxParam,
           "comments": "payable transactions response",
         },
       );

@@ -93,7 +93,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       walletAddress: user.walletAddress!,
       ownerType: 'owner',
       type: 'all',
-      isEnglish:isEnglish,
+      isEnglish: isEnglish,
     );
     await Provider.of<AssetsProvider>(context, listen: false).getCreatedAssets(
       token: accessToken,
@@ -101,7 +101,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       walletAddress: user.walletAddress!,
       ownerType: 'creator',
       type: 'all',
-      isEnglish:isEnglish,
+      isEnglish: isEnglish,
     );
     await Provider.of<AssetsProvider>(context, listen: false).getOwnedAssets(
       token: accessToken,
@@ -109,7 +109,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       walletAddress: user.walletAddress!,
       ownerType: 'owner',
       type: 'all',
-      isEnglish:isEnglish,
+      isEnglish: isEnglish,
     );
     await Provider.of<AssetsProvider>(context, listen: false).getAllAssets(
       token: accessToken,
@@ -117,7 +117,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       walletAddress: user.walletAddress!,
       ownerType: 'both',
       type: 'all',
-      isEnglish:isEnglish,
+      isEnglish: isEnglish,
     );
     setState(() {
       _isloading = false;
@@ -312,7 +312,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
         setState(() {
           _receivedData = link;
         });
-
+        Provider.of<TransactionProvider>(context, listen: false)
+            .payloadTnxParam = _receivedData;
         if (Navigator.canPop(context)) {
           Navigator.pop(context);
         }
@@ -1035,20 +1036,22 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                         : AppColors.textColorWhite,
                     body: SafeArea(
                       child: NestedScrollView(
-                        headerSliverBuilder: (context, innerBoxIsScrolled) =>
-                            [
+                        headerSliverBuilder: (context, innerBoxIsScrolled) => [
                           SliverOverlapAbsorber(
                               handle: NestedScrollView
                                   .sliverOverlapAbsorberHandleFor(context),
-                              sliver: SliverSafeArea(
+                              sliver:
+                              SliverSafeArea(
                                 top: false,
                                 sliver:
                                 SliverAppBar(
                                   expandedHeight: 29.h,
-                                  backgroundColor:
-                                  AppColors.backgroundColor,
+                                  backgroundColor: AppColors.backgroundColor,
                                   foregroundColor: AppColors.profileHeaderDark,
                                   pinned: true,
+                                  floating: true,
+                                  snap: true,
+                                  stretch: true,
                                   leading: Padding(
                                     padding: EdgeInsets.only(
                                       top: 10.sp,
@@ -1068,9 +1071,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                 : AppColors.textColorBlack,
                                             size: 25.sp,
                                           ),
-                                          Consumer<TransactionProvider>(
-                                              builder: (context,
-                                                  TransactionProvider trP,
+                                          Consumer<TransactionProvider>(builder:
+                                              (context, TransactionProvider trP,
                                                   _) {
                                             return Positioned(
                                               right: 1,
@@ -1122,108 +1124,114 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                     ),
                                   ],
                                   flexibleSpace: FlexibleSpaceBar(
+                                    stretchModes: [StretchMode.zoomBackground],
                                       background: Stack(
-                                        children:[
-                                        Positioned(
-                                            top: 0,
-                                            left: 0,
-                                            right: 0,
-                                            child: Container(
-                                              color: AppColors.profileHeaderDark,
-                                              height: 7.h,
-                                            )),
-                                          Column(
-                                            children: [
-                                              SizedBox(height: 10.h,),
-                                                        Container(
-                                                          decoration: BoxDecoration(
-                                                              color: AppColors.textColorGrey,
-                                                              borderRadius: BorderRadius.circular(100)),
-                                                          child: Padding(
-                                                            padding: EdgeInsets.all(1.sp),
-                                                            child: Container(
-                                                              height: 60.sp,
-                                                              width: 60.sp,
-                                                              decoration: BoxDecoration(
-                                                                  color: AppColors.backgroundColor,
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(100)),
-                                                              child: Padding(
-                                                                padding: EdgeInsets.all(1.sp),
-                                                                child: ClipRRect(
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(100),
-                                                                  child: user.userAvatar != null
-                                                                      ? Image.network(
-                                                                          user.userAvatar!,
-                                                                          fit: BoxFit.cover,
-                                                                        )
-                                                                      : Padding(
-                                                                          padding: EdgeInsets.all(4.sp),
-                                                                          child: Image.asset(
-                                                                            "assets/images/user_placeholder.png",
-                                                                            color:
-                                                                                AppColors.textColorGrey,
-                                                                          ),
-                                                                        ),
-                                                                ),
-                                                              ),
+                                    children: [
+                                      Positioned(
+                                          top: 0,
+                                          left: 0,
+                                          right: 0,
+                                          child: Container(
+                                            color: AppColors.profileHeaderDark,
+                                            height: 7.h,
+                                          )),
+                                      Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 10.h,
+                                          ),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                color: AppColors.textColorGrey,
+                                                borderRadius:
+                                                    BorderRadius.circular(100)),
+                                            child: Padding(
+                                              padding: EdgeInsets.all(1.sp),
+                                              child: Container(
+                                                height: 60.sp,
+                                                width: 60.sp,
+                                                decoration: BoxDecoration(
+                                                    color: AppColors
+                                                        .backgroundColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            100)),
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(1.sp),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            100),
+                                                    child: user.userAvatar !=
+                                                            null
+                                                        ? Image.network(
+                                                            user.userAvatar!,
+                                                            fit: BoxFit.cover,
+                                                          )
+                                                        : Padding(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    4.sp),
+                                                            child: Image.asset(
+                                                              "assets/images/user_placeholder.png",
+                                                              color: AppColors
+                                                                  .textColorGrey,
                                                             ),
                                                           ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 2.h,
-                                                        ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 2.h,
+                                          ),
 
-                                                        Text(
-                                                          user.userName != null
-                                                              ? user.userName!
-                                                              : 'username.mjra'.tr(),
-                                                          style: TextStyle(
-                                                              fontSize: 11.7.sp,
-                                                              fontFamily: 'Blogger Sans',
-                                                              fontWeight: FontWeight.w700,
-                                                              color: themeNotifier.isDark
-                                                                  ? AppColors.textColorWhite
-                                                                  : AppColors.textColorBlack),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 0.5.h,
-                                                        ),
-                                                        // if(user.walletAddress != null)
-                                                        GestureDetector(
-                                                          onTap: () =>
-                                                              _copyToClipboard(user.walletAddress!),
-                                                          child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.center,
-                                                            children: [
-                                                              Text(
-                                                                user.walletAddress != null
-                                                                    ? replaceMiddleWithDots(
-                                                                        user.walletAddress!)
-                                                                    : "...",
-                                                                // '0x1647f...87332',
-                                                                style: TextStyle(
-                                                                    fontSize: 9.5.sp,
-                                                                    fontFamily: 'Blogger Sans',
-                                                                    fontWeight: FontWeight.w500,
-                                                                    color: AppColors.textColorGrey),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-
-
-
-                                            ],
+                                          Text(
+                                            user.userName != null
+                                                ? user.userName!
+                                                : 'username.mjra'.tr(),
+                                            style: TextStyle(
+                                                fontSize: 11.7.sp,
+                                                fontFamily: 'Blogger Sans',
+                                                fontWeight: FontWeight.w700,
+                                                color: themeNotifier.isDark
+                                                    ? AppColors.textColorWhite
+                                                    : AppColors.textColorBlack),
+                                          ),
+                                          SizedBox(
+                                            height: 0.5.h,
+                                          ),
+                                          // if(user.walletAddress != null)
+                                          GestureDetector(
+                                            onTap: () => _copyToClipboard(
+                                                user.walletAddress!),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  user.walletAddress != null
+                                                      ? replaceMiddleWithDots(
+                                                          user.walletAddress!)
+                                                      : "...",
+                                                  // '0x1647f...87332',
+                                                  style: TextStyle(
+                                                      fontSize: 9.5.sp,
+                                                      fontFamily:
+                                                          'Blogger Sans',
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: AppColors
+                                                          .textColorGrey),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ],
-                                      )
-                                      // ProfileAppBar(
-                                      //   isOwn: true,
-                                      //   controller: scrollcontroller,
-                                      //   isProfile: true,
-                                      // ),
+                                      ),
+                                    ],
+                                  )
                                       ),
                                 ),
                               )),
@@ -1232,8 +1240,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                               delegate: FixedHeaderDelegate(
                                   tabController: _tabController)),
                         ],
-                        body:
-                            TabBarView(controller: _tabController, children: [
+                        body: TabBarView(controller: _tabController, children: [
                           CustomScrollView(
                             slivers: [
                               SliverList(
@@ -1265,8 +1272,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                 delegate: SliverChildListDelegate([
                                   // Container(height: 12.h, color: Colors.green,),
                                   Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Container(
@@ -1889,111 +1895,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   }
 }
 
-class ProfileAppBar extends StatelessWidget {
-  final bool isOwn;
-  final ScrollController controller;
-  final bool isProfile;
-  final String? userAvatar;
-  final String? userName;
-  final String? walletAddress;
-  final bool isDarkTheme;
-  final void Function(String)? copyToClipboardCallback;
-
-  ProfileAppBar({
-    required this.isOwn,
-    required this.controller,
-    required this.isProfile,
-    this.userAvatar,
-    this.userName,
-    this.walletAddress,
-    this.isDarkTheme = false,
-    this.copyToClipboardCallback,
-  });
-
-  String replaceMiddleWithDots(String text, {int start = 5, int end = 4}) {
-    if (text.length <= start + end) return text;
-    return text.substring(0, start) + "..." + text.substring(text.length - end);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: AppColors.textColorGrey,
-            borderRadius: BorderRadius.circular(100),
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(1.sp),
-            child: Container(
-              height: 60.sp,
-              width: 60.sp,
-              decoration: BoxDecoration(
-                color: AppColors.backgroundColor,
-                borderRadius: BorderRadius.circular(100),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(1.sp),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: userAvatar != null
-                      ? Image.network(
-                          userAvatar!,
-                          fit: BoxFit.cover,
-                        )
-                      : Padding(
-                          padding: EdgeInsets.all(4.sp),
-                          child: Image.asset(
-                            "assets/images/user_placeholder.png",
-                            color: AppColors.textColorGrey,
-                          ),
-                        ),
-                ),
-              ),
-            ),
-          ),
-        ),
-        SizedBox(height: 2.h),
-        Text(
-          userName ?? 'username.mjra'.tr(),
-          style: TextStyle(
-            fontSize: 11.7.sp,
-            fontFamily: 'Blogger Sans',
-            fontWeight: FontWeight.w700,
-            color: isDarkTheme
-                ? AppColors.textColorWhite
-                : AppColors.textColorBlack,
-          ),
-        ),
-        SizedBox(height: 0.5.h),
-        GestureDetector(
-          onTap: () {
-            if (walletAddress != null && copyToClipboardCallback != null) {
-              copyToClipboardCallback!(walletAddress!);
-            }
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                walletAddress != null
-                    ? replaceMiddleWithDots(walletAddress!)
-                    : "...",
-                style: TextStyle(
-                  fontSize: 9.5.sp,
-                  fontFamily: 'Blogger Sans',
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.textColorGrey,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
 
 class FixedHeaderDelegate extends SliverPersistentHeaderDelegate {
   TabController tabController;
@@ -2031,7 +1932,8 @@ class FixedHeaderDelegate extends SliverPersistentHeaderDelegate {
   @override
   double get maxExtent => kToolbarHeight; // Sets the height to just the TabBar
   @override
-  double get minExtent => kToolbarHeight;  // Minimum height when pinned (no collapsing)
+  double get minExtent =>
+      kToolbarHeight; // Minimum height when pinned (no collapsing)
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
       false;

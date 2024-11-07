@@ -177,6 +177,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
             context,
             listen: false)
             .totalForDialog);
+        Provider.of<TransactionProvider>(context, listen: false)
+            .functionToNavigateAfterPayable(
+            paymentResultData.paymentResult.toString(), operation, context,
+            statusCode: '400');
         print('Failure Reason: ${paymentResultData.errorString}');
         setState(() {
           isLoading = false;

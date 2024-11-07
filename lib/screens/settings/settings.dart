@@ -279,18 +279,18 @@ class _SettingsState extends State<Settings> {
                                           builder: (context) =>
                                               SecurityAndPrivacy()),
                                     )),
-                            SettingsWidget(
-                                title: 'Language'.tr(),
-                                imagePath: "assets/images/world.png",
-                                imageHeight: 3.2.h,
-                                imageWidth: 3.2.h,
-                                index: 2,
-                                isDark: themeNotifier.isDark ? true : false,
-                                handler: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Language()),
-                                    )),
+                            // SettingsWidget(
+                            //     title: 'Language'.tr(),
+                            //     imagePath: "assets/images/world.png",
+                            //     imageHeight: 3.2.h,
+                            //     imageWidth: 3.2.h,
+                            //     index: 2,
+                            //     isDark: themeNotifier.isDark ? true : false,
+                            //     handler: () => Navigator.push(
+                            //           context,
+                            //           MaterialPageRoute(
+                            //               builder: (context) => Language()),
+                            //         )),
                             SettingsWidget(
                                 title: 'Term and conditions'.tr(),
                                 imagePath: "assets/images/termandcondition.png",
