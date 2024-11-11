@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -1040,18 +1041,21 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                           SliverOverlapAbsorber(
                               handle: NestedScrollView
                                   .sliverOverlapAbsorberHandleFor(context),
-                              sliver:
-                              SliverSafeArea(
+                              sliver: SliverSafeArea(
                                 top: false,
-                                sliver:
-                                SliverAppBar(
+                                sliver: SliverAppBar(
                                   expandedHeight: 29.h,
+                                  collapsedHeight: 8.h,
                                   backgroundColor: AppColors.backgroundColor,
-                                  foregroundColor: AppColors.profileHeaderDark,
+                                  // surfaceTintColor: AppColors.backgroundColor,
+                                  // foregroundColor: AppColors.profileHeaderDark,
+                                  // shadowColor: AppColors.errorColor,
+                                  // surfaceTintColor: AppColors.errorColor,
+                                  elevation: 0.0,
                                   pinned: true,
-                                  floating: true,
-                                  snap: true,
-                                  stretch: true,
+                                  floating: false,
+                                  snap: false,
+                                  // stretch: true,
                                   leading: Padding(
                                     padding: EdgeInsets.only(
                                       top: 10.sp,
@@ -1123,116 +1127,155 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                       ),
                                     ),
                                   ],
-                                  flexibleSpace: FlexibleSpaceBar(
-                                    stretchModes: [StretchMode.zoomBackground],
-                                      background: Stack(
-                                    children: [
-                                      Positioned(
-                                          top: 0,
-                                          left: 0,
-                                          right: 0,
-                                          child: Container(
-                                            color: AppColors.profileHeaderDark,
-                                            height: 7.h,
-                                          )),
-                                      Column(
-                                        children: [
-                                          SizedBox(
-                                            height: 10.h,
-                                          ),
-                                          Container(
-                                            decoration: BoxDecoration(
-                                                color: AppColors.textColorGrey,
-                                                borderRadius:
-                                                    BorderRadius.circular(100)),
-                                            child: Padding(
-                                              padding: EdgeInsets.all(1.sp),
+                                  flexibleSpace: DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      color: AppColors.profileHeaderDark,
+                                    ),
+                                    child: FlexibleSpaceBar(
+                                        collapseMode: CollapseMode.parallax,
+                                        expandedTitleScale: 1,
+                                        stretchModes: [
+                                          // StretchMode.blurBackground
+                                        ],
+                                        background: Stack(
+                                          children: [
+                                            Positioned(
+                                                top: 0,
+                                                left: 0,
+                                                right: 0,
+                                                child: Container(
+                                                  color: AppColors
+                                                      .profileHeaderDark,
+                                                  height: 10.h,
+                                                )),
+                                            Positioned(
+                                              top: 63,
+                                              left: 0,
+                                              right: 0,
                                               child: Container(
-                                                height: 60.sp,
-                                                width: 60.sp,
-                                                decoration: BoxDecoration(
-                                                    color: AppColors
-                                                        .backgroundColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            100)),
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(1.sp),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            100),
-                                                    child: user.userAvatar !=
-                                                            null
-                                                        ? Image.network(
-                                                            user.userAvatar!,
-                                                            fit: BoxFit.cover,
-                                                          )
-                                                        : Padding(
+                                                color: AppColors.backgroundColor,
+                                                child: Column(
+                                                  children: [
+                                                    SizedBox(
+                                                      height: 2.h,
+                                                    ),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                          color: AppColors
+                                                              .textColorGrey,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(100)),
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsets.all(1.sp),
+                                                        child: Container(
+                                                          height: 60.sp,
+                                                          width: 60.sp,
+                                                          decoration: BoxDecoration(
+                                                              color: AppColors
+                                                                  .backgroundColor,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          100)),
+                                                          child: Padding(
                                                             padding:
                                                                 EdgeInsets.all(
-                                                                    4.sp),
-                                                            child: Image.asset(
-                                                              "assets/images/user_placeholder.png",
-                                                              color: AppColors
-                                                                  .textColorGrey,
+                                                                    1.sp),
+                                                            child: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          100),
+                                                              child:
+                                                                  user.userAvatar !=
+                                                                          null
+                                                                      ? Image
+                                                                          .network(
+                                                                          user.userAvatar!,
+                                                                          fit: BoxFit
+                                                                              .cover,
+                                                                        )
+                                                                      : Padding(
+                                                                          padding:
+                                                                              EdgeInsets.all(4.sp),
+                                                                          child: Image
+                                                                              .asset(
+                                                                            "assets/images/user_placeholder.png",
+                                                                            color:
+                                                                                AppColors.textColorGrey,
+                                                                          ),
+                                                                        ),
                                                             ),
                                                           ),
-                                                  ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 2.h,
+                                                    ),
+
+                                                    Text(
+                                                      user.userName != null
+                                                          ? user.userName!
+                                                          : 'username.mjra'.tr(),
+                                                      style: TextStyle(
+                                                          fontSize: 11.7.sp,
+                                                          fontFamily:
+                                                              'Blogger Sans',
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          color: themeNotifier
+                                                                  .isDark
+                                                              ? AppColors
+                                                                  .textColorWhite
+                                                              : AppColors
+                                                                  .textColorBlack),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 0.5.h,
+                                                    ),
+                                                    // if(user.walletAddress != null)
+                                                    GestureDetector(
+                                                      onTap: () =>
+                                                          _copyToClipboard(user
+                                                              .walletAddress!),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            user.walletAddress !=
+                                                                    null
+                                                                ? replaceMiddleWithDots(
+                                                                    user.walletAddress!)
+                                                                : "...",
+                                                            // '0x1647f...87332',
+                                                            style: TextStyle(
+                                                                fontSize: 9.5.sp,
+                                                                fontFamily:
+                                                                    'Blogger Sans',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: AppColors
+                                                                    .textColorGrey),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 8.h,
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          SizedBox(
-                                            height: 2.h,
-                                          ),
-
-                                          Text(
-                                            user.userName != null
-                                                ? user.userName!
-                                                : 'username.mjra'.tr(),
-                                            style: TextStyle(
-                                                fontSize: 11.7.sp,
-                                                fontFamily: 'Blogger Sans',
-                                                fontWeight: FontWeight.w700,
-                                                color: themeNotifier.isDark
-                                                    ? AppColors.textColorWhite
-                                                    : AppColors.textColorBlack),
-                                          ),
-                                          SizedBox(
-                                            height: 0.5.h,
-                                          ),
-                                          // if(user.walletAddress != null)
-                                          GestureDetector(
-                                            onTap: () => _copyToClipboard(
-                                                user.walletAddress!),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  user.walletAddress != null
-                                                      ? replaceMiddleWithDots(
-                                                          user.walletAddress!)
-                                                      : "...",
-                                                  // '0x1647f...87332',
-                                                  style: TextStyle(
-                                                      fontSize: 9.5.sp,
-                                                      fontFamily:
-                                                          'Blogger Sans',
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: AppColors
-                                                          .textColorGrey),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                                      ),
+                                          ],
+                                        )),
+                                  ),
                                 ),
                               )),
                           SliverPersistentHeader(
@@ -1242,6 +1285,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                         ],
                         body: TabBarView(controller: _tabController, children: [
                           CustomScrollView(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
                             slivers: [
                               SliverList(
                                 delegate: SliverChildListDelegate([
@@ -1894,7 +1939,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     // fToast.init(context);
   }
 }
-
 
 class FixedHeaderDelegate extends SliverPersistentHeaderDelegate {
   TabController tabController;
