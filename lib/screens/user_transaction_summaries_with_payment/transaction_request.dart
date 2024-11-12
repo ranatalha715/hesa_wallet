@@ -157,10 +157,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                   .checkoutId,
         );
         paymentSuccesfullDialogue(
-            amount: Provider.of<TransactionProvider>(
-                context,
-                listen: false)
-                .totalForDialog );
+            amount: Provider.of<TransactionProvider>(context, listen: false)
+                .totalForDialog);
         Provider.of<TransactionProvider>(context, listen: false)
             .functionToNavigateAfterPayable(
                 paymentResultData.paymentResult.toString(), operation, context,
@@ -173,14 +171,13 @@ class _TransactionRequestState extends State<TransactionRequest> {
         // Handle success
       } else {
         print('Payment failed');
-        paymentFailedDialogue(amount: Provider.of<TransactionProvider>(
-            context,
-            listen: false)
-            .totalForDialog);
+        paymentFailedDialogue(
+            amount: Provider.of<TransactionProvider>(context, listen: false)
+                .totalForDialog);
         Provider.of<TransactionProvider>(context, listen: false)
             .functionToNavigateAfterPayable(
-            paymentResultData.paymentResult.toString(), operation, context,
-            statusCode: '400');
+                paymentResultData.paymentResult.toString(), operation, context,
+                statusCode: '400');
         print('Failure Reason: ${paymentResultData.errorString}');
         setState(() {
           isLoading = false;
@@ -188,10 +185,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
       }
     } catch (e) {
       print('Error occurred: $e');
-      paymentFailedDialogue(amount: Provider.of<TransactionProvider>(
-          context,
-          listen: false)
-          .totalForDialog);
+      paymentFailedDialogue(
+          amount: Provider.of<TransactionProvider>(context, listen: false)
+              .totalForDialog);
       setState(() {
         isLoading = false;
       });
@@ -583,6 +579,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
         trPro.selectedCardTokenId = paymentCards[0].id;
       }
     }
+    final filteredFees = feesMap!.entries
+        .where((entry) => entry.value['label'] != 'Total')
+        .toList();
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       setThemeDark = themeNotifier.isDark;
       return Stack(
@@ -845,64 +844,130 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                         //         : false,
                                         //   ),
                                         if (feesMap != null)
+                                          // ListView.builder(
+                                          //   padding: EdgeInsets.zero,
+                                          //   controller: scrollController,
+                                          //   itemCount: feesMap!.length,
+                                          //   shrinkWrap: true,
+                                          //   itemBuilder: (BuildContext context,
+                                          //       int index) {
+                                          //     final feeKey = feesMap!.keys
+                                          //         .elementAt(
+                                          //             index); // Get the key at index
+                                          //     final fee = feesMap![
+                                          //         feeKey]; // Get the fee object
+                                          //
+                                          //     String feeLabel =
+                                          //         fee['label'].toString();
+                                          //     String feeValue =
+                                          //         fee['value'].toString();
+                                          //     bool isDebit =
+                                          //         fee['type'].toString() ==
+                                          //                 'debit'
+                                          //             ? true
+                                          //             : false;
+                                          //     bool lastIndex =
+                                          //         index == feesMap!.length - 1;
+                                          //     feeLabel == 'Total'
+                                          //         ? Provider.of<TransactionProvider>(
+                                          //                     context,
+                                          //                     listen: false)
+                                          //                 .totalForDialog =
+                                          //             formatCurrency(feeValue)
+                                          //         : '';
+                                          //     return Column(
+                                          //       children: [
+                                          //         if (lastIndex)
+                                          //           Divider(
+                                          //             color: AppColors
+                                          //                 .textColorGrey,
+                                          //           ),
+                                          //         transactionFeesWidget(
+                                          //           title: feeLabel,
+                                          //           // details: isDebit ? '- '+ feeValue : '' + feeValue,
+                                          //           details: formatCurrency(
+                                          //               feeValue),
+                                          //           showCurrency: true,
+                                          //           isDark: themeNotifier.isDark
+                                          //               ? true
+                                          //               : false,
+                                          //         ),
+                                          //       ],
+                                          //     );
+                                          //   },
+                                          // ),
                                           ListView.builder(
                                             padding: EdgeInsets.zero,
                                             controller: scrollController,
-                                            itemCount: feesMap!.length,
+                                            itemCount: filteredFees.length + 1,
+                                            // Add one for the "Total" item at the end
                                             shrinkWrap: true,
                                             itemBuilder: (BuildContext context,
                                                 int index) {
-                                              final feeKey = feesMap!.keys
-                                                  .elementAt(
-                                                      index); // Get the key at index
-                                              final fee = feesMap![
-                                                  feeKey]; // Get the fee object
+                                              // Display the "Total" item at the end
+                                              if (index ==
+                                                  filteredFees.length) {
+                                                final totalFee = feesMap!
+                                                    .entries
+                                                    .firstWhere((entry) =>
+                                                        entry.value['label'] ==
+                                                        'Total');
+                                                String totalLabel = totalFee
+                                                    .value['label']
+                                                    .toString();
+                                                String totalValue = totalFee
+                                                    .value['value']
+                                                    .toString();
 
+                                                Provider.of<TransactionProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .totalForDialog =
+                                                    formatCurrency(totalValue);
+
+                                                return Column(
+                                                  children: [
+                                                    Divider(
+                                                        color: AppColors
+                                                            .textColorGrey),
+                                                    transactionFeesWidget(
+                                                      title: totalLabel,
+                                                      details: formatCurrency(
+                                                          totalValue),
+                                                      showCurrency: true,
+                                                      isDark:
+                                                          themeNotifier.isDark,
+                                                    ),
+                                                  ],
+                                                );
+                                              }
+
+                                              // Render all other fees except "Total"
+                                              final fee =
+                                                  filteredFees[index].value;
                                               String feeLabel =
                                                   fee['label'].toString();
                                               String feeValue =
                                                   fee['value'].toString();
-                                              bool isDebit =
-                                                  fee['type'].toString() ==
-                                                          'debit'
-                                                      ? true
-                                                      : false;
-                                              bool lastIndex =
-                                                  index == feesMap!.length - 1;
-                                              feeLabel == 'Total'
-                                                  ? Provider.of<TransactionProvider>(
-                                                              context,
-                                                              listen: false)
-                                                          .totalForDialog =
-                                                      formatCurrency(feeValue)
-                                                  : '';
-                                              return Column(
-                                                children: [
-                                                  if (lastIndex)
-                                                    Divider(
-                                                      color: AppColors
-                                                          .textColorGrey,
-                                                    ),
-                                                  transactionFeesWidget(
-                                                    title: feeLabel,
-                                                    // details: isDebit ? '- '+ feeValue : '' + feeValue,
-                                                    details: formatCurrency(
-                                                        feeValue),
-                                                    showCurrency: true,
-                                                    isDark: themeNotifier.isDark
-                                                        ? true
-                                                        : false,
-                                                  ),
-                                                ],
+
+                                              return transactionFeesWidget(
+                                                title: feeLabel,
+                                                details:
+                                                    formatCurrency(feeValue),
+                                                showCurrency: true,
+                                                isDark: themeNotifier.isDark,
                                               );
                                             },
                                           ),
+
                                         Text(
                                           operation != "acceptCounterOffer" &&
                                                   operation !=
                                                       "acceptCollectionCounterOffer"
-                                              ? 'The transaction request is automatically signed and submitted to the Blockchain once this transaction is paid.'.tr()
-                                              : 'Your original offer amount will be fully refunded once the counter offer amount is confirmed.'.tr()
+                                              ? 'The transaction request is automatically signed and submitted to the Blockchain once this transaction is paid.'
+                                                  .tr()
+                                              : 'Your original offer amount will be fully refunded once the counter offer amount is confirmed.'
+                                                  .tr()
                                                   .tr(),
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
@@ -1323,7 +1388,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     //         trPro.selectedCardNum ==
                                                     //             null
                                                     paymentCards.isEmpty
-                                                        ? "Add payment method".tr()
+                                                        ? "Add payment method"
+                                                            .tr()
                                                         : trPro.selectedCardNum +
                                                             " **********",
                                                     // "2561 **** **** 1234",
@@ -1423,8 +1489,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                             paymentCards.isNotEmpty)
                                           isCardLoading
                                               ? CircularProgressIndicator(
-                                                  color:
-                                                      AppColors.gradientColor1,
+                                                  color: AppColors.hexaGreen,
                                                 )
                                               : Container(
                                                   child: ListView.builder(
@@ -1637,9 +1702,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                               //               TermsAndConditions()),
                                                               // );
                                                             },
-                                                      text: ' Terms & Conditions'
-                                                              .tr() +
-                                                          " ",
+                                                      text:
+                                                          ' Terms & Conditions'
+                                                                  .tr() +
+                                                              " ",
                                                       style: TextStyle(
                                                           // decoration:
                                                           //     TextDecoration
@@ -3001,7 +3067,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
           ),
           Container(
             // color: Colors.red,
-            width: title == "Total" ? 45.w : 25.w,
+            width: title == "Total" ? 45.w : 28.w,
             child: Align(
               alignment: Alignment.centerRight,
               child: Text(
@@ -3331,8 +3397,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
         final dialogWidth = screenWidth * 0.90;
 
         Future.delayed(Duration(seconds: 2), () async {
-          await Navigator.of(context)
-              .pushNamedAndRemoveUntil(
+          await Navigator.of(context).pushNamedAndRemoveUntil(
               'nfts-page', (Route d) => false,
               arguments: {}); // Close the dialog
         });
@@ -3539,7 +3604,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
     );
   }
 
-  void paymentFailedDialogue({bool isDark = true,  String amount = '',}) {
+  void paymentFailedDialogue({
+    bool isDark = true,
+    String amount = '',
+  }) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -3548,8 +3616,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
         final dialogWidth = screenWidth * 0.90;
 
         Future.delayed(Duration(seconds: 2), () async {
-          await Navigator.of(context)
-              .pushNamedAndRemoveUntil(
+          await Navigator.of(context).pushNamedAndRemoveUntil(
               'nfts-page', (Route d) => false,
               arguments: {}); // Close the dialog
         });
@@ -3587,22 +3654,22 @@ class _TransactionRequestState extends State<TransactionRequest> {
                       // SizedBox(
                       //   height: 3.h,
                       // ),
-                     Row(
-                       mainAxisAlignment: MainAxisAlignment.center,
-                       crossAxisAlignment: CrossAxisAlignment.center,
-                       children: [
-                         Text(
-                           'Payment Failed'.tr(),
-                           style: TextStyle(
-                             color: isDark
-                                 ? AppColors.textColorWhite
-                                 : AppColors.textColorBlack,
-                             fontWeight: FontWeight.w600,
-                             fontSize: 17.5.sp,
-                           ),
-                         ),
-                       ],
-                     ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Payment Failed'.tr(),
+                            style: TextStyle(
+                              color: isDark
+                                  ? AppColors.textColorWhite
+                                  : AppColors.textColorBlack,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 17.5.sp,
+                            ),
+                          ),
+                        ],
+                      ),
                       SizedBox(
                         height: 2.h,
                       ),
@@ -3734,7 +3801,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
     );
   }
 
-  void transactionFailed({bool isDark = true,  String amount = '',}) {
+  void transactionFailed({
+    bool isDark = true,
+    String amount = '',
+  }) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -3743,8 +3813,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
         final dialogWidth = screenWidth * 0.90;
 
         Future.delayed(Duration(seconds: 2), () async {
-          await Navigator.of(context)
-              .pushNamedAndRemoveUntil(
+          await Navigator.of(context).pushNamedAndRemoveUntil(
               'nfts-page', (Route d) => false,
               arguments: {}); // Close the dialog
         });
@@ -3817,9 +3886,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                         ),
                       ),
                       SizedBox(height: 2.h),
-                    ]
-
-                ),
+                    ]),
               )),
         );
       },

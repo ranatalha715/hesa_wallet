@@ -494,7 +494,7 @@ class TransactionProvider with ChangeNotifier {
     }
   }
 
-  Future<AuthResult> sendTransactionOTP({
+  Future<AuthResult> sendTransacionOTP({
     required String token,
     required BuildContext context,
   }) async {

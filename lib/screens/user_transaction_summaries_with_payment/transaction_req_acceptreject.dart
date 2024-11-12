@@ -377,21 +377,20 @@ class _TransactionRequestAcceptRejectState
   }
 
   String replaceMiddleWithDotsTokenId(String input) {
-    // If the input length is less than or equal to 30, return it as is
-    if (input.length <= 65) {
+    // Check if the input is already short enough
+    if (input.length <= 32) {
       return input;
     }
 
-    final int middleIndex = input.length ~/ 2; // Find the middle index
-    final int startIndex = middleIndex - 32; // Calculate the start index
-    final int endIndex = middleIndex + 32; // Calculate the end index
+    // Define how many characters to keep at the beginning and end
+    final int numCharsToShow = 8; // Adjust this number as needed
+    final String start = input.substring(0, numCharsToShow);
+    final String end = input.substring(input.length - numCharsToShow);
 
-    // Split the input string into two parts, removing the middle 30 characters and adding '....'
-    final String result =
-        input.substring(0, startIndex) + '....' + input.substring(endIndex);
-
-    return result;
+    // Return the shortened string with dots in the middle
+    return "$start....$end";
   }
+
 
   String capitalizeFirstLetter(String text) {
     if (text.isEmpty) {
@@ -2251,6 +2250,8 @@ class _TransactionRequestAcceptRejectState
             width: 50.w,
             child: Text(
               details,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.right,
               style: TextStyle(
                   color: color == null ? AppColors.textColorGreyShade2 : color,
@@ -2277,7 +2278,7 @@ class _TransactionRequestAcceptRejectState
         children: [
           Container(
             // color: Colors.yellow,
-            width: 45.w,
+            width:title == "Total Receivable" ? 30.w : 45.w,
             child: Text(
               title,
               style: TextStyle(
@@ -2291,7 +2292,7 @@ class _TransactionRequestAcceptRejectState
           ),
           Container(
             // color: Colors.red,
-            width: 25.w,
+            width: title == "Total Receivable" ? 40.w : 28.w,
             child: Align(
               alignment: Alignment.centerRight,
               child: Text(
