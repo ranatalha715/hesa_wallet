@@ -163,66 +163,49 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
     // if (!isWifiOn) {
     //   noInternetDialog(context);
-    // }fetchActivities
+    // }
   }
 
-  callRedDotLogic() async {
-    // Get the shared preferences instance
+  Future<void> callRedDotLogic(int currentActivitiesLength) async {
     final prefs = await SharedPreferences.getInstance();
-
-    // Get the number of previously stored activities from shared preferences
     var numActivity = prefs.getInt('numOfActivities') ?? 0;
 
-    // Fetch the wallet activities (make sure this is correct)
-    await Provider.of<TransactionProvider>(context, listen: false)
-        .getWalletActivities(
-        accessToken: accessToken, context: context, refresh: true, isEnglish:true);
-
-    // Get the current number of activities from the provider
-    var currentActivitiesLength = Provider.of<TransactionProvider>(context, listen: false)
-        .activities
-        .length;
-
-    // Update the showRedDot flag in the provider based on whether there's a change in activities count
-    // bool showRedDot = numActivity != currentActivitiesLength;
-    // Provider.of<TransactionProvider>(context, listen: false).showRedDot = showRedDot;
+    // Check if there's a difference in activity count to show the red dot
     if (numActivity != currentActivitiesLength) {
-      // Set showRedDot to true if there is a difference
-      Provider.of<TransactionProvider>(context, listen: false).showRedDot = true;
-      Provider.of<TransactionProvider>(context, listen: false).confirmedRedDot = true;
+      final transactionProvider = Provider.of<TransactionProvider>(context, listen: false);
+      transactionProvider.showRedDot = true;
+      transactionProvider.confirmedRedDot = true;
 
-      // Debugging prints
-      print('Red dot set to true');
+      // Save the updated count to SharedPreferences
+      prefs.setInt('numOfActivities', currentActivitiesLength);
 
-      // Wait for 3 seconds
+      // Set a delay to hide the red dot after 24 hours
       await Future.delayed(Duration(hours: 24));
-
-      // Set showRedDot back to false after 3 seconds
-      Provider.of<TransactionProvider>(context, listen: false).showRedDot = false;
-
-      // Debugging prints
-      print('Red dot reset to false after 30 seconds');
+      transactionProvider.showRedDot = false;
     }
-    // Debugging prints
-    print('testing red dot');
-    print('Previous activity count: $numActivity');
-    print('Current activity count: $currentActivitiesLength');
-    // print('Show red dot: $showRedDot');
-
-    // Update the stored number of activities in shared preferences
-    await prefs.setInt('numOfActivities', currentActivitiesLength);
   }
-
-
   Future<void> fetchActivities() async {
-    // Call the API to fetch activities or detect new activity.
-    await Provider.of<TransactionProvider>(context, listen: false)
-        .getWalletActivities(
-        accessToken: accessToken, context: context, refresh: true, isEnglish:true);
+    // Fetch activities once
+    final transactionProvider = Provider.of<TransactionProvider>(context, listen: false);
+    await transactionProvider.getWalletActivities(
+      accessToken: accessToken,
+      context: context,
+      refresh: true,
+      isEnglish: true,
+    );
 
-    // Call your red dot logic
-    await callRedDotLogic();
+    // Pass the current activity count to callRedDotLogic for red dot handling
+    await callRedDotLogic(transactionProvider.activities.length);
   }
+  void openActivityScreen() {
+    // Set showRedDot to false
+    Provider.of<TransactionProvider>(context, listen: false).showRedDot = false;
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => ActivityScreen()),
+    // );
+  }
+
 
 
   Timer? _timer;
@@ -267,6 +250,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     fToast.init(context);
     // this.initUniLinks();
     getAccessToken();
+    Provider.of<TransactionProvider>(context, listen: false).showRedDot = false;
     Future.delayed(Duration(seconds: 2), () {
       showNotification();
       //   if(accessToken !='') {
@@ -279,13 +263,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       checkWifiStatus();
-    }); // 31 jan
+    });
     initUniLinks();
-    // startPeriodicChecking();
     print('recieved data' + _receivedData);
     Timer.periodic(Duration(seconds: 3), (timer) async {
       getAccessToken();
-      callRedDotLogic();
+      // callRedDotLogic();
       // initUniLinks();
       // print('isEmailVerified');
       // print(Provider.of<UserProvider>(context, listen: false)
