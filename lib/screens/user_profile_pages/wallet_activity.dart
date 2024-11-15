@@ -560,7 +560,7 @@ class _WalletActivityState extends State<WalletActivity> {
                 bottom: 0,
                 left: 0,
                 right: 0,
-                child: LoaderBluredScreen())
+                child: LoaderBluredScreen(),)
         ],
       );
     });

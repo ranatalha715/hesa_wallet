@@ -13,6 +13,7 @@ import 'package:hesa_wallet/screens/onboarding_notifications/verify_email.dart';
 import 'package:hesa_wallet/screens/unlock/set_confirm_pin_screen.dart';
 import 'package:hesa_wallet/screens/unlock/set_pin_screen.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/nfts_details.dart';
+import 'package:hesa_wallet/screens/user_profile_pages/wallet_activity.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:hesa_wallet/widgets/dialog_button.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -146,7 +147,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final PageController _pageController = PageController(initialPage: 0);
   var accessToken = '';
   var refreshToken = '';
-
+  Timer? _redDotTimer;
   late FToast fToast;
   bool isOverlayVisible = false;
   bool isWifiOn = true;
@@ -168,25 +169,33 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   Future<void> callRedDotLogic(int currentActivitiesLength) async {
     final prefs = await SharedPreferences.getInstance();
-    var numActivity = prefs.getInt('numOfActivities') ?? 0;
+    int numActivity = prefs.getInt('numOfActivities') ?? 0;
+    Future.delayed(Duration(seconds: 3), () {
+    });
+    print('check mismatch true');
+    print(numActivity.toString());
+    print(currentActivitiesLength.toString());
 
-    // Check if there's a difference in activity count to show the red dot
     if (numActivity != currentActivitiesLength) {
-      final transactionProvider = Provider.of<TransactionProvider>(context, listen: false);
+      final transactionProvider = await Provider.of<TransactionProvider>(context, listen: false);
       transactionProvider.showRedDot = true;
       transactionProvider.confirmedRedDot = true;
-
-      // Save the updated count to SharedPreferences
       prefs.setInt('numOfActivities', currentActivitiesLength);
-
-      // Set a delay to hide the red dot after 24 hours
-      await Future.delayed(Duration(hours: 24));
-      transactionProvider.showRedDot = false;
+      print('showRedDot' +  transactionProvider.showRedDot.toString());
+      print('confirmRedDot' +  transactionProvider.confirmedRedDot.toString());
+      _redDotTimer?.cancel();
+      _redDotTimer = Timer(Duration(hours: 24), () {
+        transactionProvider.showRedDot = false;
+      });
     }
+
   }
+
   Future<void> fetchActivities() async {
-    // Fetch activities once
     final transactionProvider = Provider.of<TransactionProvider>(context, listen: false);
+
+    // Fetch activities
+
     await transactionProvider.getWalletActivities(
       accessToken: accessToken,
       context: context,
@@ -194,20 +203,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       isEnglish: true,
     );
 
-    // Pass the current activity count to callRedDotLogic for red dot handling
+    // Check and handle red dot logic based on the current activity count
     await callRedDotLogic(transactionProvider.activities.length);
   }
-  void openActivityScreen() {
-    // Set showRedDot to false
-    Provider.of<TransactionProvider>(context, listen: false).showRedDot = false;
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => ActivityScreen()),
-    // );
-  }
-
-
-
   Timer? _timer;
   StreamSubscription<String?>? _linkSubscription;
 
@@ -242,7 +240,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   @override
-  initState() {
+  initState()  {
     super.initState();
     generateFcmToken();
     AppDeepLinking().initDeeplink();
@@ -250,7 +248,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     fToast.init(context);
     // this.initUniLinks();
     getAccessToken();
-    Provider.of<TransactionProvider>(context, listen: false).showRedDot = false;
+    // Provider.of<TransactionProvider>(context, listen: false).showRedDot = false;
     Future.delayed(Duration(seconds: 2), () {
       showNotification();
       //   if(accessToken !='') {
@@ -268,6 +266,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     print('recieved data' + _receivedData);
     Timer.periodic(Duration(seconds: 3), (timer) async {
       getAccessToken();
+      Future.delayed(Duration(milliseconds: 100), () {
+
+         fetchActivities();
+      });
+
       // callRedDotLogic();
       // initUniLinks();
       // print('isEmailVerified');
@@ -280,7 +283,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     });
     startTokenRefreshTimer(
         refreshToken: refreshToken, token: accessToken, context: context);
-    fetchActivities();
+    // Future.delayed(Duration(seconds: 4), () {
+      fetchActivities();
+    // });
     // Timer.periodic(Duration(minutes: 25), (timer) async {
     //   await Provider.of<AuthProvider>(context, listen: false).refreshToken(
     //       refreshToken: refreshToken, context: context, token: accessToken);

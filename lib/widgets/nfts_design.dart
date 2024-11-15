@@ -3,12 +3,14 @@ import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hesa_wallet/models/nfts_model.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:sizer/sizer.dart';
 
 import '../constants/colors.dart';
 import '../models/nfts_model.dart';
 import '../screens/user_profile_pages/nfts_collection_details.dart';
 import '../screens/user_profile_pages/nfts_details.dart';
+import 'image_placeholder.dart';
 
 class NftsDesign extends StatefulWidget {
   const NftsDesign({Key? key, required this.nfts}) : super(key: key);
@@ -21,9 +23,9 @@ class NftsDesign extends StatefulWidget {
 
 class _NftsDesignState extends State<NftsDesign> {
   bool _isFavourite = false;
+  bool _isLoading = true;
 
   @override
-
   String _capitalize(String text) {
     if (text.isEmpty) return text;
     return text[0].toUpperCase() + text.substring(1).toLowerCase();
@@ -49,13 +51,16 @@ class _NftsDesignState extends State<NftsDesign> {
       }),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
-        child: Stack(
+        child:
+        Stack(
           children: [
+            ShimmerPlaceholder(),
             Container(
-              // decoration: BoxDecoration(color: AppColors.textColorGreyShade2.withOpacity(0.25)),
+              decoration: BoxDecoration(color: AppColors.textColorGreyShade2.withOpacity(0.25)),
               height: 27.2.h,
               width: double.infinity,
-              child: Image.network(
+              child:
+              Image.network(
                 widget.nfts.tokenURI,
                 fit: BoxFit.cover,
                 width: double.infinity,

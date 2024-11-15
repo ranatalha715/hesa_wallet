@@ -22,6 +22,7 @@ import '../../constants/app_deep_linking.dart';
 import '../../providers/assets_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
+import '../../widgets/animated_loader/animated_loader.dart';
 import '../../widgets/app_drawer.dart';
 import '../../widgets/local_toast.dart';
 import '../connection_requests_pages/connect_dapp.dart';
@@ -1153,7 +1154,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                               left: 0,
                                               right: 0,
                                               child: Container(
-                                                color: AppColors.backgroundColor,
+                                                color:
+                                                    AppColors.backgroundColor,
                                                 child: Column(
                                                   children: [
                                                     SizedBox(
@@ -1165,10 +1167,11 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                               .textColorGrey,
                                                           borderRadius:
                                                               BorderRadius
-                                                                  .circular(100)),
+                                                                  .circular(
+                                                                      100)),
                                                       child: Padding(
-                                                        padding:
-                                                            EdgeInsets.all(1.sp),
+                                                        padding: EdgeInsets.all(
+                                                            1.sp),
                                                         child: Container(
                                                           height: 60.sp,
                                                           width: 60.sp,
@@ -1200,8 +1203,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                                       : Padding(
                                                                           padding:
                                                                               EdgeInsets.all(4.sp),
-                                                                          child: Image
-                                                                              .asset(
+                                                                          child:
+                                                                              Image.asset(
                                                                             "assets/images/user_placeholder.png",
                                                                             color:
                                                                                 AppColors.textColorGrey,
@@ -1219,7 +1222,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                     Text(
                                                       user.userName != null
                                                           ? user.userName!
-                                                          : 'username.mjra'.tr(),
+                                                          : 'username.mjra'
+                                                              .tr(),
                                                       style: TextStyle(
                                                           fontSize: 11.7.sp,
                                                           fontFamily:
@@ -1254,7 +1258,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                                 : "...",
                                                             // '0x1647f...87332',
                                                             style: TextStyle(
-                                                                fontSize: 9.5.sp,
+                                                                fontSize:
+                                                                    9.5.sp,
                                                                 fontFamily:
                                                                     'Blogger Sans',
                                                                 fontWeight:
@@ -1290,22 +1295,29 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                             slivers: [
                               SliverList(
                                 delegate: SliverChildListDelegate([
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 8.h,
-                                    ),
-                                    child: Text(
-                                      "You have no Tokens".tr(),
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: themeNotifier.isDark
-                                              ? AppColors.textColorGreyShade2
-                                              : AppColors.textColorBlack,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 12.sp,
-                                          fontFamily: 'Blogger Sans'),
-                                    ),
-                                  ),
+                                  _isloading
+                                      ? Container(
+                                          height: 50.h,
+                                          // color: Colors.blue,
+                                          child: Center(
+                                              child: LoaderBluredScreen()))
+                                      : Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: 20.h,
+                                          ),
+                                          child: Text(
+                                            "You have no Tokens".tr(),
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: themeNotifier.isDark
+                                                    ? AppColors
+                                                        .textColorGreyShade2
+                                                    : AppColors.textColorBlack,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 12.sp,
+                                                fontFamily: 'Blogger Sans'),
+                                          ),
+                                        ),
                                 ]),
                               ),
                             ],
@@ -1316,80 +1328,98 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                               SliverList(
                                 delegate: SliverChildListDelegate([
                                   // Container(height: 12.h, color: Colors.green,),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                          height: 8.h,
-                                          width: 100.w,
-                                          color: themeNotifier.isDark
-                                              ? AppColors.backgroundColor
-                                              : AppColors.textColorWhite,
-                                          child: SingleChildScrollView(
-                                            scrollDirection: Axis.horizontal,
-                                            child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 16.sp,
-                                              ),
-                                              // vertical: 10.sp),
-                                              child: Row(
-                                                children: [
-                                                  NFTCategoryWidget(
-                                                    title: "All".tr(),
-                                                    // image: "",
-                                                    isFirst: true,
-                                                    index: 0,
-                                                    handler: () =>
-                                                        onCategorySelected(0),
+                                  _isloading
+                                      ? Container(
+                                          height: 50.h,
+                                          // color: Colors.blue,
+                                          child: Center(
+                                              child: LoaderBluredScreen()),
+                                        )
+                                      : Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Container(
+                                                height: 8.h,
+                                                width: 100.w,
+                                                color: themeNotifier.isDark
+                                                    ? AppColors.backgroundColor
+                                                    : AppColors.textColorWhite,
+                                                child: SingleChildScrollView(
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                      horizontal: 16.sp,
+                                                    ),
+                                                    // vertical: 10.sp),
+                                                    child: Row(
+                                                      children: [
+                                                        NFTCategoryWidget(
+                                                          title: "All".tr(),
+                                                          // image: "",
+                                                          isFirst: true,
+                                                          index: 0,
+                                                          handler: () =>
+                                                              onCategorySelected(
+                                                                  0),
+                                                        ),
+                                                        NFTCategoryWidget(
+                                                            title: "Owned".tr(),
+                                                            // image:
+                                                            //     'assets/images/cat_dig_art.png',
+                                                            index: 1,
+                                                            handler: () {
+                                                              setState(() {
+                                                                _isloading =
+                                                                    true;
+                                                              });
+                                                              onCategorySelected(
+                                                                  1);
+                                                              setState(() {
+                                                                _isloading =
+                                                                    false;
+                                                              });
+                                                            }),
+                                                        NFTCategoryWidget(
+                                                          title: "Created".tr(),
+                                                          // image:
+                                                          //     'assets/images/cat_sports.png',
+                                                          index: 2,
+                                                          handler: () =>
+                                                              onCategorySelected(
+                                                                  2),
+                                                        ),
+                                                        NFTCategoryWidget(
+                                                          title: "Listed".tr(),
+                                                          // image:
+                                                          //     'assets/images/cat_animals.png',
+                                                          index: 3,
+                                                          handler: () =>
+                                                              onCategorySelected(
+                                                                  3),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
-                                                  NFTCategoryWidget(
-                                                      title: "Owned".tr(),
-                                                      // image:
-                                                      //     'assets/images/cat_dig_art.png',
-                                                      index: 1,
-                                                      handler: () {
-                                                        setState(() {
-                                                          _isloading = true;
-                                                        });
-                                                        onCategorySelected(1);
-                                                        setState(() {
-                                                          _isloading = false;
-                                                        });
-                                                      }),
-                                                  NFTCategoryWidget(
-                                                    title: "Created".tr(),
-                                                    // image:
-                                                    //     'assets/images/cat_sports.png',
-                                                    index: 2,
-                                                    handler: () =>
-                                                        onCategorySelected(2),
-                                                  ),
-                                                  NFTCategoryWidget(
-                                                    title: "Listed".tr(),
-                                                    // image:
-                                                    //     'assets/images/cat_animals.png',
-                                                    index: 3,
-                                                    handler: () =>
-                                                        onCategorySelected(3),
-                                                  ),
-                                                ],
+                                                )),
+                                            Container(
+                                              child: bottomSpaceContent(
+                                                nftsCollectionAll,
+                                                nftsAll,
+                                                nftsCollectionOwnedByUser,
+                                                nftsOwned,
+                                                themeNotifier.isDark,
+                                                nftsCollectionCreated,
+                                                nftsCreated,
+                                                nftsListed,
+                                                collectionListed,
                                               ),
                                             ),
-                                          )),
-                                      bottomSpaceContent(
-                                        nftsCollectionAll,
-                                        nftsAll,
-                                        nftsCollectionOwnedByUser,
-                                        nftsOwned,
-                                        themeNotifier.isDark,
-                                        nftsCollectionCreated,
-                                        nftsCreated,
-                                        nftsListed,
-                                        collectionListed,
-                                      ),
-                                    ],
-                                  ),
+                                          ],
+                                        ),
                                 ]),
                               ),
                             ],

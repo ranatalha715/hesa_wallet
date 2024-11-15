@@ -8,6 +8,7 @@ import '../constants/colors.dart';
 import '../models/assets_model.dart';
 import '../models/nfts_model.dart';
 import '../screens/user_profile_pages/nfts_collection_details.dart';
+import 'image_placeholder.dart';
 
 class NftsCollectionDesign extends StatefulWidget {
   const NftsCollectionDesign({Key? key, required this.nftsCollection})
@@ -47,6 +48,7 @@ class _NftsCollectionDesignState extends State<NftsCollectionDesign> {
         borderRadius: BorderRadius.circular(10),
         child: Stack(
           children: [
+            ShimmerPlaceholder(),
             Container(
               // color: Colors.red,
               // decoration: BoxDecoration(color: AppColors.textColorGreyShade2.withOpacity(0.25)),

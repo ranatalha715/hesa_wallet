@@ -28,7 +28,7 @@ class TransactionProvider with ChangeNotifier {
   String totalForDialog = '';
   var siteUrl;
   var selectedPaymentMethod='cards';
-  // bool showRedDot=false;
+
   bool _showRedDot = false;
   bool _confirmedRedDot = false;
   bool otpErrorResponse=false;

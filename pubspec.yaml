@@ -45,6 +45,7 @@ dependencies:
   google_fonts:
   url_launcher:
   animated_checkmark: ^3.1.0
+  shimmer: ^3.0.0
   shared_preferences: ^2.2.0
   http: ^1.2.1
   sms_autofill: ^2.3.0
