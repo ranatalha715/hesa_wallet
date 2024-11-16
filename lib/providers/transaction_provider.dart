@@ -62,18 +62,9 @@ class TransactionProvider with ChangeNotifier {
   }
   int currentPage = 1;
   String calculateTimeDifference(String createdAtStr) {
-    // Parse the createdAt timestamp and ensure it's in UTC
     DateTime createdAt = DateTime.parse(createdAtStr).toUtc();
-    // Get the current time in UTC
     DateTime now = DateTime.now().toUtc();
-    // Calculate the difference
     Duration difference = now.difference(createdAt);
-
-    // Debug prints
-    print('Created at: $createdAt');
-    print('Now: $now');
-    print('Difference: $difference');
-
     if (difference.inSeconds < 60) {
       return '${difference.inSeconds}s';
     } else if (difference.inMinutes < 60) {
@@ -91,28 +82,6 @@ class TransactionProvider with ChangeNotifier {
     }
   }
 
-  // String calculateTimeDifference(DateTime createdAt) {
-  //   DateTime now = DateTime.now();
-  //   Duration difference = now.difference(createdAt);
-  //
-  //   if (difference.inSeconds < 60) {
-  //     return '${difference.inSeconds}s';
-  //   } else if (difference.inMinutes < 60) {
-  //     return '${difference.inMinutes}m';
-  //   } else if (difference.inHours < 24) {
-  //     return '${difference.inHours}h';
-  //   } else if (difference.inDays < 30) {
-  //     return '${difference.inDays}d';
-  //   } else if (difference.inDays < 365) {
-  //     int months =
-  //         now.month - createdAt.month + (12 * (now.year - createdAt.year));
-  //     return '$months m';
-  //   } else {
-  //     int years = now.year - createdAt.year;
-  //     return '$years y';
-  //   }
-  // }
-
   bool get showRedDot => _showRedDot;
   bool get confirmedRedDot => _confirmedRedDot;
 
@@ -123,31 +92,20 @@ class TransactionProvider with ChangeNotifier {
 
   set confirmedRedDot(bool value) {
     _confirmedRedDot = value;
-    // notifyListeners();
   }
-  // void clearRedDot() {
-  //   _showRedDot = false;
-  //   notifyListeners();
-  // }
 
   Future<void> initializeRedDotState() async {
     final prefs = await SharedPreferences.getInstance();
     final savedShowRedDot = prefs.getBool('showRedDot') ?? false;
-
-    print('Initializing red dot state: $savedShowRedDot');
     showRedDot = savedShowRedDot;
     notifyListeners();
   }
-
   void resetRedDotState() async {
     final prefs = await SharedPreferences.getInstance();
-
     showRedDot = false;
     confirmedRedDot = false;
     notifyListeners();
-
     await prefs.setBool('showRedDot', false);
-    print('Red dot state reset and saved to preferences.');
   }
 
 
