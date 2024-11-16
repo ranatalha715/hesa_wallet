@@ -178,7 +178,15 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       statusBarColor:
           AppColors.profileHeaderDark, // Change to your desired color
     ));
-  }
+    callRedDotLogic();
+    }
+    var savedShowRedDot;
+
+    callRedDotLogic() async {
+      final prefs = await SharedPreferences.getInstance();
+       savedShowRedDot = prefs.getBool('showRedDot') ?? false;
+
+    }
 
   @override
   void dispose() {
@@ -1086,8 +1094,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                 height: 4.3.sp,
                                                 width: 4.3.sp,
                                                 decoration: BoxDecoration(
-                                                  color: trP.showRedDot &&
-                                                          trP.confirmedRedDot
+                                                  color:
+                                                  trP.showRedDot
                                                       ? AppColors.errorColor
                                                       : Colors.transparent,
                                                   borderRadius:

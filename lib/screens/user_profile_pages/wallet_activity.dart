@@ -88,8 +88,10 @@ class _WalletActivityState extends State<WalletActivity> {
     // redDotLogic();
     super.initState();
 
+    Provider.of<TransactionProvider>(context, listen: false).resetRedDotState();
     Provider.of<TransactionProvider>(context, listen: false).confirmedRedDot =
     false;
+    callRedDotLogic();
 
     print(
         'confirm red dot' +  Provider.of<TransactionProvider>(context, listen: false).confirmedRedDot.toString());
@@ -180,6 +182,13 @@ class _WalletActivityState extends State<WalletActivity> {
 
     return sortedActivities;
   }
+
+  callRedDotLogic() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('showRedDot', false);
+
+  }
+
 
   @override
   Widget build(BuildContext context) {

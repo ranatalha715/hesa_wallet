@@ -75,8 +75,8 @@ Future<void> main() async {
   // await Firebase.initializeApp();
   // HyperPay.init("", "");
   SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp, // Disable landscape mode
-    DeviceOrientation.portraitDown, // Disable landscape mode
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
   ]).then((_) {
     runApp(
         // DevicePreview(
@@ -166,36 +166,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     //   noInternetDialog(context);
     // }
   }
-
-  Future<void> callRedDotLogic(int currentActivitiesLength) async {
-    final prefs = await SharedPreferences.getInstance();
-    int numActivity = prefs.getInt('numOfActivities') ?? 0;
-    Future.delayed(Duration(seconds: 3), () {
-    });
-    print('check mismatch true');
-    print(numActivity.toString());
-    print(currentActivitiesLength.toString());
-
-    if (numActivity != currentActivitiesLength) {
-      final transactionProvider = await Provider.of<TransactionProvider>(context, listen: false);
-      transactionProvider.showRedDot = true;
-      transactionProvider.confirmedRedDot = true;
-      prefs.setInt('numOfActivities', currentActivitiesLength);
-      print('showRedDot' +  transactionProvider.showRedDot.toString());
-      print('confirmRedDot' +  transactionProvider.confirmedRedDot.toString());
-      _redDotTimer?.cancel();
-      _redDotTimer = Timer(Duration(hours: 24), () {
-        transactionProvider.showRedDot = false;
-      });
-    }
-
-  }
-
   Future<void> fetchActivities() async {
     final transactionProvider = Provider.of<TransactionProvider>(context, listen: false);
-
-    // Fetch activities
-
     await transactionProvider.getWalletActivities(
       accessToken: accessToken,
       context: context,
@@ -203,25 +175,48 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       isEnglish: true,
     );
 
-    // Check and handle red dot logic based on the current activity count
-    await callRedDotLogic(transactionProvider.activities.length);
+    if (transactionProvider.activities.isNotEmpty) {
+      final latestActivityTime = transactionProvider.activities
+          .map((activity) => DateTime.parse(activity.time))
+          .reduce((a, b) => a.isAfter(b) ? a : b)
+          .toIso8601String();
+      await callRedDotLogic(latestActivityTime);
+    } else {
+    }
+  }
+
+
+
+  Future<void> callRedDotLogic(String latestActivityTime) async {
+    final prefs = await SharedPreferences.getInstance();
+    final storedActivityTime = prefs.getString('lastActivityTime') ?? '';
+    final savedShowRedDot = prefs.getBool('showRedDot') ?? false;
+    if (storedActivityTime != latestActivityTime) {
+      final transactionProvider = Provider.of<TransactionProvider>(context, listen: false);
+      transactionProvider.showRedDot = true;
+      transactionProvider.confirmedRedDot = true;
+      await prefs.setString('lastActivityTime', latestActivityTime);
+      await prefs.setBool('showRedDot', true);
+      print('Updated shared preferences with latest activity time and red dot state.');
+    } else {
+      final transactionProvider = Provider.of<TransactionProvider>(context, listen: false);
+      transactionProvider.showRedDot = savedShowRedDot;
+      print('Restored red dot state: showRedDot=${transactionProvider.showRedDot}');
+    }
   }
   Timer? _timer;
   StreamSubscription<String?>? _linkSubscription;
 
   void clearLinkStream() {
-    // Cancel or reset the link stream if possible
     getLinksStream()
-        .drain(); // This will stop the stream from emitting more items
-
-    print('Link stream has been cleared.');
+        .drain();
   }
 
   void showNotification() async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      'your_channel_id', // id
-      'your_channel_name', // name
+      'your_channel_id',
+      'your_channel_name',
       importance: Importance.max,
       priority: Priority.high,
       showWhen: false,
@@ -231,11 +226,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         NotificationDetails(android: androidPlatformChannelSpecifics);
 
     await flutterLocalNotificationsPlugin.show(
-      0, // notification id
-      'Hello', // title
-      'This is a local notification', // body
+      0,
+      'Hello',
+      'This is a local notification',
       platformChannelSpecifics,
-      payload: 'notification payload', // optional
+      payload: 'notification payload',
     );
   }
 
@@ -246,9 +241,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     AppDeepLinking().initDeeplink();
     fToast = FToast();
     fToast.init(context);
-    // this.initUniLinks();
     getAccessToken();
-    // Provider.of<TransactionProvider>(context, listen: false).showRedDot = false;
     Future.delayed(Duration(seconds: 2), () {
       showNotification();
       //   if(accessToken !='') {
@@ -256,26 +249,15 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       //       .updateFCM(FCM: fcmToken, token: accessToken, context: context);
       //   }
     });
-
     WidgetsBinding.instance.addObserver(this);
-
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       checkWifiStatus();
     });
     initUniLinks();
-    print('recieved data' + _receivedData);
     Timer.periodic(Duration(seconds: 3), (timer) async {
       getAccessToken();
-      Future.delayed(Duration(milliseconds: 100), () {
-
+     Provider.of<TransactionProvider>(context,listen: false).initializeRedDotState();
          fetchActivities();
-      });
-
-      // callRedDotLogic();
-      // initUniLinks();
-      // print('isEmailVerified');
-      // print(Provider.of<UserProvider>(context, listen: false)
-      //     .isEmailVerified);
     });
     Timer.periodic(Duration(seconds: 30), (timer) async {
       await Provider.of<AuthProvider>(context, listen: false)
@@ -283,9 +265,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     });
     startTokenRefreshTimer(
         refreshToken: refreshToken, token: accessToken, context: context);
-    // Future.delayed(Duration(seconds: 4), () {
-      fetchActivities();
-    // });
     // Timer.periodic(Duration(minutes: 25), (timer) async {
     //   await Provider.of<AuthProvider>(context, listen: false).refreshToken(
     //       refreshToken: refreshToken, context: context, token: accessToken);
@@ -300,64 +279,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  String _receivedData = 'No UniLink data received';
-  bool _uniLinkHandled = false;
-
-  // Future<void> initUniLinks() async {
-  //   try {
-  //     // Handle the initial link
-  //     final initialLink = await getInitialLink();
-  //     if (initialLink != null) {
-  //       _handleIncomingLink(initialLink);
-  //     }
-  //
-  //     // Handle subsequent links
-  //     _linkSubscription = linkStream.listen((String? link) {
-  //       if (link != null) {
-  //         _handleIncomingLink(link);
-  //       }
-  //     }, onError: (err) {
-  //       print('Error listening for UniLinks: $err');
-  //     });
-  //   } catch (e) {
-  //     print('Error initializing UniLinks: $e');
-  //     // Handle error as necessary
-  //   }
-  // }
-  //
-  // void _handleIncomingLink(String link) {
-  //   if (_uniLinkHandled) {
-  //     return;
-  //   }
-  //   setState(() {
-  //     _receivedData = link;
-  //   });
-  //
-  //   Uri uri = Uri.parse(link);
-  //   String? operation = uri.queryParameters['operation'];
-  //   print('operation this: ' + operation.toString());
-  //   if (operation != null && operation == 'connectWallet') {
-  //     // Navigate to ConnectWalletScreen
-  //     setState(() {
-  //       Provider.of<UserProvider>(context, listen: false).navigateToNeoForConnectWallet = true;
-  //       print("check kro: " +
-  //           Provider.of<UserProvider>(context, listen: false)
-  //               .navigateToNeoForConnectWallet
-  //               .toString());
-  //     });
-  //     _uniLinkHandled = true;
-  //     // Navigator.push(
-  //     //   context,
-  //     //   MaterialPageRoute(builder: (context) => ConnectWalletScreen()),
-  //     // );
-  //
-  //     // Kill or remove the UniLink from the app lifecycle
-  //     _linkSubscription?.cancel();
-  //     _linkSubscription = null;
-  //   } else {
-  //     Provider.of<UserProvider>(context, listen: false).navigateToNeoForConnectWallet = false;
-  //   }
-  // }
 
   void handleDisconnection() async {
     final prefs = await SharedPreferences.getInstance();
@@ -448,52 +369,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     }
   }
 
-  // Future<void> initUniLinks() async {
-  //   try {
-  //     print('trying');
-  //     // AppDeepLinking().initDeeplink(); muzamil recommended
-  //     getLinksStream().listen((String? link) {
-  //       if (link != null) {
-  //         setState(() {
-  //           _receivedData = link;
-  //         });
-  //
-  //         Uri uri = Uri.parse(link);
-  //         String? operation = uri.queryParameters['operation'];
-  //         print("print operation");
-  //         print(operation);
-  //
-  //         if (operation != null && operation == 'connectWallet') {
-  //
-  //
-  //
-  //           Provider.of<UserProvider>(context, listen: false)
-  //               .navigateToNeoForConnectWallet = true;
-  //
-  //           print("check kro" +
-  //               Provider.of<UserProvider>(context, listen: false)
-  //                   .navigateToNeoForConnectWallet
-  //                   .toString());
-  //
-  //         } else {
-  //           Provider.of<UserProvider>(context, listen: false)
-  //               .navigateToNeoForConnectWallet = false;
-  //         }
-  //       }
-  //     });
-  //     print('trying end');
-  //   } catch (e) {
-  //     print('Error initializing UniLinks: $e');
-  //     print('trying error');
-  //
-  //   }
-  // }
-
-  // payable non payable functions
   @override
   void didChangeDependencies() {
-    // isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
-    //     .navigateToNeoForConnectWallet;
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
@@ -501,37 +378,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
-      // setState(() {
-      //   isOverlayVisible=false;
-      // });
-      // print('app paused');
-      // SystemNavigator.pop();
-      // initUniLinks();
-      // // App goes into the background
-      //
-      // setState(() {
-      //   isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
-      //       .navigateToNeoForConnectWallet;
-      // });
-      // _showLockScreen();
     } else if (state == AppLifecycleState.resumed) {
-      // SystemNavigator.pop();
-      // setState(() {
-      //   isOverlayVisible=false;
-      // });
-      // initUniLinks();
-      // App comes back to the foreground
-      // print('app resumed');
-      //
-      // setState(() {
-      //   isOverlayVisible = false;
-      //       // Provider.of<UserProvider>(context, listen: false)
-      //       // .navigateToNeoForConnectWallet;
-      // });
-      // _hideLockScreen();
     } else {}
-    // print('isOverlayVisible');
-    // print(isOverlayVisible);
+
   }
 
   getAccessToken() async {
@@ -543,10 +392,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       prefs.remove('accessToken');
       Provider.of<AuthProvider>(context, listen: false).refreshToken(
           refreshToken: refreshToken, context: context, token: accessToken);
-      // setState(() {
-      //   accessToken = '';
-      // });
-      // _showToast('Session Expired!');
     } else {}
   }
 
@@ -611,17 +456,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 ),
           debugShowCheckedModeBanner: false,
           home:
-              // accessToken.isEmpty ?
-              //  Stack(
-              //   children: [
-              //     Wallet(),
-              //     if (!isWifiOn)
-              //       LoaderBluredScreen(
-              //         isWifiOn: false,
-              //       ),
-              //   ],
-              // ): WalletTokensNfts(),
-
               _buildContent(),
           // Provider.of<TokenProvider>(
           //   context,
@@ -730,8 +564,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         ],
       ),
     );
-
-    // Custom Toast Position
     fToast.showToast(
         child: toast,
         toastDuration: Duration(milliseconds: duration),
@@ -834,15 +666,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       future: initUniLinks(), // Call the modified initUniLinks function
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // Show a loading indicator while waiting for the deep link to be processed
           return accessToken.isEmpty ? const Wallet() : WalletTokensNfts();
-          // WalletTokensNfts();
-          // Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          // Handle any errors
           return Center(child: Text('Error: ${snapshot.error}'));
         } else {
-          // The future is complete, return your content based on the overlay visibility
           if (accessToken.isEmpty) {
             return Stack(
               children: [
@@ -882,7 +709,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       },
     );
   }
-//// transactions
 }
 
 bool isTokenExpired(String token) {

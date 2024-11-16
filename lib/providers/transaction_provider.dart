@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:hyperpay_plugin/flutter_hyperpay.dart';
 import 'package:hyperpay_plugin/model/ready_ui.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import '../constants/app_deep_linking.dart';
 import '../constants/colors.dart';
@@ -129,6 +130,26 @@ class TransactionProvider with ChangeNotifier {
   //   notifyListeners();
   // }
 
+  Future<void> initializeRedDotState() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedShowRedDot = prefs.getBool('showRedDot') ?? false;
+
+    print('Initializing red dot state: $savedShowRedDot');
+    showRedDot = savedShowRedDot;
+    notifyListeners();
+  }
+
+  void resetRedDotState() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    showRedDot = false;
+    confirmedRedDot = false;
+    notifyListeners();
+
+    await prefs.setBool('showRedDot', false);
+    print('Red dot state reset and saved to preferences.');
+  }
+
 
   Future<AuthResult> getWalletActivities({
     required String accessToken,
@@ -169,9 +190,7 @@ class TransactionProvider with ChangeNotifier {
             tokenName: prodData['name'].toString(),
             image: prodData['image'].toString(),
             time:
-            // calculateTimeDifference(
                 prodData['timestamp'].toString(),
-            // ),
             // time: calculateTimeDifference(DateTime.parse(prodData['timestamp'].toString())),
             siteURL: prodData['siteURL'].toString(),
             amountType: prodData['amount']['type'].toString(),
