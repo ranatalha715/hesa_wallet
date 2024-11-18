@@ -162,17 +162,17 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor:
-          AppColors.profileHeaderDark,
+      AppColors.profileHeaderDark,
     ));
     callRedDotLogic();
-    }
-    var savedShowRedDot;
+  }
+  var savedShowRedDot;
 
-    callRedDotLogic() async {
-      final prefs = await SharedPreferences.getInstance();
-       savedShowRedDot = prefs.getBool('showRedDot') ?? false;
+  callRedDotLogic() async {
+    final prefs = await SharedPreferences.getInstance();
+    savedShowRedDot = prefs.getBool('showRedDot') ?? false;
 
-    }
+  }
 
   @override
   void dispose() {
@@ -240,7 +240,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
 
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => ConnectDapp()),
-              (Route<dynamic> route) => false,
+                  (Route<dynamic> route) => false,
             );
             Provider.of<TransactionProvider>(context, listen: false)
                 .logoFromNeo = logoFromNeo;
@@ -666,10 +666,10 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   }
 
   Future<void>
-      navigateToTransactionRequestAcceptRejectWithAcceptCollectionOffer(
-          Map<String, dynamic> queryParams,
-          String operation,
-          BuildContext ctx) async {
+  navigateToTransactionRequestAcceptRejectWithAcceptCollectionOffer(
+      Map<String, dynamic> queryParams,
+      String operation,
+      BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx)
@@ -682,10 +682,10 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   }
 
   Future<void>
-      navigateToTransactionRequestAcceptRejectWithrejectNFTOfferReceived(
-          Map<String, dynamic> queryParams,
-          String operation,
-          BuildContext ctx) async {
+  navigateToTransactionRequestAcceptRejectWithrejectNFTOfferReceived(
+      Map<String, dynamic> queryParams,
+      String operation,
+      BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx)
@@ -698,10 +698,10 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   }
 
   Future<void>
-      navigateToTransactionRequestAcceptRejectWithrejectCollectionOfferReceived(
-          Map<String, dynamic> queryParams,
-          String operation,
-          BuildContext ctx) async {
+  navigateToTransactionRequestAcceptRejectWithrejectCollectionOfferReceived(
+      Map<String, dynamic> queryParams,
+      String operation,
+      BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx)
@@ -729,10 +729,10 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   }
 
   Future<void>
-      navigateToTransactionRequestAcceptRejectWithCancelCollectionOfferMade(
-          Map<String, dynamic> queryParams,
-          String operation,
-          BuildContext ctx) async {
+  navigateToTransactionRequestAcceptRejectWithCancelCollectionOfferMade(
+      Map<String, dynamic> queryParams,
+      String operation,
+      BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx)
@@ -760,10 +760,10 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   }
 
   Future<void>
-      navigateToTransactionRequestAcceptRejectWithCancelCollectionAuctionListing(
-          Map<String, dynamic> queryParams,
-          String operation,
-          BuildContext ctx) async {
+  navigateToTransactionRequestAcceptRejectWithCancelCollectionAuctionListing(
+      Map<String, dynamic> queryParams,
+      String operation,
+      BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx)
@@ -791,10 +791,10 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   }
 
   Future<void>
-      navigateToTransactionRequestAcceptRejectWithCancelCollectionListing(
-          Map<String, dynamic> queryParams,
-          String operation,
-          BuildContext ctx) async {
+  navigateToTransactionRequestAcceptRejectWithCancelCollectionListing(
+      Map<String, dynamic> queryParams,
+      String operation,
+      BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx)
@@ -807,13 +807,13 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   }
 
   Future<void> navigateToTransactionRequestAcceptRejectWithMakeCounterOffer(
-    Map<String, dynamic> queryParams,
-    String operation,
-    BuildContext ctx,
-    String id,
-    String offererId,
-    String offerAmount,
-  ) async {
+      Map<String, dynamic> queryParams,
+      String operation,
+      BuildContext ctx,
+      String id,
+      String offererId,
+      String offerAmount,
+      ) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx)
@@ -829,14 +829,14 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   }
 
   Future<void>
-      navigateToTransactionRequestAcceptRejectWithrejectNFTCounterOffer(
-    Map<String, dynamic> queryParams,
-    String operation,
-    BuildContext ctx,
-    String id,
-    String offererId,
-    String offerAmount,
-  ) async {
+  navigateToTransactionRequestAcceptRejectWithrejectNFTCounterOffer(
+      Map<String, dynamic> queryParams,
+      String operation,
+      BuildContext ctx,
+      String id,
+      String offererId,
+      String offerAmount,
+      ) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx)
@@ -853,14 +853,14 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   }
 
   Future<void>
-      navigateToTransactionRequestAcceptRejectWithrejectCollectionCounterOffer(
-    Map<String, dynamic> queryParams,
-    String operation,
-    BuildContext ctx,
-    String id,
-    String offererId,
-    String offerAmount,
-  ) async {
+  navigateToTransactionRequestAcceptRejectWithrejectCollectionCounterOffer(
+      Map<String, dynamic> queryParams,
+      String operation,
+      BuildContext ctx,
+      String id,
+      String offererId,
+      String offerAmount,
+      ) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx)
@@ -877,14 +877,14 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   }
 
   Future<void>
-      navigateToTransactionRequestAcceptRejectWithmakeCollectionCounterOffer(
-    Map<String, dynamic> queryParams,
-    String operation,
-    BuildContext ctx,
-    String id,
-    String offererId,
-    String offerAmount,
-  ) async {
+  navigateToTransactionRequestAcceptRejectWithmakeCollectionCounterOffer(
+      Map<String, dynamic> queryParams,
+      String operation,
+      BuildContext ctx,
+      String id,
+      String offererId,
+      String offerAmount,
+      ) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
     await Navigator.of(ctx)
@@ -940,14 +940,14 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                     if (snapshot.hasData) {
                       final passcode = snapshot.data!['passcode'] as String?;
                       final setLockScreen =
-                          snapshot.data!['setLockScreen'] as bool;
+                      snapshot.data!['setLockScreen'] as bool;
                       print("setLockScreen && passcode");
                       print(setLockScreen.toString() + passcode.toString());
                       if (setLockScreen
-                          // &&
-                          // passcode != null &&
-                          // passcode.isNotEmpty
-                          ) {
+                      // &&
+                      // passcode != null &&
+                      // passcode.isNotEmpty
+                      ) {
                         return Unlock();
                         // return WelcomeScreen(handler: (){});
                         // Navigate to the pin screen
@@ -1011,7 +1011,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                           ),
                                           Consumer<TransactionProvider>(builder:
                                               (context, TransactionProvider trP,
-                                                  _) {
+                                              _) {
                                             return Positioned(
                                               right: 1,
                                               // bottom: 2.sp,
@@ -1024,8 +1024,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                       ? AppColors.errorColor
                                                       : Colors.transparent,
                                                   borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.sp),
+                                                  BorderRadius.circular(
+                                                      10.sp),
                                                 ),
                                               ),
                                             );
@@ -1043,8 +1043,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => Unlock()),
-                                          (Route<dynamic> route) =>
-                                              false, // This predicate removes all previous routes
+                                              (Route<dynamic> route) =>
+                                          false, // This predicate removes all previous routes
                                         );
                                       },
                                       child: Padding(
@@ -1088,7 +1088,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                               right: 0,
                                               child: Container(
                                                 color:
-                                                    AppColors.backgroundColor,
+                                                AppColors.backgroundColor,
                                                 child: Column(
                                                   children: [
                                                     SizedBox(
@@ -1099,9 +1099,9 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                           color: AppColors
                                                               .textColorGrey,
                                                           borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      100)),
+                                                          BorderRadius
+                                                              .circular(
+                                                              100)),
                                                       child: Padding(
                                                         padding: EdgeInsets.all(
                                                             1.sp),
@@ -1112,37 +1112,37 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                               color: AppColors
                                                                   .backgroundColor,
                                                               borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          100)),
+                                                              BorderRadius
+                                                                  .circular(
+                                                                  100)),
                                                           child: Padding(
                                                             padding:
-                                                                EdgeInsets.all(
-                                                                    1.sp),
+                                                            EdgeInsets.all(
+                                                                1.sp),
                                                             child: ClipRRect(
                                                               borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          100),
+                                                              BorderRadius
+                                                                  .circular(
+                                                                  100),
                                                               child:
-                                                                  user.userAvatar !=
-                                                                          null
-                                                                      ? Image
-                                                                          .network(
-                                                                          user.userAvatar!,
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                        )
-                                                                      : Padding(
-                                                                          padding:
-                                                                              EdgeInsets.all(4.sp),
-                                                                          child:
-                                                                              Image.asset(
-                                                                            "assets/images/user_placeholder.png",
-                                                                            color:
-                                                                                AppColors.textColorGrey,
-                                                                          ),
-                                                                        ),
+                                                              user.userAvatar !=
+                                                                  null
+                                                                  ? Image
+                                                                  .network(
+                                                                user.userAvatar!,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              )
+                                                                  : Padding(
+                                                                padding:
+                                                                EdgeInsets.all(4.sp),
+                                                                child:
+                                                                Image.asset(
+                                                                  "assets/images/user_placeholder.png",
+                                                                  color:
+                                                                  AppColors.textColorGrey,
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
@@ -1156,19 +1156,19 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                       user.userName != null
                                                           ? user.userName!
                                                           : 'username.mjra'
-                                                              .tr(),
+                                                          .tr(),
                                                       style: TextStyle(
                                                           fontSize: 11.7.sp,
                                                           fontFamily:
-                                                              'Blogger Sans',
+                                                          'Blogger Sans',
                                                           fontWeight:
-                                                              FontWeight.w700,
+                                                          FontWeight.w700,
                                                           color: themeNotifier
-                                                                  .isDark
+                                                              .isDark
                                                               ? AppColors
-                                                                  .textColorWhite
+                                                              .textColorWhite
                                                               : AppColors
-                                                                  .textColorBlack),
+                                                              .textColorBlack),
                                                     ),
                                                     SizedBox(
                                                       height: 0.5.h,
@@ -1180,24 +1180,24 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                               .walletAddress!),
                                                       child: Row(
                                                         mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
+                                                        MainAxisAlignment
+                                                            .center,
                                                         children: [
                                                           Text(
                                                             user.walletAddress !=
-                                                                    null
+                                                                null
                                                                 ? replaceMiddleWithDots(
-                                                                    user.walletAddress!)
+                                                                user.walletAddress!)
                                                                 : "...",
                                                             // '0x1647f...87332',
                                                             style: TextStyle(
                                                                 fontSize:
-                                                                    9.5.sp,
+                                                                9.5.sp,
                                                                 fontFamily:
-                                                                    'Blogger Sans',
+                                                                'Blogger Sans',
                                                                 fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
+                                                                FontWeight
+                                                                    .w500,
                                                                 color: AppColors
                                                                     .textColorGrey),
                                                           ),
@@ -1230,26 +1230,26 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                 delegate: SliverChildListDelegate([
                                   _isloading
                                       ? Container(
-                                          height: 50.h,
-                                          child: Center(
-                                              child: LoaderBluredScreen()))
+                                      height: 50.h,
+                                      child: Center(
+                                          child: LoaderBluredScreen()))
                                       : Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            vertical: 20.h,
-                                          ),
-                                          child: Text(
-                                            "You have no Tokens".tr(),
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                color: themeNotifier.isDark
-                                                    ? AppColors
-                                                        .textColorGreyShade2
-                                                    : AppColors.textColorBlack,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 12.sp,
-                                                fontFamily: 'Blogger Sans'),
-                                          ),
-                                        ),
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 20.h,
+                                    ),
+                                    child: Text(
+                                      "You have no Tokens".tr(),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: themeNotifier.isDark
+                                              ? AppColors
+                                              .textColorGreyShade2
+                                              : AppColors.textColorBlack,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 12.sp,
+                                          fontFamily: 'Blogger Sans'),
+                                    ),
+                                  ),
                                 ]),
                               ),
                             ],
@@ -1261,87 +1261,87 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                 delegate: SliverChildListDelegate([
                                   _isloading
                                       ? Container(
-                                          height: 50.h,
-                                          child: Center(
-                                              child: LoaderBluredScreen()),
-                                        )
+                                    height: 50.h,
+                                    child: Center(
+                                        child: LoaderBluredScreen()),
+                                  )
                                       : Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Container(
-                                                height: 8.h,
-                                                width: 100.w,
-                                                color: themeNotifier.isDark
-                                                    ? AppColors.backgroundColor
-                                                    : AppColors.textColorWhite,
-                                                child: SingleChildScrollView(
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                      horizontal: 16.sp,
-                                                    ),
-                                                    child: Row(
-                                                      children: [
-                                                        NFTCategoryWidget(
-                                                          title: "All".tr(),
-                                                          isFirst: true,
-                                                          index: 0,
-                                                          handler: () =>
-                                                              onCategorySelected(
-                                                                  0),
-                                                        ),
-                                                        NFTCategoryWidget(
-                                                            title: "Owned".tr(),
-                                                            index: 1,
-                                                            handler: () {
-                                                              setState(() {
-                                                                _isloading =
-                                                                    true;
-                                                              });
-                                                              onCategorySelected(
-                                                                  1);
-                                                              setState(() {
-                                                                _isloading =
-                                                                    false;
-                                                              });
-                                                            }),
-                                                        NFTCategoryWidget(
-                                                          title: "Created".tr(),
-                                                          index: 2,
-                                                          handler: () =>
-                                                              onCategorySelected(
-                                                                  2),
-                                                        ),
-                                                        NFTCategoryWidget(
-                                                          title: "Listed".tr(),
-                                                          index: 3,
-                                                          handler: () =>
-                                                              onCategorySelected(
-                                                                  3),
-                                                        ),
-                                                      ],
-                                                    ),
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                          height: 8.h,
+                                          width: 100.w,
+                                          color: themeNotifier.isDark
+                                              ? AppColors.backgroundColor
+                                              : AppColors.textColorWhite,
+                                          child: SingleChildScrollView(
+                                            scrollDirection:
+                                            Axis.horizontal,
+                                            child: Padding(
+                                              padding:
+                                              EdgeInsets.symmetric(
+                                                horizontal: 16.sp,
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  NFTCategoryWidget(
+                                                    title: "All".tr(),
+                                                    isFirst: true,
+                                                    index: 0,
+                                                    handler: () =>
+                                                        onCategorySelected(
+                                                            0),
                                                   ),
-                                                )),
-                                            Container(
-                                              child: bottomSpaceContent(
-                                                nftsCollectionAll,
-                                                nftsAll,
-                                                nftsCollectionOwnedByUser,
-                                                nftsOwned,
-                                                themeNotifier.isDark,
-                                                nftsCollectionCreated,
-                                                nftsCreated,
-                                                nftsListed,
-                                                collectionListed,
+                                                  NFTCategoryWidget(
+                                                      title: "Owned".tr(),
+                                                      index: 1,
+                                                      handler: () {
+                                                        setState(() {
+                                                          _isloading =
+                                                          true;
+                                                        });
+                                                        onCategorySelected(
+                                                            1);
+                                                        setState(() {
+                                                          _isloading =
+                                                          false;
+                                                        });
+                                                      }),
+                                                  NFTCategoryWidget(
+                                                    title: "Created".tr(),
+                                                    index: 2,
+                                                    handler: () =>
+                                                        onCategorySelected(
+                                                            2),
+                                                  ),
+                                                  NFTCategoryWidget(
+                                                    title: "Listed".tr(),
+                                                    index: 3,
+                                                    handler: () =>
+                                                        onCategorySelected(
+                                                            3),
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                          ],
+                                          )),
+                                      Container(
+                                        child: bottomSpaceContent(
+                                          nftsCollectionAll,
+                                          nftsAll,
+                                          nftsCollectionOwnedByUser,
+                                          nftsOwned,
+                                          themeNotifier.isDark,
+                                          nftsCollectionCreated,
+                                          nftsCreated,
+                                          nftsListed,
+                                          collectionListed,
                                         ),
+                                      ),
+                                    ],
+                                  ),
                                 ]),
                               ),
                             ],
@@ -1361,10 +1361,10 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
 
   Widget NFTCategoryWidget(
       {required String title,
-      Function? handler,
-      // String? image,
-      bool isFirst = false,
-      required int index}) {
+        Function? handler,
+        // String? image,
+        bool isFirst = false,
+        required int index}) {
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -1409,22 +1409,22 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   }
 
   Widget bottomSpaceContent(
-    var nftsCollectionAll,
-    var nftsAll,
-    var nftsCollectionOwnedByUser,
-    var nftsOwned,
-    var isDark,
-    var nftsCollectionCreated,
-    var nftsCreated,
-    var nftsListed,
-    var nftsCollectionListed,
-  ) {
+      var nftsCollectionAll,
+      var nftsAll,
+      var nftsCollectionOwnedByUser,
+      var nftsOwned,
+      var isDark,
+      var nftsCollectionCreated,
+      var nftsCreated,
+      var nftsListed,
+      var nftsCollectionListed,
+      ) {
     switch (selectedCategoryIndex) {
       case 0:
         return NftsCollectionDivision(
             nftsCollection: nftsCollectionAll,
             nfts:
-                nftsAll);
+            nftsAll);
       case 1:
         return NftsCollectionDivision(
           nftsCollection: nftsCollectionOwnedByUser,

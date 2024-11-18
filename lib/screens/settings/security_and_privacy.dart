@@ -360,37 +360,38 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                         padding: EdgeInsets.only(top: 0.4.h),
                                         shrinkWrap: true,
                                         children: [
-                                          biometricLock(
-                                              isFirst: true,
-                                              imageUrl:
-                                                  "assets/images/face_Id2.png",
-                                              title: 'Face ID'.tr(),
-                                              // subTitle: 'Have been set up'.tr(),
-                                              subTitle:
-                                                  'Have not been set up'.tr(),
-
-                                              // isSet: true,
-                                              setUpHandler: () {},
-                                              isDark: themeNotifier.isDark
-                                                  ? true
-                                                  : false),
-                                          biometricLock(
-                                              // isLast: true,
-                                              imageUrl:
-                                                  "assets/images/finger_id2.png",
-                                              title: 'Finger ID'.tr(),
-                                              subTitle: _isUserAuthorized
-                                                  ? "Have been set up".tr()
-                                                  : "Have not been set up".tr(),
-                                              setUpHandler: authenticateUser,
-                                              isSet: _isUserAuthorized
-                                                  ? true
-                                                  : false,
-                                              isDark: themeNotifier.isDark
-                                                  ? true
-                                                  : false),
+                                          // biometricLock(
+                                          //     isFirst: true,
+                                          //     imageUrl:
+                                          //         "assets/images/face_Id2.png",
+                                          //     title: 'Face ID'.tr(),
+                                          //     // subTitle: 'Have been set up'.tr(),
+                                          //     subTitle:
+                                          //         'Have not been set up'.tr(),
+                                          //
+                                          //     // isSet: true,
+                                          //     setUpHandler: () {},
+                                          //     isDark: themeNotifier.isDark
+                                          //         ? true
+                                          //         : false),
+                                          // biometricLock(
+                                          //     // isLast: true,
+                                          //     imageUrl:
+                                          //         "assets/images/finger_id2.png",
+                                          //     title: 'Finger ID'.tr(),
+                                          //     subTitle: _isUserAuthorized
+                                          //         ? "Have been set up".tr()
+                                          //         : "Have not been set up".tr(),
+                                          //     setUpHandler: authenticateUser,
+                                          //     isSet: _isUserAuthorized
+                                          //         ? true
+                                          //         : false,
+                                          //     isDark: themeNotifier.isDark
+                                          //         ? true
+                                          //         : false),
                                           biometricLock(
                                               isLast: true,
+                                              isFirst: true,
                                               imageUrl:
                                                   "assets/images/passcode.png",
                                               title: 'Pin'.tr(),
