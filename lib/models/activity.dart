@@ -21,3 +21,4 @@ class ActivityModel {
         required this.type
       });
 }
+

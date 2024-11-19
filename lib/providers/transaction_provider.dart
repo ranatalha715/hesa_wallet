@@ -108,65 +108,75 @@ class TransactionProvider with ChangeNotifier {
     await prefs.setBool('showRedDot', false);
   }
 
-
   Future<AuthResult> getWalletActivities({
     required String accessToken,
     required BuildContext context,
+    int limit = 10,
+    int page = 1,
     bool refresh = false,
     bool isEnglish = true,
   }) async {
+    // Construct the URL with limit and page query parameters
     final url = Uri.parse(
-      BASE_URL + '/user/wallet-activity?limit=10&page=1',
+      '$BASE_URL/user/wallet-activity?limit=$limit&page=$page',
     );
 
-    final response = await http.get(
-      url,
-      headers: {
-        "Accept": "application/json",
-        'Authorization': 'Bearer $accessToken',
-        'accept-language': isEnglish ? 'eng' :'ar',
-      },
-    );
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          "Accept": "application/json",
+          'Authorization': 'Bearer $accessToken',
+          'accept-language': isEnglish ? 'eng' : 'ar',
+        },
+      );
 
-    final jsonData = json.decode(response.body);
-    print('Get Wallet Activities' + response.body);
+      final jsonData = json.decode(response.body);
+      print('Get Wallet Activities Response: ' + response.body);
 
-    if (response.statusCode == 200) {
-      if (jsonData != null) {
-        final List<dynamic> extractedData = jsonData as List<dynamic>;
-        print("extracted data" + extractedData.toString());
-        final List<ActivityModel> loadedActivities =
-        extractedData.map((prodData) {
-          final metaData = prodData['metaData'];
-          final bool containsCollection = prodData['transactionType']
-              .toString()
-              .toLowerCase()
-              .contains('collection');
-          return ActivityModel(
-            transactionType: prodData['func'].toString(),
-            transactionAmount: prodData['amount']['value'].toString(),
-            tokenName: prodData['name'].toString(),
-            image: prodData['image'].toString(),
-            time:
-                prodData['timestamp'].toString(),
-            // time: calculateTimeDifference(DateTime.parse(prodData['timestamp'].toString())),
-            siteURL: prodData['siteURL'].toString(),
-            amountType: prodData['amount']['type'].toString(),
-            id: prodData['id'].toString(),
-            type: prodData['type'].toString(),
-          );
-        }).toList();
+      if (response.statusCode == 200) {
+        if (jsonData != null) {
+          final List<dynamic> extractedData = jsonData as List<dynamic>;
+          print("Extracted Data: " + extractedData.toString());
 
-        _activities = loadedActivities;
-        notifyListeners();
+          final List<ActivityModel> loadedActivities = extractedData.map((prodData) {
+            return ActivityModel(
+              transactionType: prodData['func'].toString(),
+              transactionAmount: prodData['amount']['value'].toString(),
+              tokenName: prodData['name'].toString(),
+              image: prodData['image'].toString(),
+              time: prodData['timestamp'].toString(),
+              siteURL: prodData['siteURL'].toString(),
+              amountType: prodData['amount']['type'].toString(),
+              id: prodData['id'].toString(),
+              type: prodData['type'].toString(),
+            );
+          }).toList();
 
-        return AuthResult.success;
+          loadedActivities.sort((a, b) {
+            final timeA = DateTime.parse(a.time);
+            final timeB = DateTime.parse(b.time);
+            return timeB.compareTo(timeA); // Sort in descending order (most recent first)
+          });
+
+          if (refresh) {
+            _activities = loadedActivities;
+          } else {
+            _activities.addAll(loadedActivities);
+          }
+
+          notifyListeners();
+          return AuthResult.success;
+        } else {
+          print("Activity data is empty");
+          return AuthResult.failure;
+        }
       } else {
-        print("Activity not found in response data");
+        print("Failed to fetch wallet activities: ${response.statusCode}");
         return AuthResult.failure;
       }
-    } else {
-      print("Failed to fetch wallet Activities: ${response.statusCode}");
+    } catch (error) {
+      print("Error fetching wallet activities: $error");
       return AuthResult.failure;
     }
   }
@@ -175,34 +185,30 @@ class TransactionProvider with ChangeNotifier {
   //   required String accessToken,
   //   required BuildContext context,
   //   bool refresh = false,
+  //   bool isEnglish = true,
   // }) async {
-  //   if (refresh) {
-  //     currentPage = 1;
-  //   }
   //   final url = Uri.parse(
   //     BASE_URL + '/user/wallet-activity?limit=10&page=1',
-  //
-  //     // BASE_URL + '/user/wallet-activity?limit=10&page=1'
   //   );
   //
   //   final response = await http.get(
   //     url,
   //     headers: {
-  //       // "Content-type": "application/json",
   //       "Accept": "application/json",
   //       'Authorization': 'Bearer $accessToken',
+  //       'accept-language': isEnglish ? 'eng' :'ar',
   //     },
   //   );
-  //   // final dynamic responseBody = json.decode(response.body);
-  //   // final jsonData = json.decode(response.body)['data'];
+  //
   //   final jsonData = json.decode(response.body);
-  //   print('jsonData' + response.body);
+  //   print('Get Wallet Activities' + response.body);
+  //
   //   if (response.statusCode == 200) {
   //     if (jsonData != null) {
   //       final List<dynamic> extractedData = jsonData as List<dynamic>;
   //       print("extracted data" + extractedData.toString());
   //       final List<ActivityModel> loadedActivities =
-  //           extractedData.map((prodData) {
+  //       extractedData.map((prodData) {
   //         final metaData = prodData['metaData'];
   //         final bool containsCollection = prodData['transactionType']
   //             .toString()
@@ -212,24 +218,19 @@ class TransactionProvider with ChangeNotifier {
   //           transactionType: prodData['func'].toString(),
   //           transactionAmount: prodData['amount']['value'].toString(),
   //           tokenName: prodData['name'].toString(),
-  //           // Fetching nameEn
   //           image: prodData['image'].toString(),
   //           time:
-  //               calculateTimeDifference(DateTime.parse(prodData['timestamp'])),
+  //               prodData['timestamp'].toString(),
+  //           // time: calculateTimeDifference(DateTime.parse(prodData['timestamp'].toString())),
   //           siteURL: prodData['siteURL'].toString(),
   //           amountType: prodData['amount']['type'].toString(),
   //           id: prodData['id'].toString(),
   //           type: prodData['type'].toString(),
   //         );
   //       }).toList();
-  //       if (refresh) {
-  //         _activities = loadedActivities;
-  //       } else {
-  //         _activities.addAll(loadedActivities);
-  //       }
-  //       // _activities = loadedActivities;
+  //
+  //       _activities = loadedActivities;
   //       notifyListeners();
-  //       currentPage++;
   //
   //       return AuthResult.success;
   //     } else {
@@ -241,6 +242,7 @@ class TransactionProvider with ChangeNotifier {
   //     return AuthResult.failure;
   //   }
   // }
+
 
   var txTimeStamp = '';
   var txType = '';

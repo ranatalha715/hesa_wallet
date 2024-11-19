@@ -51,8 +51,9 @@ class _WalletActivityState extends State<WalletActivity> {
           .getUserDetails(token: accessToken, context: context);
       Locale currentLocale = context.locale;
       bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
-      await Provider.of<TransactionProvider>(context, listen: false)
-          .getWalletActivities(accessToken: accessToken, context: context, isEnglish:isEnglish);
+      // await Provider.of<TransactionProvider>(context, listen: false)
+      //     .getWalletActivities(accessToken: accessToken, context: context, isEnglish:isEnglish,  limit: 10,
+      //   page: 1,);
 
       final prefs = await SharedPreferences.getInstance();
 
@@ -189,6 +190,9 @@ class _WalletActivityState extends State<WalletActivity> {
 
   }
 
+  int currentPage = 1;
+  int activitesLimit = 10;
+
 
   @override
   Widget build(BuildContext context) {
@@ -234,19 +238,29 @@ class _WalletActivityState extends State<WalletActivity> {
                               List<dynamic> sortedActivities =
                                   snapshot.data as List<dynamic>;
 
-                              return RefreshIndicator(
+                              return  RefreshIndicator(
                                 color: AppColors.hexaGreen,
                                 onRefresh: () async {
-                                  await Provider.of<TransactionProvider>(
-                                          context,
-                                          listen: false)
+                                  setState(() {
+                                    _isLoading=true;
+                                  });
+                                  currentPage++;
+                                  activitesLimit += 10;
+                                  // Trigger the refresh with page 1 and refresh: true
+                                  await Provider.of<TransactionProvider>(context, listen: false)
                                       .getWalletActivities(
-                                          accessToken: accessToken,
-                                          context: context,
-                                          refresh: true,
-                                  isEnglish:isEnglish);
+                                    accessToken: accessToken,
+                                    context: context,
+                                    refresh: true, // Replace activities
+                                    limit: activitesLimit,     // Fetch 20 activities per page
+                                    page: currentPage,       // Start from the first page for refresh
+                                    isEnglish: isEnglish,
+                                  );
+                                  setState(() {
+                                    _isLoading=false;
+                                  });
                                 },
-                                child: ListView.builder(
+                                child:  ListView.builder(
                                   padding: EdgeInsets.zero,
                                   itemCount: sortedActivities.length,
                                   shrinkWrap: true,

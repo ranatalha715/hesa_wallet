@@ -24,6 +24,7 @@ import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../widgets/animated_loader/animated_loader.dart';
 import '../../widgets/app_drawer.dart';
+import '../../widgets/image_placeholder.dart';
 import '../../widgets/local_toast.dart';
 import '../connection_requests_pages/connect_dapp.dart';
 import '../signup_signin/welcome_screen.dart';
@@ -977,62 +978,63 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                   .sliverOverlapAbsorberHandleFor(context),
                               sliver: SliverSafeArea(
                                 top: false,
-                                sliver: SliverAppBar(
+                                sliver:
+                                SliverAppBar(
                                   expandedHeight: 29.h,
                                   collapsedHeight: 8.h,
                                   backgroundColor: AppColors.backgroundColor,
-                                  // surfaceTintColor: AppColors.backgroundColor,
-                                  // foregroundColor: AppColors.profileHeaderDark,
-                                  // shadowColor: AppColors.errorColor,
-                                  // surfaceTintColor: AppColors.errorColor,
-                                  elevation: 0.0,
+                                  elevation: 0,
                                   pinned: true,
                                   floating: false,
                                   snap: false,
-                                  // stretch: true,
-                                  leading: Padding(
-                                    padding: EdgeInsets.only(
-                                      top: 10.sp,
-                                      left: 14.sp,
-                                      right: 20.sp,
-                                      bottom: 8.sp,
-                                    ),
-                                    child: GestureDetector(
-                                      onTap: () =>
-                                          _key.currentState!.openDrawer(),
-                                      child: Stack(
-                                        children: [
-                                          Icon(
-                                            Icons.menu_rounded,
-                                            color: themeNotifier.isDark
-                                                ? AppColors.textColorWhite
-                                                : AppColors.textColorBlack,
-                                            size: 25.sp,
-                                          ),
-                                          Consumer<TransactionProvider>(builder:
-                                              (context, TransactionProvider trP,
-                                              _) {
-                                            return Positioned(
-                                              right: 1,
-                                              // bottom: 2.sp,
-                                              child: Container(
-                                                height: 4.3.sp,
-                                                width: 4.3.sp,
-                                                decoration: BoxDecoration(
-                                                  color:
-                                                  trP.showRedDot
-                                                      ? AppColors.errorColor
-                                                      : Colors.transparent,
-                                                  borderRadius:
-                                                  BorderRadius.circular(
-                                                      10.sp),
-                                                ),
+                                  stretch: true,
+                                  leading: Stack(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          top: 10.sp,
+                                          left: 14.sp,
+                                          right: 20.sp,
+                                          bottom: 8.sp,
+                                        ),
+                                        child: GestureDetector(
+                                          onTap: () =>
+                                              _key.currentState!.openDrawer(),
+                                          child:
+                                              Icon(
+                                                Icons.menu_rounded,
+                                                color: themeNotifier.isDark
+                                                    ? AppColors.textColorWhite
+                                                    : AppColors.textColorBlack,
+                                                size: 25.sp,
                                               ),
-                                            );
-                                          }),
-                                        ],
+
+
+                                        ),
                                       ),
-                                    ),
+                                      Consumer<TransactionProvider>(builder:
+                                          (context, TransactionProvider trP,
+                                          _) {
+                                        return Positioned(
+                                          right: 10,
+                                          top: 12,
+                                          // bottom: 2.sp,
+                                          child: Container(
+                                            height: 4.3.sp,
+                                            width: 4.3.sp,
+                                            decoration: BoxDecoration(
+                                              color:
+                                              trP.showRedDot
+                                                  ? AppColors.errorColor
+                                                  : Colors.transparent,
+                                              borderRadius:
+                                              BorderRadius.circular(
+                                                  10.sp),
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                    ],
                                   ),
                                   actions: [
                                     GestureDetector(
@@ -1069,7 +1071,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                         collapseMode: CollapseMode.parallax,
                                         expandedTitleScale: 1,
                                         stretchModes: [
-                                          // StretchMode.blurBackground
+                                          // StretchMode.fadeTitle
                                         ],
                                         background: Stack(
                                           children: [
@@ -1081,7 +1083,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                   color: AppColors
                                                       .profileHeaderDark,
                                                   height: 10.h,
-                                                )),
+                                                ),
+                                            ),
                                             Positioned(
                                               top: 63,
                                               left: 0,
@@ -1211,6 +1214,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                 ),
                                               ),
                                             ),
+
                                           ],
                                         )),
                                   ),
