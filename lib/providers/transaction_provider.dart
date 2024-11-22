@@ -56,7 +56,6 @@ class TransactionProvider with ChangeNotifier {
   }
 
   List<ActivityModel> _activities = [];
-
   List<ActivityModel> get activities {
     return [..._activities];
   }

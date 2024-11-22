@@ -16,6 +16,7 @@ import 'package:hesa_wallet/screens/user_profile_pages/nfts_details.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/wallet_activity.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:hesa_wallet/widgets/dialog_button.dart';
+import 'package:hesa_wallet/widgets/pagination.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:flutter/material.dart';
@@ -456,6 +457,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 ),
           debugShowCheckedModeBanner: false,
           home:
+          // BeerListView(),
               _buildContent(),
           // Provider.of<TokenProvider>(
           //   context,
