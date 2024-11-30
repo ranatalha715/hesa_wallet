@@ -369,7 +369,6 @@ class _ConnectDappState extends State<ConnectDapp> {
                                     MaterialPageRoute(builder: (context) => WalletTokensNfts()),
                                         (Route<dynamic> route) => false,
                                   );
-                                  // SystemNavigator.pop();
                                 },
                                 isGradientWithBorder: true,
                                 buttonWithBorderColor: AppColors.errorColor,
@@ -406,11 +405,9 @@ class _ConnectDappState extends State<ConnectDapp> {
                                         Navigator.of(context).pop();
                                         await Future.delayed(
                                             Duration(milliseconds: 100));
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  WalletTokensNfts()),
+                                        Navigator.of(context).pushAndRemoveUntil(
+                                          MaterialPageRoute(builder: (context) => WalletTokensNfts()),
+                                              (Route<dynamic> route) => false,
                                         );
                                         await AppDeepLinking().openNftApp(
                                           {

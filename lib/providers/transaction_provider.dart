@@ -115,7 +115,6 @@ class TransactionProvider with ChangeNotifier {
     bool refresh = false,
     bool isEnglish = true,
   }) async {
-    // Construct the URL with limit and page query parameters
     final url = Uri.parse(
       '$BASE_URL/user/wallet-activity?limit=$limit&page=$page',
     );
@@ -2578,25 +2577,38 @@ class TransactionProvider with ChangeNotifier {
 
   ///
   Future<AuthResult> makeCounterOffer({
-    // required String params,
+    required String params,
     required String token,
     required String operation,
     required BuildContext context,
-    required String id,
-    required String offererId,
-    required String offerAmount,
+    // required String id,
+    // required String assetType,
+    // required String offererId,
+    // required String offerAmount,
     required String code,
     required String walletAddress,
   }) async {
-    final url = Uri.parse(BASE_URL + '/counter-offer');
+    final url = Uri.parse(BASE_URL + '/non-payable-transactions/send');
 
-    var requestBody = {
-      "id": id,
-      "offererId": offererId,
-      // "offererId": offererId,
-      "offerAmount": int.parse(offerAmount),
+    Map<String, dynamic> paramsMap = jsonDecode(params);
+    // String yourWalletAddress = walletAddress;
+    //
+    // paramsMap['creatorWalletAddress'] = yourWalletAddress;
+    // paramsMap['price'] = 500;
+    // Convert the paramsMap to a string
+    String updatedParams = jsonEncode(paramsMap);
+    print('params to send bilal' + updatedParams);
+    final Map<String, dynamic> requestBody = {
+      "orgCode": "Neonft",
+      "channel": "nftchannel",
+      "chaincode": "nft",
+      "func": "MakeCounterOffer",
+      "walletAddress": walletAddress,
+      "country": "PK",
       "code": code,
+      "params": paramsMap,
     };
+
 
     try {
       final response = await http.post(
@@ -2654,24 +2666,28 @@ class TransactionProvider with ChangeNotifier {
   }
 
   Future<AuthResult> makeCollectionCounterOffer({
-    // required String params,
+    required String params,
     required String token,
     required String operation,
     required BuildContext context,
-    required String id,
-    required String offererId,
-    required String offerAmount,
     required String walletAddress,
     required String code,
   }) async {
-    final url = Uri.parse(BASE_URL + '/counter-offer/collection');
-
-    var requestBody = {
-      "id": id,
-      "offererId": offererId,
-      "offerAmount": int.parse(offerAmount),
+    final url = Uri.parse(BASE_URL + '/non-payable-transactions/send');
+    Map<String, dynamic> paramsMap = jsonDecode(params);
+    String updatedParams = jsonEncode(paramsMap);
+    print('params to send bilal' + updatedParams);
+    final Map<String, dynamic> requestBody = {
+      "orgCode": "Neonft",
+      "channel": "nftchannel",
+      "chaincode": "nft",
+      "func": "MakeCounterOffer",
+      "walletAddress": walletAddress,
+      "country": "PK",
       "code": code,
+      "params": paramsMap,
     };
+
     fToast = FToast();
     fToast.init(context);
     try {
@@ -2728,23 +2744,26 @@ class TransactionProvider with ChangeNotifier {
   }
 
   Future<AuthResult> rejectNFTCounterOffer({
-    // required String params,
+    required String params,
     required String token,
     required String operation,
     required BuildContext context,
-    required String id,
-    required String offererId,
-    required String offerAmount,
     required String walletAddress,
     required String code,
   }) async {
-    final url = Uri.parse(BASE_URL + '/counter-offer/reject');
-
-    var requestBody = {
-      "id": id,
-      "offererId": offererId,
-      "offerAmount": int.parse(offerAmount),
+    final url = Uri.parse(BASE_URL + '/non-payable-transactions/send');
+    Map<String, dynamic> paramsMap = jsonDecode(params);
+    String updatedParams = jsonEncode(paramsMap);
+    print('params to send bilal' + updatedParams);
+    final Map<String, dynamic> requestBody = {
+      "orgCode": "Neonft",
+      "channel": "nftchannel",
+      "chaincode": "nft",
+      "func": "RejectCounterOffer",
+      "walletAddress": walletAddress,
+      "country": "PK",
       "code": code,
+      "params": paramsMap,
     };
 
     try {
@@ -2803,25 +2822,27 @@ class TransactionProvider with ChangeNotifier {
   }
 
   Future<AuthResult> rejectCollectionCounterOffer({
-    // required String params,
+    required String params,
     required String token,
     required String operation,
     required BuildContext context,
-    required String id,
     required String code,
-    required String offererId,
-    required String offerAmount,
     required String walletAddress,
   }) async {
-    final url = Uri.parse(BASE_URL + '/counter-offer/collection/reject');
-
-    var requestBody = {
-      "id": id,
-      "offererId": offererId,
+    final url = Uri.parse(BASE_URL + '/non-payable-transactions/send');
+    Map<String, dynamic> paramsMap = jsonDecode(params);
+    String updatedParams = jsonEncode(paramsMap);
+    print('params to send bilal' + updatedParams);
+    final Map<String, dynamic> requestBody = {
+      "orgCode": "Neonft",
+      "channel": "nftchannel",
+      "chaincode": "nft",
+      "func": "RejectCounterOffer",
+      "walletAddress": walletAddress,
+      "country": "PK",
       "code": code,
-      "offerAmount": int.parse(offerAmount),
+      "params": paramsMap,
     };
-
     try {
       final response = await http.post(
         url,

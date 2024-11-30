@@ -103,6 +103,7 @@ class _TransactionRequestAcceptRejectState
   var creatorId;
   var itemCollectionID;
   var counterId;
+  var assetType;
   var counterOffererId;
   var counterOffererAmount;
 
@@ -456,6 +457,7 @@ class _TransactionRequestAcceptRejectState
       fees = args['fees'] ?? "N/A";
       feesMap = fees != "" ? jsonDecode(fees) : null;
       counterId = args['id'] ?? "N/A";
+    assetType=args['assetType'] ?? "N/A";
       counterOffererId = args['offererId'].toString() ?? "N/A";
       counterOffererAmount = args['offerAmount'] ?? "N/A";
       operation = args['operation'] ?? "N/A";
@@ -1467,13 +1469,14 @@ class _TransactionRequestAcceptRejectState
                                                                             'makeNFTCounterOffer') {
                                                                           await Provider.of<TransactionProvider>(context, listen: false).makeCounterOffer(
                                                                               walletAddress: walletAddress,
-                                                                              // params: params,
+                                                                              params: params,
                                                                               token: accessToken,
                                                                               context: context,
                                                                               operation: operation,
-                                                                              id: counterId,
-                                                                              offererId: counterOffererId,
-                                                                              offerAmount: counterOffererAmount,
+                                                                              // id: counterId,
+                                                                              // assetType: assetType,
+                                                                              // offererId: counterOffererId,
+                                                                              // offerAmount: counterOffererAmount,
                                                                               code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
                                                                         }
                                                                         if (operation ==
@@ -1498,37 +1501,28 @@ class _TransactionRequestAcceptRejectState
                                                                             'rejectNFTCounterOffer') {
                                                                           await Provider.of<TransactionProvider>(context, listen: false).rejectNFTCounterOffer(
                                                                               walletAddress: walletAddress,
-                                                                              // params: params,
+                                                                              params: params,
                                                                               token: accessToken,
                                                                               context: context,
                                                                               operation: operation,
-                                                                              id: counterId,
-                                                                              offererId: counterOffererId,
-                                                                              offerAmount: counterOffererAmount,
                                                                               code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
                                                                         } else if (operation ==
                                                                             'makeCollectionCounterOffer') {
                                                                           await Provider.of<TransactionProvider>(context, listen: false).makeCollectionCounterOffer(
                                                                               walletAddress: walletAddress,
-                                                                              // params: params,
+                                                                              params: params,
                                                                               token: accessToken,
                                                                               context: context,
                                                                               operation: operation,
-                                                                              id: counterId,
-                                                                              offererId: counterOffererId,
-                                                                              offerAmount: counterOffererAmount,
                                                                               code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
                                                                         } else if (operation ==
                                                                             'rejectCollectionCounterOffer') {
                                                                           await Provider.of<TransactionProvider>(context, listen: false).rejectCollectionCounterOffer(
                                                                               walletAddress: walletAddress,
-                                                                              // params: params,
+                                                                              params: params,
                                                                               token: accessToken,
                                                                               context: context,
                                                                               operation: operation,
-                                                                              id: counterId,
-                                                                              offererId: counterOffererId,
-                                                                              offerAmount: counterOffererAmount,
                                                                               code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
                                                                         } else if (operation ==
                                                                             'CancelCollectionOfferMade') {
@@ -1937,19 +1931,20 @@ class _TransactionRequestAcceptRejectState
                                                   listen: false)
                                               .makeCounterOffer(
                                                   walletAddress: walletAddress,
-                                                  // params: params,
+                                                  params: params,
                                                   token: accessToken,
                                                   context: context,
                                                   operation: operation,
-                                                  id: counterId,
-                                                  offererId: counterOffererId,
-                                                  offerAmount:
-                                                      counterOffererAmount,
+                                            //       id: counterId,
+                                            // assetType: assetType,
+                                            //       offererId: counterOffererId,
+                                            //       offerAmount:
+                                            //           counterOffererAmount,
                                                   code:
                                                       Provider.of<AuthProvider>(
                                                               context,
                                                               listen: false)
-                                                          .codeFromOtpBoxes);
+                                                          .codeFromOtpBoxes,  );
                                         }
                                         if (operation == 'CancelNFTOfferMade') {
                                           await Provider.of<
@@ -1976,14 +1971,10 @@ class _TransactionRequestAcceptRejectState
                                                   listen: false)
                                               .rejectNFTCounterOffer(
                                                   walletAddress: walletAddress,
-                                                  // params: params,
+                                                  params: params,
                                                   token: accessToken,
                                                   context: context,
                                                   operation: operation,
-                                                  id: counterId,
-                                                  offererId: counterOffererId,
-                                                  offerAmount:
-                                                      counterOffererAmount,
                                                   code:
                                                       Provider.of<AuthProvider>(
                                                               context,
@@ -1997,14 +1988,10 @@ class _TransactionRequestAcceptRejectState
                                                   listen: false)
                                               .makeCollectionCounterOffer(
                                                   walletAddress: walletAddress,
-                                                  // params: params,
+                                                  params: params,
                                                   token: accessToken,
                                                   context: context,
                                                   operation: operation,
-                                                  id: counterId,
-                                                  offererId: counterOffererId,
-                                                  offerAmount:
-                                                      counterOffererAmount,
                                                   code:
                                                       Provider.of<AuthProvider>(
                                                               context,
@@ -2018,14 +2005,10 @@ class _TransactionRequestAcceptRejectState
                                                   listen: false)
                                               .rejectCollectionCounterOffer(
                                                   walletAddress: walletAddress,
-                                                  // params: params,
+                                                  params: params,
                                                   token: accessToken,
                                                   context: context,
                                                   operation: operation,
-                                                  id: counterId,
-                                                  offererId: counterOffererId,
-                                                  offerAmount:
-                                                      counterOffererAmount,
                                                   code:
                                                       Provider.of<AuthProvider>(
                                                               context,
@@ -2731,4 +2714,138 @@ class _TransactionRequestAcceptRejectState
       },
     );
   }
+}
+
+void transactionExecutedDialoge({bool isDark = true, required BuildContext context}) {
+  showDialog(
+    context: context,    builder: (BuildContext context) {
+      final screenWidth = MediaQuery.of(context).size.width;
+      final dialogWidth = screenWidth * 0.90;
+
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        backgroundColor: Colors.transparent,
+        child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+            child: Container(
+              height: 23.h,
+              width: dialogWidth,
+              decoration: BoxDecoration(
+                color: isDark
+                    ? AppColors.showDialogClr
+                    : AppColors.textColorWhite,
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.textColorBlack.withOpacity(0.95),
+                    offset: Offset(0, 0),
+                    blurRadius: 10,
+                    spreadRadius: 0.4,
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    height: 3.h,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Transaction Executed'.tr(),
+                        style: TextStyle(
+                          color: isDark
+                              ? AppColors.textColorWhite
+                              : AppColors.textColorBlack,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 17.5.sp,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 2.w,
+                      ),
+                      Container(
+                        width: 2.h,
+                        height: 2.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                              color: AppColors.activeButtonColor,
+                              width: 1.sp),
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.check_rounded,
+                            size: 10.sp,
+                            color: AppColors.activeButtonColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 3.h,
+                  ),
+                  Column(children: [
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                              text: 'Tx ID:'.tr(),
+                              style: TextStyle(
+                                // height: 2,
+                                  color: AppColors.textColorWhite,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 11.7.sp,
+                                  fontFamily: 'Inter')),
+                          TextSpan(
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {},
+                              text: ' xyeafa...wrbqwurqw'.tr(),
+                              style: TextStyle(
+                                // decoration: TextDecoration.underline,
+                                // height: 1.5,
+                                  color: AppColors.textColorToska,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 11.7.sp,
+                                  fontFamily: 'Inter')),
+                        ],
+                      ),
+                    )
+                  ]),
+                  SizedBox(
+                    height: 3.h,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 28.sp),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Transaction is sent to blockchain for execution.'
+                            .tr(),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: isDark
+                              ? AppColors.textColorWhite
+                              : AppColors.textColorBlack,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 10.2.sp,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 3.h,
+                  ),
+                ],
+              ),
+            )),
+      );
+    },
+  );
 }

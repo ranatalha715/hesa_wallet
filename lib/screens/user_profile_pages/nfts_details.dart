@@ -29,22 +29,29 @@ class _NftsDetailsState extends State<NftsDetails> {
   var accessToken;
   var _isInit = true;
 
-  String replaceMiddleWithDots(String input) {
-    if (input.length <= 20) {
-      // If the input string is 30 characters or less, return it as is.
-      return input;
-    }
+  String replaceMiddleWithDots(String? input) {
+    // if (input == null || input.isEmpty) {
+    //   // Return a default value or an error message if the input is null or empty
+    //   return '';
+    // }
+    //
+    // if (input.length <= 20) {
+    //   // If the input string is 20 characters or less, return it as is.
+    //   return input;
+    // }
+    //
+    // final int middleIndex = input.length ~/ 2; // Find the middle index
+    // final int startIndex = middleIndex - 15; // Calculate the start index
+    // final int endIndex = middleIndex + 15; // Calculate the end index
+    //
+    // // Split the input string into three parts and join them with '...'
+    // final String result =
+    //     input.substring(0, startIndex) + '...' + input.substring(endIndex);
 
-    final int middleIndex = input.length ~/ 2; // Find the middle index
-    final int startIndex = middleIndex - 15; // Calculate the start index
-    final int endIndex = middleIndex + 15; // Calculate the end index
-
-    // Split the input string into three parts and join them with '...'
-    final String result =
-        input.substring(0, startIndex) + '...' + input.substring(endIndex);
-
-    return result;
+    // return result;
+     return input.toString();
   }
+
 
   String replaceMiddleWithDotsCollectionId(String input) {
     if (input.length <= 30) {

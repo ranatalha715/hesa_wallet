@@ -158,12 +158,7 @@ class AssetsProvider with ChangeNotifier {
   }) async {
     final url = Uri.parse(BASE_URL +
         '/user/assets/?ownerType=$ownerType&limit=10&page=1&type=$type&walletAddress=$walletAddress'
-        // '/user/assets/?ownerType=$ownerType&limit=10&page=1&type=$type'
     );
-    // final body = {
-    //   "walletAddress": walletAddress,
-    // };
-
     final response = await http.get(
       url,
       // body: body,

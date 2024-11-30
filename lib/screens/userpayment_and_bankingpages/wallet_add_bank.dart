@@ -1026,7 +1026,8 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                                           context,
                                                                       StateSetter
                                                                           setState) {
-                                                                return Dialog(
+                                                                return
+                                                                  Dialog(
                                                                   shape:
                                                                       RoundedRectangleBorder(
                                                                     borderRadius:

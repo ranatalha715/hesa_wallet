@@ -16,7 +16,6 @@ import 'package:hesa_wallet/screens/user_profile_pages/nfts_details.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/wallet_activity.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:hesa_wallet/widgets/dialog_button.dart';
-import 'package:hesa_wallet/widgets/pagination.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:flutter/material.dart';
@@ -53,9 +52,7 @@ import 'package:hesa_wallet/screens/user_transaction_summaries_with_payment/tran
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-
 import 'constants/configs.dart';
-
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -66,12 +63,9 @@ Future<void> main() async {
   // const AndroidInitializationSettings initializationSettingsAndroid =
   // const AndroidInitializationSettings initializationSettingsAndroid =
   // AndroidInitializationSettings('@mipmap/ic_launcher');
-  //
   // final InitializationSettings initializationSettings =
   // InitializationSettings(android: initializationSettingsAndroid);
-  //
   // await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
   // WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp();
   // HyperPay.init("", "");
@@ -123,7 +117,6 @@ Future<void> main() async {
                   Locale('ar', 'AE')
                 ],
                 path: 'assets/translations',
-                // path to your language files
                 fallbackLocale: Locale('en', 'US'),
                 saveLocale: true,
                 child:
@@ -132,7 +125,6 @@ Future<void> main() async {
                     // builder: (context) =>
                     MyApp())));
     // );
-    // Register the MethodChannel with the same unique name as in the NFT app
     const channel = MethodChannel('com.example.hesa_wallet');
   });
 }
@@ -155,7 +147,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   bool fromNeoApp = false;
   var user;
 
-  // late OverlayEntry overlayEntry = OverlayEntry(builder: (context) => Container());
   Future<void> checkWifiStatus() async {
     var connectivityResult = await Connectivity().checkConnectivity();
     setState(() {

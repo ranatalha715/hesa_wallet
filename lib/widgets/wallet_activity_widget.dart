@@ -209,7 +209,6 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                         children: [
                           Container(
                             width: 47.w,
-                            // color: Colors.yellow,
                             child: Text(
                               widget.title,
                               style: TextStyle(

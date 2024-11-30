@@ -154,10 +154,13 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
 
   @override
   void initState() {
+
     super.initState();
     getPasscode();
     initUniLinks();
     initUniLinks1();
+
+
     _tabController = TabController(length: 2, vsync: this);
     init();
 
@@ -198,7 +201,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     });
   }
 
-  void handleDisconnection() async {
+  void handleDisconnection1() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('disconnectionTime', DateTime.now().toString());
     await prefs.setBool('isConnected', false);
@@ -220,6 +223,80 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
           ],
         );
       },
+    );
+  }
+   handleDisconnection() async {
+    print('handling disconnection');
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('disconnectionTime', DateTime.now().toString());
+    await prefs.setBool('isConnected', false);
+    setState(() {});
+    await Future.delayed(Duration(seconds: 1), () {});
+    return Dialog(
+      shape:
+      RoundedRectangleBorder(
+        borderRadius:
+        BorderRadius.circular(
+            8.0),
+      ),
+      backgroundColor:
+      Colors
+          .transparent,
+      child:
+      BackdropFilter(
+          filter: ImageFilter.blur(
+              sigmaX:
+              7,
+              sigmaY:
+              7),
+          child:
+          Container(
+            height:
+            23.h,
+            width:
+            100,
+            decoration:
+            BoxDecoration(
+              color:  AppColors.errorColor ,
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.textColorBlack.withOpacity(0.95),
+                  offset: Offset(0, 0),
+                  blurRadius: 10,
+                  spreadRadius: 0.4,
+                ),
+              ],
+            ),
+            child:
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 4.h,
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Image.asset(
+                    "assets/images/disconnect.png",
+                    height: 5.h,
+                    color: AppColors
+                        .textColorWhite,
+                  ),
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  'Your wallet has been disconnected'.tr(),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15.sp, color: AppColors.textColorWhite),
+                ),
+                SizedBox(
+                  height: 4.h,
+                ),
+              ],
+            ),
+          )),
     );
   }
 
@@ -247,8 +324,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                 .logoFromNeo = logoFromNeo;
             Provider.of<TransactionProvider>(context, listen: false).siteUrl =
                 siteUrl;
-          } else if (operation != null && operation == 'DisconnectWallet') {
-            handleDisconnection();
+          } else if (operation != null && operation == 'disconnectWallet') {
+            handleDisconnection1();
           } else {
             Provider.of<UserProvider>(context, listen: false)
                 .navigateToNeoForConnectWallet = false;
@@ -356,39 +433,25 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
               uri.queryParameters, operation, context);
         } else if (operation != null && operation == 'makeNFTCounterOffer') {
           var data = json.decode(uri.queryParameters["params"]!);
-          String? id = data['id'];
-          String? offererId = data['offererId'];
-          int? offerAmount = int.tryParse(data['offerAmount'].toString() ?? '');
-          print(id.toString() +
-              "  " +
-              offererId.toString() +
-              "  " +
-              offerAmount.toString());
+          // String? id = data['id'];
+          // String? offererId = data['offererId'];
+          // int? offerAmount = int.tryParse(data['offerAmount'].toString() ?? '');
           navigateToTransactionRequestAcceptRejectWithMakeCounterOffer(
               uri.queryParameters,
               operation,
               context,
-              id.toString(),
-              offererId.toString(),
-              offerAmount.toString());
+            );
         } else if (operation != null &&
             operation == 'makeCollectionCounterOffer') {
           var data = json.decode(uri.queryParameters["params"]!);
           String? id = data['id'];
           String? offererId = data['offererId'];
           int? offerAmount = int.tryParse(data['offerAmount'].toString() ?? '');
-          print(id.toString() +
-              "  " +
-              offererId.toString() +
-              "  " +
-              offerAmount.toString());
           navigateToTransactionRequestAcceptRejectWithmakeCollectionCounterOffer(
               uri.queryParameters,
               operation,
               context,
-              id.toString(),
-              offererId.toString(),
-              offerAmount.toString());
+          );
         } else if (operation != null && operation == 'acceptNFTCounterOffer') {
           navigateToTransactionRequestWithacceptNFTCounterOffer(
               uri.queryParameters, operation, context);
@@ -405,10 +468,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
           navigateToTransactionRequestAcceptRejectWithrejectNFTCounterOffer(
               uri.queryParameters,
               operation,
-              context,
-              id.toString(),
-              offererId.toString(),
-              offerAmount.toString());
+              context,);
         } else if (operation != null &&
             operation == 'rejectCollectionCounterOffer') {
           var data = json.decode(uri.queryParameters["params"]!);
@@ -424,9 +484,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
               uri.queryParameters,
               operation,
               context,
-              id.toString(),
-              offererId.toString(),
-              offerAmount.toString());
+             );
         } else if (operation != null &&
             operation == 'acceptCollectionCounterOffer') {
           navigateToTransactionRequestWithacceptCollectionCounterOffer(
@@ -811,9 +869,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       Map<String, dynamic> queryParams,
       String operation,
       BuildContext ctx,
-      String id,
-      String offererId,
-      String offerAmount,
       ) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
@@ -822,10 +877,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "id": id,
-      "offererId": offererId,
-      "offerAmount": offerAmount,
-      "walletAddress": userWalletAddress
+      "walletAddress": userWalletAddress,
     });
   }
 
@@ -834,9 +886,9 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       Map<String, dynamic> queryParams,
       String operation,
       BuildContext ctx,
-      String id,
-      String offererId,
-      String offerAmount,
+      // String id,
+      // String offererId,
+      // String offerAmount,
       ) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
@@ -845,9 +897,9 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "id": id,
-      "offererId": offererId,
-      "offerAmount": offerAmount,
+      // "id": id,
+      // "offererId": offererId,
+      // "offerAmount": offerAmount,
       "walletAddress": userWalletAddress
     });
     print('chal gia');
@@ -858,9 +910,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       Map<String, dynamic> queryParams,
       String operation,
       BuildContext ctx,
-      String id,
-      String offererId,
-      String offerAmount,
       ) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
@@ -869,9 +918,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       "params": paramsString,
       "operation": operation,
       "fees": feesString,
-      "id": id,
-      "offererId": offererId,
-      "offerAmount": offerAmount,
       "walletAddress": userWalletAddress
     });
     print('chal gia');
@@ -882,9 +928,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       Map<String, dynamic> queryParams,
       String operation,
       BuildContext ctx,
-      String id,
-      String offererId,
-      String offerAmount,
       ) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
@@ -893,9 +936,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
-      "id": id,
-      "offererId": offererId,
-      "offerAmount": offerAmount,
       "walletAddress": userWalletAddress
     });
   }
@@ -1505,6 +1545,7 @@ class FixedHeaderDelegate extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
       false;
 }
+
 
 
 
