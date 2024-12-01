@@ -136,7 +136,6 @@ class TransactionProvider with ChangeNotifier {
         if (jsonData != null) {
           final List<dynamic> extractedData = jsonData as List<dynamic>;
           print("Extracted Data: " + extractedData.toString());
-
           final List<ActivityModel> loadedActivities = extractedData.map((prodData) {
             return ActivityModel(
               transactionType: prodData['func'].toString(),

@@ -249,7 +249,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     Timer.periodic(Duration(seconds: 3), (timer) async {
       getAccessToken();
      Provider.of<TransactionProvider>(context,listen: false).initializeRedDotState();
-         fetchActivities();
+         // fetchActivities();
     });
     Timer.periodic(Duration(seconds: 30), (timer) async {
       await Provider.of<AuthProvider>(context, listen: false)

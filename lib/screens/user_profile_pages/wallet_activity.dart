@@ -32,10 +32,23 @@ class _WalletActivityState extends State<WalletActivity> {
   var bytes;
   var connectionTime;
   var disconnectionTime;
+  final scrollController=ScrollController();
+  bool hasMore=true;
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
+  }
+
+  refresh() async {
+   setState(() {
+     _isLoading=false;
+     hasMore=true;
+     currentPage=0;
+     Provider.of<TransactionProvider>(context,listen: false).activities.clear();
+     // sortedActivities.clear();
+   });
+   await fetch();
   }
 
   @override
@@ -54,14 +67,21 @@ class _WalletActivityState extends State<WalletActivity> {
       // await Provider.of<TransactionProvider>(context, listen: false)
       //     .getWalletActivities(accessToken: accessToken, context: context, isEnglish:isEnglish,  limit: 10,
       //   page: 1,);
+     // await refresh();
+
+      // scrollController.addListener(() {
+      //
+      //   if(scrollController.position.maxScrollExtent==scrollController.offset){
+      //     fetch();
+      //   }
+      //
+      // });
+      await fetch();
 
       final prefs = await SharedPreferences.getInstance();
-
-      // Null checks for siteUrl, logoFromNeo, connectionTime, and disconnectionTime
       siteUrl = prefs.getString("siteUrl") ??
-          ""; // Fallback to an empty string if null
+          "";
       logoFromNeo = prefs.getString("logoFromNeo") ?? "";
-
       if (logoFromNeo != null && logoFromNeo.isNotEmpty) {
         bytes = base64Decode(logoFromNeo);
       }
@@ -84,8 +104,47 @@ class _WalletActivityState extends State<WalletActivity> {
   // }
 
   @override
+  void dispose() {
+    scrollController.dispose();
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  Future fetch() async{
+    // if(_isLoading) return;
+    // _isLoading=true;
+    const limit=10;
+    // setState(() {
+    setState(() {
+        Provider.of<TransactionProvider>(context, listen: false).activities.clear();
+    });
+    await Provider.of<TransactionProvider>(context, listen: false)
+        .getWalletActivities(accessToken: accessToken, context: context, isEnglish:true,
+      limit: limit,
+      page: currentPage,
+    );
+    //  await refresh(
+    //     currentPage,limit
+    //   );
+      setState(() {
+        currentPage++;
+      });
+      if(Provider.of<TransactionProvider>(context, listen: false).activities.length < limit){
+        hasMore=false;
+      }
+    // });
+  }
+
+  @override
   void initState() {
     // TODO: implement initState
+    fetch();
+    scrollController.addListener(() {
+      if(scrollController.position.maxScrollExtent==scrollController.offset){
+        fetch();
+      }
+
+    });
     // redDotLogic();
     super.initState();
 
@@ -93,25 +152,12 @@ class _WalletActivityState extends State<WalletActivity> {
     Provider.of<TransactionProvider>(context, listen: false).confirmedRedDot =
     false;
     callRedDotLogic();
-
-    print(
-        'confirm red dot' +  Provider.of<TransactionProvider>(context, listen: false).confirmedRedDot.toString());
-
   }
 
   String calculateTimeDifference(String createdAtStr) {
-    // Parse the createdAt timestamp and ensure it's in UTC
     DateTime createdAt = DateTime.parse(createdAtStr).toUtc();
-    // Get the current time in UTC
     DateTime now = DateTime.now().toUtc();
-    // Calculate the difference
     Duration difference = now.difference(createdAt);
-
-    // Debug prints
-    print('Created at: $createdAt');
-    print('Now: $now');
-    print('Difference: $difference');
-
     if (difference.inSeconds < 60) {
       return '${difference.inSeconds}s';
     } else if (difference.inMinutes < 60) {
@@ -132,10 +178,6 @@ class _WalletActivityState extends State<WalletActivity> {
   Future<List<Map<String, dynamic>>>
   _getSortedActivitiesWithSiteConnection() async {
     List<Map<String, dynamic>> sortedActivities = [];
-
-    // Print to check if activities and connectionTime exist
-
-    // Add the site connection data if it exists
     if (connectionTime != "" && siteUrl != "") {
       sortedActivities.add({
         'type': 'site_connection',
@@ -148,13 +190,11 @@ class _WalletActivityState extends State<WalletActivity> {
       sortedActivities.add({
         'type': 'site_disconnection',
         'siteURL': siteUrl,
-        'time': disconnectionTime, // Timestamp for the disconnection
+        'time': disconnectionTime,
         'bytes': bytes,
-        // 'event': 'disconnect',  // Indicate this is a disconnection event
       });
     }
 
-    // Add all other activities
     Provider.of<TransactionProvider>(context, listen: false)
         .activities
         .forEach((activity) {
@@ -191,7 +231,7 @@ class _WalletActivityState extends State<WalletActivity> {
   }
 
   int currentPage = 1;
-  int activitesLimit = 10;
+  // int activitesLimit = 10;
 
 
   @override
@@ -241,108 +281,184 @@ class _WalletActivityState extends State<WalletActivity> {
                         return  RefreshIndicator(
                           color: AppColors.hexaGreen,
                           onRefresh: () async {
+                            sortedActivities.clear();
+                           await refresh();
                             // setState(() {
                             //   _isLoading=true;
                             // });
-                            currentPage++;
-                            activitesLimit += 10;
-                            // Trigger the refresh with page 1 and refresh: true
-                            await Provider.of<TransactionProvider>(context, listen: false)
-                                .getWalletActivities(
-                              accessToken: accessToken,
-                              context: context,
-                              refresh: true, // Replace activities
-                              limit: activitesLimit,     // Fetch 20 activities per page
-                              page: currentPage,       // Start from the first page for refresh
-                              isEnglish: isEnglish,
-                            );
+                            // currentPage++;
+                            // activitesLimit += 10;
+                            // // Trigger the refresh with page 1 and refresh: true
+                            // await Provider.of<TransactionProvider>(context, listen: false)
+                            //     .getWalletActivities(
+                            //   accessToken: accessToken,
+                            //   context: context,
+                            //   refresh: true, // Replace activities
+                            //   limit: activitesLimit,     // Fetch 20 activities per page
+                            //   page: currentPage,       // Start from the first page for refresh
+                            //   isEnglish: isEnglish,
+                            // );
                             // setState(() {
                             //   _isLoading=false;
                             // });
                           },
                           child:  ListView.builder(
                             padding: EdgeInsets.zero,
-                            itemCount: sortedActivities.length,
+                            controller: scrollController,
+                            itemCount: sortedActivities.length + 1,
+                            // itemCount: sortedActivities.length + (hasMore ? 1 : 0),
                             shrinkWrap: true,
-                            itemBuilder:
-                                (BuildContext context, int index) {
-                              var activity = sortedActivities[index];
+                            itemBuilder: (BuildContext context, int index) {
+                              // Check if index is within bounds of the list
+                              if (index < sortedActivities.length) {
+                                var activity = sortedActivities[index];
 
-                              if (activity['type'] == 'site_connection') {
-                                // Custom container for the site connection
-                                return WalletActivityWidget(
-                                  title: "Site Connected".tr(),
-                                  subTitle: "Connect Success".tr(),
-                                  image:
-                                  'https://images.pexels.com/photos/14354112/pexels-photo-14354112.jpeg?auto=compress&cs=tinysrgb&w=800',
-                                  bytes: bytes,
-                                  time: calculateTimeDifference(
-                                      activity['time']),
-                                  priceUp: null,
-                                  priceDown: null,
-                                  handler: () {
-                                    // Optional: Handle tap if necessary
-                                  },
-                                  siteURL: activity['siteURL'],
-                                );
-                              } else if (activity['type'] ==
-                                  'site_disconnection') {
-                                // Custom widget for site disconnection
-                                return WalletActivityWidget(
-                                  title: "Site Disconnected".tr(),
-                                  subTitle: "Disconnect Success".tr(),
-                                  image:
-                                  'https://images.pexels.com/photos/14354112/pexels-photo-14354112.jpeg?auto=compress&cs=tinysrgb&w=800',
-                                  bytes: bytes,
-                                  time: calculateTimeDifference(
-                                      activity['time']),
-                                  priceUp: null,
-                                  priceDown: null,
-                                  handler: () {
-                                    // Handle tap if necessary
-                                  },
-                                  siteURL: activity['siteURL'],
-                                );
-                              } else {
-                                return WalletActivityWidget(
-                                  isPending: activity['tokenName'] ==
-                                      'Site Connected' ||
-                                      activity['tokenName'] ==
-                                          'Site Disconnected'
-                                      ? true
-                                      : false,
-                                  title: activity['tokenName'],
-                                  subTitle: activity['transactionType'],
-                                  image: activity['image'],
-                                  time: calculateTimeDifference(
-                                      activity['time']),
-                                  priceDown:
-                                  activity['amountType'] == 'debit'
-                                      ? activity['transactionAmount']
-                                      : null,
-                                  priceUp:
-                                  activity['amountType'] == 'credit'
-                                      ? activity['transactionAmount']
-                                      : null,
-                                  siteURL: activity['siteURL'],
-                                  handler: () {
-                                    if (activity['tokenName'] !=
-                                        'Site Connected' &&
-                                        activity['tokenName'] !=
-                                            'Site Disconnected') {
-                                      Navigator.of(context).pushNamed(
+                                if (activity['type'] == 'site_connection') {
+                                  return WalletActivityWidget(
+                                    title: "Site Connected".tr(),
+                                    subTitle: "Connect Success".tr(),
+                                    image: 'https://images.pexels.com/photos/14354112/pexels-photo-14354112.jpeg?auto=compress&cs=tinysrgb&w=800',
+                                    bytes: bytes,
+                                    time: calculateTimeDifference(activity['time']),
+                                    priceUp: null,
+                                    priceDown: null,
+                                    handler: () {
+                                    },
+                                    siteURL: activity['siteURL'],
+                                  );
+                                } else if (activity['type'] == 'site_disconnection') {
+                                  return WalletActivityWidget(
+                                    title: "Site Disconnected".tr(),
+                                    subTitle: "Disconnect Success".tr(),
+                                    image: 'https://images.pexels.com/photos/14354112/pexels-photo-14354112.jpeg?auto=compress&cs=tinysrgb&w=800',
+                                    bytes: bytes,
+                                    time: calculateTimeDifference(activity['time']),
+                                    priceUp: null,
+                                    priceDown: null,
+                                    handler: () {
+                                      // Handle tap if necessary
+                                    },
+                                    siteURL: activity['siteURL'],
+                                  );
+                                } else {
+                                  return WalletActivityWidget(
+                                    isPending: activity['tokenName'] == 'Site Connected' || activity['tokenName'] == 'Site Disconnected',
+                                    title: activity['tokenName'],
+                                    subTitle: activity['transactionType'],
+                                    image: activity['image'],
+                                    time: calculateTimeDifference(activity['time']),
+                                    priceDown: activity['amountType'] == 'debit' ? activity['transactionAmount'] : null,
+                                    priceUp: activity['amountType'] == 'credit' ? activity['transactionAmount'] : null,
+                                    siteURL: activity['siteURL'],
+                                    handler: () {
+                                      if (activity['tokenName'] != 'Site Connected' && activity['tokenName'] != 'Site Disconnected') {
+                                        Navigator.of(context).pushNamed(
                                           TransactionSummary.routeName,
                                           arguments: {
                                             'id': activity['id'],
                                             'type': activity['type'],
                                             'site': activity['siteURL'],
-                                          });
-                                    }
-                                  },
-                                );
+                                          },
+                                        );
+                                      }
+                                    },
+                                  );
+                                }
+                              } else {
+                                // Handle the extra item
+                                return hasMore
+                                    ? Center(child: CircularProgressIndicator())
+                                    : Center(child: Text('No Data Found'));
                               }
                             },
-                          ),
+                          )
+
+                          // ListView.builder(
+                          //   padding: EdgeInsets.zero,
+                          //   controller: scrollController,
+                          //   itemCount: sortedActivities.length + 1,
+                          //   shrinkWrap: true,
+                          //   itemBuilder:
+                          //       (BuildContext context, int index) {
+                          //     var activity = sortedActivities[index];
+                          //
+                          //     if (activity['type'] == 'site_connection') {
+                          //       // Custom container for the site connection
+                          //       return WalletActivityWidget(
+                          //         title: "Site Connected".tr(),
+                          //         subTitle: "Connect Success".tr(),
+                          //         image:
+                          //         'https://images.pexels.com/photos/14354112/pexels-photo-14354112.jpeg?auto=compress&cs=tinysrgb&w=800',
+                          //         bytes: bytes,
+                          //         time: calculateTimeDifference(
+                          //             activity['time']),
+                          //         priceUp: null,
+                          //         priceDown: null,
+                          //         handler: () {
+                          //           // Optional: Handle tap if necessary
+                          //         },
+                          //         siteURL: activity['siteURL'],
+                          //       );
+                          //     } else if (activity['type'] ==
+                          //         'site_disconnection') {
+                          //       // Custom widget for site disconnection
+                          //       return WalletActivityWidget(
+                          //         title: "Site Disconnected".tr(),
+                          //         subTitle: "Disconnect Success".tr(),
+                          //         image:
+                          //         'https://images.pexels.com/photos/14354112/pexels-photo-14354112.jpeg?auto=compress&cs=tinysrgb&w=800',
+                          //         bytes: bytes,
+                          //         time: calculateTimeDifference(
+                          //             activity['time']),
+                          //         priceUp: null,
+                          //         priceDown: null,
+                          //         handler: () {
+                          //           // Handle tap if necessary
+                          //         },
+                          //         siteURL: activity['siteURL'],
+                          //       );
+                          //     } else if(index < sortedActivities.length){
+                          //       return WalletActivityWidget(
+                          //         isPending: activity['tokenName'] ==
+                          //             'Site Connected' ||
+                          //             activity['tokenName'] ==
+                          //                 'Site Disconnected'
+                          //             ? true
+                          //             : false,
+                          //         title: activity['tokenName'],
+                          //         subTitle: activity['transactionType'],
+                          //         image: activity['image'],
+                          //         time: calculateTimeDifference(
+                          //             activity['time']),
+                          //         priceDown:
+                          //         activity['amountType'] == 'debit'
+                          //             ? activity['transactionAmount']
+                          //             : null,
+                          //         priceUp:
+                          //         activity['amountType'] == 'credit'
+                          //             ? activity['transactionAmount']
+                          //             : null,
+                          //         siteURL: activity['siteURL'],
+                          //         handler: () {
+                          //           if (activity['tokenName'] !=
+                          //               'Site Connected' &&
+                          //               activity['tokenName'] !=
+                          //                   'Site Disconnected') {
+                          //             Navigator.of(context).pushNamed(
+                          //                 TransactionSummary.routeName,
+                          //                 arguments: {
+                          //                   'id': activity['id'],
+                          //                   'type': activity['type'],
+                          //                   'site': activity['siteURL'],
+                          //                 });
+                          //           }
+                          //         },
+                          //       );
+                          //     } else{
+                          //       return hasMore ? Center(child: CircularProgressIndicator(),): Text('No Data Found');
+                          //     }
+                          //   },
+                          // ),
                         );
                       },
                     ),
