@@ -39,14 +39,14 @@ class _WalletActivityState extends State<WalletActivity> {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
   }
-
+  List<Map<String, dynamic>> sortedActivities=[];
   refresh() async {
    setState(() {
      _isLoading=false;
      hasMore=true;
      currentPage=0;
-     Provider.of<TransactionProvider>(context,listen: false).activities.clear();
-     // sortedActivities.clear();
+     // Provider.of<TransactionProvider>(context,listen: false).activities.clear();
+     sortedActivities.clear();
    });
    await fetch();
   }
@@ -96,12 +96,6 @@ class _WalletActivityState extends State<WalletActivity> {
     _isinit = false;
     super.didChangeDependencies();
   }
-
-  // redDotLogic() async {
-  //   // Wait for 3 seconds
-  //   await Future.delayed(Duration(seconds: 3));
-  //
-  // }
 
   @override
   void dispose() {
@@ -177,7 +171,7 @@ class _WalletActivityState extends State<WalletActivity> {
 
   Future<List<Map<String, dynamic>>>
   _getSortedActivitiesWithSiteConnection() async {
-    List<Map<String, dynamic>> sortedActivities = [];
+     sortedActivities = [];
     if (connectionTime != "" && siteUrl != "") {
       sortedActivities.add({
         'type': 'site_connection',

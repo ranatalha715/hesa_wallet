@@ -136,6 +136,8 @@ class TransactionProvider with ChangeNotifier {
         if (jsonData != null) {
           final List<dynamic> extractedData = jsonData as List<dynamic>;
           print("Extracted Data: " + extractedData.toString());
+
+          // Parse the activities
           final List<ActivityModel> loadedActivities = extractedData.map((prodData) {
             return ActivityModel(
               transactionType: prodData['func'].toString(),
@@ -150,16 +152,25 @@ class TransactionProvider with ChangeNotifier {
             );
           }).toList();
 
+          // Sort the activities by time (descending order)
           loadedActivities.sort((a, b) {
             final timeA = DateTime.parse(a.time);
             final timeB = DateTime.parse(b.time);
-            return timeB.compareTo(timeA); // Sort in descending order (most recent first)
+            return timeB.compareTo(timeA);
           });
 
+          // Remove duplicates
+          final Set<String> existingIds = _activities.map((activity) => activity.id).toSet();
+          final List<ActivityModel> uniqueActivities = loadedActivities.where((activity) {
+            return !existingIds.contains(activity.id);
+          }).toList();
+
           if (refresh) {
-            _activities = loadedActivities;
+            // If refresh is true, replace the current list
+            _activities = uniqueActivities;
           } else {
-            _activities.addAll(loadedActivities);
+            // Otherwise, add unique activities to the existing list
+            _activities.addAll(uniqueActivities);
           }
 
           notifyListeners();
@@ -177,6 +188,79 @@ class TransactionProvider with ChangeNotifier {
       return AuthResult.failure;
     }
   }
+
+
+
+  // Future<AuthResult> getWalletActivities({
+  //   required String accessToken,
+  //   required BuildContext context,
+  //   int limit = 10,
+  //   int page = 1,
+  //   bool refresh = false,
+  //   bool isEnglish = true,
+  // }) async {
+  //   final url = Uri.parse(
+  //     '$BASE_URL/user/wallet-activity?limit=$limit&page=$page',
+  //   );
+  //
+  //   try {
+  //     final response = await http.get(
+  //       url,
+  //       headers: {
+  //         "Accept": "application/json",
+  //         'Authorization': 'Bearer $accessToken',
+  //         'accept-language': isEnglish ? 'eng' : 'ar',
+  //       },
+  //     );
+  //
+  //     final jsonData = json.decode(response.body);
+  //     print('Get Wallet Activities Response: ' + response.body);
+  //
+  //     if (response.statusCode == 200) {
+  //       if (jsonData != null) {
+  //         final List<dynamic> extractedData = jsonData as List<dynamic>;
+  //         print("Extracted Data: " + extractedData.toString());
+  //         final List<ActivityModel> loadedActivities = extractedData.map((prodData) {
+  //           return ActivityModel(
+  //             transactionType: prodData['func'].toString(),
+  //             transactionAmount: prodData['amount']['value'].toString(),
+  //             tokenName: prodData['name'].toString(),
+  //             image: prodData['image'].toString(),
+  //             time: prodData['timestamp'].toString(),
+  //             siteURL: prodData['siteURL'].toString(),
+  //             amountType: prodData['amount']['type'].toString(),
+  //             id: prodData['id'].toString(),
+  //             type: prodData['type'].toString(),
+  //           );
+  //         }).toList();
+  //
+  //         loadedActivities.sort((a, b) {
+  //           final timeA = DateTime.parse(a.time);
+  //           final timeB = DateTime.parse(b.time);
+  //           return timeB.compareTo(timeA); // Sort in descending order (most recent first)
+  //         });
+  //
+  //         if (refresh) {
+  //           _activities = loadedActivities;
+  //         } else {
+  //           _activities.addAll(loadedActivities);
+  //         }
+  //
+  //         notifyListeners();
+  //         return AuthResult.success;
+  //       } else {
+  //         print("Activity data is empty");
+  //         return AuthResult.failure;
+  //       }
+  //     } else {
+  //       print("Failed to fetch wallet activities: ${response.statusCode}");
+  //       return AuthResult.failure;
+  //     }
+  //   } catch (error) {
+  //     print("Error fetching wallet activities: $error");
+  //     return AuthResult.failure;
+  //   }
+  // }
 
   // Future<AuthResult> getWalletActivities({
   //   required String accessToken,
@@ -1544,7 +1628,8 @@ class TransactionProvider with ChangeNotifier {
       fToast.init(context);
       print('payload to send bilal');
       print(requestBody.toString());
-
+      print(requestBody.toString());
+      print('make Offer Collection' + response.body);
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
@@ -1784,7 +1869,8 @@ class TransactionProvider with ChangeNotifier {
             title: 'AcceptOfferNFT',
             description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
-            statusCode: response.statusCode.toString());
+            statusCode: response.statusCode.toString()
+        );
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
@@ -2341,7 +2427,7 @@ class TransactionProvider with ChangeNotifier {
             title: 'CancelListing',
             description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
-            statusCode: response.statusCode.toString());
+            statusCode: response.statusCode.toString(), paramsToSend: paramsMap.toString());
         print("send response " + responseBody.toString());
         otpErrorResponse=false;
         otpSuccessResponse=true;
@@ -2353,7 +2439,7 @@ class TransactionProvider with ChangeNotifier {
             title: 'CancelListing',
             description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
-            statusCode: response.statusCode.toString());
+            statusCode: response.statusCode.toString(), paramsToSend: paramsMap.toString());
         otpErrorResponse=true;
         otpSuccessResponse=false;
         return AuthResult.failure;
@@ -2362,7 +2448,7 @@ class TransactionProvider with ChangeNotifier {
       print('Error: $e');
       testDialogToCheck(
           context: context, title: 'CancelListing', description: e.toString());
-      functionToNavigateAfterNonPayable(e.toString(), operation,context,);
+      functionToNavigateAfterNonPayable(e.toString(), operation,context, paramsToSend: paramsMap.toString());
       otpErrorResponse=true;
       otpSuccessResponse=false;
       return AuthResult.failure;
@@ -2519,14 +2605,15 @@ class TransactionProvider with ChangeNotifier {
   }
 
   functionToNavigateAfterNonPayable(String response, String operation, BuildContext context,
-      {String statusCode = ''}) {
+      {String statusCode = '', String paramsToSend=''}) {
     Future.delayed(const Duration(seconds: 1), () async {
+      print('paramsToSend' + paramsToSend);
       AppDeepLinking().openNftApp(
         {
           "operation": operation,
           "statusCode": statusCode.toString(),
           "data": response,
-          "payload": payloadTnxParam,
+          "payload": paramsToSend,
           "comments": "Non payable transactions response",
         },
       );
@@ -2536,29 +2623,55 @@ class TransactionProvider with ChangeNotifier {
           arguments: {});
     });
   }
-
+  //
+  // functionToNavigateAfterPayable(
+  //     String response, String operation, BuildContext context,
+  //     {String statusCode = '', String paramsToSend=''}) {
+  //   Future.delayed(Duration(seconds: 1), () async {
+  //     print('PayloadparamsToSend' + paramsToSend);
+  //     AppDeepLinking().openNftApp(
+  //       {
+  //         "operation": operation,
+  //         "statusCode": statusCode.toString(),
+  //         "data": response,
+  //         "payload" : paramsToSend,
+  //         "comments": "payable transactions response",
+  //       },
+  //     );
+  //     await Navigator.of(context)
+  //         .pushNamedAndRemoveUntil(
+  //         'nfts-page', (Route d) => false,
+  //         arguments: {});
+  //   });
+  // }
   functionToNavigateAfterPayable(
       String response, String operation, BuildContext context,
-      {String statusCode = ''}) {
-    Future.delayed(Duration(seconds: 2), () async {
-      //reme later
-      print('statusCode' + statusCode.toString());
-      print('PayloadTnx' + payloadTnxParam);
-      AppDeepLinking().openNftApp(
-        {
-          "operation": operation,
-          "statusCode": statusCode.toString(),
-          "data": response,
-          "payload" : payloadTnxParam,
-          "comments": "payable transactions response",
-        },
+      {String statusCode = '', String paramsToSend = ''}) {
+    Future.delayed(Duration(seconds: 1), () async {
+      // Prepare the data being sent
+      final data = {
+        "operation": operation,
+        "statusCode": statusCode.toString(),
+        "data": response,
+        "payload": paramsToSend,
+        "comments": "payable transactions response",
+      };
+
+      // Print the data before passing it to the NFT app
+      print('Data being sent to Neo NFT app: $data');
+
+      // Pass the data to the NFT app
+      AppDeepLinking().openNftApp(data);
+
+      // Navigate to the NFTs page
+      await Navigator.of(context).pushNamedAndRemoveUntil(
+        'nfts-page',
+            (Route<dynamic> route) => false,
+        arguments: {},
       );
-      await Navigator.of(context)
-          .pushNamedAndRemoveUntil(
-          'nfts-page', (Route d) => false,
-          arguments: {});
     });
   }
+
 
   functionToNavigateAfterCounterOffer(String response, String operation,
       {String statusCode = ''}) {
@@ -2858,7 +2971,6 @@ class TransactionProvider with ChangeNotifier {
       print('payload to send bilal');
       print(requestBody.toString());
       print('Counter offer response' + response.body);
-
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);

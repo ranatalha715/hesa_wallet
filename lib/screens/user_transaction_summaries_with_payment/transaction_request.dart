@@ -5,37 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hesa_wallet/constants/colors.dart';
-import 'package:hesa_wallet/models/payment_card_model.dart';
 import 'package:hesa_wallet/providers/card_provider.dart';
 import 'package:hesa_wallet/providers/transaction_provider.dart';
-import 'package:hesa_wallet/screens/signup_signin/terms_conditions.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
-import 'package:hesa_wallet/widgets/app_header.dart';
 import 'package:hesa_wallet/widgets/button.dart';
-import 'package:hyperpay_plugin/model/custom_ui.dart';
 import 'package:hyperpay_plugin/model/ready_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-
 import 'dart:io' as OS;
-import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:hyperpay_plugin/flutter_hyperpay.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'dart:developer' as dev;
-
 import '../../constants/app_deep_linking.dart';
 import '../../constants/configs.dart';
 import '../../constants/inapp_settings.dart';
-import '../../main.dart';
-import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../widgets/main_header.dart';
-import '../../widgets/payment_fees/payment_fees.dart';
-import '../userpayment_and_bankingpages/wallet_add_bank.dart';
 import '../userpayment_and_bankingpages/wallet_add_card.dart';
 
 class TransactionRequest extends StatefulWidget {
@@ -48,11 +34,10 @@ class TransactionRequest extends StatefulWidget {
 }
 
 class _TransactionRequestState extends State<TransactionRequest> {
-  var _selectedPaymentCard = false;
   bool _isSelected = false;
-  var _selectedBankDetails = false;
   var params;
   var operation;
+  var metaData;
   var walletAddress;
   var country;
   var transactionType;
@@ -68,25 +53,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
   var creatorId;
   var itemCollectionID;
   var unformatted = DateTime.now();
-
-  final ScrollController scrollController = ScrollController();
-  final TextEditingController otp1Controller = TextEditingController();
-  final TextEditingController otp2Controller = TextEditingController();
-  final TextEditingController otp3Controller = TextEditingController();
-  final TextEditingController otp4Controller = TextEditingController();
-  final TextEditingController otp5Controller = TextEditingController();
-  final TextEditingController otp6Controller = TextEditingController();
-  FocusNode firstFieldFocusNode = FocusNode();
-
-  FocusNode secondFieldFocusNode = FocusNode();
-
-  FocusNode thirdFieldFocusNode = FocusNode();
-
-  FocusNode forthFieldFocusNode = FocusNode();
-
-  FocusNode fifthFieldFocusNode = FocusNode();
-
-  FocusNode sixthFieldFocusNode = FocusNode();
   var isLoading = false;
   var isCardLoading = false;
   var isDialogLoading = false;
@@ -99,25 +65,16 @@ class _TransactionRequestState extends State<TransactionRequest> {
   var wstoken = "";
   var accessToken = "";
   bool IsScrolled = false;
+  late FToast fToast;
   late FlutterHyperPay flutterHyperPay;
-
+  String displayedText = '';
+  String formattedExpiryDate = '';
+  String displayedName = '';
+  final TextEditingController _cardnumberController = TextEditingController();
+  final ScrollController scrollController = ScrollController();
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
-
     accessToken = prefs.getString('accessToken')!;
-    print(accessToken);
-  }
-
-  makeIsScrolledFalse() {
-    setState(() {
-      IsScrolled = false;
-    });
-  }
-
-  makeIsScrolledTrue() {
-    setState(() {
-      IsScrolled = true;
-    });
   }
 
   init() async {}
@@ -134,57 +91,42 @@ class _TransactionRequestState extends State<TransactionRequest> {
         readyUI: ReadyUI(
           brandsName: brandsName,
           checkoutId: checkoutId,
-          // checkoutId: checkoutId,
           merchantIdApplePayIOS: InAppPaymentSetting.merchantId,
           countryCodeApplePayIOS: InAppPaymentSetting.countryCode,
           companyNameApplePayIOS: "LIMAR INTERNATIONAL TECHNOLGIES",
           themColorHexIOS: "#000000",
-          // FOR IOS ONLY
-          setStorePaymentDetailsMode:
-              true, // store payment details for future use
+          setStorePaymentDetailsMode: true,
         ),
       );
-      print("paymentResultData.paymentResult=");
       print(paymentResultData.paymentResult);
       if (paymentResultData.paymentResult == PaymentResult.success ||
           paymentResultData.paymentResult == PaymentResult.sync) {
         setState(() {
           isLoading = true;
         });
-        print(
-          'CheckoutID Talha' +
-              Provider.of<TransactionProvider>(context, listen: false)
-                  .checkoutId,
-        );
         paymentSuccesfullDialogue(
             amount: Provider.of<TransactionProvider>(context, listen: false)
                 .totalForDialog);
         Provider.of<TransactionProvider>(context, listen: false)
             .functionToNavigateAfterPayable(
                 paymentResultData.paymentResult.toString(), operation, context,
-                statusCode: '201');
+                statusCode: '201', paramsToSend: paramsMap.toString());
         setState(() {
           isLoading = false;
         });
-        print('Payment successful');
-        print('ye response ${paymentResultData}');
-        // Handle success
       } else {
-        print('Payment failed');
         paymentFailedDialogue(
             amount: Provider.of<TransactionProvider>(context, listen: false)
                 .totalForDialog);
         Provider.of<TransactionProvider>(context, listen: false)
             .functionToNavigateAfterPayable(
                 paymentResultData.paymentResult.toString(), operation, context,
-                statusCode: '400');
-        print('Failure Reason: ${paymentResultData.errorString}');
+                statusCode: '400', paramsToSend: paramsMap.toString());
         setState(() {
           isLoading = false;
         });
       }
     } catch (e) {
-      print('Error occurred: $e');
       paymentFailedDialogue(
           amount: Provider.of<TransactionProvider>(context, listen: false)
               .totalForDialog);
@@ -194,76 +136,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
     }
   }
 
-  late FToast fToast;
-
-  _showToast(String message, {int duration = 1000}) {
-    Widget toast = Container(
-      height: 60,
-      // width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.0),
-        color: AppColors.textColorWhite.withOpacity(0.5),
-      ),
-      child: Row(
-        // mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Flexible(
-            child: Container(
-              color: Colors.transparent,
-              child: Text(
-                message,
-                maxLines: 2,
-                softWrap: true,
-                overflow: TextOverflow.ellipsis,
-                // .toUpperCase(),
-                style: TextStyle(
-                        color: AppColors.backgroundColor,
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.bold)
-                    .apply(fontWeightDelta: -2),
-              ),
-            ),
-          ),
-          // Spacer(),
-        ],
-      ),
-    );
-
-    // Custom Toast Position
-    fToast.showToast(
-        child: toast,
-        toastDuration: Duration(milliseconds: duration),
-        positionedToastBuilder: (context, child) {
-          return Positioned(
-            child: Center(child: child),
-            top: 43.0,
-            left: 20,
-            right: 20,
-          );
-        });
-  }
-
   @override
   void initState() {
-    // Future.delayed(Duration(seconds: 2), () {
-    //
-    //   paymentSuccesfullDialogue(isDark: setThemeDark);
-    // }
-    // );
     init();
-    // Locale currentLocale = context.locale;
-    // bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
     fToast = FToast();
     fToast.init(context);
-    // flutterHyperPay = FlutterHyperPay(
-    //   shopperResultUrl: InAppPaymentSetting.shopperResultUrl,
-    //   paymentMode: PaymentMode.test,
-    //   lang: isEnglish ? "en_US" : 'ar_AR',
-    // );
-
     super.initState();
   }
 
@@ -275,8 +152,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
         isCardLoading = true;
       });
       await getAccessToken();
-      // await Provider.of<UserProvider>(context, listen: false)
-      //     .getUserDetails(token: accessToken, context: context);
       await Provider.of<UserProvider>(context, listen: false)
           .getUserDetails(token: accessToken, context: context);
       setState(() {
@@ -286,7 +161,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
     isInit = false;
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en';
-
     flutterHyperPay = FlutterHyperPay(
       shopperResultUrl: InAppPaymentSetting.shopperResultUrl,
       paymentMode: PaymentMode.test,
@@ -302,11 +176,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
     // TODO: implement dispose
     super.dispose();
   }
-
-  String displayedText = '';
-  String formattedExpiryDate = '';
-  String displayedName = '';
-  final TextEditingController _cardnumberController = TextEditingController();
 
   String addSpacesToText(String input) {
     final chunkSize = 4;
@@ -364,11 +233,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
     setState(() {
       isLoading = true;
     });
-    Future.delayed(Duration(seconds: 2), () async {
-      print(
-        "operation" + operation,
-      );
-      print("data" + "$operation transaction has been cancelled by the user,");
+    Future.delayed(Duration(seconds:1), () async {
       setState(() {
         isLoading = false;
       });
@@ -465,7 +330,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                 Provider.of<TransactionProvider>(context,
                                         listen: false)
                                     .selectedCardBrand = 'VISA';
-                                // Navigator.pop(context);
                                 navigateToAddCard();
                               },
                               child: Image.asset(
@@ -518,18 +382,14 @@ class _TransactionRequestState extends State<TransactionRequest> {
   }
 
   String formatCurrency(String? numberString) {
-    // Check if the string is null or empty
     if (numberString == null || numberString.isEmpty) {
-      return "0"; // Return a default value if input is invalid
+      return "0";
     }
-
     try {
-      // Convert the string to a number (num handles both int and double)
       num number = num.parse(numberString);
       final formatter = NumberFormat("#,##0.##", "en_US");
       return formatter.format(number);
     } catch (e) {
-      // Handle any format exceptions and return a fallback
       return "Invalid Number";
     }
   }
@@ -539,10 +399,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
     if (args != null) {
-      print('args params' + args['params']);
       params = args['params'] ?? "N/A";
       paramsMap = jsonDecode(params);
       operation = args['operation'] ?? "N/A";
+      metaData = args['metaData'] ?? "N/A";
       walletAddress = args['walletAddress'] ?? "N/A";
       fees = args['fees'] ?? "N/A";
       feesMap = jsonDecode(fees);
@@ -594,13 +454,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
               children: [
                 MainHeader(
                   title: "Transaction Request".tr(),
-                  // height: IsScrolled ? 12.h : 21.h,
                   IsScrolled: IsScrolled,
                 ),
-
                 Container(
                   height: 88.h,
-                  // color: Colors.yellow,
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -629,7 +486,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                     Image.asset(
                                       "assets/images/neo.png",
                                       height: 5.5.h,
-                                      // width: 104,
                                     ),
                                   SizedBox(
                                     width: 4.w,
@@ -654,9 +510,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                         'https://neo-nft.com',
                                         style: TextStyle(
                                             color: AppColors.textColorToska,
-                                            // color: themeNotifier.isDark
-                                            //     ? AppColors.textColorWhite
-                                            //     : AppColors.textColorBlack,
                                             fontSize: 10.5.sp,
                                             fontWeight: FontWeight.w600),
                                       ),
@@ -683,15 +536,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                         Container(
                           decoration: BoxDecoration(
                               color: AppColors.transactionReqBorderWhole,
-                              // border: Border(
-                              //   bottom: BorderSide(
-                              //     color: Colors.black, // Border color
-                              //     width: 1.0, // Border width
-                              //   ),
-                              // ),
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(15.sp),
-                                // Adjust the radius as needed
                                 topRight: Radius.circular(15.sp),
                               )),
                           child: Padding(
@@ -812,9 +658,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        // SizedBox(
-                                        //   height: 4.h,
-                                        // ),
                                         Text(
                                           'Transaction fees'.tr(),
                                           style: TextStyle(
@@ -830,72 +673,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                         SizedBox(
                                           height: 1.h,
                                         ),
-                                        // if (feesMap!['nftMintingFee'] != null)
-                                        //   transactionFeesWidget(
-                                        //     title: feesMap!['nftMintingFee']
-                                        //     ['label']
-                                        //         .toString(),
-                                        //     details: feesMap!['nftMintingFee']
-                                        //     ['value']
-                                        //         .toString(),
-                                        //     showCurrency: true,
-                                        //     isDark: themeNotifier.isDark
-                                        //         ? true
-                                        //         : false,
-                                        //   ),
                                         if (feesMap != null)
-                                          // ListView.builder(
-                                          //   padding: EdgeInsets.zero,
-                                          //   controller: scrollController,
-                                          //   itemCount: feesMap!.length,
-                                          //   shrinkWrap: true,
-                                          //   itemBuilder: (BuildContext context,
-                                          //       int index) {
-                                          //     final feeKey = feesMap!.keys
-                                          //         .elementAt(
-                                          //             index); // Get the key at index
-                                          //     final fee = feesMap![
-                                          //         feeKey]; // Get the fee object
-                                          //
-                                          //     String feeLabel =
-                                          //         fee['label'].toString();
-                                          //     String feeValue =
-                                          //         fee['value'].toString();
-                                          //     bool isDebit =
-                                          //         fee['type'].toString() ==
-                                          //                 'debit'
-                                          //             ? true
-                                          //             : false;
-                                          //     bool lastIndex =
-                                          //         index == feesMap!.length - 1;
-                                          //     feeLabel == 'Total'
-                                          //         ? Provider.of<TransactionProvider>(
-                                          //                     context,
-                                          //                     listen: false)
-                                          //                 .totalForDialog =
-                                          //             formatCurrency(feeValue)
-                                          //         : '';
-                                          //     return Column(
-                                          //       children: [
-                                          //         if (lastIndex)
-                                          //           Divider(
-                                          //             color: AppColors
-                                          //                 .textColorGrey,
-                                          //           ),
-                                          //         transactionFeesWidget(
-                                          //           title: feeLabel,
-                                          //           // details: isDebit ? '- '+ feeValue : '' + feeValue,
-                                          //           details: formatCurrency(
-                                          //               feeValue),
-                                          //           showCurrency: true,
-                                          //           isDark: themeNotifier.isDark
-                                          //               ? true
-                                          //               : false,
-                                          //         ),
-                                          //       ],
-                                          //     );
-                                          //   },
-                                          // ),
                                           ListView.builder(
                                             padding: EdgeInsets.zero,
                                             controller: scrollController,
@@ -904,7 +682,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                             shrinkWrap: true,
                                             itemBuilder: (BuildContext context,
                                                 int index) {
-                                              // Display the "Total" item at the end
                                               if (index ==
                                                   filteredFees.length) {
                                                 final totalFee = feesMap!
@@ -918,13 +695,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                 String totalValue = totalFee
                                                     .value['value']
                                                     .toString();
-
                                                 Provider.of<TransactionProvider>(
                                                             context,
                                                             listen: false)
                                                         .totalForDialog =
                                                     formatCurrency(totalValue);
-
                                                 return Column(
                                                   children: [
                                                     Divider(
@@ -941,15 +716,12 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   ],
                                                 );
                                               }
-
-                                              // Render all other fees except "Total"
                                               final fee =
                                                   filteredFees[index].value;
                                               String feeLabel =
                                                   fee['label'].toString();
                                               String feeValue =
                                                   fee['value'].toString();
-
                                               return transactionFeesWidget(
                                                 title: feeLabel,
                                                 details:
@@ -959,7 +731,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                               );
                                             },
                                           ),
-
                                         Text(
                                           operation != "acceptCounterOffer" &&
                                                   operation !=
@@ -1353,21 +1124,17 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                             "cards"
                                                         ? AppColors
                                                             .textColorGrey
-                                                        // .selectedCardAndBankBorder // 12 June
                                                         : AppColors
                                                             .selectedCardAndBankBorder,
                                                 width: 1,
                                               ),
                                               borderRadius: BorderRadius.only(
                                                 topLeft: Radius.circular(8.0),
-                                                // Radius for top-left corner
                                                 topRight: Radius.circular(8.0),
                                                 bottomLeft: Radius.circular(
                                                     _isSelected ? 0.0 : 8.0),
                                                 bottomRight: Radius.circular(
-                                                    _isSelected
-                                                        ? 0.0
-                                                        : 8.0), // Radius for top-right corner
+                                                    _isSelected ? 0.0 : 8.0),
                                               ),
                                             ),
                                             child: Padding(
@@ -1379,20 +1146,12 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.center,
                                                 children: [
-                                                  // SizedBox(
-                                                  //   width: 0.5.h,
-                                                  // ),
                                                   Text(
-                                                    // trPro.selectedCardNum ==
-                                                    //             "" ||
-                                                    //         trPro.selectedCardNum ==
-                                                    //             null
                                                     paymentCards.isEmpty
                                                         ? "Add payment method"
                                                             .tr()
                                                         : trPro.selectedCardNum +
                                                             " **********",
-                                                    // "2561 **** **** 1234",
                                                     style: TextStyle(
                                                         fontSize: 11.7.sp,
                                                         fontFamily: 'Inter',
@@ -1407,32 +1166,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                     .selectedPaymentMethod !=
                                                                 "cards"
                                                             ? AppColors
-                                                                .textColorGrey //12 June
+                                                                .textColorGrey
                                                             : AppColors
-                                                                .selectedCardAndBankBorder
-                                                        // color: themeNotifier
-                                                        //     .isDark
-                                                        //     ? AppColors
-                                                        //     .textColorWhite
-                                                        //     : AppColors
-                                                        //     .textColorBlack
-                                                        ),
+                                                                .selectedCardAndBankBorder),
                                                   ),
-
-                                                  // SizedBox(
-                                                  //   width: 0.5.h,
-                                                  // ),
                                                   Spacer(),
-                                                  // Image.asset(
-                                                  //   "assets/images/Visa.png",
-                                                  //   height: 20.sp,
-                                                  //   color: themeNotifier.isDark
-                                                  //       ? AppColors
-                                                  //           .textColorWhite
-                                                  //       : AppColors
-                                                  //           .textColorBlack,
-                                                  //   // width: 20.sp,
-                                                  // ),
                                                   SizedBox(
                                                     width: 1.w,
                                                   ),
@@ -1503,12 +1241,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                           (context, index) {
                                                         bool isFirst =
                                                             index == 0;
-
                                                         bool isLast = index ==
                                                             paymentCards
                                                                     .length -
                                                                 1;
-
                                                         return GestureDetector(
                                                           onTap: () {
                                                             print(trPro
@@ -1555,19 +1291,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                   ? true
                                                                   : false),
                                                         );
-                                                        // Card(
-                                                        //   margin: EdgeInsets.all(8.0),
-                                                        //   child: ListTile(
-                                                        //     title: Text('Card ${index + 1}'),
-                                                        //     subtitle: Text(
-                                                        //       'BIN: ${paymentCards[index].bin}',
-                                                        //       style: TextStyle(
-                                                        //           color: Colors.red),
-                                                        //     ),
-                                                        //     onTap: () {
-                                                        //       // Handle card tap if needed
-                                                        //     },
-                                                        //   ));
                                                       }),
                                                 )
                                       ],
@@ -1603,10 +1326,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     "cards"
                                                 ? AppColors
                                                     .selectedCardAndBankBorder
-                                                :
-                                                //12 June
-                                                AppColors.transactionFeeBorder,
-                                            // Off-white color
+                                                : AppColors
+                                                    .transactionFeeBorder,
                                             width: 1.0,
                                           ),
                                         ),
@@ -1649,22 +1370,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                       ),
                                     ),
                                   ),
-                                // SizedBox(
-                                //   height: 3.h,
-                                // ),
                                 Container(
-                                  decoration: BoxDecoration(
-                                      // color: themeNotifier.isDark
-                                      //     ? AppColors.transactionFeeContainer
-                                      //     : AppColors.textColorWhite,
-                                      // border: Border(
-                                      //   top: BorderSide(
-                                      //     color: AppColors.textColorGrey, // Border color
-                                      //     width: 1.0, // Border width
-                                      //   ),
-                                      // ),
-                                      ),
-                                  // margin: EdgeInsets.symmetric(horizontal: 20.sp),
+                                  decoration: BoxDecoration(),
                                   child: Padding(
                                     padding:
                                         EdgeInsets.symmetric(horizontal: 0.sp),
@@ -1693,15 +1400,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   TextSpan(
                                                       recognizer:
                                                           TapGestureRecognizer()
-                                                            ..onTap = () {
-                                                              // Navigator.push(
-                                                              //   context,
-                                                              //   MaterialPageRoute(
-                                                              //       builder:
-                                                              //           (context) =>
-                                                              //               TermsAndConditions()),
-                                                              // );
-                                                            },
+                                                            ..onTap = () {},
                                                       text:
                                                           ' Terms & Conditions'
                                                                   .tr() +
@@ -1733,14 +1432,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                             )
                                           ]),
                                         ),
-
                                         SizedBox(height: 1.5.h),
                                         AppButton(
                                           title: "Reject request".tr(),
                                           handler: () {
-                                            // if(operation=="MintNFT"){
                                             rejectTransactions();
-                                            // }
                                           },
                                           isGradient: false,
                                           isGradientWithBorder: true,
@@ -1752,8 +1448,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                               ? AppColors.textColorWhite
                                               : AppColors.textColorBlack
                                                   .withOpacity(0.8),
-                                          // color: AppColors.appSecondButton
-                                          //     .withOpacity(0.10)
                                         ),
                                         SizedBox(height: 2.h),
                                         AppButton(
@@ -1762,22 +1456,18 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                               setState(() {
                                                 isValidating = true;
                                               });
-
                                               setState(() {
                                                 isLoading = true;
                                               });
-                                              // var result;
                                               TransactionProvider
                                                   transactionProvider = Provider
                                                       .of<TransactionProvider>(
                                                           context,
                                                           listen: false);
-
                                               UserProvider userProvider =
                                                   Provider.of<UserProvider>(
                                                       context,
                                                       listen: false);
-
                                               confirmBrandDialogue(() async {
                                                 if (operation ==
                                                     'MintCollection') {
@@ -1817,10 +1507,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     operation: operation,
                                                   )
                                                           .then((value) {
-                                                    print(
-                                                        "transactionProvider.checkoutId.collection");
-                                                    print(transactionProvider
-                                                        .checkoutId);
                                                     payRequestNowReadyUI(
                                                         operation: operation,
                                                         brandsName: Provider.of<
@@ -1835,9 +1521,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                 "VISA",
                                                                 "MASTER",
                                                                 "MADA",
-                                                                // "PAYPAL",
-                                                                // "STC_PAY",
-                                                                // "APPLEPAY"
                                                               ],
                                                         checkoutId: Provider.of<
                                                                     TransactionProvider>(
@@ -1847,41 +1530,35 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   });
                                                 } else if (operation ==
                                                     'MintNFT') {
-                                                  // Uncomment this block if needed, adjust parameters accordingly
-                                                  print('running mint nft');
-                                                  final nftResult =
-                                                      await transactionProvider
-                                                          .mintNftpayableTransactionSend(
-                                                              params: params,
-                                                              token:
-                                                                  accessToken,
-                                                              context: context,
-                                                              //12 june
-                                                              brand: Provider.of<TransactionProvider>(
-                                                                              context,
-                                                                              listen:
-                                                                                  false)
-                                                                          .selectedPaymentMethod !=
-                                                                      "cards"
-                                                                  ? 'APPLEPAY'
-                                                                  : Provider.of<
-                                                                              TransactionProvider>(
+                                                  final nftResult = await transactionProvider
+                                                      .mintNftpayableTransactionSend(
+                                                          params: params,
+                                                          token: accessToken,
+                                                          context: context,
+                                                          brand: Provider.of<TransactionProvider>(
                                                                           context,
                                                                           listen:
                                                                               false)
-                                                                      .selectedCardBrand,
-                                                              walletAddress:
-                                                                  userProvider
-                                                                      .walletAddress!,
-                                                              tokenId: paymentCards
-                                                                      .isEmpty
-                                                                  ? ""
-                                                                  : trPro
-                                                                      .selectedCardTokenId,
-                                                              country: country,
-                                                              operation:
-                                                                  operation)
-                                                          .then((value) {
+                                                                      .selectedPaymentMethod !=
+                                                                  "cards"
+                                                              ? 'APPLEPAY'
+                                                              : Provider.of<
+                                                                          TransactionProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .selectedCardBrand,
+                                                          walletAddress:
+                                                              userProvider
+                                                                  .walletAddress!,
+                                                          tokenId: paymentCards
+                                                                  .isEmpty
+                                                              ? ""
+                                                              : trPro
+                                                                  .selectedCardTokenId,
+                                                          country: country,
+                                                          operation: operation)
+                                                      .then((value) {
                                                     print(
                                                         "transactionProvider.checkoutId");
                                                     print(transactionProvider
@@ -1906,8 +1583,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                 context,
                                                                 listen: false)
                                                             .checkoutId);
-                                                    // });
-                                                    // }
                                                   });
                                                 } else if (operation ==
                                                     'MintNFTWithEditions') {
@@ -1964,8 +1639,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                 context,
                                                                 listen: false)
                                                             .checkoutId);
-                                                    // });
-                                                    // }
                                                   });
                                                 } else if (operation ==
                                                     'purchaseNFT') {
@@ -1998,10 +1671,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                           country: country,
                                                           operation: operation)
                                                       .then((value) {
-                                                    print(
-                                                        "transactionProvider.checkoutId");
-                                                    print(transactionProvider
-                                                        .checkoutId);
                                                     payRequestNowReadyUI(
                                                         operation: operation,
                                                         brandsName: Provider.of<
@@ -2022,8 +1691,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                 context,
                                                                 listen: false)
                                                             .checkoutId);
-                                                    // });
-                                                    // }
                                                   });
                                                 } else if (operation ==
                                                     'purchaseCollection') {
@@ -2056,10 +1723,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                           country: country,
                                                           operation: operation)
                                                       .then((value) {
-                                                    print(
-                                                        "transactionProvider.checkoutId");
-                                                    print(transactionProvider
-                                                        .checkoutId);
                                                     payRequestNowReadyUI(
                                                         operation: operation,
                                                         brandsName: Provider.of<
@@ -2080,12 +1743,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                 context,
                                                                 listen: false)
                                                             .checkoutId);
-                                                    // });
-                                                    // }
                                                   });
                                                 } else if (operation ==
                                                     'listNFT') {
-                                                  // Uncomment this block if needed, adjust parameters accordingly
                                                   final listNftFixedPrice =
                                                       await transactionProvider
                                                           .listNftFixedPrice(
@@ -2114,10 +1774,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     operation: operation,
                                                   )
                                                           .then((value) {
-                                                    print(
-                                                        "transactionProvider.checkoutId");
-                                                    print(transactionProvider
-                                                        .checkoutId);
                                                     payRequestNowReadyUI(
                                                         operation: operation,
                                                         brandsName: Provider.of<
@@ -2138,12 +1794,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                 context,
                                                                 listen: false)
                                                             .checkoutId);
-                                                    // });
-                                                    // }
                                                   });
                                                 } else if (operation ==
                                                     'listCollection') {
-                                                  // Uncomment this block if needed, adjust parameters accordingly
                                                   final listCollectionFixedPrice =
                                                       await transactionProvider
                                                           .listCollectionFixedPrice(
@@ -2172,10 +1825,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     operation: operation,
                                                   )
                                                           .then((value) {
-                                                    print(
-                                                        "transactionProvider.checkoutId");
-                                                    print(transactionProvider
-                                                        .checkoutId);
                                                     payRequestNowReadyUI(
                                                         operation: operation,
                                                         brandsName: Provider.of<
@@ -2196,12 +1845,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                 context,
                                                                 listen: false)
                                                             .checkoutId);
-                                                    // });
-                                                    // }
                                                   });
                                                 } else if (operation ==
                                                     'listAuctionNFT') {
-                                                  // Uncomment this block if needed, adjust parameters accordingly
                                                   final listNftForAuction =
                                                       await transactionProvider
                                                           .listNftForAuction(
@@ -2230,10 +1876,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     operation: operation,
                                                   )
                                                           .then((value) {
-                                                    print(
-                                                        "transactionProvider.checkoutId");
-                                                    print(transactionProvider
-                                                        .checkoutId);
                                                     payRequestNowReadyUI(
                                                         operation: operation,
                                                         brandsName: Provider.of<
@@ -2254,12 +1896,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                 context,
                                                                 listen: false)
                                                             .checkoutId);
-                                                    // });
-                                                    // }
                                                   });
                                                 } else if (operation ==
                                                     'listAuctionCollection') {
-                                                  // Uncomment this block if needed, adjust parameters accordingly
                                                   final listCollectionForAuction =
                                                       await transactionProvider
                                                           .listCollectionForAuction(
@@ -2288,10 +1927,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     operation: operation,
                                                   )
                                                           .then((value) {
-                                                    print(
-                                                        "transactionProvider.checkoutId");
-                                                    print(transactionProvider
-                                                        .checkoutId);
                                                     payRequestNowReadyUI(
                                                         operation: operation,
                                                         brandsName: Provider.of<
@@ -2312,12 +1947,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                 context,
                                                                 listen: false)
                                                             .checkoutId);
-                                                    // });
-                                                    // }
                                                   });
                                                 } else if (operation ==
                                                     'burnNFT') {
-                                                  // Uncomment this block if needed, adjust parameters accordingly
                                                   final burnNFT =
                                                       await transactionProvider
                                                           .burnNFT(
@@ -2346,10 +1978,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     operation: operation,
                                                   )
                                                           .then((value) {
-                                                    print(
-                                                        "transactionProvider.checkoutId");
-                                                    print(transactionProvider
-                                                        .checkoutId);
                                                     payRequestNowReadyUI(
                                                         operation: operation,
                                                         brandsName: Provider.of<
@@ -2370,12 +1998,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                 context,
                                                                 listen: false)
                                                             .checkoutId);
-                                                    // });
-                                                    // }
                                                   });
                                                 } else if (operation ==
                                                     'burnCollection') {
-                                                  // Uncomment this block if needed, adjust parameters accordingly
                                                   final burnCollection =
                                                       await transactionProvider
                                                           .burnCollection(
@@ -2404,10 +2029,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     operation: operation,
                                                   )
                                                           .then((value) {
-                                                    print(
-                                                        "transactionProvider.checkoutId");
-                                                    print(transactionProvider
-                                                        .checkoutId);
                                                     payRequestNowReadyUI(
                                                         operation: operation,
                                                         brandsName: Provider.of<
@@ -2428,8 +2049,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                 context,
                                                                 listen: false)
                                                             .checkoutId);
-                                                    // });
-                                                    // }
                                                   });
                                                 } else if (operation ==
                                                     'makeOfferNFT') {
@@ -2461,10 +2080,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     operation: operation,
                                                   )
                                                           .then((value) {
-                                                    print(
-                                                        "transactionProvider.checkoutId");
-                                                    print(transactionProvider
-                                                        .checkoutId);
                                                     payRequestNowReadyUI(
                                                         operation: operation,
                                                         brandsName: Provider.of<
@@ -2485,8 +2100,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                 context,
                                                                 listen: false)
                                                             .checkoutId);
-                                                    // });
-                                                    // }
                                                   });
                                                 } else if (operation ==
                                                     'makeOfferCollection') {
@@ -2518,10 +2131,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     operation: operation,
                                                   )
                                                           .then((value) {
-                                                    print(
-                                                        "transactionProvider.checkoutId");
-                                                    print(transactionProvider
-                                                        .checkoutId);
                                                     payRequestNowReadyUI(
                                                         operation: operation,
                                                         brandsName: Provider.of<
@@ -2542,8 +2151,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                 context,
                                                                 listen: false)
                                                             .checkoutId);
-                                                    // });
-                                                    // }
                                                   });
                                                 } else if (operation ==
                                                     'acceptNFTCounterOffer') {
@@ -2575,10 +2182,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     operation: operation,
                                                   )
                                                           .then((value) {
-                                                    print(
-                                                        "transactionProvider.checkoutId");
-                                                    print(transactionProvider
-                                                        .checkoutId);
                                                     payRequestNowReadyUI(
                                                         operation: operation,
                                                         brandsName: Provider.of<
@@ -2599,8 +2202,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                 context,
                                                                 listen: false)
                                                             .checkoutId);
-                                                    // });
-                                                    // }
                                                   });
                                                 } else if (operation ==
                                                     'acceptCollectionCounterOffer') {
@@ -2632,10 +2233,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     operation: operation,
                                                   )
                                                           .then((value) {
-                                                    print(
-                                                        "transactionProvider.checkoutId");
-                                                    print(transactionProvider
-                                                        .checkoutId);
                                                     payRequestNowReadyUI(
                                                         operation: operation,
                                                         brandsName: Provider.of<
@@ -2656,8 +2253,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                 context,
                                                                 listen: false)
                                                             .checkoutId);
-                                                    // });
-                                                    // }
                                                   });
                                                 } else {}
                                                 setState(() {
@@ -2677,313 +2272,14 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                   .selectedPaymentMethod !=
                                                               "apple_pay"
                                                       ? true
-                                                      : false
-                                                  //
-                                                  //         Provider.of<TransactionProvider>(
-                                                  //             context,
-                                                  //             listen:
-                                                  //             false)
-                                                  //             .selectedPaymentMethod !=
-                                                  //             "cards")
-                                                  // ||
-                                                  //         Provider.of<TransactionProvider>(
-                                                  //         context,
-                                                  //         listen:
-                                                  //         false)
-                                                  //         .selectedPaymentMethod !=
-                                                  //         "apple_pay"
-                                                  );
-
-                                              // if (result == AuthResult.success) {
-                                              //   showDialog(
-                                              //     context: context,
-                                              //     builder: (BuildContext context) {
-                                              //       final screenWidth =
-                                              //           MediaQuery.of(context).size.width;
-                                              //       final dialogWidth = screenWidth * 0.85;
-                                              //       return StatefulBuilder(builder:
-                                              //           (BuildContext context,
-                                              //               StateSetter setState) {
-                                              //         return Dialog(
-                                              //           shape: RoundedRectangleBorder(
-                                              //             borderRadius: BorderRadius.circular(8.0),
-                                              //           ),
-                                              //           backgroundColor: Colors.transparent,
-                                              //           child: BackdropFilter(
-                                              //               filter: ImageFilter.blur(
-                                              //                   sigmaX: 7, sigmaY: 7),
-                                              //               child: Container(
-                                              //                 height: 55.h,
-                                              //                 width: dialogWidth,
-                                              //                 decoration: BoxDecoration(
-                                              //
-                                              //                   color: themeNotifier.isDark
-                                              //                       ? AppColors.showDialogClr
-                                              //                       : AppColors.textColorWhite,
-                                              //                   borderRadius:
-                                              //                       BorderRadius.circular(15),
-                                              //                 ),
-                                              //                 child: Column(
-                                              //                   children: [
-                                              //                     SizedBox(
-                                              //                       height: 3.h,
-                                              //                     ),
-                                              //                     Align(
-                                              //                       alignment:
-                                              //                           Alignment.bottomCenter,
-                                              //                       child: Image.asset(
-                                              //                         "assets/images/svg_icon.png",
-                                              //                         height: 5.9.h,
-                                              //                         width: 5.6.h,
-                                              //                       ),
-                                              //                     ),
-                                              //                     SizedBox(height: 2.h),
-                                              //                     Text(
-                                              //                       'OTP verification'.tr(),
-                                              //                       style: TextStyle(
-                                              //                           fontWeight: FontWeight.w600,
-                                              //                           fontSize: 17.5.sp,
-                                              //                           color: themeNotifier.isDark
-                                              //                               ? AppColors
-                                              //                                   .textColorWhite
-                                              //                               : AppColors
-                                              //                                   .textColorBlack),
-                                              //                     ),
-                                              //                     SizedBox(
-                                              //                       height: 2.h,
-                                              //                     ),
-                                              //                     Row(
-                                              //                       mainAxisAlignment:
-                                              //                           MainAxisAlignment.center,
-                                              //                       children: [
-                                              //                         otpContainer(
-                                              //                           controller: otp1Controller,
-                                              //                           focusNode:
-                                              //                               firstFieldFocusNode,
-                                              //                           previousFocusNode:
-                                              //                               firstFieldFocusNode,
-                                              //                           handler: () => FocusScope
-                                              //                                   .of(context)
-                                              //                               .requestFocus(
-                                              //                                   secondFieldFocusNode),
-                                              //                         ),
-                                              //                         SizedBox(
-                                              //                           width: 1.h,
-                                              //                         ),
-                                              //                         otpContainer(
-                                              //                           controller: otp2Controller,
-                                              //                           focusNode:
-                                              //                               secondFieldFocusNode,
-                                              //                           previousFocusNode:
-                                              //                               firstFieldFocusNode,
-                                              //                           handler: () => FocusScope
-                                              //                                   .of(context)
-                                              //                               .requestFocus(
-                                              //                                   thirdFieldFocusNode),
-                                              //                         ),
-                                              //                         SizedBox(
-                                              //                           width: 1.h,
-                                              //                         ),
-                                              //                         otpContainer(
-                                              //                           controller: otp3Controller,
-                                              //                           focusNode:
-                                              //                               thirdFieldFocusNode,
-                                              //                           previousFocusNode:
-                                              //                               secondFieldFocusNode,
-                                              //                           handler: () => FocusScope
-                                              //                                   .of(context)
-                                              //                               .requestFocus(
-                                              //                                   forthFieldFocusNode),
-                                              //                         ),
-                                              //                         SizedBox(
-                                              //                           width: 1.h,
-                                              //                         ),
-                                              //                         otpContainer(
-                                              //                           controller: otp4Controller,
-                                              //                           focusNode:
-                                              //                               forthFieldFocusNode,
-                                              //                           previousFocusNode:
-                                              //                               thirdFieldFocusNode,
-                                              //                           handler: () => FocusScope
-                                              //                                   .of(context)
-                                              //                               .requestFocus(
-                                              //                                   fifthFieldFocusNode),
-                                              //                         ),
-                                              //                         SizedBox(
-                                              //                           width: 1.h,
-                                              //                         ),
-                                              //                         otpContainer(
-                                              //                           controller: otp5Controller,
-                                              //                           focusNode:
-                                              //                               fifthFieldFocusNode,
-                                              //                           previousFocusNode:
-                                              //                               forthFieldFocusNode,
-                                              //                           handler: () => FocusScope
-                                              //                                   .of(context)
-                                              //                               .requestFocus(
-                                              //                                   sixthFieldFocusNode),
-                                              //                         ),
-                                              //                         SizedBox(
-                                              //                           width: 1.h,
-                                              //                         ),
-                                              //                         otpContainer(
-                                              //                           controller: otp6Controller,
-                                              //                           focusNode:
-                                              //                               sixthFieldFocusNode,
-                                              //                           previousFocusNode:
-                                              //                               fifthFieldFocusNode,
-                                              //                           handler: () => null,
-                                              //                         ),
-                                              //                       ],
-                                              //                     ),
-                                              //                     SizedBox(
-                                              //                       height: 1.h,
-                                              //                     ),
-                                              //                     Text(
-                                              //                       '*Incorrect verification code'
-                                              //                           .tr(),
-                                              //                       style: TextStyle(
-                                              //                           color: AppColors.errorColor,
-                                              //                           fontSize: 10.2.sp,
-                                              //                           fontWeight:
-                                              //                               FontWeight.w400),
-                                              //                     ),
-                                              //                     SizedBox(
-                                              //                       height: 2.h,
-                                              //                     ),
-                                              //                     Text(
-                                              //                       'Please enter sms verification code sent to your mobile number'
-                                              //                           .tr(),
-                                              //                       textAlign: TextAlign.center,
-                                              //                       style: TextStyle(
-                                              //                           height: 1.4,
-                                              //                           color:
-                                              //                               AppColors.textColorGrey,
-                                              //                           fontSize: 10.2.sp,
-                                              //                           fontWeight:
-                                              //                               FontWeight.w400),
-                                              //                     ),
-                                              //                     Expanded(child: SizedBox()),
-                                              //                     Padding(
-                                              //                       padding:
-                                              //                           const EdgeInsets.symmetric(
-                                              //                               horizontal: 22),
-                                              //                       child: Consumer<UserProvider>(
-                                              //                           builder:
-                                              //                               (context, user, child) {
-                                              //                         return AppButton(
-                                              //                           title: 'Verify'.tr(),
-                                              //                           handler: () async {
-                                              //                             if (otp1Controller.text.isNotEmpty &&
-                                              //                                 otp2Controller.text
-                                              //                                     .isNotEmpty &&
-                                              //                                 otp3Controller.text
-                                              //                                     .isNotEmpty &&
-                                              //                                 otp4Controller.text
-                                              //                                     .isNotEmpty &&
-                                              //                                 otp5Controller.text
-                                              //                                     .isNotEmpty &&
-                                              //                                 otp6Controller.text
-                                              //                                     .isNotEmpty) {
-                                              //                               setState(() {
-                                              //                                 isLoading = true;
-                                              //                               });
-                                              //                               final result = await Provider.of<
-                                              //                                           TransactionProvider>(
-                                              //                                       context,
-                                              //                                       listen: false)
-                                              //                                   .nonPayableTransactionSend(
-                                              //                                       token: accessToken,
-                                              //                                       walletAddress: user
-                                              //                                           .walletAddress!,
-                                              //                                       code: otp1Controller.text +
-                                              //                                           otp2Controller
-                                              //                                               .text +
-                                              //                                           otp3Controller
-                                              //                                               .text +
-                                              //                                           otp4Controller
-                                              //                                               .text +
-                                              //                                           otp5Controller
-                                              //                                               .text +
-                                              //                                           otp6Controller
-                                              //                                               .text,
-                                              //                                       context:
-                                              //                                           context);
-                                              //
-                                              //                               setState(() {
-                                              //                                 isLoading = false;
-                                              //                               });
-                                              //                               if (result ==
-                                              //                                   AuthResult
-                                              //                                       .success) {
-                                              //                                 Navigator.push(
-                                              //                                   context,
-                                              //                                   MaterialPageRoute(
-                                              //                                     builder: (context) =>
-                                              //                                         TermsAndConditions(),
-                                              //                                   ),
-                                              //                                 );
-                                              //                               }
-                                              //                             }
-                                              //                           },
-                                              //                           isLoading: isLoading,
-                                              //                           isGradient: true,
-                                              //                           color: Colors.transparent,
-                                              //                           textColor: AppColors
-                                              //                               .textColorBlack,
-                                              //                         );
-                                              //                       }),
-                                              //                     ),
-                                              //                     SizedBox(height: 2.h),
-                                              //                     Padding(
-                                              //                       padding:
-                                              //                           const EdgeInsets.symmetric(
-                                              //                               horizontal: 22),
-                                              //                       child: AppButton(
-                                              //                           title: 'Resend code 06:00'
-                                              //                               .tr(),
-                                              //                           handler: () {
-                                              //                             // Navigator.push(
-                                              //                             //   context,
-                                              //                             //   MaterialPageRoute(
-                                              //                             //     builder: (context) => TermsAndConditions(),
-                                              //                             //   ),
-                                              //                             // );
-                                              //                           },
-                                              //                           isGradient: false,
-                                              //                           textColor: themeNotifier
-                                              //                                   .isDark
-                                              //                               ? AppColors
-                                              //                                   .textColorWhite
-                                              //                               : AppColors
-                                              //                                   .textColorBlack
-                                              //                                   .withOpacity(0.8),
-                                              //                           color: Colors.transparent),
-                                              //                     ),
-                                              //                     Expanded(child: SizedBox()),
-                                              //                   ],
-                                              //                 ),
-                                              //               )),
-                                              //         );
-                                              //       });
-                                              //     },
-                                              //   );
-                                              // }
+                                                      : false);
                                             },
-                                            // isLoading: isLoading,
                                             isGradient: true,
                                             color: AppColors.textColorBlack),
-
-                                        // SizedBox(
-                                        //   height: 3.h,
-                                        // )
                                       ],
                                     ),
                                   ),
                                 ),
-                                // SizedBox(
-                                //   height: 10.h,
-                                // ),
                               ],
                             ),
                           ),
@@ -3052,7 +2348,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            // color: Colors.yellow,
             width: title == "Total" ? 25.w : 45.w,
             child: Text(
               title,
@@ -3066,7 +2361,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
             width: 5.sp,
           ),
           Container(
-            // color: Colors.red,
             width: title == "Total" ? 45.w : 28.w,
             child: Align(
               alignment: Alignment.centerRight,
@@ -3094,7 +2388,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
         border: Border.all(
-          color: AppColors.textColorGrey, // Off-white color
+          color: AppColors.textColorGrey,
           width: 1.0,
         ),
       ),
@@ -3121,7 +2415,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
             Image.asset(
               "assets/images/Visa.png",
               height: 20.sp,
-              // width: 20.sp,
             ),
           ],
         ),
@@ -3145,13 +2438,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
         Container(
           height: 5.5.h,
           decoration: BoxDecoration(
-            // color: Colors.red,
-            // border: Border.all(
-            //   color:
-            //   // _isSelected ? Colors.transparent :
-            //   AppColors.textColorGrey,
-            //   width: 1.0,
-            // ),
             borderRadius: BorderRadius.circular(8.0),
           ),
           child: Padding(
@@ -3200,11 +2486,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                   color: isDark
                       ? AppColors.textColorWhite
                       : AppColors.textColorBlack,
-                  // width: 20.sp,
                 ),
-                // SizedBox(
-                //   width: 0.5.h,
-                // ),
                 SizedBox(
                   width: 2.w,
                 ),
@@ -3214,31 +2496,20 @@ class _TransactionRequestState extends State<TransactionRequest> {
                     cardNumber: " ********** " + cardNum,
                     index: index,
                   ),
-                  // Provider.of<CardProvider>(context, listen: false)
-                  // .deletePaymentCards(
-                  //     token: accessToken, index: index, context: context),
                   child: Image.asset(
                     "assets/images/cancel.png",
                     height: 20.sp,
                     color: AppColors.textColorGrey,
-                    // color: isDark
-                    //     ? AppColors.textColorWhite
-                    //     : AppColors.textColorBlack,
-                    // width: 20.sp,
                   ),
                 ),
               ],
             ),
           ),
         ),
-
         if (!isLast)
           SizedBox(
             height: 1.h,
           ),
-        // Divider(
-        //   color: AppColors.textColorGrey,
-        // ),
         if (isLast)
           SizedBox(
             height: 1.h,
@@ -3248,13 +2519,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
   }
 
   void confirmationRequestDialogue({bool isDark = true}) {
-    // Navigator.pop(context);
     showDialog(
       context: context,
       builder: (BuildContext context) {
         final screenWidth = MediaQuery.of(context).size.width;
         final dialogWidth = screenWidth * 0.90;
-
         return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
@@ -3266,8 +2535,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                 height: 23.h,
                 width: dialogWidth,
                 decoration: BoxDecoration(
-                  // border:
-                  //     Border.all(width: 0.1.h, color: AppColors.textColorGrey),
                   color: isDark
                       ? AppColors.showDialogClr
                       : AppColors.textColorWhite,
@@ -3395,13 +2662,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
       builder: (BuildContext context) {
         final screenWidth = MediaQuery.of(context).size.width;
         final dialogWidth = screenWidth * 0.90;
-
         Future.delayed(Duration(seconds: 2), () async {
           await Navigator.of(context).pushNamedAndRemoveUntil(
               'nfts-page', (Route d) => false,
-              arguments: {}); // Close the dialog
+              arguments: {});
         });
-
         return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
@@ -3413,8 +2678,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                 height: 28.h,
                 width: dialogWidth,
                 decoration: BoxDecoration(
-                  // border:
-                  //     Border.all(width: 0.1.h, color: AppColors.textColorGrey),
                   color: isDark
                       ? AppColors.showDialogClr
                       : AppColors.textColorWhite,
@@ -3432,9 +2695,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // SizedBox(
-                      //   height: 3.h,
-                      // ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -3457,22 +2717,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                             width: 16.sp,
                             color: AppColors.textColorWhite,
                           ),
-                          // Container(
-                          //   width: 2.h,
-                          //   height: 2.h,
-                          //   decoration: BoxDecoration(
-                          //     borderRadius: BorderRadius.circular(20),
-                          //     border: Border.all(
-                          //         color: AppColors.textColorWhite, width: 1.sp),
-                          //   ),
-                          //   child: Center(
-                          //     child: Icon(
-                          //       Icons.check_rounded,
-                          //       size: 10.sp,
-                          //       color: AppColors.textColorWhite,
-                          //     ),
-                          //   ),
-                          // ),
                         ],
                       ),
                       SizedBox(
@@ -3614,13 +2858,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
       builder: (BuildContext context) {
         final screenWidth = MediaQuery.of(context).size.width;
         final dialogWidth = screenWidth * 0.90;
-
         Future.delayed(Duration(seconds: 2), () async {
           await Navigator.of(context).pushNamedAndRemoveUntil(
               'nfts-page', (Route d) => false,
-              arguments: {}); // Close the dialog
+              arguments: {});
         });
-
         return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
@@ -3632,8 +2874,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                 height: 30.h,
                 width: dialogWidth,
                 decoration: BoxDecoration(
-                  // border:
-                  //     Border.all(width: 0.1.h, color: AppColors.textColorGrey),
                   color: isDark
                       ? AppColors.showDialogClr
                       : AppColors.textColorWhite,
@@ -3651,9 +2891,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // SizedBox(
-                      //   height: 3.h,
-                      // ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -3811,7 +3048,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
       builder: (BuildContext context) {
         final screenWidth = MediaQuery.of(context).size.width;
         final dialogWidth = screenWidth * 0.90;
-
         Future.delayed(Duration(seconds: 2), () async {
           await Navigator.of(context).pushNamedAndRemoveUntil(
               'nfts-page', (Route d) => false,
@@ -3829,8 +3065,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                 height: 18.h,
                 width: dialogWidth,
                 decoration: BoxDecoration(
-                  // border:
-                  //     Border.all(width: 0.1.h, color: AppColors.textColorGrey),
                   color: isDark
                       ? AppColors.showDialogClr
                       : AppColors.textColorWhite,
@@ -3848,9 +3082,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // SizedBox(
-                      //   height: 3.h,
-                      // ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -3919,9 +3150,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                       color: isDark
                           ? AppColors.showDialogClr
                           : AppColors.textColorWhite,
-                      // border: Border.all(
-                      //     width: 0.1.h, color: AppColors.textColorGrey),
-                      // color: AppColors.backgroundColor,
                       borderRadius: BorderRadius.circular(15),
                       boxShadow: [
                         BoxShadow(
@@ -3955,10 +3183,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                           height: 6.5.h,
                           decoration: BoxDecoration(
                             color: AppColors.textColorWhite.withOpacity(0.15),
-                            // border: Border.all(
-                            //   color: AppColors.textFieldParentDark,
-                            //   width: 1.0,
-                            // ),
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           child: Padding(
@@ -3970,7 +3194,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                 Spacer(),
                                 Text(
                                   cardNumber,
-                                  // "**** 1234",
                                   style: TextStyle(
                                     fontSize: 11.5.sp,
                                     fontFamily: 'Inter',
@@ -3989,7 +3212,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                   color: isDark
                                       ? AppColors.textColorWhite
                                       : AppColors.textColorBlack,
-                                  // width: 20.sp,
                                 ),
                               ],
                             ),
@@ -4019,20 +3241,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
                               });
                               if (result == AuthResult.success) {
                                 Navigator.pop(context);
-                                // Navigator.pop(context);
-                                // Navigator.pushReplacement(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (BuildContext context) {
-                                //       return TransactionRequest(); // Replace NewScreen() with the widget for your new screen
-                                //     },
-                                //   ),
-                                // );
                               }
                             },
                             isLoading: isDialogLoading,
                             isGradient: true,
-                            // color: Colors.transparent,
                             color: AppColors.appSecondButton.withOpacity(0.10),
                             textColor: AppColors.textColorBlack,
                           ),
@@ -4044,12 +3256,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
                               title: 'Cancel'.tr(),
                               handler: () {
                                 Navigator.pop(context);
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => TermsAndConditions(),
-                                //   ),
-                                // );
                               },
                               isGradient: false,
                               textColor: isDark
@@ -4065,5 +3271,49 @@ class _TransactionRequestState extends State<TransactionRequest> {
         });
       },
     );
+  }
+
+  _showToast(String message, {int duration = 1000}) {
+    Widget toast = Container(
+      height: 60,
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12.0),
+        color: AppColors.textColorWhite.withOpacity(0.5),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Flexible(
+            child: Container(
+              color: Colors.transparent,
+              child: Text(
+                message,
+                maxLines: 2,
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                        color: AppColors.backgroundColor,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.bold)
+                    .apply(fontWeightDelta: -2),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    fToast.showToast(
+        child: toast,
+        toastDuration: Duration(milliseconds: duration),
+        positionedToastBuilder: (context, child) {
+          return Positioned(
+            child: Center(child: child),
+            top: 43.0,
+            left: 20,
+            right: 20,
+          );
+        });
   }
 }

@@ -405,7 +405,7 @@ class _TransactionRequestAcceptRejectState
     setState(() {
       isLoading = true;
     });
-    Future.delayed(Duration(seconds: 2), () async {
+    Future.delayed(Duration(seconds: 1), () async {
       print(
         "operation" + operation,
       );

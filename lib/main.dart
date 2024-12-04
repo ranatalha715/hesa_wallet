@@ -177,8 +177,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     }
   }
 
-
-
   Future<void> callRedDotLogic(String latestActivityTime) async {
     final prefs = await SharedPreferences.getInstance();
     final storedActivityTime = prefs.getString('lastActivityTime') ?? '';
@@ -189,11 +187,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       transactionProvider.confirmedRedDot = true;
       await prefs.setString('lastActivityTime', latestActivityTime);
       await prefs.setBool('showRedDot', true);
-      print('Updated shared preferences with latest activity time and red dot state.');
     } else {
       final transactionProvider = Provider.of<TransactionProvider>(context, listen: false);
       transactionProvider.showRedDot = savedShowRedDot;
-      print('Restored red dot state: showRedDot=${transactionProvider.showRedDot}');
     }
   }
   Timer? _timer;

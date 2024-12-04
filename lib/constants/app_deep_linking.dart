@@ -1,14 +1,13 @@
-// ignore_for_file: constant_identifier_names
+
 import 'dart:io';
 import 'package:deep_linking/deep_linking.dart';
 
 class AppDeepLinking {
-  // static const NEO_NFT_NAME = "unilink://hesawallet.com";
   static const NEO_NFT_NAME = "unilink://neonft.com";
   initDeeplink() {
     DeepLinking().getDeepLinkStream.listen((event) {
-      print(event);
-      print(event?.queryParameters);
+      print("Deep Link Event: $event");
+      print("Query Parameters: ${event?.queryParameters}");
     });
   }
 

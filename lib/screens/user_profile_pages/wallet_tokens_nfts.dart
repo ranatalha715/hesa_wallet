@@ -5,42 +5,31 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hesa_wallet/providers/transaction_provider.dart';
-import 'package:hesa_wallet/screens/settings/security_and_privacy.dart';
-import 'package:hesa_wallet/widgets/main_header.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hesa_wallet/constants/colors.dart';
-import 'package:hesa_wallet/providers/nfts_provider.dart';
 import 'package:hesa_wallet/widgets/nfts_collection_divisions/nfts_collections_division.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sizer/sizer.dart';
-import '../../constants/app_deep_linking.dart';
 import '../../providers/assets_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../widgets/animated_loader/animated_loader.dart';
 import '../../widgets/app_drawer.dart';
-import '../../widgets/image_placeholder.dart';
-import '../../widgets/local_toast.dart';
 import '../connection_requests_pages/connect_dapp.dart';
-import '../signup_signin/welcome_screen.dart';
 import '../unlock/unlock.dart';
 import '../user_transaction_summaries_with_payment/transaction_req_acceptreject.dart';
 import '../user_transaction_summaries_with_payment/transaction_request.dart';
 
 class WalletTokensNfts extends StatefulWidget {
   static const routeName = 'nfts-page';
-
   const WalletTokensNfts({Key? key}) : super(key: key);
-
   @override
   State<WalletTokensNfts> createState() => _WalletTokensNftsState();
 }
-
 class _WalletTokensNftsState extends State<WalletTokensNfts>
     with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _key = GlobalKey();
@@ -53,7 +42,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   int selectedCategoryIndex = 0;
   bool _isloading = false;
   bool showCopiedMsg = false;
-
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
@@ -63,18 +51,14 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     if (input.length <= 30) {
       return input;
     }
-
     final int middleIndex = input.length ~/ 2;
     final int startIndex = middleIndex - 16;
     final int endIndex = middleIndex + 16;
     final String result =
         input.substring(0, startIndex) + '...' + input.substring(endIndex);
-
     return result;
   }
-
   var userWalletAddress;
-
   Future<void> init() async {
     setState(() {
       _isloading = true;
@@ -149,21 +133,16 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     } else {
       _isPasscodeSet = false;
     }
-    print("ispasscodeset" + _isPasscodeSet.toString());
   }
 
   @override
   void initState() {
-
     super.initState();
     getPasscode();
     initUniLinks();
     initUniLinks1();
-
-
     _tabController = TabController(length: 2, vsync: this);
     init();
-
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor:
       AppColors.profileHeaderDark,
@@ -171,19 +150,16 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     callRedDotLogic();
   }
   var savedShowRedDot;
-
   callRedDotLogic() async {
     final prefs = await SharedPreferences.getInstance();
     savedShowRedDot = prefs.getBool('showRedDot') ?? false;
 
   }
-
   @override
   void dispose() {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: AppColors.profileHeaderDark, // Reset to default color
+      statusBarColor: AppColors.profileHeaderDark,
     ));
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -302,20 +278,15 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
 
   Future<void> initUniLinks1() async {
     try {
-      print('trying');
       await getLinksStream().firstWhere((String? link) {
         if (link != null) {
           Uri uri = Uri.parse(link);
           String? operation = uri.queryParameters['operation'];
           String? logoFromNeo = uri.queryParameters['logo'];
           String? siteUrl = uri.queryParameters['siteUrl'];
-          print("print operation");
-          print(operation);
-
           if (operation != null && operation == 'connectWallet') {
             Provider.of<UserProvider>(context, listen: false)
                 .navigateToNeoForConnectWallet = true;
-
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => ConnectDapp()),
                   (Route<dynamic> route) => false,
@@ -342,11 +313,9 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     }
   }
 
-  // uniilink
   String _receivedData = 'No UniLink data received';
   Future<void> initUniLinks() async {
     getLinksStream().listen((String? link) {
-      print(link.toString() + " before");
       if (link != null) {
         setState(() {
           _receivedData = link;
@@ -358,12 +327,29 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
         }
         Uri uri = Uri.parse(link);
         String? operation = uri.queryParameters['operation'];
+        String? params = uri.queryParameters['params'];
+        Map<String, dynamic>? metadata;
+        if(params!=null){
+          try {
+            Map<String, dynamic> paramsMap = jsonDecode(params);
+             metadata= paramsMap['metadata'];
+            if (metadata != null) {
+              print('Metadata testing: $metadata');
+            } else {
+              print('Metadata not found');
+            }
+          } catch (e) {
+            print('Error decoding JSON: $e');
+          }
+        } else {
+          print('No params found');
+        }
         if (operation != null && operation == 'MintNFT') {
           navigateToTransactionRequestWithMint(
-              uri.queryParameters, operation, context);
+              uri.queryParameters, operation,'', context);
         } else if (operation != null && operation == 'MintCollection') {
           navigateToTransactionRequestWithMintCollection(
-              uri.queryParameters, operation, context);
+              uri.queryParameters, operation,'', context,);
         } else if (operation != null && operation == 'MintNFTWithEditions') {
           navigateToTransactionRequestWithMintNFTWithEditions(
               uri.queryParameters, operation, context);
@@ -497,6 +483,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   Future<void> navigateToTransactionRequestWithMintCollection(
       Map<String, dynamic> queryParams,
       String operation,
+      String metaData,
       BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
@@ -504,6 +491,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
+      "metaData": metaData,
       "walletAddress": userWalletAddress
     });
   }
@@ -525,20 +513,16 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   Future<void> navigateToTransactionRequestWithMint(
       Map<String, dynamic> queryParams,
       String operation,
+      String metaData,
       BuildContext ctx) async {
     String paramsString = queryParams['params'] ?? '';
     String feesString = queryParams['fees'] ?? '';
-    // await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
-    //   "params": paramsString,
-    //   "fees": feesString,
-    //   "operation": operation,
-    //   "walletAddress": userWalletAddress
-    // });
     await Navigator.of(ctx)
         .popAndPushNamed(TransactionRequest.routeName, arguments: {
       "params": paramsString,
       "fees": feesString,
       "operation": operation,
+      "metaData": metaData,
       "walletAddress": userWalletAddress
     });
   }
@@ -902,7 +886,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       // "offerAmount": offerAmount,
       "walletAddress": userWalletAddress
     });
-    print('chal gia');
   }
 
   Future<void>
@@ -920,7 +903,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       "fees": feesString,
       "walletAddress": userWalletAddress
     });
-    print('chal gia');
   }
 
   Future<void>
@@ -952,21 +934,16 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
         Provider.of<AssetsProvider>(context, listen: false).assetsListed;
     final collectionListed = Provider.of<AssetsProvider>(context, listen: false)
         .assetsCollectionListed;
-
     final nftsCreated =
         Provider.of<AssetsProvider>(context, listen: false).assetsCreated;
     final nftsCollectionCreated =
         Provider.of<AssetsProvider>(context, listen: false)
             .assetsCollectionCreated;
-
     final nftsOwned =
         Provider.of<AssetsProvider>(context, listen: false).assetsOwned;
     final nftsCollectionOwnedByUser =
         Provider.of<AssetsProvider>(context, listen: false)
             .assetsCollectionOwned;
-    print('red dot logic');
-    print(Provider.of<TransactionProvider>(context, listen: false)
-        .confirmedRedDot);
     print(Provider.of<TransactionProvider>(context, listen: false).showRedDot);
     return Consumer<UserProvider>(builder: (context, user, child) {
       return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
@@ -1048,8 +1025,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                     : AppColors.textColorBlack,
                                                 size: 25.sp,
                                               ),
-
-
                                         ),
                                       ),
                                       Consumer<TransactionProvider>(builder:
@@ -1058,7 +1033,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                         return Positioned(
                                           right: 10,
                                           top: 12,
-                                          // bottom: 2.sp,
                                           child: Container(
                                             height: 4.3.sp,
                                             width: 4.3.sp,
@@ -1080,13 +1054,12 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                     GestureDetector(
                                       onTap: () {
                                         setLockScreenStatus(true);
-                                        // _isPasscodeSet ?
                                         Navigator.pushAndRemoveUntil(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => Unlock()),
                                               (Route<dynamic> route) =>
-                                          false, // This predicate removes all previous routes
+                                          false,
                                         );
                                       },
                                       child: Padding(
@@ -1111,7 +1084,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                         collapseMode: CollapseMode.parallax,
                                         expandedTitleScale: 1,
                                         stretchModes: [
-                                          // StretchMode.fadeTitle
                                         ],
                                         background: Stack(
                                           children: [
@@ -1144,7 +1116,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                           borderRadius:
                                                           BorderRadius
                                                               .circular(
-                                                              100)),
+                                                              100)
+                                                      ),
                                                       child: Padding(
                                                         padding: EdgeInsets.all(
                                                             1.sp),
@@ -1216,7 +1189,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                     SizedBox(
                                                       height: 0.5.h,
                                                     ),
-                                                    // if(user.walletAddress != null)
                                                     GestureDetector(
                                                       onTap: () =>
                                                           _copyToClipboard(user
@@ -1232,7 +1204,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                                 ? replaceMiddleWithDots(
                                                                 user.walletAddress!)
                                                                 : "...",
-                                                            // '0x1647f...87332',
                                                             style: TextStyle(
                                                                 fontSize:
                                                                 9.5.sp,
@@ -1254,7 +1225,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                 ),
                                               ),
                                             ),
-
                                           ],
                                         )),
                                   ),
@@ -1263,7 +1233,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                           SliverPersistentHeader(
                               pinned: true,
                               delegate: FixedHeaderDelegate(
-                                  tabController: _tabController)),
+                                  tabController: _tabController)
+                          ),
                         ],
                         body: TabBarView(controller: _tabController, children: [
                           CustomScrollView(
@@ -1298,7 +1269,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                               ),
                             ],
                           ),
-
                           CustomScrollView(
                             slivers: [
                               SliverList(
@@ -1364,8 +1334,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                     title: "Listed".tr(),
                                                     index: 3,
                                                     handler: () =>
-                                                        onCategorySelected(
-                                                            3),
+                                                        onCategorySelected(3),
                                                   ),
                                                 ],
                                               ),
@@ -1390,9 +1359,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                               ),
                             ],
                           ),
-                          // Second tab content
                         ]),
-
                       ),
                     ),
                   );
@@ -1402,11 +1369,9 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
       });
     });
   }
-
   Widget NFTCategoryWidget(
       {required String title,
         Function? handler,
-        // String? image,
         bool isFirst = false,
         required int index}) {
     return GestureDetector(
@@ -1489,7 +1454,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
         return Container();
     }
   }
-
   void _copyToClipboard(String text) {
     Clipboard.setData(ClipboardData(text: text));
     setState(() {
@@ -1502,23 +1466,18 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     });
   }
 }
-
 class FixedHeaderDelegate extends SliverPersistentHeaderDelegate {
   TabController tabController;
-
   FixedHeaderDelegate({required this.tabController});
-
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       color: AppColors.backgroundColor,
-      // height: 25.h,
       child: Column(
         children: [
           TabBar(
             controller: tabController,
-            // indicatorPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
             indicatorColor: AppColors.activeButtonColor,
             unselectedLabelColor: AppColors.textColorGrey,
             labelColor: AppColors.textColorWhite,
@@ -1537,439 +1496,11 @@ class FixedHeaderDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => kToolbarHeight; // Sets the height to just the TabBar
+  double get maxExtent => kToolbarHeight;
   @override
   double get minExtent =>
-      kToolbarHeight; // Minimum height when pinned (no collapsing)
+      kToolbarHeight;
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
       false;
 }
-
-
-
-
-
-
-// Column(
-//   children: [
-//     Container(
-//       height: 35.h,
-//       width: double.infinity,
-//       color: themeNotifier.isDark
-//           ? AppColors.backgroundColor
-//           : AppColors.textColorWhite,
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.start,
-//         children: [
-//           Container(
-//             height: 12.h,
-//             color: themeNotifier.isDark
-//                 ? AppColors.profileHeaderDark
-//                 : AppColors.whiteShade,
-//             child: Padding(
-//               padding: EdgeInsets.only(
-//                   left: 14.sp,
-//                   right: 20.sp,
-//                   bottom: 8.sp),
-//               child: Row(
-//                 mainAxisAlignment:
-//                     MainAxisAlignment.spaceBetween,
-//                 crossAxisAlignment:
-//                     CrossAxisAlignment.end,
-//                 children: [
-//                   GestureDetector(
-//                     onTap: () =>
-//                         _key.currentState!.openDrawer(),
-//                     child: Stack(
-//                       children: [
-//                         Icon(
-//                           Icons.menu_rounded,
-//                           color: themeNotifier.isDark
-//                               ? AppColors.textColorWhite
-//                               : AppColors.textColorBlack,
-//                           size: 25.sp,
-//                         ),
-//                         Consumer<TransactionProvider>(
-//                             builder: (context,
-//                                 TransactionProvider trP,
-//                                 _) {
-//                           return Positioned(
-//                             right: 1,
-//                             // bottom: 2.sp,
-//                             child: Container(
-//                               height: 4.3.sp,
-//                               width: 4.3.sp,
-//                               decoration: BoxDecoration(
-//                                 color: trP.showRedDot &&
-//                                         trP.confirmedRedDot
-//                                     ? AppColors.errorColor
-//                                     : Colors.transparent,
-//                                 borderRadius:
-//                                     BorderRadius.circular(
-//                                         10.sp),
-//                               ),
-//                             ),
-//                           );
-//                         }),
-//                       ],
-//                     ),
-//                   ),
-//                   GestureDetector(
-//                     onTap: () {
-//                       setLockScreenStatus(true);
-//                       // _isPasscodeSet ?
-//                       Navigator.pushAndRemoveUntil(
-//                         context,
-//                         MaterialPageRoute(
-//                             builder: (context) =>
-//                                 Unlock()),
-//                         (Route<dynamic> route) =>
-//                             false, // This predicate removes all previous routes
-//                       );
-//                     },
-//                     child: Padding(
-//                       padding:
-//                           EdgeInsets.only(bottom: 5.sp),
-//                       child: Image.asset(
-//                         "assets/images/lock.png",
-//                         height: 19.sp,
-//                         width: 19.sp,
-//                         color: themeNotifier.isDark
-//                             ? AppColors.textColorWhite
-//                             : AppColors.textColorBlack,
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//           SizedBox(
-//             height: 4.h,
-//           ),
-//           Container(
-//             decoration: BoxDecoration(
-//                 color: AppColors.textColorGrey,
-//                 borderRadius: BorderRadius.circular(100)),
-//             child: Padding(
-//               padding: EdgeInsets.all(1.sp),
-//               child: Container(
-//                 height: 60.sp,
-//                 width: 60.sp,
-//                 decoration: BoxDecoration(
-//                     color: AppColors.backgroundColor,
-//                     borderRadius:
-//                         BorderRadius.circular(100)),
-//                 child: Padding(
-//                   padding: EdgeInsets.all(1.sp),
-//                   child: ClipRRect(
-//                     borderRadius:
-//                         BorderRadius.circular(100),
-//                     child: user.userAvatar != null
-//                         ? Image.network(
-//                             user.userAvatar!,
-//                             fit: BoxFit.cover,
-//                           )
-//                         : Padding(
-//                             padding: EdgeInsets.all(4.sp),
-//                             child: Image.asset(
-//                               "assets/images/user_placeholder.png",
-//                               color:
-//                                   AppColors.textColorGrey,
-//                             ),
-//                           ),
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ),
-//           SizedBox(
-//             height: 2.h,
-//           ),
-//           Text(
-//             user.userName != null
-//                 ? user.userName!
-//                 : 'username.mjra'.tr(),
-//             style: TextStyle(
-//                 fontSize: 11.7.sp,
-//                 fontFamily: 'Blogger Sans',
-//                 fontWeight: FontWeight.w700,
-//                 color: themeNotifier.isDark
-//                     ? AppColors.textColorWhite
-//                     : AppColors.textColorBlack),
-//           ),
-//           SizedBox(
-//             height: 0.5.h,
-//           ),
-//           // if(user.walletAddress != null)
-//           GestureDetector(
-//             onTap: () =>
-//                 _copyToClipboard(user.walletAddress!),
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Text(
-//                   user.walletAddress != null
-//                       ? replaceMiddleWithDots(
-//                           user.walletAddress!)
-//                       : "...",
-//                   // '0x1647f...87332',
-//                   style: TextStyle(
-//                       fontSize: 9.5.sp,
-//                       fontFamily: 'Blogger Sans',
-//                       fontWeight: FontWeight.w500,
-//                       color: AppColors.textColorGrey),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ],
-//       ),
-//     ),
-//     Stack(
-//       children: [
-//         Container(
-//           height: 65.h,
-//           width: double.infinity,
-//           color: themeNotifier.isDark
-//               ? AppColors.backgroundColor
-//               : AppColors.textColorWhite,
-//           child: Column(
-//             children: [
-//               PreferredSize(
-//                 preferredSize:
-//                     Size.fromHeight(kToolbarHeight + 10),
-//                 child: Stack(
-//                   children: [
-//                     Positioned(
-//                       bottom: 0,
-//                       left: 0,
-//                       right: 0,
-//                       child: Container(
-//                         height: 1.sp,
-//                         color: themeNotifier.isDark
-//                             ? AppColors
-//                                 .transactionSummNeoBorder
-//                             : AppColors
-//                                 .tabUnselectedClorLight,
-//                       ),
-//                     ),
-//                     Container(
-//                       color: Colors.transparent,
-//                       // Background color of the TabBar
-//
-//                       child: TabBar(
-//                         controller: _tabController,
-//                         // indicatorPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-//                         indicatorColor:
-//                             AppColors.activeButtonColor,
-//                         unselectedLabelColor:
-//                             AppColors.textColorGrey,
-//                         labelColor: themeNotifier.isDark
-//                             ? AppColors.textColorWhite
-//                             : AppColors.textColorBlack,
-//                         labelStyle: TextStyle(
-//                             color: themeNotifier.isDark
-//                                 ? AppColors.textColorWhite
-//                                 : AppColors
-//                                     .textColorBlack,
-//                             fontSize: 11.5.sp,
-//                             fontWeight: FontWeight.w600),
-//                         tabs: [
-//                           Tab(
-//                               text: "     " +
-//                                   'Tokens'.tr() +
-//                                   "     "),
-//                           Tab(
-//                               text: "      " +
-//                                   'NFTs'.tr() +
-//                                   "       "),
-//                         ],
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//               _isloading
-//                   ? Padding(
-//                       padding: EdgeInsets.only(top: 25.h),
-//                       child: Center(
-//                         child: CircularProgressIndicator(
-//                           color:
-//                               AppColors.activeButtonColor,
-//                         ),
-//                       ),
-//                     )
-//                   : Expanded(
-//                       child: TabBarView(
-//                         controller: _tabController,
-//                         children: [
-//                           Padding(
-//                             padding: EdgeInsets.symmetric(
-//                               vertical: 15.h,
-//                             ),
-//                             child: Text(
-//                               "You have no Tokens".tr(),
-//                               textAlign: TextAlign.center,
-//                               style: TextStyle(
-//                                   color: themeNotifier
-//                                           .isDark
-//                                       ? AppColors
-//                                           .textColorGreyShade2
-//                                       : AppColors
-//                                           .textColorBlack,
-//                                   fontWeight:
-//                                       FontWeight.w500,
-//                                   fontSize: 12.sp,
-//                                   fontFamily:
-//                                       'Blogger Sans'),
-//                             ),
-//                           ),
-//                           Column(
-//                             children: [
-//                               Container(
-//                                   height: 8.h,
-//                                   width: 100.w,
-//                                   color: themeNotifier
-//                                           .isDark
-//                                       ? AppColors
-//                                           .backgroundColor
-//                                       : AppColors
-//                                           .textColorWhite,
-//                                   child:
-//                                       SingleChildScrollView(
-//                                     scrollDirection:
-//                                         Axis.horizontal,
-//                                     child: Padding(
-//                                       padding: EdgeInsets
-//                                           .symmetric(
-//                                         horizontal: 16.sp,
-//                                       ),
-//                                       // vertical: 10.sp),
-//                                       child: Row(
-//                                         children: [
-//                                           NFTCategoryWidget(
-//                                             title: "All"
-//                                                 .tr(),
-//                                             // image: "",
-//                                             isFirst: true,
-//                                             index: 0,
-//                                             handler: () =>
-//                                                 onCategorySelected(
-//                                                     0),
-//                                           ),
-//                                           NFTCategoryWidget(
-//                                               title: "Owned"
-//                                                   .tr(),
-//                                               // image:
-//                                               //     'assets/images/cat_dig_art.png',
-//                                               index: 1,
-//                                               handler:
-//                                                   () {
-//                                                 setState(
-//                                                     () {
-//                                                   _isloading =
-//                                                       true;
-//                                                 });
-//                                                 onCategorySelected(
-//                                                     1);
-//                                                 setState(
-//                                                     () {
-//                                                   _isloading =
-//                                                       false;
-//                                                 });
-//                                               }),
-//                                           NFTCategoryWidget(
-//                                             title:
-//                                                 "Created"
-//                                                     .tr(),
-//                                             // image:
-//                                             //     'assets/images/cat_sports.png',
-//                                             index: 2,
-//                                             handler: () =>
-//                                                 onCategorySelected(
-//                                                     2),
-//                                           ),
-//                                           NFTCategoryWidget(
-//                                             title:
-//                                                 "Listed"
-//                                                     .tr(),
-//                                             // image:
-//                                             //     'assets/images/cat_animals.png',
-//                                             index: 3,
-//                                             handler: () =>
-//                                                 onCategorySelected(
-//                                                     3),
-//                                           ),
-//                                         ],
-//                                       ),
-//                                     ),
-//                                   )),
-//                               Expanded(
-//                                   child: bottomSpaceContent(
-//                                       nftsCollectionAll,
-//                                       nftsAll,
-//                                       nftsCollectionOwnedByUser,
-//                                       nftsOwned,
-//                                       themeNotifier
-//                                           .isDark,
-//                                       nftsCollectionCreated,
-//                                       nftsCreated,
-//                                       nftsListed,
-//                                       collectionListed))
-//                             ],
-//                           ),
-//                         ],
-//                       ),
-//                     )
-//             ],
-//           ),
-//         ),
-//         if (showCopiedMsg)
-//           Positioned(
-//             left: 10,
-//             right: 10,
-//             bottom: 40,
-//             child: Align(
-//               alignment: Alignment.center,
-//               child: Container(
-//                 height: 4.h,
-//                 width: 35.w,
-//                 decoration: BoxDecoration(
-//                   borderRadius:
-//                       BorderRadius.circular(5.sp),
-//                   color: AppColors.profileHeaderDark,
-//                 ),
-//                 child: Row(
-//                   mainAxisAlignment:
-//                       MainAxisAlignment.center,
-//                   crossAxisAlignment:
-//                       CrossAxisAlignment.center,
-//                   children: [
-//                     Image.asset(
-//                       "assets/images/hesa_wallet_logo.png",
-//                       fit: BoxFit.cover,
-//                       height: 12.sp,
-//                       width: 12.sp,
-//                     ),
-//                     SizedBox(
-//                       width: 5.sp,
-//                     ),
-//                     Text(
-//                       'Address copied!'.tr(),
-//                       style: TextStyle(
-//                           fontSize: 9.sp,
-//                           fontWeight: FontWeight.w600,
-//                           color: AppColors.textColorWhite,
-//                           fontFamily: 'Blogger Sans'),
-//                     )
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           )
-//       ],
-//     ),
-//   ],
-// ),
