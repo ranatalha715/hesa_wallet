@@ -108,10 +108,10 @@ class _WalletActivityState extends State<WalletActivity> {
     // if(_isLoading) return;
     // _isLoading=true;
     const limit=10;
+
     // setState(() {
-    setState(() {
-        Provider.of<TransactionProvider>(context, listen: false).activities.clear();
-    });
+    //     Provider.of<TransactionProvider>(context, listen: false).activities.clear();
+    // });
     await Provider.of<TransactionProvider>(context, listen: false)
         .getWalletActivities(accessToken: accessToken, context: context, isEnglish:true,
       limit: limit,
@@ -132,6 +132,9 @@ class _WalletActivityState extends State<WalletActivity> {
   @override
   void initState() {
     // TODO: implement initState
+    // Clear the activities list when the user navigates to this page
+    Provider.of<TransactionProvider>(context, listen: false).clearActivities();
+
     fetch();
     scrollController.addListener(() {
       if(scrollController.position.maxScrollExtent==scrollController.offset){
@@ -361,7 +364,7 @@ class _WalletActivityState extends State<WalletActivity> {
                               } else {
                                 // Handle the extra item
                                 return hasMore
-                                    ? Center(child: CircularProgressIndicator())
+                                    ? Center(child: CircularProgressIndicator(color: AppColors.hexaGreen,))
                                     : Center(child: Text('No Data Found'));
                               }
                             },

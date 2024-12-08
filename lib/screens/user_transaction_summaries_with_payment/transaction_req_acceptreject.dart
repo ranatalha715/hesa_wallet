@@ -314,8 +314,11 @@ class _TransactionRequestAcceptRejectState
   @override
   void initState() {
     // Future.delayed(Duration(seconds: 2), () {
+    //   print('before dialoge');
     //
-    //   paymentRecievedDialogue(isDark: setThemeDark);  }
+    //   transactionExecutedDialoge(isDark: setThemeDark, context: context);
+    //   print('After dialoge');
+    // }
     // );
 
     init();
@@ -366,11 +369,9 @@ class _TransactionRequestAcceptRejectState
       return input;
     }
 
-    final int middleIndex = input.length ~/ 2; // Find the middle index
-    final int startIndex = middleIndex - 15; // Calculate the start index
-    final int endIndex = middleIndex + 15; // Calculate the end index
-
-    // Split the input string into three parts and join them with '...'
+    final int middleIndex = input.length ~/ 2;
+    final int startIndex = middleIndex - 15;
+    final int endIndex = middleIndex + 15;
     final String result =
         input.substring(0, startIndex) + '...' + input.substring(endIndex);
 
@@ -378,17 +379,12 @@ class _TransactionRequestAcceptRejectState
   }
 
   String replaceMiddleWithDotsTokenId(String input) {
-    // Check if the input is already short enough
     if (input.length <= 32) {
       return input;
     }
-
-    // Define how many characters to keep at the beginning and end
-    final int numCharsToShow = 8; // Adjust this number as needed
+    final int numCharsToShow = 8;
     final String start = input.substring(0, numCharsToShow);
     final String end = input.substring(input.length - numCharsToShow);
-
-    // Return the shortened string with dots in the middle
     return "$start....$end";
   }
 
@@ -1545,7 +1541,7 @@ class _TransactionRequestAcceptRejectState
                                                                         }
                                                                         if (operation ==
                                                                             'CancelAuctionListing') {
-                                                                          await Provider.of<TransactionProvider>(context, listen: false)
+                                                                       final cancelAuctionListingResult =   await Provider.of<TransactionProvider>(context, listen: false)
                                                                               .cancelAuctionListing(
                                                                             walletAddress:
                                                                                 walletAddress,
@@ -1560,6 +1556,10 @@ class _TransactionRequestAcceptRejectState
                                                                             code:
                                                                                 Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes,
                                                                           );
+                                                                       if(cancelAuctionListingResult==AuthResult.success){
+                                                                         // Navigator.pop(context);
+                                                                         // transactionExecutedDialoge(context: context);
+                                                                       }
                                                                         } else if (operation ==
                                                                             'CancelCollectionAuctionListing') {
                                                                           await Provider.of<TransactionProvider>(context, listen: false).cancelCollectionAuctionListing(
@@ -2434,14 +2434,12 @@ class _TransactionRequestAcceptRejectState
   }
 
   void confirmationRequestDialogue({bool isDark = true}) {
-    // Navigator.pop(context);
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         final screenWidth = MediaQuery.of(context).size.width;
         final dialogWidth = screenWidth * 0.90;
-
         return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
@@ -2453,8 +2451,6 @@ class _TransactionRequestAcceptRejectState
                 height: 23.h,
                 width: dialogWidth,
                 decoration: BoxDecoration(
-                  // border:
-                  //     Border.all(width: 0.1.h, color: AppColors.textColorGrey),
                   color: isDark
                       ? AppColors.showDialogClr
                       : AppColors.textColorWhite,
@@ -2717,11 +2713,11 @@ class _TransactionRequestAcceptRejectState
 }
 
 void transactionExecutedDialoge({bool isDark = true, required BuildContext context}) {
+  print('now running dialoge');
   showDialog(
     context: context,    builder: (BuildContext context) {
       final screenWidth = MediaQuery.of(context).size.width;
       final dialogWidth = screenWidth * 0.90;
-
       return Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
@@ -2806,10 +2802,9 @@ void transactionExecutedDialoge({bool isDark = true, required BuildContext conte
                           TextSpan(
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {},
-                              text: ' xyeafa...wrbqwurqw'.tr(),
+                              // text: 'abc',
+                              text: Provider.of<TransactionProvider>(context, listen: false).nonPayableTxId,
                               style: TextStyle(
-                                // decoration: TextDecoration.underline,
-                                // height: 1.5,
                                   color: AppColors.textColorToska,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 11.7.sp,

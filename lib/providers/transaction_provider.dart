@@ -29,7 +29,7 @@ class TransactionProvider with ChangeNotifier {
   String totalForDialog = '';
   var siteUrl;
   var selectedPaymentMethod='cards';
-
+   String? nonPayableTxId;
   bool _showRedDot = false;
   bool _confirmedRedDot = false;
   bool otpErrorResponse=false;
@@ -107,6 +107,12 @@ class TransactionProvider with ChangeNotifier {
     await prefs.setBool('showRedDot', false);
   }
 
+  void clearActivities() {
+    _activities.clear();
+    notifyListeners();
+  }
+
+
   Future<AuthResult> getWalletActivities({
     required String accessToken,
     required BuildContext context,
@@ -131,13 +137,10 @@ class TransactionProvider with ChangeNotifier {
 
       final jsonData = json.decode(response.body);
       print('Get Wallet Activities Response: ' + response.body);
-
       if (response.statusCode == 200) {
         if (jsonData != null) {
           final List<dynamic> extractedData = jsonData as List<dynamic>;
           print("Extracted Data: " + extractedData.toString());
-
-          // Parse the activities
           final List<ActivityModel> loadedActivities = extractedData.map((prodData) {
             return ActivityModel(
               transactionType: prodData['func'].toString(),
@@ -1612,7 +1615,6 @@ class TransactionProvider with ChangeNotifier {
       },
       "params": paramsMap,
     };
-
     try {
       final response = await http.post(
         url,
@@ -1623,7 +1625,6 @@ class TransactionProvider with ChangeNotifier {
         },
         body: json.encode(requestBody),
       );
-
       fToast = FToast();
       fToast.init(context);
       print('payload to send bilal');
@@ -1636,7 +1637,6 @@ class TransactionProvider with ChangeNotifier {
         checkoutURL = responseBody['data']['checkoutURL'];
         checkoutId = responseBody['data']['checkoutId'];
         print("send response " + responseBody.toString());
-
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -1708,14 +1708,12 @@ class TransactionProvider with ChangeNotifier {
       fToast.init(context);
       print('payload to send bilal');
       print(requestBody.toString());
-
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
         checkoutURL = responseBody['data']['checkoutURL'];
         checkoutId = responseBody['data']['checkoutId'];
         print("send response " + responseBody.toString());
-
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
@@ -2029,6 +2027,9 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
+
+         nonPayableTxId = responseBody['data']?['txId'];
+        print('Transaction ID: $txId');
         testDialogToCheck(
             context: context,
             title: 'rejectNFTOfferReceived',
