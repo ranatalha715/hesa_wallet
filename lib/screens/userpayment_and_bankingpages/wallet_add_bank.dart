@@ -670,7 +670,11 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 7.sp),
                                         child: Text(
-                                          "*${bank.addBankErrorResponse}",
+                                          bank.addBankErrorResponse
+                                                  .toString()
+                                                  .contains('Invalid IBAN')
+                                              ? "*Invalid IBAN"
+                                              : "*${bank.addBankErrorResponse}",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontSize: 10.sp,
@@ -685,11 +689,11 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                           ? Alignment.centerLeft
                                           : Alignment.centerRight,
                                       child: Text(
-                                        _accountholdernamerController
-                                                    .text.length >=
-                                                3
-                                            ? 'Account holder name'
-                                            : 'Account Beneficiary Name'.tr(),
+                                        // _accountholdernamerController
+                                        //             .text.length >=
+                                        //         3
+                                        //     ? 'Account holder name' :
+                                        'Account Beneficiary Name'.tr(),
                                         style: TextStyle(
                                             fontSize: 10.2.sp,
                                             fontFamily: 'Inter',
@@ -1026,8 +1030,7 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                                           context,
                                                                       StateSetter
                                                                           setState) {
-                                                                return
-                                                                  Dialog(
+                                                                return Dialog(
                                                                   shape:
                                                                       RoundedRectangleBorder(
                                                                     borderRadius:

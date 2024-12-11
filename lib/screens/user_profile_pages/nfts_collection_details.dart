@@ -229,7 +229,9 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                                               : false,
                                           isEnglish: isEnglish,
                                         ),
-                                      if (assetsDetails.ownerName != "null")
+                                      if (assetsDetails.ownerName != "null" &&
+                                          assetsDetails.ownerName == '' &&
+                                          assetsDetails.ownerName == 'Unknown')
                                         nftsDetailsWidget(
                                           title: 'Owned by:'.tr(),
                                           func: () => _launchURL(
@@ -264,7 +266,9 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                                             themeNotifier.isDark ? true : false,
                                         isEnglish: isEnglish,
                                       ),
-                                      if (assetsDetails.listingType != "null")
+                                      if (assetsDetails.listingType != "null" &&
+                                          assetsDetails.listingType == '' &&
+                                          assetsDetails.listingType == 'Unknown')
                                         nftsDetailsWidget(
                                           title: 'Listing Type:'.tr(),
                                           details: assetsDetails.listingType,

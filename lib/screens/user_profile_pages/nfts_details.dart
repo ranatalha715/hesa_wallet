@@ -49,9 +49,8 @@ class _NftsDetailsState extends State<NftsDetails> {
     //     input.substring(0, startIndex) + '...' + input.substring(endIndex);
 
     // return result;
-     return input.toString();
+    return input.toString();
   }
-
 
   String replaceMiddleWithDotsCollectionId(String input) {
     if (input.length <= 30) {
@@ -117,7 +116,7 @@ class _NftsDetailsState extends State<NftsDetails> {
         token: accessToken,
         type: 'nft',
         id: args!["tokenId"],
-        isEnglish:isEnglish,
+        isEnglish: isEnglish,
       );
     }
     _isInit = false;
@@ -143,7 +142,8 @@ class _NftsDetailsState extends State<NftsDetails> {
               body: Column(
                 children: [
                   MainHeader(
-                    title: isLoading ? 'NFT Name'.tr() : assetsDetails.tokenName,
+                    title:
+                        isLoading ? 'NFT Name'.tr() : assetsDetails.tokenName,
                     subTitle: isLoading
                         ? '.......'
                         : replaceMiddleWithDotsCollectionId(
@@ -196,11 +196,11 @@ class _NftsDetailsState extends State<NftsDetails> {
                                     color: AppColors.transactionSummNeoBorder),
                                 SizedBox(height: 2.h),
                                 nftsDetailsWidget(
-                                  title: 'Created:'.tr(),
-                                  details: formatDate(assetsDetails.createdAt),
-                                  isDark: themeNotifier.isDark ? true : false,
-                                  isEnglish: isEnglish
-                                ),
+                                    title: 'Created:'.tr(),
+                                    details:
+                                        formatDate(assetsDetails.createdAt),
+                                    isDark: themeNotifier.isDark ? true : false,
+                                    isEnglish: isEnglish),
                                 // // nftsDetailsWidget(
                                 // //   title: 'Status:'.tr(),
                                 // //   details: args["status"] ?? 'N/A',
@@ -230,7 +230,9 @@ class _NftsDetailsState extends State<NftsDetails> {
                                     isDark: themeNotifier.isDark ? true : false,
                                     isEnglish: isEnglish,
                                   ),
-                                if (assetsDetails.numberOfEdtions != null)
+                                if (assetsDetails.numberOfEdtions != null &&
+                                    assetsDetails.numberOfEdtions == '' &&
+                                    assetsDetails.numberOfEdtions == 'Unknown')
                                   nftsDetailsWidget(
                                     title: 'Editions:'.tr(),
                                     details: assetsDetails.numberOfEdtions,
@@ -257,7 +259,9 @@ class _NftsDetailsState extends State<NftsDetails> {
                                     isDark: themeNotifier.isDark ? true : false,
                                     isEnglish: isEnglish,
                                   ),
-                                if (assetsDetails.ownerName != "null")
+                                if (assetsDetails.ownerName != "null" &&
+                                    assetsDetails.ownerName == '' &&
+                                    assetsDetails.ownerName == 'Unknown')
                                   nftsDetailsWidget(
                                     title: 'Owned by:'.tr(),
                                     func: () => _launchURL(
@@ -282,7 +286,9 @@ class _NftsDetailsState extends State<NftsDetails> {
                                     isDark: themeNotifier.isDark ? true : false,
                                     isEnglish: isEnglish,
                                   ),
-                                if (assetsDetails.listingType != "null")
+                                if (assetsDetails.listingType != "null" &&
+                                    assetsDetails.listingType == '' &&
+                                    assetsDetails.listingType == 'Unknown')
                                   nftsDetailsWidget(
                                     title: 'Listing Type:'.tr(),
                                     details: assetsDetails.listingType,
@@ -299,7 +305,9 @@ class _NftsDetailsState extends State<NftsDetails> {
                                 if (assetsDetails.isListable != "null")
                                   nftsDetailsWidget(
                                     title: 'Is Listable:'.tr(),
-                                    details: assetsDetails.isListable,
+                                    details: assetsDetails.isListable == 'true'
+                                        ? 'True'
+                                        : 'False',
                                     isDark: themeNotifier.isDark ? true : false,
                                     isEnglish: isEnglish,
                                   ),
@@ -324,7 +332,9 @@ class _NftsDetailsState extends State<NftsDetails> {
                                     isDark: themeNotifier.isDark ? true : false,
                                     isEnglish: isEnglish,
                                   ),
-                                SizedBox(height: 2.h,),
+                                SizedBox(
+                                  height: 2.h,
+                                ),
                               ],
                             ),
                     ),
@@ -373,9 +383,12 @@ class _NftsDetailsState extends State<NftsDetails> {
             child: Container(
               width: 45.w,
               child: Align(
-                alignment: isEnglish ? Alignment.centerRight:Alignment.centerLeft,
+                alignment:
+                    isEnglish ? Alignment.centerRight : Alignment.centerLeft,
                 child: Text(
                   details,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.right,
                   style: TextStyle(
                       color:

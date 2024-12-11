@@ -646,10 +646,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'MintCollection not working',
-            description: response.body.toString());
         functionToNavigateAfterPayable(
             response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
@@ -657,10 +653,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'MintCollection not working',
-          description: e.toString());
       functionToNavigateAfterPayable(e.toString(), operation, context);
       return AuthResult.failure;
     }
@@ -732,10 +724,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.success;
       } else {
         print("Minting Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'Mint NFT not working',
-            description: response.body.toString());
         functionToNavigateAfterPayable(
             response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
@@ -743,10 +731,6 @@ class TransactionProvider with ChangeNotifier {
       }
     } catch (e) {
       print('Minting Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'Mint NFT not working',
-          description: e.toString());
       functionToNavigateAfterPayable(
         e.toString(),
         operation,
@@ -826,22 +810,12 @@ class TransactionProvider with ChangeNotifier {
 
         return AuthResult.success;
       } else {
-        print("MintNFTWithEditions Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'MintNFTWithEditions',
-            description: response.body.toString());
         functionToNavigateAfterPayable(
             response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
-      print('MintNFTWithEditions Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'MintNFTWithEditions not working',
-          description: e.toString());
       functionToNavigateAfterPayable(e.toString(), operation, context);
       return AuthResult.failure;
     }
@@ -911,19 +885,11 @@ class TransactionProvider with ChangeNotifier {
 
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'PurchaseNFT',
-            description: response.body.toString());
         functionToNavigateAfterPayable(
             response.body.toString(), operation, context);
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context, title: 'PurchaseNFT', description: e.toString());
       functionToNavigateAfterPayable(e.toString(), operation, context);
       return AuthResult.failure;
     }
@@ -988,21 +954,11 @@ class TransactionProvider with ChangeNotifier {
 
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'PurchaseCollection',
-            description: response.body.toString());
         functionToNavigateAfterPayable(
             response.body.toString(), operation, context);
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'PurchaseCollection',
-          description: e.toString());
       functionToNavigateAfterPayable(e.toString(), operation, context);
       return AuthResult.failure;
     }
@@ -1069,22 +1025,12 @@ class TransactionProvider with ChangeNotifier {
 
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'ListNFT Fixed price not working',
-            description: response.body.toString());
         functionToNavigateAfterPayable(
             response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'ListNFT Fixed price not working',
-          description: e.toString());
       functionToNavigateAfterPayable(e.toString(), operation, context);
       return AuthResult.failure;
     }
@@ -1150,22 +1096,12 @@ class TransactionProvider with ChangeNotifier {
 
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'ListCollection Fixed price not working',
-            description: response.body.toString());
         functionToNavigateAfterPayable(
             response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'ListCollection Fixed price not working',
-          description: e.toString());
       functionToNavigateAfterPayable(e.toString(), operation, context);
       return AuthResult.failure;
     }
@@ -1234,22 +1170,12 @@ class TransactionProvider with ChangeNotifier {
 
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'ListNFTForAuction not working',
-            description: response.body.toString());
         functionToNavigateAfterPayable(
             response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'ListNFTForAuction not working',
-          description: e.toString());
       functionToNavigateAfterPayable(e.toString(), operation, context);
       return AuthResult.failure;
     }
@@ -1315,22 +1241,12 @@ class TransactionProvider with ChangeNotifier {
         print("send response " + responseBody.toString());
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'ListCollectionForAuction not working',
-            description: response.body.toString());
         functionToNavigateAfterPayable(
             response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'ListCollectionForAuction not working',
-          description: e.toString());
       functionToNavigateAfterPayable(e.toString(), operation, context);
       return AuthResult.failure;
     }
@@ -1398,22 +1314,12 @@ class TransactionProvider with ChangeNotifier {
 
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'BurnNFT not working',
-            description: response.body.toString());
         functionToNavigateAfterPayable(
             response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'BurnNFT not working',
-          description: e.toString());
       functionToNavigateAfterPayable(e.toString(), operation, context);
       return AuthResult.failure;
     }
@@ -1478,22 +1384,12 @@ class TransactionProvider with ChangeNotifier {
         print("send response " + responseBody.toString());
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'BurnCollection not working',
-            description: response.body.toString());
         functionToNavigateAfterPayable(
             response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'BurnCollection not working',
-          description: e.toString());
       functionToNavigateAfterPayable(e.toString(), operation, context);
       return AuthResult.failure;
     }
@@ -1562,22 +1458,12 @@ class TransactionProvider with ChangeNotifier {
 
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'MakeOfferNFT not working',
-            description: response.body.toString());
         functionToNavigateAfterPayable(
             response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'MakeOfferNFT not working',
-          description: e.toString());
       functionToNavigateAfterPayable(e.toString(), operation, context);
       return AuthResult.failure;
     }
@@ -1639,22 +1525,12 @@ class TransactionProvider with ChangeNotifier {
         print("send response " + responseBody.toString());
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'MakeCollectionOffer',
-            description: response.body.toString());
         functionToNavigateAfterPayable(
             response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'MakeCollectionOffer',
-          description: e.toString());
       functionToNavigateAfterPayable(e.toString(), operation, context);
       return AuthResult.failure;
     }
@@ -1716,22 +1592,12 @@ class TransactionProvider with ChangeNotifier {
         print("send response " + responseBody.toString());
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'AcceptCounterOffer',
-            description: response.body.toString());
         functionToNavigateAfterPayable(
             response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'AcceptCounterOffer',
-          description: e.toString());
       functionToNavigateAfterPayable(e.toString(), operation, context);
       return AuthResult.failure;
     }
@@ -1795,22 +1661,12 @@ class TransactionProvider with ChangeNotifier {
 
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'acceptCollectionCounterOffer',
-            description: response.body.toString());
         functionToNavigateAfterPayable(
             response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'acceptCollectionCounterOffer',
-          description: e.toString());
       functionToNavigateAfterPayable(e.toString(), operation, context);
       return AuthResult.failure;
     }
@@ -1862,10 +1718,6 @@ class TransactionProvider with ChangeNotifier {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
         print("send response " + responseBody.toString());
-        testDialogToCheck(
-            context: context,
-            title: 'AcceptOfferNFT',
-            description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString()
         );
@@ -1874,10 +1726,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.success;
       } else {
         print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'AcceptOfferNFT',
-            description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation,context,
             statusCode: response.statusCode.toString());
         otpErrorResponse=true;
@@ -1885,9 +1733,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context, title: 'AcceptOfferNFT', description: e.toString());
       functionToNavigateAfterNonPayable(
         e.toString(),
         operation,
@@ -1945,21 +1790,12 @@ class TransactionProvider with ChangeNotifier {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
         print("send response " + responseBody.toString());
-        testDialogToCheck(
-            context: context,
-            title: 'AcceptCollectionOffer',
-            description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation,context,
             statusCode: response.statusCode.toString());
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'AcceptCollectionOffer',
-            description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         otpErrorResponse=true;
@@ -1967,11 +1803,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'AcceptCollectionOffer',
-          description: e.toString());
       functionToNavigateAfterNonPayable(
         e.toString(),
         operation,context,
@@ -2030,10 +1861,6 @@ class TransactionProvider with ChangeNotifier {
 
          nonPayableTxId = responseBody['data']?['txId'];
         print('Transaction ID: $txId');
-        testDialogToCheck(
-            context: context,
-            title: 'rejectNFTOfferReceived',
-            description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation,context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
@@ -2041,11 +1868,6 @@ class TransactionProvider with ChangeNotifier {
         otpSuccessResponse=true;
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'rejectNFTOfferReceived',
-            description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation,context,
             statusCode: response.statusCode.toString());
         otpErrorResponse=true;
@@ -2053,11 +1875,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'rejectNFTOfferReceived',
-          description: e.toString());
       functionToNavigateAfterNonPayable(
         e.toString(),
         operation, context,
@@ -2113,10 +1930,6 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        testDialogToCheck(
-            context: context,
-            title: 'RejectCollectionOffer',
-            description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
@@ -2124,11 +1937,6 @@ class TransactionProvider with ChangeNotifier {
         otpSuccessResponse=true;
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'RejectCollectionOffer',
-            description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation,context,
             statusCode: response.statusCode.toString());
         otpErrorResponse=true;
@@ -2136,11 +1944,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'RejectCollectionOffer',
-          description: e.toString());
       functionToNavigateAfterNonPayable(
         e.toString(),
         operation,context,
@@ -2194,31 +1997,16 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        testDialogToCheck(
-            context: context,
-            title: 'CancelNFTOfferMade',
-            description: response.body.toString());
-        
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'CancelNFTOfferMade',
-            description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'CancelNFTOfferMade',
-          description: e.toString());
       functionToNavigateAfterNonPayable(e.toString(), operation, context,);
       return AuthResult.failure;
     }
@@ -2267,10 +2055,6 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        testDialogToCheck(
-            context: context,
-            title: 'CancelAuctionListing',
-            description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
@@ -2278,11 +2062,6 @@ class TransactionProvider with ChangeNotifier {
         otpSuccessResponse=true;
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'CancelAuctionListing',
-            description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         otpErrorResponse=true;
@@ -2290,11 +2069,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'CancelAuctionListing',
-          description: e.toString());
       functionToNavigateAfterNonPayable(e.toString(), operation, context,);
       otpErrorResponse=true;
       otpSuccessResponse=false;
@@ -2345,10 +2119,6 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        testDialogToCheck(
-            context: context,
-            title: 'CancelCollectionAuctionListing',
-            description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
@@ -2356,11 +2126,6 @@ class TransactionProvider with ChangeNotifier {
         otpSuccessResponse=true;
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'CancelCollectionAuctionListing',
-            description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation,context,
             statusCode: response.statusCode.toString());
         otpErrorResponse=true;
@@ -2368,11 +2133,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'CancelCollectionAuctionListing',
-          description: e.toString());
       functionToNavigateAfterNonPayable(e.toString(), operation, context,);
       otpErrorResponse=true;
       otpSuccessResponse=false;
@@ -2423,10 +2183,6 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        testDialogToCheck(
-            context: context,
-            title: 'CancelListing',
-            description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString(), paramsToSend: paramsMap.toString());
         print("send response " + responseBody.toString());
@@ -2434,11 +2190,6 @@ class TransactionProvider with ChangeNotifier {
         otpSuccessResponse=true;
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'CancelListing',
-            description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString(), paramsToSend: paramsMap.toString());
         otpErrorResponse=true;
@@ -2446,9 +2197,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context, title: 'CancelListing', description: e.toString());
       functionToNavigateAfterNonPayable(e.toString(), operation,context, paramsToSend: paramsMap.toString());
       otpErrorResponse=true;
       otpSuccessResponse=false;
@@ -2499,10 +2247,6 @@ class TransactionProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        testDialogToCheck(
-            context: context,
-            title: 'CancelCollectionListing',
-            description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
@@ -2510,11 +2254,6 @@ class TransactionProvider with ChangeNotifier {
         otpSuccessResponse=true;
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'CancelCollectionListing',
-            description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         otpErrorResponse=true;
@@ -2522,11 +2261,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'CancelCollectionListing',
-          description: e.toString());
       functionToNavigateAfterNonPayable(e.toString(), operation, context,);
       otpErrorResponse=true;
       otpSuccessResponse=false;
@@ -2581,11 +2315,6 @@ class TransactionProvider with ChangeNotifier {
         otpSuccessResponse=true;
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'CancelCollectionOfferMade not working',
-            description: response.body.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         otpErrorResponse=true;
@@ -2593,11 +2322,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'CancelCollectionOfferMade not working',
-          description: e.toString());
       functionToNavigateAfterNonPayable(e.toString(), operation, context,);
       otpErrorResponse=true;
       otpSuccessResponse=false;
@@ -2744,21 +2468,12 @@ class TransactionProvider with ChangeNotifier {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
         print("send response " + responseBody.toString());
-        testDialogToCheck(
-            context: context,
-            title: 'MakeCounterOffer',
-            description: response.body.toString());
         functionToNavigateAfterCounterOffer(response.body.toString(), operation,
             statusCode: response.statusCode.toString());
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'MakeCounterOffer',
-            description: response.body.toString());
         functionToNavigateAfterCounterOffer(response.body.toString(), operation,
             statusCode: response.statusCode.toString());
         otpErrorResponse=true;
@@ -2766,11 +2481,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'MakeCounterOffer',
-          description: e.toString());
       functionToNavigateAfterCounterOffer(e.toString(), operation);
       otpErrorResponse=true;
       otpSuccessResponse=false;
@@ -2822,21 +2532,12 @@ class TransactionProvider with ChangeNotifier {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
         print("send response " + responseBody.toString());
-        testDialogToCheck(
-            context: context,
-            title: 'MakeCollectionCounterOffer',
-            description: response.body.toString());
         functionToNavigateAfterCounterOffer(response.body.toString(), operation,
             statusCode: response.statusCode.toString());
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'MakeCollectionCounterOffer',
-            description: response.body.toString());
         functionToNavigateAfterCounterOffer(response.body.toString(), operation,
             statusCode: response.statusCode.toString());
         otpErrorResponse=true;
@@ -2844,11 +2545,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'MakeCollectionCounterOffer',
-          description: e.toString());
       functionToNavigateAfterCounterOffer(e.toString(), operation);
       otpErrorResponse=true;
       otpSuccessResponse=false;
@@ -2900,21 +2596,12 @@ class TransactionProvider with ChangeNotifier {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
         print("send response " + responseBody.toString());
-        testDialogToCheck(
-            context: context,
-            title: 'RejectNFTCounterOffer',
-            description: response.body.toString());
         functionToNavigateAfterCounterOffer(response.body.toString(), operation,
             statusCode: response.statusCode.toString());
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'RejectNFTCounterOffer',
-            description: response.body.toString());
         functionToNavigateAfterCounterOffer(response.body.toString(), operation,
             statusCode: response.statusCode.toString());
         otpErrorResponse=true;
@@ -2922,11 +2609,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'RejectNFTCounterOffer',
-          description: e.toString());
       functionToNavigateAfterCounterOffer(e.toString(), operation);
       otpErrorResponse=true;
       otpSuccessResponse=false;
@@ -2976,21 +2658,12 @@ class TransactionProvider with ChangeNotifier {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
         print("send response " + responseBody.toString());
-        testDialogToCheck(
-            context: context,
-            title: 'RejectCollectionCounterOffer',
-            description: response.body.toString());
         functionToNavigateAfterCounterOffer(response.body.toString(), operation,
             statusCode: response.statusCode.toString());
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
       } else {
-        print("Error: ${response.body}");
-        testDialogToCheck(
-            context: context,
-            title: 'RejectCollectionCounterOffer',
-            description: response.body.toString());
         functionToNavigateAfterCounterOffer(response.body.toString(), operation,
             statusCode: response.statusCode.toString());
         otpErrorResponse=true;
@@ -2998,11 +2671,6 @@ class TransactionProvider with ChangeNotifier {
         return AuthResult.failure;
       }
     } catch (e) {
-      print('Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'RejectCollectionCounterOffer',
-          description: e.toString());
       functionToNavigateAfterCounterOffer(e.toString(), operation);
       otpErrorResponse=true;
       otpSuccessResponse=false;
@@ -3082,10 +2750,6 @@ class TransactionProvider with ChangeNotifier {
       print(requestBody);
       print('process api response');
       print(response.body);
-      testDialogToCheck(
-          context: context,
-          title: 'Process Api Response',
-          description: response.body.toString());
       if (response.statusCode == 201) {
         functionToNavigateAfterPayable(
             response.body.toString(), operation!, context,
@@ -3102,25 +2766,13 @@ class TransactionProvider with ChangeNotifier {
       }
     } on TimeoutException catch (error) {
       // Handle timeout error
-      print('Process Api Timeout Error: $error');
-      testDialogToCheck(
-          context: context,
-          title: 'Process Api Response',
-          description: error.toString());
       functionToNavigateAfterPayable(
         error.toString(),
         operation!,
         context,
       );
-
       return AuthResult.failure;
     } catch (e) {
-      // Handle other exceptions here
-      print('Process Api Error: $e');
-      testDialogToCheck(
-          context: context,
-          title: 'Process Api Response On catch',
-          description: e.toString());
       functionToNavigateAfterPayable(
         e.toString(),
         operation!,

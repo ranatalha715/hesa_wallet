@@ -562,13 +562,13 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                   height: 1.h,
                                 ),
                                 transactionDetailsWidget(
-                                  title: 'Timestamp'.tr(),
+                                  title: 'Timestamp:'.tr(),
                                   details: DateFormat('MMMM dd, yyyy')
                                       .format(unformatted),
                                   isDark: themeNotifier.isDark ? true : false,
                                 ),
                                 transactionDetailsWidget(
-                                  title: 'Tx Type:'.tr(),
+                                  title: 'Tnx Type:'.tr(),
                                   details: capitalizeFirstLetter(operation),
                                   isDark: themeNotifier.isDark ? true : false,
                                 ),

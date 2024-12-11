@@ -382,10 +382,10 @@ class _TransactionRequestAcceptRejectState
     if (input.length <= 32) {
       return input;
     }
-    final int numCharsToShow = 8;
+    final int numCharsToShow = 7;
     final String start = input.substring(0, numCharsToShow);
     final String end = input.substring(input.length - numCharsToShow);
-    return "$start....$end";
+    return "$start...$end";
   }
 
 
@@ -421,22 +421,14 @@ class _TransactionRequestAcceptRejectState
   }
 
   String formatCurrency(String? numberString) {
-    // Check if the string is null or empty
     if (numberString == null || numberString.isEmpty) {
-      return "0"; // Return a default value if input is invalid
+      return "0";
     }
-
     try {
-      // Convert the string to a number (num handles both int and double)
       num number = num.parse(numberString);
-
-      // Create a NumberFormat object for Saudi currency style
       final formatter = NumberFormat("#,##0.##", "en_US");
-
-      // Format the number with commas
       return formatter.format(number);
     } catch (e) {
-      // Handle any format exceptions and return a fallback
       return "Invalid Number";
     }
   }
@@ -685,7 +677,7 @@ class _TransactionRequestAcceptRejectState
                                                         : false,
                                                   ),
                                                   transactionDetailsWidget(
-                                                    title: 'Tx Type:'.tr(),
+                                                    title: 'Tnx Type:'.tr(),
                                                     details:
                                                         capitalizeFirstLetter(
                                                             operation),
@@ -705,7 +697,9 @@ class _TransactionRequestAcceptRejectState
                                                             operation ==
                                                                 'CancelCollectionListing' ||
                                                             operation ==
-                                                                'CancelCollectionOfferMade'
+                                                                'CancelCollectionOfferMade' ||
+                                                        operation ==
+                                                            'rejectCollectionOfferReceived'
                                                         ? 'Collection ID:'.tr()
                                                         : 'Token ID:'.tr(),
                                                     details:
@@ -788,14 +782,18 @@ class _TransactionRequestAcceptRejectState
                                                               operation !=
                                                                   "rejectNFTOfferReceived" &&
                                                               operation !=
-                                                                  "rejectCollectionOfferReceived"
+                                                                  "rejectCollectionOfferReceived"  &&
+                                                          operation !=
+                                                              "CancelNFTOfferMade" &&
+                                                          operation !=
+                                                              "CancelCollectionOfferMade"
                                                           ? 'Counter Offer Amount:'
                                                               .tr()
                                                           : 'Offer Amount:'
                                                               .tr(),
-                                                      details: paramsMap![
+                                                      details:formatCurrency( paramsMap![
                                                                   'offerAmount']
-                                                              .toString() +
+                                                              .toString()) +
                                                           " SAR",
                                                       isDark:
                                                           themeNotifier.isDark
@@ -1288,7 +1286,6 @@ class _TransactionRequestAcceptRejectState
                                                     Container(
                                                       decoration:
                                                           BoxDecoration(),
-                                                      // margin: EdgeInsets.symmetric(horizontal: 20.sp),
                                                       child: Padding(
                                                         padding: EdgeInsets
                                                             .symmetric(
@@ -1750,7 +1747,7 @@ class _TransactionRequestAcceptRejectState
                   Positioned(
                     left: 28,
                     right: 28,
-                    bottom: 10,
+                    bottom: 30,
                     child: Container(
                       decoration: BoxDecoration(),
                       child: Padding(
@@ -2217,8 +2214,8 @@ class _TransactionRequestAcceptRejectState
             width: 27.w,
             child: Text(
               title,
-              // maxLines: 1,
-              // overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                   color: isDark
                       ? AppColors.textColorWhite

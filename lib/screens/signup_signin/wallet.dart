@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../providers/theme_provider.dart';
 import '../../widgets/button.dart';
+import 'package:flutter/services.dart';
+
 
 class Wallet extends StatefulWidget {
   const Wallet({Key? key}) : super(key: key);
@@ -19,6 +21,25 @@ class Wallet extends StatefulWidget {
 class _WalletState extends State<Wallet> {
   var _isLoading = false;
 
+
+  @override
+  void initState() {
+    super.initState();
+    _updateStatusBar();
+  }
+  void _updateStatusBar() {
+    final themeNotifier = Provider.of<ThemeProvider>(context, listen: false);
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: themeNotifier.isDark
+            ? AppColors.backgroundColor
+            : AppColors.textColorWhite,
+        statusBarIconBrightness: themeNotifier.isDark
+            ? Brightness.light
+            : Brightness.dark,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

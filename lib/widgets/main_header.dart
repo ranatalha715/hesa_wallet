@@ -1,7 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../constants/colors.dart';
+import '../providers/theme_provider.dart';
 
 class MainHeader extends StatefulWidget {
   final String title;
@@ -40,6 +43,14 @@ class _MainHeaderState extends State<MainHeader> {
   Widget build(BuildContext context) {
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
+    return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarColor: themeNotifier.isDark
+              ? AppColors.profileHeaderDark
+              : AppColors.textColorWhite,
+        ),
+      );
     return Container(
         height: 12.h,
         width: 100.w,
@@ -160,5 +171,6 @@ class _MainHeaderState extends State<MainHeader> {
             ),
           ],
         ));
+    });
   }
 }

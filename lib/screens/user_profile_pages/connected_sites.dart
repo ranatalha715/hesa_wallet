@@ -85,25 +85,23 @@ class _ConnectedSitesState extends State<ConnectedSites> {
   }
 
   Future<void> _checkFirstVisit() async {
-    print('checking popup');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool hasVisited = prefs.getBool('hasVisited') ?? false;
-
     if (!hasVisited
         && lastConnectedSite != "No site connected"
         ) {
-      showConnectionPopup = true;
-      print('showConnectionPopup' + showConnectionPopup.toString());
+      // Timer(const Duration(seconds: 2), () {
+        // setState(() {
+          showConnectionPopup = true;
+        // });
+      // });
       prefs.setBool('hasVisited', true);
-
       Timer(const Duration(seconds: 3), () {
         setState(() {
           showConnectionPopup = false;
         });
-        print('showConnectionPopup2' + showConnectionPopup.toString());
       });
     }
-    print('checking popup2');
   }
 
   Future<void> _checkFirstDisconnectionVisit() async {
@@ -116,8 +114,6 @@ class _ConnectedSitesState extends State<ConnectedSites> {
         showDisconnectionPopup = true;
       });
       prefs.setBool('hasVisitedDisconnection', true);
-
-      // Set a timer to hide the popup after 3 seconds
       Timer(Duration(seconds: 1), () {
         setState(() {
           showDisconnectionPopup = false;
