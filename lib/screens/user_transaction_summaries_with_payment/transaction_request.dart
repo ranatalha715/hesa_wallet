@@ -72,6 +72,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
   String displayedName = '';
   final TextEditingController _cardnumberController = TextEditingController();
   final ScrollController scrollController = ScrollController();
+
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
@@ -233,7 +234,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
     setState(() {
       isLoading = true;
     });
-    Future.delayed(Duration(seconds:1), () async {
+    Future.delayed(Duration(seconds: 1), () async {
       setState(() {
         isLoading = false;
       });
@@ -266,9 +267,17 @@ class _TransactionRequestState extends State<TransactionRequest> {
             tokenizedCheckoutId:
                 Provider.of<TransactionProvider>(context, listen: false)
                     .tokenizedCheckoutId,
+            fromTransactionReq: true,
           ),
         ),
       );
+      // Refresh the paymentCards list
+      var pc = Provider.of<UserProvider>(context, listen: false).paymentCards;
+      await Provider.of<UserProvider>(context, listen: false)
+          .getUserDetails(token: accessToken, context: context);
+      // setState(() {
+      //   pc = Provider.of<UserProvider>(context, listen: false).getUpdatedPaymentCards(); // Replace this with your method to fetch the updated list.
+      // });
     }
   }
 
@@ -394,6 +403,74 @@ class _TransactionRequestState extends State<TransactionRequest> {
     }
   }
 
+  String getTransactionDetails(String operation) {
+    switch (operation) {
+      case 'MintNFT':
+      case 'MintNFT':
+        return 'NFT Minting';
+
+      case 'MintCollection':
+        return 'NFT Collection Minting';
+
+      case 'listNFT':
+        return 'NFT Listing';
+
+      case 'listAuctionNFT':
+      case 'listAuctionCollection':
+        return 'Auction Listing';
+
+      case 'listCollection':
+        return 'Listing for sale';
+
+      case 'makeOfferNFT':
+      case 'makeOfferCollection':
+        return 'Offer Placement';
+
+      case 'purchaseNFT':
+      case 'purchaseCollection':
+        return 'Purchase';
+
+      case 'burnNFT':
+      case 'burnCollection':
+        return 'Burning';
+
+      case 'CancelNFTOfferMade':
+      case 'CancelCollectionOfferMade':
+        return 'Offer Cancellation';
+
+      case 'makeNFTCounterOffer':
+        return 'Offer Placement';
+
+      case 'makeCollectionCounterOffer':
+        return 'Counter Offer Placement';
+
+      case 'AcceptCollectionOffer':
+      case 'AcceptNFTOffer':
+        return 'Offer Acceptance';
+
+      case 'rejectCollectionOfferReceived':
+      case 'rejectNFTOfferReceived':
+        return 'Offer Rejection';
+
+      case 'CancelListing':
+      case 'CancelCollectionAuctionListing':
+      case 'CancelAuctionListing':
+      case 'CancelCollectionAuctionListing':
+        return 'Listing Cancellation';
+
+      case 'acceptCollectionCounterOffer':
+      case 'acceptNFTCounterOffer':
+        return 'Counter Offer Acceptance';
+
+      case 'rejectCollectionCounterOffer':
+      case 'rejectNFTCounterOffer':
+        return 'Counter Offer Rejection';
+
+      default:
+        return 'Unknown Operation';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final args =
@@ -444,6 +521,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
         .toList();
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       setThemeDark = themeNotifier.isDark;
+      Provider.of<UserProvider>(context, listen: false)
+          .refreshCards((paymentCards));
       return Stack(
         children: [
           Scaffold(
@@ -569,7 +648,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                 ),
                                 transactionDetailsWidget(
                                   title: 'Tnx Type:'.tr(),
-                                  details: capitalizeFirstLetter(operation),
+                                  details: getTransactionDetails(operation),
                                   isDark: themeNotifier.isDark ? true : false,
                                 ),
                                 transactionDetailsWidget(
@@ -1209,11 +1288,11 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                 .keyboard_arrow_up
                                                             : Icons
                                                                 .keyboard_arrow_down,
-                                                        size: 28.sp,
+                                                        size: 22.sp,
                                                         color: themeNotifier
                                                                 .isDark
-                                                            ? AppColors
-                                                                .textColorWhite
+                                                            ?
+                                                        AppColors.textColorGrey
                                                             : AppColors
                                                                 .textColorBlack,
                                                       ),
@@ -1229,8 +1308,12 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                               ? CircularProgressIndicator(
                                                   color: AppColors.hexaGreen,
                                                 )
-                                              : Container(
-                                                  child: ListView.builder(
+                                              : Container(child:
+                                                  StatefulBuilder(builder:
+                                                      (BuildContext context,
+                                                          StateSetter
+                                                              setState) {
+                                                  return ListView.builder(
                                                       controller:
                                                           scrollController,
                                                       itemCount:
@@ -1268,6 +1351,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                   paymentCards[
                                                                           index]
                                                                       .id;
+                                                              _isSelected =
+                                                                  !_isSelected;
                                                             });
                                                           },
                                                           child: paymentTypes(
@@ -1279,6 +1364,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                       : false,
                                                               index: index,
                                                               isLast: isLast,
+                                                              cardBrand:
+                                                                  paymentCards[
+                                                                          index]
+                                                                      .cardBrand,
                                                               cardNum:
                                                                   paymentCards[
                                                                           index]
@@ -1291,8 +1380,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                                   ? true
                                                                   : false),
                                                         );
-                                                      }),
-                                                )
+                                                      });
+                                                }))
                                       ],
                                     ),
                                   ),
@@ -2422,99 +2511,119 @@ class _TransactionRequestState extends State<TransactionRequest> {
     );
   }
 
-  Widget paymentTypes(
-      {bool isFirst = false,
-      bool isLast = false,
-      bool isDark = true,
-      bool isCardSelected = false,
-      required int index,
-      required String cardNum}) {
-    return Column(
-      children: [
-        if (isFirst)
-          Divider(
-            color: AppColors.paymentTypesBorder,
-          ),
-        Container(
-          height: 5.5.h,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.sp),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  cardNum + " ********** ",
-                  style: TextStyle(
-                      fontSize: 11.7.sp,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w400,
-                      color: isCardSelected
-                          ? AppColors.selectedCardAndBankBorder
-                          : isDark
-                              ? AppColors.textColorWhite
-                              : AppColors.textColorBlack),
-                ),
-                if (isCardSelected)
-                  Container(
-                    margin: EdgeInsets.only(left: 2.w),
-                    width: 2.h,
-                    height: 2.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                          color: AppColors.activeButtonColor, width: 1.sp),
-                    ),
-                    child: Center(
-                      child: Icon(
-                        Icons.check_rounded,
-                        size: 10.sp,
-                        color: AppColors.selectedCardAndBankBorder,
+  Widget paymentTypes({
+    bool isFirst = false,
+    bool isLast = false,
+    bool isDark = true,
+    bool isCardSelected = false,
+    required int index,
+    required String cardNum,
+    required String cardBrand,
+  }) {
+    return StatefulBuilder(
+      builder: (BuildContext context, StateSetter setState) {
+        return Column(
+          children: [
+            if (isFirst)
+              Divider(
+                color: AppColors.paymentTypesBorder,
+              ),
+            Container(
+              height: 5.5.h,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.sp),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "$cardNum ********** ",
+                      style: TextStyle(
+                        fontSize: 11.7.sp,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
+                        color: isCardSelected
+                            ? AppColors.selectedCardAndBankBorder
+                            : isDark
+                                ? AppColors.textColorWhite
+                                : AppColors.textColorBlack,
                       ),
                     ),
-                  ),
-                Spacer(),
-                Image.asset(
-                  // cardNum.startsWith('4',0) ?
-                  "assets/images/Visa.png",
-                  // "assets/images/master_card.png",
-
-                  height: 20.sp,
-                  color: isDark
-                      ? AppColors.textColorWhite
-                      : AppColors.textColorBlack,
+                    if (isCardSelected)
+                      Container(
+                        margin: EdgeInsets.only(left: 2.w),
+                        width: 2.h,
+                        height: 2.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: AppColors.activeButtonColor,
+                            width: 1.sp,
+                          ),
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.check_rounded,
+                            size: 10.sp,
+                            color: AppColors.selectedCardAndBankBorder,
+                          ),
+                        ),
+                      ),
+                    Spacer(),
+                    cardBrand == 'VISA'
+                        ? Image.asset(
+                            "assets/images/Visa.png",
+                            height: 17.5.sp,
+                          )
+                        : Container(
+                            height: 2.7.h,
+                            decoration: BoxDecoration(
+                              color: AppColors.textColorGreyShade2
+                                  .withOpacity(0.27),
+                              borderRadius: BorderRadius.circular(3),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 3.8.sp, vertical: 0.sp),
+                              child: Image.asset(
+                                cardBrand == 'MASTER'
+                                    ? "assets/images/master2.png"
+                                    : "assets/images/mada_pay.png",
+                                height: 18.sp,
+                                width: 18.sp,
+                              ),
+                            ),
+                          ),
+                    SizedBox(
+                      width: 2.w,
+                    ),
+                    GestureDetector(
+                      onTap: () => showPopupCardRemove(
+                        isDark: isDark,
+                        cardNumber: " ********** $cardNum",
+                        index: index,
+                        cardBrand: cardBrand,
+                      ),
+                      child: Image.asset(
+                        "assets/images/cancel.png",
+                        height: 16.sp,
+                        color: AppColors.textColorGrey,
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  width: 2.w,
-                ),
-                GestureDetector(
-                  onTap: () => showPopupCardRemove(
-                    isDark: isDark,
-                    cardNumber: " ********** " + cardNum,
-                    index: index,
-                  ),
-                  child: Image.asset(
-                    "assets/images/cancel.png",
-                    height: 20.sp,
-                    color: AppColors.textColorGrey,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
-        if (!isLast)
-          SizedBox(
-            height: 1.h,
-          ),
-        if (isLast)
-          SizedBox(
-            height: 1.h,
-          ),
-      ],
+            if (!isLast || isLast)
+              SizedBox(
+                height: 1.h,
+              ),
+          ],
+        );
+      },
     );
   }
 
@@ -3128,6 +3237,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
     required bool isDark,
     required String cardNumber,
     required int index,
+    required String cardBrand,
   }) {
     return showDialog(
       context: context,
@@ -3179,10 +3289,10 @@ class _TransactionRequestState extends State<TransactionRequest> {
                           height: 4.h,
                         ),
                         Container(
-                          margin: EdgeInsets.symmetric(horizontal: 20.sp),
+                          margin: EdgeInsets.symmetric(horizontal: 18.sp),
                           height: 6.5.h,
                           decoration: BoxDecoration(
-                            color: AppColors.textColorWhite.withOpacity(0.15),
+                            color: AppColors.textColorGrey.withOpacity(0.10),
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           child: Padding(
@@ -3206,13 +3316,32 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                 SizedBox(
                                   width: 2.w,
                                 ),
-                                Image.asset(
-                                  "assets/images/Visa.png",
-                                  height: 18.sp,
-                                  color: isDark
-                                      ? AppColors.textColorWhite
-                                      : AppColors.textColorBlack,
-                                ),
+                                cardBrand == 'VISA'
+                                    ? Image.asset(
+                                        "assets/images/Visa.png",
+                                        height: 18.sp,
+                                      )
+                                    : Container(
+                                  // height: 2.7.h,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.textColorGreyShade2
+                                              .withOpacity(0.27),
+                                          borderRadius:
+                                              BorderRadius.circular(3),
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 5.2.sp,
+                                              vertical: 1.5.sp),
+                                          child: Image.asset(
+                                            cardBrand == 'MASTER'
+                                                ? "assets/images/master2.png"
+                                                : "assets/images/mada_pay.png",
+                                            height: 16.sp,
+                                            width: 18.sp,
+                                          ),
+                                        ),
+                                      ),
                               ],
                             ),
                           ),
@@ -3244,25 +3373,30 @@ class _TransactionRequestState extends State<TransactionRequest> {
                               }
                             },
                             isLoading: isDialogLoading,
-                            isGradient: true,
-                            color: AppColors.appSecondButton.withOpacity(0.10),
-                            textColor: AppColors.textColorBlack,
+                            isGradient: false,
+                            color: AppColors.deleteAccountBtnColor
+                                .withOpacity(0.10),
+                            textColor: AppColors.textColorWhite,
+                            buttonWithBorderColor: AppColors.errorColor,
+                            isGradientWithBorder: true,
                           ),
                         ),
                         SizedBox(height: 2.h),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 22),
                           child: AppButton(
-                              title: 'Cancel'.tr(),
-                              handler: () {
-                                Navigator.pop(context);
-                              },
-                              isGradient: false,
-                              textColor: isDark
-                                  ? AppColors.textColorWhite
-                                  : AppColors.textColorBlack.withOpacity(0.8),
-                              color:
-                                  AppColors.appSecondButton.withOpacity(0.10)),
+                            title: 'Cancel'.tr(),
+                            handler: () {
+                              Navigator.pop(context);
+                            },
+                            isGradient: false,
+                            textColor: isDark
+                                ? AppColors.textColorWhite
+                                : AppColors.textColorBlack.withOpacity(0.8),
+                            color: AppColors.appSecondButton.withOpacity(0.10),
+                            isGradientWithBorder: true,
+                            secondBtnBorderClr: true,
+                          ),
                         ),
                         Expanded(child: SizedBox())
                       ],

@@ -49,6 +49,11 @@ class UserProvider with ChangeNotifier {
     return [..._connectedSites];
   }
 
+  void refreshCards(List<PaymentCard> updatedCards) {
+    _paymentCards = updatedCards;
+    notifyListeners();
+  }
+
   Future<AuthResult> getUserDetails({
     required String token,
     required BuildContext context,

@@ -295,7 +295,9 @@ class _NftsDetailsState extends State<NftsDetails> {
                                     isDark: themeNotifier.isDark ? true : false,
                                     isEnglish: isEnglish,
                                   ),
-                                if (assetsDetails.collectionName != "null")
+                                if (assetsDetails.collectionName != "null"&&
+                                    assetsDetails.collectionName == '' &&
+                                    assetsDetails.collectionName == 'Unknown')
                                   nftsDetailsWidget(
                                     title: 'Collection Name:'.tr(),
                                     details: assetsDetails.collectionName,

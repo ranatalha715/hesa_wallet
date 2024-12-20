@@ -1559,7 +1559,7 @@ class _WalletBankingAndPaymentEmptyState
                           height: 4.h,
                         ),
                         Container(
-                          margin: EdgeInsets.symmetric(horizontal: 20.sp),
+                          margin: EdgeInsets.symmetric(horizontal: 18.sp),
                           height: 6.5.h,
                           decoration: BoxDecoration(
                             color: AppColors.textColorGrey.withOpacity(0.10),
@@ -1727,7 +1727,7 @@ class _WalletBankingAndPaymentEmptyState
                           height: 4.h,
                         ),
                         Container(
-                          margin: EdgeInsets.symmetric(horizontal: 22.sp),
+                          margin: EdgeInsets.symmetric(horizontal: 18.sp),
                           height: 6.5.h,
                           decoration: BoxDecoration(
                             color: AppColors.textColorGrey.withOpacity(0.10),
@@ -1772,7 +1772,7 @@ class _WalletBankingAndPaymentEmptyState
                                               vertical: 1.5.sp),
                                           child: Image.asset(
                                             cardBrand == 'MASTER'
-                                                ? "assets/images/master_card.png"
+                                                ? "assets/images/master2.png"
                                                 : "assets/images/mada_pay.png",
                                             height: 16.sp,
                                             width: 18.sp,
@@ -1807,6 +1807,7 @@ class _WalletBankingAndPaymentEmptyState
                                         listen: false)
                                     .removeSelectedCardNum();
                                 // refreshPage();
+                                 Navigator.pop(context);
                                 await Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -1817,9 +1818,7 @@ class _WalletBankingAndPaymentEmptyState
                             },
                             isLoading: isDialogLoading,
                             isGradient: false,
-
-                            color: AppColors.deleteAccountBtnColor
-                                .withOpacity(0.10),
+                             color: AppColors.deleteAccountBtnColor.withOpacity(0.10),
                             textColor: AppColors.textColorWhite,
                             buttonWithBorderColor: AppColors.errorColor,
                             isGradientWithBorder: true,

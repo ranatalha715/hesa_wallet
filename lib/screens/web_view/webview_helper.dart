@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hesa_wallet/providers/card_provider.dart';
+import 'package:hesa_wallet/screens/user_transaction_summaries_with_payment/transaction_request.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
@@ -11,6 +12,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../constants/colors.dart';
 import '../../providers/transaction_provider.dart';
+import '../../providers/user_provider.dart';
 import '../../widgets/main_header.dart';
 import '../userpayment_and_bankingpages/wallet_banking_and_payment_empty.dart';
 
@@ -80,13 +82,26 @@ class _WebviewHelperState extends State<WebviewHelper> {
     //     listen: false)
     //     .selectedCardBrand,);
     // Navigator.pop(context);
-    Navigator.pop(context);
-    await Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-          builder: (context) =>
-              WalletBankingAndPaymentEmpty()),
-    ).then((value) => print('after going'));
+    if(!widget.fromTransactionReq){
+      Navigator.pop(context);
+      await Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                WalletBankingAndPaymentEmpty()
+        ),
+      ).then((value) => print('after going'));
+    } else {
+      await Provider.of<UserProvider>(context, listen: false)
+          .getUserDetails(token: accessToken, context: context);
+      Navigator.pop(context, true);
+      // await Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(
+      //     builder: (context) =>
+      //     TransactionRequest()));
+    }
+
   }
 
   @override

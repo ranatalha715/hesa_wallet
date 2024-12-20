@@ -90,11 +90,11 @@ class _ConnectedSitesState extends State<ConnectedSites> {
     if (!hasVisited
         && lastConnectedSite != "No site connected"
         ) {
-      // Timer(const Duration(seconds: 2), () {
-        // setState(() {
+      Timer(const Duration(seconds: 1), () {
+        setState(() {
           showConnectionPopup = true;
-        // });
-      // });
+        });
+      });
       prefs.setBool('hasVisited', true);
       Timer(const Duration(seconds: 3), () {
         setState(() {
@@ -110,11 +110,13 @@ class _ConnectedSitesState extends State<ConnectedSites> {
         prefs.getBool('hasVisitedDisconnection') ?? false;
 
     if (!hasVisitedDisconnection  && lastConnectedSite != "No site connected" && !isConnected) {
-      setState(() {
-        showDisconnectionPopup = true;
+      Timer(const Duration(seconds: 1), () {
+        setState(() {
+          showDisconnectionPopup = true;
+        });
       });
       prefs.setBool('hasVisitedDisconnection', true);
-      Timer(Duration(seconds: 1), () {
+      Timer(Duration(seconds: 3), () {
         setState(() {
           showDisconnectionPopup = false;
         });
@@ -138,7 +140,9 @@ class _ConnectedSitesState extends State<ConnectedSites> {
       //   // showConnectionPopup = true;
       // });
       await init();
-      await _checkFirstVisit();
+      // Timer(const Duration(seconds: 1), () async {
+        await _checkFirstVisit();
+      // });
       await _checkFirstDisconnectionVisit();
 
 

@@ -14,7 +14,6 @@ import '../../providers/user_provider.dart';
 import '../../widgets/animated_loader/animated_loader.dart';
 import '../../widgets/main_header.dart';
 
-
 class SecurityAndPrivacy extends StatefulWidget {
   const SecurityAndPrivacy({Key? key}) : super(key: key);
 
@@ -30,7 +29,7 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
   var _isLoading = false;
   var _isinit = true;
   var accessToken;
-  bool _isPasscodeSet =false;
+  bool _isPasscodeSet = false;
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -69,10 +68,9 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
     print('printing');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final passcode = prefs.getString('passcode')!;
-    if(passcode!=""){
+    if (passcode != "") {
       _isPasscodeSet = true;
-    }
-    else{
+    } else {
       _isPasscodeSet = false;
     }
     print("ispasscodeset" + _isPasscodeSet.toString());
@@ -84,7 +82,6 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
     getPasscode();
     super.initState();
   }
-
 
   Future<void> authenticateUser() async {
     bool isAuthorized = false;
@@ -99,8 +96,7 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
     } on PlatformException catch (exception) {
       if (exception.code == local_auth_error.notAvailable ||
           exception.code == local_auth_error.passcodeNotSet ||
-          exception.code == local_auth_error.notEnrolled) {
-      }
+          exception.code == local_auth_error.notEnrolled) {}
     }
 
     if (!mounted) return;
@@ -136,7 +132,6 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                 ),
                 Expanded(
                   child: Container(
-                    // color: AppColors.errorColor,
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20.sp),
                       child: SingleChildScrollView(
@@ -144,14 +139,26 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             GestureDetector(
-                              onTap: () {
-                              },
+                              onTap: () {},
                               child: Container(
                                 // height: 10.7.h,
                                 decoration: BoxDecoration(
                                   color: AppColors.textFieldParentDark,
                                   borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.10),
+                                      // Shadow color
+                                      offset: Offset(0, 4),
+                                      // Pushes the shadow down, removes the top shadow
+                                      blurRadius: 3,
+                                      // Adjust the blur radius to change shadow size
+                                      spreadRadius:
+                                          0.5, // Optional: Adjust spread radius if needed
+                                    ),
+                                  ],
                                 ),
+
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 13.sp, vertical: 10.sp),
@@ -248,176 +255,178 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                             SizedBox(
                               height: 2.h,
                             ),
+                            // if (_isSelected)
                             Container(
+                              margin: EdgeInsets.only(
+                                  left: 1.sp, right: 1.sp, top: 0.4.h),
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Column(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () => setState(() {
-                                      _isSelected = !_isSelected;
-                                    }),
-                                    child: Container(
-                                      height: 6.5.h,
-                                      decoration: BoxDecoration(
-                                        color:
-                                        AppColors.textFieldParentDark,
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(8.0),
-                                          topRight: Radius.circular(8.0),
-                                          bottomLeft: Radius.circular(
-                                              _isSelected
-                                                  ? 8.0
-                                                  : 8.0),
-                                          // Adjust as needed
-                                          bottomRight: Radius.circular(
-                                              _isSelected
-                                                  ? 8.0
-                                                  : 8.0), // Adjust as needed
-                                        ),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  EdgeInsets.only(left: 20.sp),
-                                              child: Image.asset(
-                                                _isUserAuthorized && _isPasscodeSet
-                                                    ? "assets/images/biometric_true.png"
-                                                    : "assets/images/alert_biometric.png",
-                                                height: 2.6.h,
-                                                width: 2.6.h,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 1.h,
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  EdgeInsets.only(left: 20.sp),
-                                              child: Text(
-                                                'Biometric lock'.tr(),
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 11.7.sp,
-                                                    color: themeNotifier.isDark
-                                                        ? AppColors
-                                                            .textColorWhite
-                                                        : AppColors
-                                                            .textColorBlack),
-                                              ),
-                                            ),
-                                            Spacer(),
-                                            Container(
-                                                margin: EdgeInsets.only(
-                                                    right: 8.sp),
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            2.sp),
-                                                    color: AppColors
-                                                        .textColorGrey
-                                                        .withOpacity(0.10)),
-                                                child: Icon(
-                                                  _isSelected
-                                                      ? Icons.keyboard_arrow_up
-                                                      : Icons
-                                                          .keyboard_arrow_down,
-                                                  size: 21.sp,
-                                                  color: themeNotifier.isDark
-                                                      ? AppColors.textColorWhite
-                                                      : AppColors
-                                                          .textColorBlack,
-                                                ))
-                                          ],
-                                        ),
-                                      ),
-                                    ),
+                                color: AppColors.textFieldParentDark,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8.sp)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.10),
+                                    // Shadow color
+                                    offset: Offset(0, 4),
+                                    // Pushes the shadow down, removes the top shadow
+                                    blurRadius: 3,
+                                    // Adjust the blur radius to change shadow size
+                                    spreadRadius:
+                                        0.5, // Optional: Adjust spread radius if needed
                                   ),
-                                  if (_isSelected)
-                                    Container(
-                                      margin: EdgeInsets.only(left: 1.sp, right: 1.sp,  top: 0.4.h),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.textFieldParentDark,
-                                        borderRadius: BorderRadius.all(Radius.circular(8.sp)),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(0.10), // Shadow color
-                                            offset: Offset(0, 4), // Pushes the shadow down, removes the top shadow
-                                            blurRadius: 3, // Adjust the blur radius to change shadow size
-                                            spreadRadius: 0.5,  // Optional: Adjust spread radius if needed
+                                ],
+                              ),
+                              child: ListView(
+                                controller: _scrollController,
+                                padding: EdgeInsets.only(top: 0.4.h),
+                                shrinkWrap: true,
+                                children: [
+                                  // biometricLock(
+                                  //     isFirst: true,
+                                  //     imageUrl:
+                                  //         "assets/images/face_Id2.png",
+                                  //     title: 'Face ID'.tr(),
+                                  //     // subTitle: 'Have been set up'.tr(),
+                                  //     subTitle:
+                                  //         'Have not been set up'.tr(),
+                                  //
+                                  //     // isSet: true,
+                                  //     setUpHandler: () {},
+                                  //     isDark: themeNotifier.isDark
+                                  //         ? true
+                                  //         : false),
+                                  // biometricLock(
+                                  //     // isLast: true,
+                                  //     imageUrl:
+                                  //         "assets/images/finger_id2.png",
+                                  //     title: 'Finger ID'.tr(),
+                                  //     subTitle: _isUserAuthorized
+                                  //         ? "Have been set up".tr()
+                                  //         : "Have not been set up".tr(),
+                                  //     setUpHandler: authenticateUser,
+                                  //     isSet: _isUserAuthorized
+                                  //         ? true
+                                  //         : false,
+                                  //     isDark: themeNotifier.isDark
+                                  //         ? true
+                                  //         : false),
+                                  biometricLock(
+                                      isLast: true,
+                                      isFirst: true,
+                                      imageUrl: "assets/images/passcode.png",
+                                      title: 'Pin'.tr(),
+                                      subTitle: _isPasscodeSet
+                                          ? "Have been set up".tr()
+                                          : "Have not been set up".tr(),
+                                      setUpHandler: () =>
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PinScreen()),
                                           ),
-                                        ],
-                                      ),
-                                      child: ListView(
-                                        controller: _scrollController,
-                                        padding: EdgeInsets.only(top: 0.4.h),
-                                        shrinkWrap: true,
-                                        children: [
-                                          // biometricLock(
-                                          //     isFirst: true,
-                                          //     imageUrl:
-                                          //         "assets/images/face_Id2.png",
-                                          //     title: 'Face ID'.tr(),
-                                          //     // subTitle: 'Have been set up'.tr(),
-                                          //     subTitle:
-                                          //         'Have not been set up'.tr(),
-                                          //
-                                          //     // isSet: true,
-                                          //     setUpHandler: () {},
-                                          //     isDark: themeNotifier.isDark
-                                          //         ? true
-                                          //         : false),
-                                          // biometricLock(
-                                          //     // isLast: true,
-                                          //     imageUrl:
-                                          //         "assets/images/finger_id2.png",
-                                          //     title: 'Finger ID'.tr(),
-                                          //     subTitle: _isUserAuthorized
-                                          //         ? "Have been set up".tr()
-                                          //         : "Have not been set up".tr(),
-                                          //     setUpHandler: authenticateUser,
-                                          //     isSet: _isUserAuthorized
-                                          //         ? true
-                                          //         : false,
-                                          //     isDark: themeNotifier.isDark
-                                          //         ? true
-                                          //         : false),
-                                          biometricLock(
-                                              isLast: true,
-                                              isFirst: true,
-                                              imageUrl:
-                                                  "assets/images/passcode.png",
-                                              title: 'Pin'.tr(),
-                                              subTitle:
-                                                  _isPasscodeSet
-                                                      ? "Have been set up".tr()
-                                                      :
-                                                  "Have not been set up".tr(),
-                                              setUpHandler: () => Navigator.pushReplacement(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            PinScreen()),
-                                                  ),
-                                              isSet: _isPasscodeSet
-                                                  ? true
-                                                  : false,
-                                              isDark: themeNotifier.isDark
-                                                  ? true
-                                                  : false),
-                                        ],
-                                      ),
-                                    )
+                                      isSet: _isPasscodeSet ? true : false,
+                                      isDark:
+                                          themeNotifier.isDark ? true : false),
                                 ],
                               ),
                             ),
+                            // Container(
+                            //   decoration: BoxDecoration(
+                            //     borderRadius: BorderRadius.circular(8),
+                            //   ),
+                            //   child: Column(
+                            //     children: [
+                            //       GestureDetector(
+                            //         onTap: () => setState(() {
+                            //           _isSelected = !_isSelected;
+                            //         }),
+                            //         child: Container(
+                            //           height: 6.5.h,
+                            //           decoration: BoxDecoration(
+                            //             color:
+                            //             AppColors.textFieldParentDark,
+                            //             borderRadius: BorderRadius.only(
+                            //               topLeft: Radius.circular(8.0),
+                            //               topRight: Radius.circular(8.0),
+                            //               bottomLeft: Radius.circular(
+                            //                   _isSelected
+                            //                       ? 8.0
+                            //                       : 8.0),
+                            //               // Adjust as needed
+                            //               bottomRight: Radius.circular(
+                            //                   _isSelected
+                            //                       ? 8.0
+                            //                       : 8.0), // Adjust as needed
+                            //             ),
+                            //           ),
+                            //           child: Padding(
+                            //             padding: const EdgeInsets.symmetric(
+                            //                 horizontal: 5),
+                            //             child: Row(
+                            //               mainAxisAlignment:
+                            //                   MainAxisAlignment.center,
+                            //               children: [
+                            //                 Padding(
+                            //                   padding:
+                            //                       EdgeInsets.only(left: 20.sp),
+                            //                   child: Image.asset(
+                            //                     _isUserAuthorized && _isPasscodeSet
+                            //                         ? "assets/images/biometric_true.png"
+                            //                         : "assets/images/alert_biometric.png",
+                            //                     height: 2.6.h,
+                            //                     width: 2.6.h,
+                            //                   ),
+                            //                 ),
+                            //                 SizedBox(
+                            //                   width: 1.h,
+                            //                 ),
+                            //                 Padding(
+                            //                   padding:
+                            //                       EdgeInsets.only(left: 20.sp),
+                            //                   child: Text(
+                            //                     'Biometric lock'.tr(),
+                            //                     style: TextStyle(
+                            //                         fontWeight: FontWeight.w500,
+                            //                         fontSize: 11.7.sp,
+                            //                         color: themeNotifier.isDark
+                            //                             ? AppColors
+                            //                                 .textColorWhite
+                            //                             : AppColors
+                            //                                 .textColorBlack),
+                            //                   ),
+                            //                 ),
+                            //                 Spacer(),
+                            //                 Container(
+                            //                     margin: EdgeInsets.only(
+                            //                         right: 8.sp),
+                            //                     decoration: BoxDecoration(
+                            //                         borderRadius:
+                            //                             BorderRadius.circular(
+                            //                                 2.sp),
+                            //                         color: AppColors
+                            //                             .textColorGrey
+                            //                             .withOpacity(0.10)),
+                            //                     child: Icon(
+                            //                       _isSelected
+                            //                           ? Icons.keyboard_arrow_up
+                            //                           : Icons
+                            //                               .keyboard_arrow_down,
+                            //                       size: 21.sp,
+                            //                       color: themeNotifier.isDark
+                            //                           ? AppColors.textColorWhite
+                            //                           : AppColors
+                            //                               .textColorBlack,
+                            //                     ))
+                            //               ],
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //
+                            //     ],
+                            //   ),
+                            // ),
                             SizedBox(
                               height: 2.h,
                             ),
@@ -432,6 +441,18 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                                 decoration: BoxDecoration(
                                   color: AppColors.textFieldParentDark,
                                   borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.10),
+                                      // Shadow color
+                                      offset: Offset(0, 4),
+                                      // Pushes the shadow down, removes the top shadow
+                                      blurRadius: 3,
+                                      // Adjust the blur radius to change shadow size
+                                      spreadRadius:
+                                          0.5, // Optional: Adjust spread radius if needed
+                                    ),
+                                  ],
                                 ),
                                 child: Padding(
                                   padding:
@@ -673,13 +694,18 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
           decoration: BoxDecoration(
             color: AppColors.textFieldParentDark,
             borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(isLast ? 8.0 : 0.0), // Adjust as needed
-              bottomRight:
-              Radius.circular(isLast ? 8.0 : 0.0,), // Adjust as needed
-              topRight:
-              Radius.circular(isFirst ? 8.0 : 0.0,),
-              topLeft:
-              Radius.circular(isFirst ? 8.0 : 0.0,), // Adjust as needed
+              bottomLeft: Radius.circular(isLast ? 8.0 : 0.0),
+              // Adjust as needed
+              bottomRight: Radius.circular(
+                isLast ? 8.0 : 0.0,
+              ),
+              // Adjust as needed
+              topRight: Radius.circular(
+                isFirst ? 8.0 : 0.0,
+              ),
+              topLeft: Radius.circular(
+                isFirst ? 8.0 : 0.0,
+              ), // Adjust as needed
             ),
           ),
           child: Padding(
@@ -693,8 +719,7 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8.sp),
                         color: isDark
-                            ? AppColors.textClrGreyIconsContainerSecurity
-                                .withOpacity(0.10)
+                            ? AppColors.textColorGrey.withOpacity(0.10)
                             : AppColors.textColorGreyShade2.withOpacity(0.5)),
                     child: Padding(
                       padding: const EdgeInsets.all(8),
