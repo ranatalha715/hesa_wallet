@@ -56,8 +56,12 @@ class TransactionProvider with ChangeNotifier {
   }
 
   List<ActivityModel> _activities = [];
+  List<ActivityModel> _activitiesForRedDot = [];
   List<ActivityModel> get activities {
     return [..._activities];
+  }
+  List<ActivityModel> get activitiesForRedDot {
+    return [..._activitiesForRedDot];
   }
   int currentPage = 1;
   String calculateTimeDifference(String createdAtStr) {
@@ -109,6 +113,7 @@ class TransactionProvider with ChangeNotifier {
 
   void clearActivities() {
     _activities.clear();
+    _activitiesForRedDot.clear();
     notifyListeners();
   }
 
@@ -164,16 +169,22 @@ class TransactionProvider with ChangeNotifier {
 
           // Remove duplicates
           final Set<String> existingIds = _activities.map((activity) => activity.id).toSet();
+          final Set<String> existingIdsRed = _activitiesForRedDot.map((activity) => activity.id).toSet();
           final List<ActivityModel> uniqueActivities = loadedActivities.where((activity) {
             return !existingIds.contains(activity.id);
+          }).toList();
+          final List<ActivityModel> uniqueActivitiesRed = loadedActivities.where((activity) {
+            return !existingIdsRed.contains(activity.id);
           }).toList();
 
           if (refresh) {
             // If refresh is true, replace the current list
             _activities = uniqueActivities;
+            _activitiesForRedDot = uniqueActivitiesRed;
           } else {
             // Otherwise, add unique activities to the existing list
             _activities.addAll(uniqueActivities);
+            _activitiesForRedDot.addAll(uniqueActivitiesRed);
           }
 
           notifyListeners();
@@ -192,7 +203,80 @@ class TransactionProvider with ChangeNotifier {
     }
   }
 
+  Future<AuthResult> getWalletActivitiesRedDOt({
+    required String accessToken,
+    required BuildContext context,
+    int limit = 10,
+    int page = 1,
+    bool refresh = false,
+    bool isEnglish = true,
+  }) async {
+    final url = Uri.parse(
+      '$BASE_URL/user/wallet-activity?limit=$limit&page=$page',
+    );
 
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          "Accept": "application/json",
+          'Authorization': 'Bearer $accessToken',
+          'accept-language': isEnglish ? 'eng' : 'ar',
+        },
+      );
+
+      final jsonData = json.decode(response.body);
+      print('Get Wallet Activities Response: ' + response.body);
+      if (response.statusCode == 200) {
+        if (jsonData != null) {
+          final List<dynamic> extractedData = jsonData as List<dynamic>;
+          print("Extracted Data: " + extractedData.toString());
+          final List<ActivityModel> loadedActivities = extractedData.map((prodData) {
+            return ActivityModel(
+              transactionType: prodData['func'].toString(),
+              transactionAmount: prodData['amount']['value'].toString(),
+              tokenName: prodData['name'].toString(),
+              image: prodData['image'].toString(),
+              time: prodData['timestamp'].toString(),
+              siteURL: prodData['siteURL'].toString(),
+              amountType: prodData['amount']['type'].toString(),
+              id: prodData['id'].toString(),
+              type: prodData['type'].toString(),
+            );
+          }).toList();
+
+          // Sort the activities by time (descending order)
+          loadedActivities.sort((a, b) {
+            final timeA = DateTime.parse(a.time);
+            final timeB = DateTime.parse(b.time);
+            return timeB.compareTo(timeA);
+          });
+          final Set<String> existingIdsRed = _activitiesForRedDot.map((activity) => activity.id).toSet();
+          final List<ActivityModel> uniqueActivitiesRed = loadedActivities.where((activity) {
+            return !existingIdsRed.contains(activity.id);
+          }).toList();
+
+          if (refresh) {
+            _activitiesForRedDot = uniqueActivitiesRed;
+          } else {
+            _activitiesForRedDot.addAll(uniqueActivitiesRed);
+          }
+
+          notifyListeners();
+          return AuthResult.success;
+        } else {
+          print("Activity data is empty");
+          return AuthResult.failure;
+        }
+      } else {
+        print("Failed to fetch wallet activities: ${response.statusCode}");
+        return AuthResult.failure;
+      }
+    } catch (error) {
+      print("Error fetching wallet activities: $error");
+      return AuthResult.failure;
+    }
+  }
 
   // Future<AuthResult> getWalletActivities({
   //   required String accessToken,
@@ -2051,7 +2135,6 @@ class TransactionProvider with ChangeNotifier {
       print('payload to send bilal');
       print(requestBody.toString());
       print('CancelAuctionListing response' + response.body);
-
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
@@ -2331,7 +2414,7 @@ class TransactionProvider with ChangeNotifier {
 
   functionToNavigateAfterNonPayable(String response, String operation, BuildContext context,
       {String statusCode = '', String paramsToSend=''}) {
-    Future.delayed(const Duration(seconds: 1), () async {
+    Future.delayed(const Duration(seconds: 2), () async {
       print('paramsToSend' + paramsToSend);
       AppDeepLinking().openNftApp(
         {

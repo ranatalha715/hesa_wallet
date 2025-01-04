@@ -987,16 +987,13 @@ class AuthProvider with ChangeNotifier {
       final body = {
         "refreshToken": refreshToken,
       };
-
       final response = await http.post(
         url,
         body: body,
         headers: {
           'Authorization': 'Bearer $token',
         },
-      ); // Timeout set to 10 seconds
-      // fToast = FToast();
-      // fToast.init(context);
+      );
       print("refresh token response");
       print(response.body);
       print('==' + refreshToken);
@@ -1004,25 +1001,17 @@ class AuthProvider with ChangeNotifier {
         final jsonResponse = json.decode(response.body);
         final accessToken = jsonResponse['data']['accessToken'];
         final refreshToken = jsonResponse['data']['refreshToken'];
-
-        // Save the wsToken in SharedPreferences
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('accessToken', accessToken);
         await prefs.setString('refreshToken', refreshToken);
-
-        // _showToast('Token Refreshed Successfully!');
-        // }
         return AuthResult.success;
       } else {
         print(" ${response.body}");
-        // _showToast('Token Refreshed failed');
         return AuthResult.failure;
       }
     } on TimeoutException catch (e) {
-      // _showToast('Token Refreshed failed');
       return AuthResult.failure;
     } catch (e) {
-      // _showToast('Token Refreshed failed');
       return AuthResult.failure;
     }
   }

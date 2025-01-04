@@ -135,7 +135,6 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
 }
-
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final PageController _pageController = PageController(initialPage: 0);
   var accessToken = '';
@@ -160,15 +159,15 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
   Future<void> fetchActivities() async {
     final transactionProvider = Provider.of<TransactionProvider>(context, listen: false);
-    await transactionProvider.getWalletActivities(
+    await transactionProvider.getWalletActivitiesRedDOt(
       accessToken: accessToken,
       context: context,
       refresh: true,
       isEnglish: true,
     );
 
-    if (transactionProvider.activities.isNotEmpty) {
-      final latestActivityTime = transactionProvider.activities
+    if (transactionProvider.activitiesForRedDot.isNotEmpty) {
+      final latestActivityTime = transactionProvider.activitiesForRedDot
           .map((activity) => DateTime.parse(activity.time))
           .reduce((a, b) => a.isAfter(b) ? a : b)
           .toIso8601String();
@@ -245,15 +244,15 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     Timer.periodic(Duration(seconds: 3), (timer) async {
       getAccessToken();
      Provider.of<TransactionProvider>(context,listen: false).initializeRedDotState();
-         // fetchActivities();
+         fetchActivities();
     });
     Timer.periodic(Duration(seconds: 30), (timer) async {
       await Provider.of<AuthProvider>(context, listen: false)
           .updateFCM(FCM: fcmToken, token: accessToken, context: context);
     });
-    startTokenRefreshTimer(
-        refreshToken: refreshToken, token: accessToken, context: context);
-    // Timer.periodic(Duration(minutes: 25), (timer) async {
+    // startTokenRefreshTimer(
+    //     refreshToken: refreshToken, token: accessToken, context: context);
+    // Timer.periodic(Duration(seconds: 5), (timer) async {
     //   await Provider.of<AuthProvider>(context, listen: false).refreshToken(
     //       refreshToken: refreshToken, context: context, token: accessToken);
     // });
@@ -267,6 +266,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.dispose();
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      getAccessToken();
+      print('app is running');
+    }
+  }
 
   void handleDisconnection() async {
     final prefs = await SharedPreferences.getInstance();
@@ -363,24 +369,55 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.didChangeDependencies();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) {
-    } else if (state == AppLifecycleState.resumed) {
-    } else {}
-
-  }
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   if (state == AppLifecycleState.paused) {
+  //   } else if (state == AppLifecycleState.resumed) {
+  //   } else {}
+  // }
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
     refreshToken = prefs.getString('refreshToken')!;
+    print('test access token' + accessToken);
+    print('test refresh token' + refreshToken);
+    navigateToLoginPage(context);
+    // if (isTokenExpired(accessToken)) {
+    //   prefs.remove('accessToken');
+    //   Provider.of<AuthProvider>(context, listen: false).refreshToken(
+    //       refreshToken: refreshToken, context: context, token: accessToken);
+    // } else {}
+  }
 
-    if (isTokenExpired(accessToken)) {
-      prefs.remove('accessToken');
-      Provider.of<AuthProvider>(context, listen: false).refreshToken(
-          refreshToken: refreshToken, context: context, token: accessToken);
-    } else {}
+  void navigateToLoginPage(BuildContext context) async {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => Wallet()),
+          (Route<dynamic> route) => false,
+    );
+    await AppDeepLinking().openNftApp(
+      {
+        "operation": "disconnectWallet",
+        "walletAddress":
+        Provider.of<UserProvider>(
+            context,
+            listen: false)
+            .walletAddress,
+        "userName":
+        Provider.of<UserProvider>(
+            context,
+            listen: false)
+            .userName,
+        "userIcon":
+        Provider.of<UserProvider>(
+            context,
+            listen: false)
+            .userAvatar,
+        "response":
+        'Wallet disconnected successfully'
+      },
+    );
   }
 
   String fcmToken = 'Waiting for FCM token...';
@@ -395,26 +432,26 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     });
   }
 
-  void startTokenRefreshTimer({
-    required String refreshToken,
-    required String token,
-    required BuildContext context,
-  }) {
-    Timer.periodic(Duration(minutes: 25), (Timer timer) async {
-      final result =
-          await Provider.of<AuthProvider>(context, listen: false).refreshToken(
-        refreshToken: refreshToken,
-        token: token,
-        context: context,
-      );
-
-      if (result == AuthResult.failure) {
-        print('Token refresh failed, consider retrying or handling failure.');
-      } else {
-        print('Token refreshed successfully.');
-      }
-    });
-  }
+  // void startTokenRefreshTimer({
+  //   required String refreshToken,
+  //   required String token,
+  //   required BuildContext context,
+  // }) {
+  //   Timer.periodic(Duration(minutes: 1), (Timer timer) async {
+  //     final result =
+  //         await Provider.of<AuthProvider>(context, listen: false).refreshToken(
+  //       refreshToken: refreshToken,
+  //       token: token,
+  //       context: context,
+  //     );
+  //
+  //     if (result == AuthResult.failure) {
+  //       print('Token refresh failed, consider retrying or handling failure.');
+  //     } else {
+  //       print('Token refreshed successfully.');
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -708,6 +745,5 @@ bool isTokenExpired(String token) {
     DateTime expirationDate = DateTime.fromMillisecondsSinceEpoch(exp * 1000);
     return expirationDate.isBefore(DateTime.now());
   }
-
-  return true; // If no expiry information is found, consider it expired
+  return true;
 }

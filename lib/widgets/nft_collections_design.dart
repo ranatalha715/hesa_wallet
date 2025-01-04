@@ -124,7 +124,7 @@ class _NftsCollectionDesignState extends State<NftsCollectionDesign> {
                                         child: ClipRRect(
                                           borderRadius: BorderRadius.circular(
                                               5.sp),
-                                          child:  widget.nftsCollection.image != null ?
+                                          child:  widget.nftsCollection.banner != null ?
                                           Image.network(
                                             widget.nftsCollection.image!,
                                               fit: BoxFit.cover,

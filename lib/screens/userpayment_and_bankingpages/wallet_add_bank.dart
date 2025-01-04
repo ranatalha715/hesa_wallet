@@ -715,7 +715,7 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                           // scrollPadding: EdgeInsets.only(
                                           //     bottom: MediaQuery.of(context)
                                           //         .viewInsets
-                                          //         .bottom),
+                                          // navigator        .bottom),
                                           style: TextStyle(
                                               fontSize: 10.2.sp,
                                               color: themeNotifier.isDark

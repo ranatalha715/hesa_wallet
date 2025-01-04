@@ -388,7 +388,6 @@ class _TransactionRequestAcceptRejectState
     return "$start...$end";
   }
 
-
   String capitalizeFirstLetter(String text) {
     if (text.isEmpty) {
       return text;
@@ -433,6 +432,74 @@ class _TransactionRequestAcceptRejectState
     }
   }
 
+  String getTransactionDetails(String operation) {
+    switch (operation) {
+      case 'MintNFT':
+      case 'MintNFT':
+        return 'NFT Minting';
+
+      case 'MintCollection':
+        return 'NFT Collection Minting';
+
+      case 'listNFT':
+        return 'NFT Listing';
+
+      case 'listAuctionNFT':
+      case 'listAuctionCollection':
+        return 'Auction Listing';
+
+      case 'listCollection':
+        return 'Listing for sale';
+
+      case 'makeOfferNFT':
+      case 'makeOfferCollection':
+        return 'Offer Placement';
+
+      case 'purchaseNFT':
+      case 'purchaseCollection':
+        return 'Purchase';
+
+      case 'burnNFT':
+      case 'burnCollection':
+        return 'Burning';
+
+      case 'CancelNFTOfferMade':
+      case 'CancelCollectionOfferMade':
+        return 'Offer Cancellation';
+
+      case 'makeNFTCounterOffer':
+        return 'Offer Placement';
+
+      case 'makeCollectionCounterOffer':
+        return 'Counter Offer Placement';
+
+      case 'AcceptCollectionOffer':
+      case 'AcceptNFTOffer':
+        return 'Offer Acceptance';
+
+      case 'rejectCollectionOfferReceived':
+      case 'rejectNFTOfferReceived':
+        return 'Offer Rejection';
+
+      case 'CancelListing':
+      case 'CancelCollectionAuctionListing':
+      case 'CancelAuctionListing':
+      case 'CancelCollectionAuctionListing':
+        return 'Listing Cancellation';
+
+      case 'acceptCollectionCounterOffer':
+      case 'acceptNFTCounterOffer':
+        return 'Counter Offer Acceptance';
+
+      case 'rejectCollectionCounterOffer':
+      case 'rejectNFTCounterOffer':
+        return 'Counter Offer Rejection';
+
+      default:
+        return 'Unknown Operation';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final args =
@@ -445,7 +512,7 @@ class _TransactionRequestAcceptRejectState
       fees = args['fees'] ?? "N/A";
       feesMap = fees != "" ? jsonDecode(fees) : null;
       counterId = args['id'] ?? "N/A";
-    assetType=args['assetType'] ?? "N/A";
+      assetType = args['assetType'] ?? "N/A";
       counterOffererId = args['offererId'].toString() ?? "N/A";
       counterOffererAmount = args['offerAmount'] ?? "N/A";
       operation = args['operation'] ?? "N/A";
@@ -679,7 +746,7 @@ class _TransactionRequestAcceptRejectState
                                                   transactionDetailsWidget(
                                                     title: 'Tnx Type:'.tr(),
                                                     details:
-                                                        capitalizeFirstLetter(
+                                                        getTransactionDetails(
                                                             operation),
                                                     isDark: themeNotifier.isDark
                                                         ? true
@@ -698,8 +765,8 @@ class _TransactionRequestAcceptRejectState
                                                                 'CancelCollectionListing' ||
                                                             operation ==
                                                                 'CancelCollectionOfferMade' ||
-                                                        operation ==
-                                                            'rejectCollectionOfferReceived'
+                                                            operation ==
+                                                                'rejectCollectionOfferReceived'
                                                         ? 'Collection ID:'.tr()
                                                         : 'Token ID:'.tr(),
                                                     details:
@@ -782,18 +849,19 @@ class _TransactionRequestAcceptRejectState
                                                               operation !=
                                                                   "rejectNFTOfferReceived" &&
                                                               operation !=
-                                                                  "rejectCollectionOfferReceived"  &&
-                                                          operation !=
-                                                              "CancelNFTOfferMade" &&
-                                                          operation !=
-                                                              "CancelCollectionOfferMade"
+                                                                  "rejectCollectionOfferReceived" &&
+                                                              operation !=
+                                                                  "CancelNFTOfferMade" &&
+                                                              operation !=
+                                                                  "CancelCollectionOfferMade"
                                                           ? 'Counter Offer Amount:'
                                                               .tr()
                                                           : 'Offer Amount:'
                                                               .tr(),
-                                                      details:formatCurrency( paramsMap![
-                                                                  'offerAmount']
-                                                              .toString()) +
+                                                      details: formatCurrency(
+                                                              paramsMap![
+                                                                      'offerAmount']
+                                                                  .toString()) +
                                                           " SAR",
                                                       isDark:
                                                           themeNotifier.isDark
@@ -1339,9 +1407,7 @@ class _TransactionRequestAcceptRejectState
                                                                   "Reject request"
                                                                       .tr(),
                                                               handler: () {
-                                                                // if(operation=="MintNFT"){
                                                                 rejectTransactions();
-                                                                // }
                                                               },
                                                               isGradient: false,
                                                               isGradientWithBorder:
@@ -1538,8 +1604,8 @@ class _TransactionRequestAcceptRejectState
                                                                         }
                                                                         if (operation ==
                                                                             'CancelAuctionListing') {
-                                                                       final cancelAuctionListingResult =   await Provider.of<TransactionProvider>(context, listen: false)
-                                                                              .cancelAuctionListing(
+                                                                          final cancelAuctionListingResult =
+                                                                              await Provider.of<TransactionProvider>(context, listen: false).cancelAuctionListing(
                                                                             walletAddress:
                                                                                 walletAddress,
                                                                             token:
@@ -1553,10 +1619,11 @@ class _TransactionRequestAcceptRejectState
                                                                             code:
                                                                                 Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes,
                                                                           );
-                                                                       if(cancelAuctionListingResult==AuthResult.success){
-                                                                         // Navigator.pop(context);
-                                                                         // transactionExecutedDialoge(context: context);
-                                                                       }
+                                                                          if (cancelAuctionListingResult ==
+                                                                              AuthResult.success) {
+                                                                            Navigator.pop(context);
+                                                                            transactionExecutedDialoge(context: context);
+                                                                          }
                                                                         } else if (operation ==
                                                                             'CancelCollectionAuctionListing') {
                                                                           await Provider.of<TransactionProvider>(context, listen: false).cancelCollectionAuctionListing(
@@ -1927,21 +1994,21 @@ class _TransactionRequestAcceptRejectState
                                                   context,
                                                   listen: false)
                                               .makeCounterOffer(
-                                                  walletAddress: walletAddress,
-                                                  params: params,
-                                                  token: accessToken,
-                                                  context: context,
-                                                  operation: operation,
+                                            walletAddress: walletAddress,
+                                            params: params,
+                                            token: accessToken,
+                                            context: context,
+                                            operation: operation,
                                             //       id: counterId,
                                             // assetType: assetType,
                                             //       offererId: counterOffererId,
                                             //       offerAmount:
                                             //           counterOffererAmount,
-                                                  code:
-                                                      Provider.of<AuthProvider>(
-                                                              context,
-                                                              listen: false)
-                                                          .codeFromOtpBoxes,  );
+                                            code: Provider.of<AuthProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .codeFromOtpBoxes,
+                                          );
                                         }
                                         if (operation == 'CancelNFTOfferMade') {
                                           await Provider.of<
@@ -2032,11 +2099,12 @@ class _TransactionRequestAcceptRejectState
                                         }
                                         if (operation ==
                                             'CancelAuctionListing') {
-                                          await Provider.of<
-                                                      TransactionProvider>(
-                                                  context,
-                                                  listen: false)
-                                              .cancelAuctionListing(
+                                          final cancelAuctionListingResult =
+                                              await Provider.of<
+                                                          TransactionProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .cancelAuctionListing(
                                             walletAddress: walletAddress,
                                             token: accessToken,
                                             context: context,
@@ -2049,6 +2117,12 @@ class _TransactionRequestAcceptRejectState
                                                 otp5Controller.text +
                                                 otp6Controller.text,
                                           );
+                                          if (cancelAuctionListingResult ==
+                                              AuthResult.success) {
+                                            Navigator.pop(context);
+                                            transactionExecutedDialoge(
+                                                context: context);
+                                          }
                                         } else if (operation ==
                                             'CancelCollectionAuctionListing') {
                                           await Provider.of<
@@ -2101,7 +2175,7 @@ class _TransactionRequestAcceptRejectState
                                                               listen: false)
                                                           .codeFromOtpBoxes);
                                         } else {}
-                                        Navigator.pop(context);
+                                        // Navigator.pop(context);
                                         setState(() {
                                           isLoading = false;
                                         });
@@ -2258,7 +2332,7 @@ class _TransactionRequestAcceptRejectState
         children: [
           Container(
             // color: Colors.yellow,
-            width:title == "Total Receivable" ? 30.w : 45.w,
+            width: title == "Total Receivable" ? 30.w : 45.w,
             child: Text(
               title,
               style: TextStyle(
@@ -2709,10 +2783,12 @@ class _TransactionRequestAcceptRejectState
   }
 }
 
-void transactionExecutedDialoge({bool isDark = true, required BuildContext context}) {
+void transactionExecutedDialoge(
+    {bool isDark = true, required BuildContext context}) {
   print('now running dialoge');
   showDialog(
-    context: context,    builder: (BuildContext context) {
+    context: context,
+    builder: (BuildContext context) {
       final screenWidth = MediaQuery.of(context).size.width;
       final dialogWidth = screenWidth * 0.90;
       return Dialog(
@@ -2726,9 +2802,8 @@ void transactionExecutedDialoge({bool isDark = true, required BuildContext conte
               height: 23.h,
               width: dialogWidth,
               decoration: BoxDecoration(
-                color: isDark
-                    ? AppColors.showDialogClr
-                    : AppColors.textColorWhite,
+                color:
+                    isDark ? AppColors.showDialogClr : AppColors.textColorWhite,
                 borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
@@ -2768,8 +2843,7 @@ void transactionExecutedDialoge({bool isDark = true, required BuildContext conte
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                              color: AppColors.activeButtonColor,
-                              width: 1.sp),
+                              color: AppColors.activeButtonColor, width: 1.sp),
                         ),
                         child: Center(
                           child: Icon(
@@ -2791,16 +2865,17 @@ void transactionExecutedDialoge({bool isDark = true, required BuildContext conte
                           TextSpan(
                               text: 'Tx ID:'.tr(),
                               style: TextStyle(
-                                // height: 2,
+                                  // height: 2,
                                   color: AppColors.textColorWhite,
                                   fontWeight: FontWeight.w400,
                                   fontSize: 11.7.sp,
                                   fontFamily: 'Inter')),
                           TextSpan(
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {},
+                              recognizer: TapGestureRecognizer()..onTap = () {},
                               // text: 'abc',
-                              text: Provider.of<TransactionProvider>(context, listen: false).nonPayableTxId,
+                              text: Provider.of<TransactionProvider>(context,
+                                      listen: false)
+                                  .nonPayableTxId,
                               style: TextStyle(
                                   color: AppColors.textColorToska,
                                   fontWeight: FontWeight.w600,
@@ -2818,8 +2893,7 @@ void transactionExecutedDialoge({bool isDark = true, required BuildContext conte
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
-                        'Transaction is sent to blockchain for execution.'
-                            .tr(),
+                        'Transaction is sent to blockchain for execution.'.tr(),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: isDark

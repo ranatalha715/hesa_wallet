@@ -213,7 +213,6 @@ void otpDialog({
 
                                             length: 6,
                                             defaultPinTheme: PinTheme(
-
                                               width: 9.8.w,
                                               height: 8.h,
                                               textStyle: TextStyle(

@@ -73,36 +73,46 @@ class _WebviewHelperState extends State<WebviewHelper> {
     await controller.evaluateJavascript("updateCheckoutId('$newCheckoutId');");
   }
 
+  void _checkPageContent() async {
+    String pageContent = await _controller.evaluateJavascript("document.body.innerText");
+    if (pageContent.contains('Successfully')) {
+      checkFormFilledStatus(widget.checkoutId);
+    }
+  }
+
   checkFormFilledStatus(String checkoutID) async {
-    print('Now you should run the add card function');
-    // await Provider.of<CardProvider>(context, listen: false).tokenizeCardVerify(
-    //     token: accessToken, context: context, checkoutId: checkoutID,  brand: Provider.of<
-    //     TransactionProvider>(
-    //     context,
-    //     listen: false)
-    //     .selectedCardBrand,);
-    // Navigator.pop(context);
-    if(!widget.fromTransactionReq){
+    if (!widget.fromTransactionReq) {
+      Future.delayed(Duration(seconds: 1), () async {
       Navigator.pop(context);
       await Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-            builder: (context) =>
-                WalletBankingAndPaymentEmpty()
-        ),
-      ).then((value) => print('after going'));
-    } else {
+        MaterialPageRoute(builder: (context) => WalletBankingAndPaymentEmpty()),
+      );
+    });} else {
       await Provider.of<UserProvider>(context, listen: false)
           .getUserDetails(token: accessToken, context: context);
+      Future.delayed(Duration(seconds: 1), () async {
       Navigator.pop(context, true);
-      // await Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(
-      //     builder: (context) =>
-      //     TransactionRequest()));
-    }
-
+    });}
   }
+
+  // checkFormFilledStatus(String checkoutID) async {
+  //   if(!widget.fromTransactionReq){
+  //     Navigator.pop(context);
+  //     await Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(
+  //           builder: (context) =>
+  //               WalletBankingAndPaymentEmpty()
+  //       ),
+  //     ).then((value) => print('after going'));
+  //   } else {
+  //     await Provider.of<UserProvider>(context, listen: false)
+  //         .getUserDetails(token: accessToken, context: context);
+  //     Navigator.pop(context, true);
+  //   }
+  //
+  // }
 
   @override
   void initState() {
@@ -142,6 +152,7 @@ class _WebviewHelperState extends State<WebviewHelper> {
                           },
                           onPageFinished: (String url) async {
                             _updateCheckoutId(_controller, widget.checkoutId);
+                            _checkPageContent();
                           },
                           initialUrl: snapshot.data!,
                           javascriptMode: JavascriptMode.unrestricted,

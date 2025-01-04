@@ -3,20 +3,14 @@ import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:hesa_wallet/constants/colors.dart';
-import 'package:hesa_wallet/constants/footer_text.dart';
-import 'package:hesa_wallet/screens/connection_requests_pages/connect_dapp.dart';
 import 'package:hesa_wallet/screens/settings/faq_&_support.dart';
 import 'package:hesa_wallet/screens/settings/settings.dart';
-import 'package:hesa_wallet/screens/signup_signin/signin_with_mobile.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/connected_sites.dart';
 import 'package:hesa_wallet/screens/userpayment_and_bankingpages/wallet_banking_and_payment_empty.dart';
-import 'package:hesa_wallet/widgets/dialog_button.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-
 import '../constants/app_deep_linking.dart';
 import '../constants/configs.dart';
 import '../providers/auth_provider.dart';
@@ -56,18 +50,13 @@ class _AppDrawerState extends State<AppDrawer> {
 
   String replaceMiddleWithDots(String input) {
     if (input.length <= 30) {
-      // If the input string is 30 characters or less, return it as is.
       return input;
     }
-
-    final int middleIndex = input.length ~/ 2; // Find the middle index
-    final int startIndex = middleIndex - 16; // Calculate the start index
-    final int endIndex = middleIndex + 16; // Calculate the end index
-
-    // Split the input string into three parts and join them with '...'
+    final int middleIndex = input.length ~/ 2;
+    final int startIndex = middleIndex - 16;
+    final int endIndex = middleIndex + 16;
     final String result =
         input.substring(0, startIndex) + '...' + input.substring(endIndex);
-
     return result;
   }
 
@@ -85,7 +74,7 @@ class _AppDrawerState extends State<AppDrawer> {
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor:
-          AppColors.profileHeaderDark, // Change to your desired color
+          AppColors.profileHeaderDark,
     ));
   }
 

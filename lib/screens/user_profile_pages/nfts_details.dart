@@ -221,14 +221,15 @@ class _NftsDetailsState extends State<NftsDetails> {
                                     assetsDetails.collectionId != null)
                                   nftsDetailsWidget(
                                     title: 'Collection ID:'.tr(),
-                                    // func: () =>
-                                    //     _launchURL(
-                                    //         "https://www.mjraexplorer.com/nft/" +
-                                    //             assetsDetails.collectionId),
+                                    func: () =>
+                                        _launchURL(
+                                            "https://www.mjraexplorer.com/collection/" +
+                                                assetsDetails.collectionId),
                                     details: replaceMiddleWithDotsCollectionId(
                                         assetsDetails.collectionId),
                                     isDark: themeNotifier.isDark ? true : false,
                                     isEnglish: isEnglish,
+                                      color: AppColors.textColorToska,
                                   ),
                                 if (assetsDetails.numberOfEdtions != null &&
                                     assetsDetails.numberOfEdtions == '' &&

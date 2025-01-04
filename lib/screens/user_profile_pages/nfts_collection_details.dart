@@ -24,23 +24,9 @@ class NftsCollectionDetails extends StatefulWidget {
 
 class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
   var accessToken;
-
   final scrollController = ScrollController();
 
   String replaceMiddleWithDots(String input) {
-    // if (input.length <= 20) {
-    //   // If the input string is 30 characters or less, return it as is.
-    //   return input;
-    // }
-    //
-    // final int middleIndex = input.length ~/ 2; // Find the middle index
-    // final int startIndex = middleIndex - 15; // Calculate the start index
-    // final int endIndex = middleIndex + 15; // Calculate the end index
-    //
-    // // Split the input string into three parts and join them with '...'
-    // final String result =
-    //     input.substring(0, startIndex) + '...' + input.substring(endIndex);
-
     return input.toString();
   }
 
@@ -48,15 +34,11 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
     if (input.length <= 30) {
       return input;
     }
-
-    final int middleIndex = input.length ~/ 2; // Find the middle index
-    final int startIndex = middleIndex - 12; // Calculate the start index
-    final int endIndex = middleIndex + 9; // Calculate the end index
-
-    // Split the input string into three parts and join them with '...'
+    final int middleIndex = input.length ~/ 2;
+    final int startIndex = middleIndex - 12;
+    final int endIndex = middleIndex + 9;
     final String result =
         input.substring(0, startIndex) + '...' + input.substring(endIndex);
-
     return result;
   }
 
