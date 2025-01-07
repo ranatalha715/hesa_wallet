@@ -28,6 +28,7 @@ import 'dart:developer' as dev;
 import '../../constants/app_deep_linking.dart';
 import '../../constants/configs.dart';
 import '../../constants/inapp_settings.dart';
+import '../../constants/string_utils.dart';
 import '../../main.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/bank_provider.dart';
@@ -35,6 +36,7 @@ import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../widgets/main_header.dart';
 import '../../widgets/otp_dialog.dart';
+import '../user_profile_pages/wallet_tokens_nfts.dart';
 import '../userpayment_and_bankingpages/wallet_add_bank.dart';
 import '../userpayment_and_bankingpages/wallet_add_card.dart';
 
@@ -468,13 +470,13 @@ class _TransactionRequestAcceptRejectState
         return 'Offer Cancellation';
 
       case 'makeNFTCounterOffer':
-        return 'Offer Placement';
+        return 'Counter Offer Placement';
 
       case 'makeCollectionCounterOffer':
         return 'Counter Offer Placement';
 
       case 'AcceptCollectionOffer':
-      case 'AcceptNFTOffer':
+      case 'AcceptNFTOfferReceived':
         return 'Offer Acceptance';
 
       case 'rejectCollectionOfferReceived':
@@ -482,7 +484,7 @@ class _TransactionRequestAcceptRejectState
         return 'Offer Rejection';
 
       case 'CancelListing':
-      case 'CancelCollectionAuctionListing':
+      case 'CancelCollectionListing':
       case 'CancelAuctionListing':
       case 'CancelCollectionAuctionListing':
         return 'Listing Cancellation';
@@ -1483,20 +1485,27 @@ class _TransactionRequestAcceptRejectState
                                                                                 500));
                                                                         if (operation ==
                                                                             'AcceptNFTOfferReceived') {
-                                                                          final resultAcceptOffer = await Provider.of<TransactionProvider>(context, listen: false).acceptOffer(
+                                                                          final acceptNFTOfferResult = await Provider.of<TransactionProvider>(context, listen: false).acceptOffer(
                                                                               params: params,
                                                                               token: accessToken,
                                                                               walletAddress: walletAddress,
                                                                               context: context,
                                                                               operation: operation,
                                                                               code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
-                                                                          if (resultAcceptOffer ==
+                                                                          if (acceptNFTOfferResult ==
                                                                               AuthResult.success) {
-                                                                            paymentRecievedDialogue(
-                                                                              amount: formatCurrency(
-                                                                                feesMap!['total']['value'].toString(),
-                                                                              ),
-                                                                            );
+                                                                            Navigator.pop(context);
+                                                                            Future.delayed(const Duration(milliseconds: 300), () {
+                                                                              if (context.mounted) {
+                                                                                paymentRecievedDialogue(
+                                                                                  amount: formatCurrency(
+                                                                                    feesMap!['total']['value'].toString(),
+                                                                                  ),
+                                                                                );
+                                                                              } else {
+                                                                              }
+                                                                            });
+
                                                                           }
                                                                         } else if (operation ==
                                                                             'AcceptCollectionOffer') {
@@ -1509,151 +1518,160 @@ class _TransactionRequestAcceptRejectState
                                                                               code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
                                                                           if (resultAcceptCollectionOffer ==
                                                                               AuthResult.success) {
-                                                                            paymentRecievedDialogue(
-                                                                              amount: formatCurrency(
-                                                                                feesMap!['total']['value'].toString(),
-                                                                              ),
-                                                                            );
-                                                                          }
-                                                                        } else if (operation ==
-                                                                            'rejectCollectionOfferReceived') {
-                                                                          await Provider.of<TransactionProvider>(context, listen: false).rejectCollectionOfferReceived(
-                                                                              params: params,
-                                                                              token: accessToken,
-                                                                              walletAddress: walletAddress,
-                                                                              context: context,
-                                                                              operation: operation,
-                                                                              code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
-                                                                        } else if (operation ==
-                                                                            'makeNFTCounterOffer') {
-                                                                          await Provider.of<TransactionProvider>(context, listen: false).makeCounterOffer(
-                                                                              walletAddress: walletAddress,
-                                                                              params: params,
-                                                                              token: accessToken,
-                                                                              context: context,
-                                                                              operation: operation,
-                                                                              // id: counterId,
-                                                                              // assetType: assetType,
-                                                                              // offererId: counterOffererId,
-                                                                              // offerAmount: counterOffererAmount,
-                                                                              code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
-                                                                        }
-                                                                        if (operation ==
-                                                                            'CancelNFTOfferMade') {
-                                                                          await Provider.of<TransactionProvider>(context, listen: false)
-                                                                              .cancelNFTOfferMade(
-                                                                            walletAddress:
-                                                                                walletAddress,
-                                                                            // params: params,
-                                                                            token:
-                                                                                accessToken,
-                                                                            context:
-                                                                                context,
-                                                                            operation:
-                                                                                operation,
-                                                                            params:
-                                                                                params,
-                                                                            code:
-                                                                                Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes,
-                                                                          );
-                                                                        } else if (operation ==
-                                                                            'rejectNFTCounterOffer') {
-                                                                          await Provider.of<TransactionProvider>(context, listen: false).rejectNFTCounterOffer(
-                                                                              walletAddress: walletAddress,
-                                                                              params: params,
-                                                                              token: accessToken,
-                                                                              context: context,
-                                                                              operation: operation,
-                                                                              code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
-                                                                        } else if (operation ==
-                                                                            'makeCollectionCounterOffer') {
-                                                                          await Provider.of<TransactionProvider>(context, listen: false).makeCollectionCounterOffer(
-                                                                              walletAddress: walletAddress,
-                                                                              params: params,
-                                                                              token: accessToken,
-                                                                              context: context,
-                                                                              operation: operation,
-                                                                              code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
-                                                                        } else if (operation ==
-                                                                            'rejectCollectionCounterOffer') {
-                                                                          await Provider.of<TransactionProvider>(context, listen: false).rejectCollectionCounterOffer(
-                                                                              walletAddress: walletAddress,
-                                                                              params: params,
-                                                                              token: accessToken,
-                                                                              context: context,
-                                                                              operation: operation,
-                                                                              code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
-                                                                        } else if (operation ==
-                                                                            'CancelCollectionOfferMade') {
-                                                                          await Provider.of<TransactionProvider>(context, listen: false)
-                                                                              .cancelCollectionOfferMade(
-                                                                            walletAddress:
-                                                                                walletAddress,
-                                                                            // params: params,
-                                                                            token:
-                                                                                accessToken,
-                                                                            context:
-                                                                                context,
-                                                                            operation:
-                                                                                operation,
-                                                                            params:
-                                                                                params,
-                                                                            code:
-                                                                                Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes,
-                                                                          );
-                                                                        }
-                                                                        if (operation ==
-                                                                            'CancelAuctionListing') {
-                                                                          final cancelAuctionListingResult =
-                                                                              await Provider.of<TransactionProvider>(context, listen: false).cancelAuctionListing(
-                                                                            walletAddress:
-                                                                                walletAddress,
-                                                                            token:
-                                                                                accessToken,
-                                                                            context:
-                                                                                context,
-                                                                            operation:
-                                                                                operation,
-                                                                            params:
-                                                                                params,
-                                                                            code:
-                                                                                Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes,
-                                                                          );
-                                                                          if (cancelAuctionListingResult ==
-                                                                              AuthResult.success) {
                                                                             Navigator.pop(context);
-                                                                            transactionExecutedDialoge(context: context);
+                                                                            Future.delayed(const Duration(milliseconds: 300), () {
+                                                                              if (context.mounted) {
+                                                                                paymentRecievedDialogue(
+                                                                                  amount: formatCurrency(
+                                                                                    feesMap!['total']['value'].toString(),
+                                                                                  ),
+                                                                                );
+                                                                              } else {
+                                                                              }
+                                                                            });
                                                                           }
-                                                                        } else if (operation ==
-                                                                            'CancelCollectionAuctionListing') {
-                                                                          await Provider.of<TransactionProvider>(context, listen: false).cancelCollectionAuctionListing(
-                                                                              walletAddress: walletAddress,
-                                                                              token: accessToken,
-                                                                              context: context,
-                                                                              operation: operation,
-                                                                              params: params,
-                                                                              code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
-                                                                        } else if (operation ==
-                                                                            'CancelListing') {
-                                                                          await Provider.of<TransactionProvider>(context, listen: false).cancelListing(
-                                                                              walletAddress: walletAddress,
-                                                                              token: accessToken,
-                                                                              context: context,
-                                                                              operation: operation,
-                                                                              params: params,
-                                                                              code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
-                                                                        } else if (operation ==
-                                                                            'CancelCollectionListing') {
-                                                                          await Provider.of<TransactionProvider>(context, listen: false).cancelCollectionListing(
-                                                                              walletAddress: walletAddress,
-                                                                              token: accessToken,
-                                                                              context: context,
-                                                                              operation: operation,
-                                                                              params: params,
-                                                                              code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
-                                                                        } else {}
-                                                                        Navigator.pop(
-                                                                            context);
+                                                                        }
+                                                                        // else if (operation ==
+                                                                        //     'rejectCollectionOfferReceived') {
+                                                                        //   await Provider.of<TransactionProvider>(context, listen: false).rejectCollectionOfferReceived(
+                                                                        //       params: params,
+                                                                        //       token: accessToken,
+                                                                        //       walletAddress: walletAddress,
+                                                                        //       context: context,
+                                                                        //       operation: operation,
+                                                                        //       code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
+                                                                        // } else if (operation ==
+                                                                        //     'makeNFTCounterOffer') {
+                                                                        //   await Provider.of<TransactionProvider>(context, listen: false).makeCounterOffer(
+                                                                        //       walletAddress: walletAddress,
+                                                                        //       params: params,
+                                                                        //       token: accessToken,
+                                                                        //       context: context,
+                                                                        //       operation: operation,
+                                                                        //       // id: counterId,
+                                                                        //       // assetType: assetType,
+                                                                        //       // offererId: counterOffererId,
+                                                                        //       // offerAmount: counterOffererAmount,
+                                                                        //       code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
+                                                                        // }
+                                                                        // if (operation ==
+                                                                        //     'CancelNFTOfferMade') {
+                                                                        //   await Provider.of<TransactionProvider>(context, listen: false)
+                                                                        //       .cancelNFTOfferMade(
+                                                                        //     walletAddress:
+                                                                        //         walletAddress,
+                                                                        //     // params: params,
+                                                                        //     token:
+                                                                        //         accessToken,
+                                                                        //     context:
+                                                                        //         context,
+                                                                        //     operation:
+                                                                        //         operation,
+                                                                        //     params:
+                                                                        //         params,
+                                                                        //     code:
+                                                                        //         Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes,
+                                                                        //   );
+                                                                        // } else if (operation ==
+                                                                        //     'rejectNFTCounterOffer') {
+                                                                        //   await Provider.of<TransactionProvider>(context, listen: false).rejectNFTCounterOffer(
+                                                                        //       walletAddress: walletAddress,
+                                                                        //       params: params,
+                                                                        //       token: accessToken,
+                                                                        //       context: context,
+                                                                        //       operation: operation,
+                                                                        //       code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
+                                                                        // } else if (operation ==
+                                                                        //     'makeCollectionCounterOffer') {
+                                                                        //   await Provider.of<TransactionProvider>(context, listen: false).makeCollectionCounterOffer(
+                                                                        //       walletAddress: walletAddress,
+                                                                        //       params: params,
+                                                                        //       token: accessToken,
+                                                                        //       context: context,
+                                                                        //       operation: operation,
+                                                                        //       code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
+                                                                        // } else if (operation ==
+                                                                        //     'rejectCollectionCounterOffer') {
+                                                                        //   await Provider.of<TransactionProvider>(context, listen: false).rejectCollectionCounterOffer(
+                                                                        //       walletAddress: walletAddress,
+                                                                        //       params: params,
+                                                                        //       token: accessToken,
+                                                                        //       context: context,
+                                                                        //       operation: operation,
+                                                                        //       code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
+                                                                        // } else if (operation ==
+                                                                        //     'CancelCollectionOfferMade') {
+                                                                        //   await Provider.of<TransactionProvider>(context, listen: false)
+                                                                        //       .cancelCollectionOfferMade(
+                                                                        //     walletAddress:
+                                                                        //         walletAddress,
+                                                                        //     // params: params,
+                                                                        //     token:
+                                                                        //         accessToken,
+                                                                        //     context:
+                                                                        //         context,
+                                                                        //     operation:
+                                                                        //         operation,
+                                                                        //     params:
+                                                                        //         params,
+                                                                        //     code:
+                                                                        //         Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes,
+                                                                        //   );
+                                                                        // }
+                                                                        // if (operation ==
+                                                                        //     'CancelAuctionListing') {
+                                                                        //   final cancelAuctionListingResult =
+                                                                        //       await Provider.of<TransactionProvider>(context, listen: false).cancelAuctionListing(
+                                                                        //     walletAddress:
+                                                                        //         walletAddress,
+                                                                        //     token:
+                                                                        //         accessToken,
+                                                                        //     context:
+                                                                        //         context,
+                                                                        //     operation:
+                                                                        //         operation,
+                                                                        //     params:
+                                                                        //         params,
+                                                                        //     code:
+                                                                        //         Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes,
+                                                                        //   );
+                                                                        //   if (cancelAuctionListingResult ==
+                                                                        //       AuthResult.success) {
+                                                                        //     Navigator.pop(context);
+                                                                        //     Future.delayed(Duration(seconds: 2),
+                                                                        //         () async {
+                                                                        //       transactionExecutedDialoge(isDark: setThemeDark, context: context);
+                                                                        //     });
+                                                                        //   }
+                                                                        // } else if (operation ==
+                                                                        //     'CancelCollectionAuctionListing') {
+                                                                        //   await Provider.of<TransactionProvider>(context, listen: false).cancelCollectionAuctionListing(
+                                                                        //       walletAddress: walletAddress,
+                                                                        //       token: accessToken,
+                                                                        //       context: context,
+                                                                        //       operation: operation,
+                                                                        //       params: params,
+                                                                        //       code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
+                                                                        // } else if (operation ==
+                                                                        //     'CancelListing') {
+                                                                        //   await Provider.of<TransactionProvider>(context, listen: false).cancelListing(
+                                                                        //       walletAddress: walletAddress,
+                                                                        //       token: accessToken,
+                                                                        //       context: context,
+                                                                        //       operation: operation,
+                                                                        //       params: params,
+                                                                        //       code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
+                                                                        // } else if (operation ==
+                                                                        //     'CancelCollectionListing') {
+                                                                        //   await Provider.of<TransactionProvider>(context, listen: false).cancelCollectionListing(
+                                                                        //       walletAddress: walletAddress,
+                                                                        //       token: accessToken,
+                                                                        //       context: context,
+                                                                        //       operation: operation,
+                                                                        //       params: params,
+                                                                        //       code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
+                                                                        // }
+                                                                        else {}
                                                                         setState(
                                                                             () {
                                                                           isLoading =
@@ -1665,7 +1683,7 @@ class _TransactionRequestAcceptRejectState
                                                                         if (_timeLeft ==
                                                                             0) {
                                                                           print(
-                                                                              'resend function calling');
+                                                                              'resend first function calling');
                                                                           try {
                                                                             setState(() {
                                                                               _isLoadingResend = true;
@@ -1909,7 +1927,7 @@ class _TransactionRequestAcceptRejectState
                                   if (result == AuthResult.success) {
                                     startTimer();
                                     otpDialog(
-                                      fromTransaction: true,
+                                      fromTransaction:true,
                                       fromAuth: false,
                                       fromUser: false,
                                       events: _events,
@@ -1938,7 +1956,7 @@ class _TransactionRequestAcceptRejectState
                                                           .codeFromOtpBoxes);
                                         } else if (operation ==
                                             'rejectNFTOfferReceived') {
-                                          await Provider.of<
+                                         final rejectNFTOfferReceivedResult = await Provider.of<
                                                       TransactionProvider>(
                                                   context,
                                                   listen: false)
@@ -1953,6 +1971,18 @@ class _TransactionRequestAcceptRejectState
                                                               context,
                                                               listen: false)
                                                           .codeFromOtpBoxes);
+                                         if (rejectNFTOfferReceivedResult ==
+                                             AuthResult.success) {
+                                           Navigator.pop(context);
+                                           Future.delayed(const Duration(milliseconds: 300), () {
+                                             print('Showing transactionExecutedDialoge');
+                                             if (context.mounted) {
+                                               transactionExecutedDialoge(isDark: setThemeDark, context: context);
+                                             } else {
+                                               print('Context is no longer valid');
+                                             }
+                                           });
+                                         }
                                         } else if (operation ==
                                             'AcceptCollectionOffer') {
                                           await Provider.of<
@@ -1972,7 +2002,7 @@ class _TransactionRequestAcceptRejectState
                                                           .codeFromOtpBoxes);
                                         } else if (operation ==
                                             'rejectCollectionOfferReceived') {
-                                          await Provider.of<
+                                        final rejectCollectionOfferReceivedResult =  await Provider.of<
                                                       TransactionProvider>(
                                                   context,
                                                   listen: false)
@@ -1987,9 +2017,21 @@ class _TransactionRequestAcceptRejectState
                                                               context,
                                                               listen: false)
                                                           .codeFromOtpBoxes);
+                                        if (rejectCollectionOfferReceivedResult ==
+                                            AuthResult.success) {
+                                          Navigator.pop(context);
+                                          Future.delayed(const Duration(milliseconds: 300), () {
+                                            print('Showing transactionExecutedDialoge');
+                                            if (context.mounted) {
+                                              transactionExecutedDialoge(isDark: setThemeDark, context: context);
+                                            } else {
+                                              print('Context is no longer valid');
+                                            }
+                                          });
+                                        }
                                         } else if (operation ==
                                             'makeNFTCounterOffer') {
-                                          await Provider.of<
+                                        final makeNFTCounterOfferResult =  await Provider.of<
                                                       TransactionProvider>(
                                                   context,
                                                   listen: false)
@@ -2009,9 +2051,19 @@ class _TransactionRequestAcceptRejectState
                                                     listen: false)
                                                 .codeFromOtpBoxes,
                                           );
+                                        if (makeNFTCounterOfferResult ==
+                                            AuthResult.success) {
+                                          Navigator.pop(context);
+                                          Future.delayed(const Duration(milliseconds: 300), () {
+                                            if (context.mounted) {
+                                              transactionExecutedDialoge(isDark: setThemeDark, context: context);
+                                            } else {
+                                            }
+                                          });
+                                        }
                                         }
                                         if (operation == 'CancelNFTOfferMade') {
-                                          await Provider.of<
+                                          final cancelNFTOfferMadeResult = await Provider.of<
                                                       TransactionProvider>(
                                                   context,
                                                   listen: false)
@@ -2027,9 +2079,21 @@ class _TransactionRequestAcceptRejectState
                                                     listen: false)
                                                 .codeFromOtpBoxes,
                                           );
+                                          if (cancelNFTOfferMadeResult ==
+                                              AuthResult.success) {
+                                            Navigator.pop(context);
+                                            Future.delayed(const Duration(milliseconds: 300), () {
+                                              print('Showing transactionExecutedDialoge');
+                                              if (context.mounted) {
+                                                transactionExecutedDialoge(isDark: setThemeDark, context: context);
+                                              } else {
+                                                print('Context is no longer valid');
+                                              }
+                                            });
+                                          }
                                         } else if (operation ==
                                             'rejectNFTCounterOffer') {
-                                          await Provider.of<
+                                        final rejectNFTCounterOffer =  await Provider.of<
                                                       TransactionProvider>(
                                                   context,
                                                   listen: false)
@@ -2044,9 +2108,21 @@ class _TransactionRequestAcceptRejectState
                                                               context,
                                                               listen: false)
                                                           .codeFromOtpBoxes);
+                                        if (rejectNFTCounterOffer ==
+                                            AuthResult.success) {
+                                          Navigator.pop(context);
+                                          Future.delayed(const Duration(milliseconds: 300), () {
+                                            print('Showing transactionExecutedDialoge');
+                                            if (context.mounted) {
+                                              transactionExecutedDialoge(isDark: setThemeDark, context: context);
+                                            } else {
+                                              print('Context is no longer valid');
+                                            }
+                                          });
+                                        }
                                         } else if (operation ==
                                             'makeCollectionCounterOffer') {
-                                          await Provider.of<
+                                       final makeCollectionCounterOfferResult =   await Provider.of<
                                                       TransactionProvider>(
                                                   context,
                                                   listen: false)
@@ -2061,9 +2137,21 @@ class _TransactionRequestAcceptRejectState
                                                               context,
                                                               listen: false)
                                                           .codeFromOtpBoxes);
+                                       if (makeCollectionCounterOfferResult ==
+                                           AuthResult.success) {
+                                         Navigator.pop(context);
+                                         Future.delayed(const Duration(milliseconds: 300), () {
+                                           print('Showing transactionExecutedDialoge');
+                                           if (context.mounted) {
+                                             transactionExecutedDialoge(isDark: setThemeDark, context: context);
+                                           } else {
+                                             print('Context is no longer valid');
+                                           }
+                                         });
+                                       }
                                         } else if (operation ==
                                             'rejectCollectionCounterOffer') {
-                                          await Provider.of<
+                                         final rejectCollectionCounterOfferResult = await Provider.of<
                                                       TransactionProvider>(
                                                   context,
                                                   listen: false)
@@ -2078,9 +2166,21 @@ class _TransactionRequestAcceptRejectState
                                                               context,
                                                               listen: false)
                                                           .codeFromOtpBoxes);
+                                         if (rejectCollectionCounterOfferResult ==
+                                             AuthResult.success) {
+                                           Navigator.pop(context);
+                                           Future.delayed(const Duration(milliseconds: 300), () {
+                                             print('Showing transactionExecutedDialoge');
+                                             if (context.mounted) {
+                                               transactionExecutedDialoge(isDark: setThemeDark, context: context);
+                                             } else {
+                                               print('Context is no longer valid');
+                                             }
+                                           });
+                                         }
                                         } else if (operation ==
                                             'CancelCollectionOfferMade') {
-                                          await Provider.of<
+                                         final cancelCollectionOfferMadeResult= await Provider.of<
                                                       TransactionProvider>(
                                                   context,
                                                   listen: false)
@@ -2096,6 +2196,18 @@ class _TransactionRequestAcceptRejectState
                                                               context,
                                                               listen: false)
                                                           .codeFromOtpBoxes);
+                                         if (cancelCollectionOfferMadeResult ==
+                                             AuthResult.success) {
+                                           Navigator.pop(context);
+                                           Future.delayed(const Duration(milliseconds: 300), () {
+                                             print('Showing transactionExecutedDialoge');
+                                             if (context.mounted) {
+                                               transactionExecutedDialoge(isDark: setThemeDark, context: context);
+                                             } else {
+                                               print('Context is no longer valid');
+                                             }
+                                           });
+                                         }
                                         }
                                         if (operation ==
                                             'CancelAuctionListing') {
@@ -2120,12 +2232,19 @@ class _TransactionRequestAcceptRejectState
                                           if (cancelAuctionListingResult ==
                                               AuthResult.success) {
                                             Navigator.pop(context);
-                                            transactionExecutedDialoge(
-                                                context: context);
+                                            Future.delayed(const Duration(milliseconds: 300), () {
+                                              print('Showing transactionExecutedDialoge');
+                                              if (context.mounted) {
+                                                transactionExecutedDialoge(isDark: setThemeDark, context: context);
+                                              } else {
+                                                print('Context is no longer valid');
+                                              }
+                                            });
                                           }
-                                        } else if (operation ==
+                                        }
+                                        else if (operation ==
                                             'CancelCollectionAuctionListing') {
-                                          await Provider.of<
+                                          final cancelCollectionAuctionListingResult = await Provider.of<
                                                       TransactionProvider>(
                                                   context,
                                                   listen: false)
@@ -2140,9 +2259,22 @@ class _TransactionRequestAcceptRejectState
                                                               context,
                                                               listen: false)
                                                           .codeFromOtpBoxes);
-                                        } else if (operation ==
+                                          if (cancelCollectionAuctionListingResult ==
+                                              AuthResult.success) {
+                                            Navigator.pop(context);
+                                            Future.delayed(const Duration(milliseconds: 300), () {
+                                              print('Showing transactionExecutedDialoge');
+                                              if (context.mounted) {
+                                                transactionExecutedDialoge(isDark: setThemeDark, context: context);
+                                              } else {
+                                                print('Context is no longer valid');
+                                              }
+                                            });
+                                          }
+                                        }
+                                        else if (operation ==
                                             'CancelListing') {
-                                          await Provider.of<
+                                         final cancelListingResult = await Provider.of<
                                                       TransactionProvider>(
                                                   context,
                                                   listen: false)
@@ -2157,9 +2289,21 @@ class _TransactionRequestAcceptRejectState
                                                               context,
                                                               listen: false)
                                                           .codeFromOtpBoxes);
+                                         if (cancelListingResult ==
+                                             AuthResult.success) {
+                                           Navigator.pop(context);
+                                           Future.delayed(const Duration(milliseconds: 300), () {
+                                             print('Showing transactionExecutedDialoge');
+                                             if (context.mounted) {
+                                               transactionExecutedDialoge(isDark: setThemeDark, context: context);
+                                             } else {
+                                               print('Context is no longer valid');
+                                             }
+                                           });
+                                         }
                                         } else if (operation ==
                                             'CancelCollectionListing') {
-                                          await Provider.of<
+                                          final cancelCollectionListingResult = await Provider.of<
                                                       TransactionProvider>(
                                                   context,
                                                   listen: false)
@@ -2174,8 +2318,19 @@ class _TransactionRequestAcceptRejectState
                                                               context,
                                                               listen: false)
                                                           .codeFromOtpBoxes);
+                                          if (cancelCollectionListingResult ==
+                                              AuthResult.success) {
+                                            Navigator.pop(context);
+                                            Future.delayed(const Duration(milliseconds: 300), () {
+                                              print('Showing transactionExecutedDialoge');
+                                              if (context.mounted) {
+                                                transactionExecutedDialoge(isDark: setThemeDark, context: context);
+                                              } else {
+                                                print('Context is no longer valid');
+                                              }
+                                            });
+                                          }
                                         } else {}
-                                        // Navigator.pop(context);
                                         setState(() {
                                           isLoading = false;
                                         });
@@ -2552,7 +2707,7 @@ class _TransactionRequestAcceptRejectState
                                 ? AppColors.textColorWhite
                                 : AppColors.textColorBlack,
                             fontWeight: FontWeight.w600,
-                            fontSize: 17.5.sp,
+                            fontSize: 17.sp,
                           ),
                         ),
                         SizedBox(
@@ -2595,7 +2750,10 @@ class _TransactionRequestAcceptRejectState
                             TextSpan(
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {},
-                                text: ' xyeafa...wrbqwurqw'.tr(),
+                                // text: ' xyeafa...wrbqwurqw'.tr(),
+                                text: Provider.of<TransactionProvider>(context,
+                                        listen: false)
+                                    .txIdToShowInDialog,
                                 style: TextStyle(
                                     // decoration: TextDecoration.underline,
                                     // height: 1.5,
@@ -2639,11 +2797,11 @@ class _TransactionRequestAcceptRejectState
     );
   }
 
-  void paymentRecievedDialogue({
+   paymentRecievedDialogue({
     bool isDark = true,
     String amount = '',
   }) {
-    showDialog(
+   return showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
@@ -2783,10 +2941,10 @@ class _TransactionRequestAcceptRejectState
   }
 }
 
-void transactionExecutedDialoge(
-    {bool isDark = true, required BuildContext context}) {
+transactionExecutedDialoge(
+    {bool isDark = true, required BuildContext context}) async {
   print('now running dialoge');
-  showDialog(
+  return showDialog(
     context: context,
     builder: (BuildContext context) {
       final screenWidth = MediaQuery.of(context).size.width;
@@ -2831,7 +2989,7 @@ void transactionExecutedDialoge(
                               ? AppColors.textColorWhite
                               : AppColors.textColorBlack,
                           fontWeight: FontWeight.w600,
-                          fontSize: 17.5.sp,
+                          fontSize: 17.sp,
                         ),
                       ),
                       SizedBox(
@@ -2873,9 +3031,11 @@ void transactionExecutedDialoge(
                           TextSpan(
                               recognizer: TapGestureRecognizer()..onTap = () {},
                               // text: 'abc',
-                              text: Provider.of<TransactionProvider>(context,
-                                      listen: false)
-                                  .nonPayableTxId,
+                              text: ' ' + replaceMiddleWithDots2(
+                                Provider.of<TransactionProvider>(context,
+                                    listen: false)
+                                    .txIdToShowInDialog,
+                              ),
                               style: TextStyle(
                                   color: AppColors.textColorToska,
                                   fontWeight: FontWeight.w600,

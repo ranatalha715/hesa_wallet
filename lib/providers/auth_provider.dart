@@ -1002,6 +1002,8 @@ class AuthProvider with ChangeNotifier {
         final accessToken = jsonResponse['data']['accessToken'];
         final refreshToken = jsonResponse['data']['refreshToken'];
         final prefs = await SharedPreferences.getInstance();
+        await prefs.remove('accessToken');
+        await prefs.remove('refreshToken');
         await prefs.setString('accessToken', accessToken);
         await prefs.setString('refreshToken', refreshToken);
         return AuthResult.success;

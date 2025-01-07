@@ -252,10 +252,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     });
     // startTokenRefreshTimer(
     //     refreshToken: refreshToken, token: accessToken, context: context);
-    // Timer.periodic(Duration(seconds: 5), (timer) async {
-    //   await Provider.of<AuthProvider>(context, listen: false).refreshToken(
-    //       refreshToken: refreshToken, context: context, token: accessToken);
-    // });
+    Timer.periodic(Duration(minutes: 25), (timer) async {
+      await Provider.of<AuthProvider>(context, listen: false).refreshToken(
+          refreshToken: refreshToken, context: context, token: accessToken);
+    });
   }
 
   @override
@@ -382,16 +382,18 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     refreshToken = prefs.getString('refreshToken')!;
     print('test access token' + accessToken);
     print('test refresh token' + refreshToken);
+    if (isTokenExpired(accessToken)) {
+      prefs.remove('accessToken');
+      prefs.remove('refreshToken');
+      Provider.of<AuthProvider>(context, listen: false).refreshToken(
+          refreshToken: refreshToken, context: context, token: accessToken);
+    } else {}
     navigateToLoginPage(context);
-    // if (isTokenExpired(accessToken)) {
-    //   prefs.remove('accessToken');
-    //   Provider.of<AuthProvider>(context, listen: false).refreshToken(
-    //       refreshToken: refreshToken, context: context, token: accessToken);
-    // } else {}
   }
 
-  void navigateToLoginPage(BuildContext context) async {
-    Navigator.pushAndRemoveUntil(
+
+   navigateToLoginPage(BuildContext context) async {
+   await Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => Wallet()),
           (Route<dynamic> route) => false,

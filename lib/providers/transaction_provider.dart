@@ -20,6 +20,7 @@ class TransactionProvider with ChangeNotifier {
   var checkoutURL;
   var checkoutId;
   var tokenizedCheckoutId;
+  var txIdToShowInDialog;
   var selectedCardTokenId;
   var selectedCardNum;
   var selectedCardLast4Digits;
@@ -1805,6 +1806,7 @@ class TransactionProvider with ChangeNotifier {
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString()
         );
+        txIdToShowInDialog=responseBody['data']['txId'];
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
@@ -1876,6 +1878,7 @@ class TransactionProvider with ChangeNotifier {
         print("send response " + responseBody.toString());
         functionToNavigateAfterNonPayable(response.body.toString(), operation,context,
             statusCode: response.statusCode.toString());
+        txIdToShowInDialog=responseBody['data']['txId'];
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
@@ -1948,6 +1951,7 @@ class TransactionProvider with ChangeNotifier {
         functionToNavigateAfterNonPayable(response.body.toString(), operation,context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
+        txIdToShowInDialog=responseBody['data']['txId'];
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
@@ -2017,6 +2021,7 @@ class TransactionProvider with ChangeNotifier {
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
+        txIdToShowInDialog=responseBody['data']['txId'];
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
@@ -2084,14 +2089,22 @@ class TransactionProvider with ChangeNotifier {
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
+        txIdToShowInDialog=responseBody['data']['txId'];
+        print('txIDfor' + txIdToShowInDialog);
+        otpErrorResponse=false;
+        otpSuccessResponse=true;
         return AuthResult.success;
       } else {
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
+        otpErrorResponse=true;
+        otpSuccessResponse=false;
         return AuthResult.failure;
       }
     } catch (e) {
       functionToNavigateAfterNonPayable(e.toString(), operation, context,);
+      otpErrorResponse=true;
+      otpSuccessResponse=false;
       return AuthResult.failure;
     }
   }
@@ -2141,6 +2154,8 @@ class TransactionProvider with ChangeNotifier {
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
+        txIdToShowInDialog=responseBody['data']['txId'];
+        print('txIDfor' + txIdToShowInDialog);
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
@@ -2205,6 +2220,7 @@ class TransactionProvider with ChangeNotifier {
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
+        txIdToShowInDialog=responseBody['data']['txId'];
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
@@ -2269,6 +2285,7 @@ class TransactionProvider with ChangeNotifier {
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString(), paramsToSend: paramsMap.toString());
         print("send response " + responseBody.toString());
+        txIdToShowInDialog=responseBody['data']['txId'];
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
@@ -2333,6 +2350,7 @@ class TransactionProvider with ChangeNotifier {
         functionToNavigateAfterNonPayable(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         print("send response " + responseBody.toString());
+        txIdToShowInDialog=responseBody['data']['txId'];
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
@@ -2394,6 +2412,7 @@ class TransactionProvider with ChangeNotifier {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
         print("send response " + responseBody.toString());
+        txIdToShowInDialog=responseBody['data']['txId'];
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
@@ -2553,6 +2572,7 @@ class TransactionProvider with ChangeNotifier {
         print("send response " + responseBody.toString());
         functionToNavigateAfterCounterOffer(response.body.toString(), operation,
             statusCode: response.statusCode.toString());
+        txIdToShowInDialog=responseBody['data']['txId'];
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
@@ -2617,6 +2637,7 @@ class TransactionProvider with ChangeNotifier {
         print("send response " + responseBody.toString());
         functionToNavigateAfterCounterOffer(response.body.toString(), operation,
             statusCode: response.statusCode.toString());
+        txIdToShowInDialog=responseBody['data']['txId'];
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
@@ -2681,6 +2702,7 @@ class TransactionProvider with ChangeNotifier {
         print("send response " + responseBody.toString());
         functionToNavigateAfterCounterOffer(response.body.toString(), operation,
             statusCode: response.statusCode.toString());
+        txIdToShowInDialog=responseBody['data']['txId'];
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
@@ -2743,6 +2765,7 @@ class TransactionProvider with ChangeNotifier {
         print("send response " + responseBody.toString());
         functionToNavigateAfterCounterOffer(response.body.toString(), operation,
             statusCode: response.statusCode.toString());
+        txIdToShowInDialog=responseBody['data']['txId'];
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
