@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hesa_wallet/constants/colors.dart';
+import 'package:hesa_wallet/constants/string_utils.dart';
 import 'package:hesa_wallet/providers/transaction_provider.dart';
 import 'package:hesa_wallet/screens/connection_requests_pages/connect_dapp.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/transaction_summary.dart';
@@ -151,26 +152,6 @@ class _WalletActivityState extends State<WalletActivity> {
     callRedDotLogic();
   }
 
-  String calculateTimeDifference(String createdAtStr) {
-    DateTime createdAt = DateTime.parse(createdAtStr).toUtc();
-    DateTime now = DateTime.now().toUtc();
-    Duration difference = now.difference(createdAt);
-    if (difference.inSeconds < 60) {
-      return '${difference.inSeconds}s';
-    } else if (difference.inMinutes < 60) {
-      return '${difference.inMinutes}m';
-    } else if (difference.inHours < 24) {
-      return '${difference.inHours}h';
-    } else if (difference.inDays < 30) {
-      return '${difference.inDays}d';
-    } else if (difference.inDays < 365) {
-      int months = (difference.inDays / 30).floor();
-      return '$months m';
-    } else {
-      int years = (difference.inDays / 365).floor();
-      return '$years y';
-    }
-  }
 
   Future<List<Map<String, dynamic>>>
   _getSortedActivitiesWithSiteConnection() async {
@@ -341,7 +322,7 @@ class _WalletActivityState extends State<WalletActivity> {
                                   return WalletActivityWidget(
                                     isPending: activity['tokenName'] == 'Site Connected' || activity['tokenName'] == 'Site Disconnected',
                                     title: activity['tokenName'],
-                                    subTitle: activity['transactionType'],
+                                    subTitle: tnxLabelingWithApi(activity['transactionType']),
                                     image: activity['image'],
                                     time: calculateTimeDifference(activity['time']),
                                     priceDown: activity['amountType'] == 'debit' ? activity['transactionAmount'] : null,

@@ -14,6 +14,7 @@ import 'package:hesa_wallet/widgets/nfts_collection_divisions/nfts_collections_d
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import '../../constants/string_utils.dart';
 import '../../providers/assets_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
@@ -47,17 +48,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     accessToken = prefs.getString('accessToken')!;
   }
 
-  String replaceMiddleWithDots(String input) {
-    if (input.length <= 30) {
-      return input;
-    }
-    final int middleIndex = input.length ~/ 2;
-    final int startIndex = middleIndex - 16;
-    final int endIndex = middleIndex + 16;
-    final String result =
-        input.substring(0, startIndex) + '...' + input.substring(endIndex);
-    return result;
-  }
+
   var userWalletAddress;
   Future<void> init() async {
     setState(() {
@@ -1201,7 +1192,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                           Text(
                                                             user.walletAddress !=
                                                                 null
-                                                                ? replaceMiddleWithDots(
+                                                                ? replaceMiddleWithDotsWA(
                                                                 user.walletAddress!)
                                                                 : "...",
                                                             style: TextStyle(

@@ -19,6 +19,7 @@ import 'dart:convert';
 import '../../constants/app_deep_linking.dart';
 import '../../constants/configs.dart';
 import '../../constants/inapp_settings.dart';
+import '../../constants/string_utils.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../widgets/main_header.dart';
@@ -178,58 +179,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
     super.dispose();
   }
 
-  String addSpacesToText(String input) {
-    final chunkSize = 4;
-    final chunks = <String>[];
-
-    for (int i = 0; i < input.length; i += chunkSize) {
-      final end =
-          (i + chunkSize <= input.length) ? i + chunkSize : input.length;
-      chunks.add(input.substring(i, end));
-    }
-
-    return chunks.join(' ');
-  }
-
-  String replaceMiddleWithDots(String input) {
-    if (input.length <= 30) {
-      return input;
-    }
-
-    final int middleIndex = input.length ~/ 2; // Find the middle index
-    final int startIndex = middleIndex - 15; // Calculate the start index
-    final int endIndex = middleIndex + 15; // Calculate the end index
-
-    // Split the input string into three parts and join them with '...'
-    final String result =
-        input.substring(0, startIndex) + '...' + input.substring(endIndex);
-
-    return result;
-  }
-
-  String replaceMiddleWithDotsTokenId(String input) {
-    if (input.length <= 30) {
-      return input;
-    }
-
-    final int middleIndex = input.length ~/ 2; // Find the middle index
-    final int startIndex = middleIndex - 12; // Calculate the start index
-    final int endIndex = middleIndex + 9; // Calculate the end index
-
-    // Split the input string into three parts and join them with '...'
-    final String result =
-        input.substring(0, startIndex) + '...' + input.substring(endIndex);
-
-    return result;
-  }
-
-  String capitalizeFirstLetter(String text) {
-    if (text.isEmpty) {
-      return text;
-    }
-    return text[0].toUpperCase() + text.substring(1);
-  }
-
   rejectTransactions() {
     setState(() {
       isLoading = true;
@@ -281,195 +230,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
     }
   }
 
-  void confirmBrandDialogue(Function onCloseHandler,
-      {required bool showPopup}) {
-    if (showPopup) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          final screenWidth = MediaQuery.of(context).size.width;
-          final dialogWidth = screenWidth * 0.85;
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-            return Dialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              backgroundColor: Colors.transparent,
-              child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
-                  child: Container(
-                    height: 23.h,
-                    width: dialogWidth,
-                    decoration: BoxDecoration(
-                      color: AppColors.showDialogClr,
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.textColorBlack.withOpacity(0.95),
-                          offset: Offset(0, 0),
-                          blurRadius: 10,
-                          spreadRadius: 0.4,
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 4.h,
-                        ),
-                        Text(
-                          'Please select your card type'.tr(),
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14.sp,
-                              color: AppColors.textColorWhite),
-                        ),
-                        SizedBox(
-                          height: 4.h,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                Provider.of<TransactionProvider>(context,
-                                        listen: false)
-                                    .selectedCardBrand = 'VISA';
-                                navigateToAddCard();
-                              },
-                              child: Image.asset(
-                                "assets/images/VisaPopup.png",
-                                height: 40.sp,
-                                width: 40.sp,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Provider.of<TransactionProvider>(context,
-                                        listen: false)
-                                    .selectedCardBrand = 'MASTER';
-                                navigateToAddCard();
-                              },
-                              child: Image.asset(
-                                "assets/images/MastercardPopup.png",
-                                height: 40.sp,
-                                width: 40.sp,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Provider.of<TransactionProvider>(context,
-                                        listen: false)
-                                    .selectedCardBrand = 'MADA';
-                                navigateToAddCard();
-                              },
-                              child: Image.asset(
-                                "assets/images/MadaPayPopup.png",
-                                height: 45.sp,
-                                width: 44.sp,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 2.h,
-                        ),
-                      ],
-                    ),
-                  )),
-            );
-          });
-        },
-      ).then((value) => onCloseHandler());
-    } else {
-      onCloseHandler();
-    }
-  }
-
-  String formatCurrency(String? numberString) {
-    if (numberString == null || numberString.isEmpty) {
-      return "0";
-    }
-    try {
-      num number = num.parse(numberString);
-      final formatter = NumberFormat("#,##0.##", "en_US");
-      return formatter.format(number);
-    } catch (e) {
-      return "Invalid Number";
-    }
-  }
-
-  String getTransactionDetails(String operation) {
-    switch (operation) {
-      case 'MintNFT':
-      case 'MintNFT':
-        return 'NFT Minting';
-
-      case 'MintCollection':
-        return 'NFT Collection Minting';
-
-      case 'listNFT':
-        return 'NFT Listing';
-
-      case 'listAuctionNFT':
-      case 'listAuctionCollection':
-        return 'Auction Listing';
-
-      case 'listCollection':
-        return 'Listing for sale';
-
-      case 'makeOfferNFT':
-      case 'makeOfferCollection':
-        return 'Offer Placement';
-
-      case 'purchaseNFT':
-      case 'purchaseCollection':
-        return 'Purchase';
-
-      case 'burnNFT':
-      case 'burnCollection':
-        return 'Burning';
-
-      case 'CancelNFTOfferMade':
-      case 'CancelCollectionOfferMade':
-        return 'Offer Cancellation';
-
-      case 'makeNFTCounterOffer':
-        return 'Offer Placement';
-
-      case 'makeCollectionCounterOffer':
-        return 'Counter Offer Placement';
-
-      case 'AcceptCollectionOffer':
-      case 'AcceptNFTOffer':
-        return 'Offer Acceptance';
-
-      case 'rejectCollectionOfferReceived':
-      case 'rejectNFTOfferReceived':
-        return 'Offer Rejection';
-
-      case 'CancelListing':
-      case 'CancelCollectionAuctionListing':
-      case 'CancelAuctionListing':
-      case 'CancelCollectionAuctionListing':
-        return 'Listing Cancellation';
-
-      case 'acceptCollectionCounterOffer':
-      case 'acceptNFTCounterOffer':
-        return 'Counter Offer Acceptance';
-
-      case 'rejectCollectionCounterOffer':
-      case 'rejectNFTCounterOffer':
-        return 'Counter Offer Rejection';
-
-      default:
-        return 'Unknown Operation';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -648,7 +408,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                 ),
                                 transactionDetailsWidget(
                                   title: 'Tnx Type:'.tr(),
-                                  details: getTransactionDetails(operation),
+                                  details: tnxLabelingWithPayload(operation),
                                   isDark: themeNotifier.isDark ? true : false,
                                 ),
                                 transactionDetailsWidget(
@@ -3449,5 +3209,113 @@ class _TransactionRequestState extends State<TransactionRequest> {
             right: 20,
           );
         });
+  }
+  void confirmBrandDialogue(Function onCloseHandler,
+      {required bool showPopup}) {
+    if (showPopup) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          final screenWidth = MediaQuery.of(context).size.width;
+          final dialogWidth = screenWidth * 0.85;
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return Dialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  backgroundColor: Colors.transparent,
+                  child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+                      child: Container(
+                        height: 23.h,
+                        width: dialogWidth,
+                        decoration: BoxDecoration(
+                          color: AppColors.showDialogClr,
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.textColorBlack.withOpacity(0.95),
+                              offset: Offset(0, 0),
+                              blurRadius: 10,
+                              spreadRadius: 0.4,
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 4.h,
+                            ),
+                            Text(
+                              'Please select your card type'.tr(),
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14.sp,
+                                  color: AppColors.textColorWhite),
+                            ),
+                            SizedBox(
+                              height: 4.h,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                GestureDetector(
+                                  onTap: () async {
+                                    Provider.of<TransactionProvider>(context,
+                                        listen: false)
+                                        .selectedCardBrand = 'VISA';
+                                    navigateToAddCard();
+                                  },
+                                  child: Image.asset(
+                                    "assets/images/VisaPopup.png",
+                                    height: 40.sp,
+                                    width: 40.sp,
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Provider.of<TransactionProvider>(context,
+                                        listen: false)
+                                        .selectedCardBrand = 'MASTER';
+                                    navigateToAddCard();
+                                  },
+                                  child: Image.asset(
+                                    "assets/images/MastercardPopup.png",
+                                    height: 40.sp,
+                                    width: 40.sp,
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Provider.of<TransactionProvider>(context,
+                                        listen: false)
+                                        .selectedCardBrand = 'MADA';
+                                    navigateToAddCard();
+                                  },
+                                  child: Image.asset(
+                                    "assets/images/MadaPayPopup.png",
+                                    height: 45.sp,
+                                    width: 44.sp,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 2.h,
+                            ),
+                          ],
+                        ),
+                      )),
+                );
+              });
+        },
+      ).then((value) => onCloseHandler());
+    } else {
+      onCloseHandler();
+    }
   }
 }

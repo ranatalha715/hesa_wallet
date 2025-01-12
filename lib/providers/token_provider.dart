@@ -7,8 +7,6 @@ import '../main.dart';
 class TokenProvider with ChangeNotifier {
   String _wstoken = '';
   Timer? _tokenRefreshTimer;
-  // bool _isWifiOn = true; // Default to true, assuming WiFi is initially on
-
   TokenProvider() {
     _loadToken();
     _startTokenRefreshTimer();

@@ -117,13 +117,10 @@ void otpDialog({
                                       BoxShadow(
                                         color: AppColors.textColorBlack
                                             .withOpacity(0.95),
-                                        // Dark shadow color
                                         offset: Offset(0, 0),
-                                        // No offset, shadow will appear equally on all sides
                                         blurRadius: 10,
-                                        // Adjust blur for softer shadow
                                         spreadRadius:
-                                            0.4, // Spread the shadow slightly
+                                            0.4,
                                       ),
                                     ],
                                   ),
@@ -203,14 +200,16 @@ void otpDialog({
                                       SizedBox(
                                         height: 2.h,
                                       ),
+                        Consumer<AuthProvider>(
+                        builder: (context, auth, child) {
+                        return
                                       Padding(
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 10.sp),
+
                                         child:
                                         Pinput(
-                                            // smsRetriever: ,
                                             controller: otp6Controller,
-
                                             length: 6,
                                             defaultPinTheme: PinTheme(
                                               width: 9.8.w,
@@ -325,7 +324,9 @@ void otpDialog({
                                                   ? firstBtnHandler()
                                                   : () {};
                                             }),
-                                      ),
+                                      );
+                        },
+                        ),
 
                                       if (auth.otpErrorResponse ||
                                           user.otpErrorResponse ||

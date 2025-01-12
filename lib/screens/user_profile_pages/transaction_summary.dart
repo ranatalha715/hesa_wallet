@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../constants/string_utils.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../widgets/main_header.dart';
@@ -96,96 +97,10 @@ class _TransactionSummaryState extends State<TransactionSummary> {
     }
     _isInit = false;
   }
-
-  String replaceMiddleWithDotstxId(String input) {
-    if (input.length <= 30) {
-      return input;
-    }
-
-    final int middleIndex = input.length ~/ 2; // Find the middle index
-    final int startIndex = middleIndex - 23; // Calculate the start index
-    final int endIndex = middleIndex + 23; // Calculate the end index
-
-    // Split the input string into three parts and join them with '...'
-    final String result =
-        input.substring(0, startIndex) + '....' + input.substring(endIndex);
-
-    return result;
-  }
-
-  String replaceMiddleWithDotstxIdCounter(String input) {
-    if (input.length <= 30) {
-      return input;
-    }
-
-    final int middleIndex = input.length ~/ 2; // Find the middle index
-    final int startIndex = middleIndex - 15; // Calculate the start index
-    final int endIndex = middleIndex + 15; // Calculate the end index
-
-    // Split the input string into three parts and join them with '...'
-    final String result =
-        input.substring(0, startIndex) + '....' + input.substring(endIndex);
-
-    return result;
-  }
-
-  String replaceMiddleWithDotsTokenId(String input) {
-    if (input.length <= 30) {
-      return input;
-    }
-
-    final int middleIndex = input.length ~/ 2; // Find the middle index
-    final int startIndex = middleIndex - 10; // Calculate the start index
-    final int endIndex = middleIndex + 10; // Calculate the end index
-
-    // Split the input string into three parts and join them with '...'
-    final String result =
-        input.substring(0, startIndex) + '....' + input.substring(endIndex);
-
-    return result;
-  }
-
-  String replaceMiddleWithDots(String input) {
-    if (input.length <= 30) {
-      return input;
-    }
-
-    final int middleIndex = input.length ~/ 2; // Find the middle index
-    final int startIndex = middleIndex - 15; // Calculate the start index
-    final int endIndex = middleIndex + 15; // Calculate the end index
-
-    // Split the input string into three parts and join them with '...'
-    final String result =
-        input.substring(0, startIndex) + '....' + input.substring(endIndex);
-
-    return result;
-  }
-
   void _launchURL(String url) async {
     Uri uri = Uri.parse(url);
     if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
       throw 'Could not launch $url';
-    }
-  }
-
-  String formatCurrency(String? numberString) {
-    // Check if the string is null or empty
-    if (numberString == null || numberString.isEmpty) {
-      return "0"; // Return a default value if input is invalid
-    }
-
-    try {
-      // Convert the string to a number (num handles both int and double)
-      num number = num.parse(numberString);
-
-      // Create a NumberFormat object for Saudi currency style
-      final formatter = NumberFormat("#,##0.##", "en_US");
-
-      // Format the number with commas
-      return formatter.format(number);
-    } catch (e) {
-      // Handle any format exceptions and return a fallback
-      return "Invalid Number";
     }
   }
 
@@ -583,7 +498,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                     ),
                                     transactionDetailsWidget(
                                       title: 'Tx Type:'.tr(),
-                                      details: transactionSummary.txType,
+                                      details: tnxLabelingWithApi(transactionSummary.txType),
                                       isDark:
                                           themeNotifier.isDark ? true : false,
                                     ),

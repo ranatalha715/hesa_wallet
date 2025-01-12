@@ -124,62 +124,6 @@ class _TransactionRequestAcceptRejectState
         .getUserDetails(token: accessToken, context: context);
   }
 
-  // Future<String?> getCheckOut() async {
-  //   final url = Uri.parse('https://dev.hyperpay.com/hyperpay-demo/getcheckoutid.php');
-  //   final response = await http.get(url);
-  //   if (response.statusCode == 200) {
-  //     dev.log(json.decode(response.body)['id'].toString(), name: "checkoutId");
-  //     print('successful response');
-  //     print(json.decode(response.body));
-  //     return json.decode(response.body)['id'];
-  //   }else{
-  //     dev.log(response.body.toString(), name: "STATUS CODE ERROR");
-  //     return null;
-  //   }
-  // }
-
-  // void payRequestNowReadyUI(
-  //     {required List<String> brandsName, required String checkoutId}) async {
-  //   try {
-  //     PaymentResultData paymentResultData;
-  //     paymentResultData = await flutterHyperPay.readyUICards(
-  //       readyUI: ReadyUI(
-  //         brandsName: brandsName,
-  //         checkoutId: checkoutId,
-  //         // checkoutId: checkoutId,
-  //         merchantIdApplePayIOS: InAppPaymentSetting.merchantId,
-  //         countryCodeApplePayIOS: InAppPaymentSetting.countryCode,
-  //         companyNameApplePayIOS: "Test Co",
-  //         themColorHexIOS: "#000000",
-  //         // FOR IOS ONLY
-  //         setStorePaymentDetailsMode:
-  //             true, // store payment details for future use
-  //       ),
-  //     );
-  //     print("paymentResultData.paymentResult=");
-  //     print(paymentResultData.paymentResult);
-  //     if (paymentResultData.paymentResult == PaymentResult.success ||
-  //         paymentResultData.paymentResult == PaymentResult.sync) {
-  //       Provider.of<TransactionProvider>(context, listen: false).payableTransactionProcess(token: accessToken,
-  //           paymentId: paymentResultData.paymentResult.toString()
-  //           //         Provider.of<TransactionProvider>(context, listen: false)
-  //           //             .checkoutId
-  //           , context: context);
-  //       // InAppPaymentSetting.getShopperResultUrl(
-  //       //     Provider.of<TransactionProvider>(context, listen: false)
-  //       //         .checkoutId);
-  //       print('Payment successful');
-  //       print('ye response ${paymentResultData}');
-  //       // Handle success
-  //     } else {
-  //       print('Payment failed');
-  //       // Handle failure
-  //       print('Failure Reason: ${paymentResultData.errorString}');
-  //     }
-  //   } catch (e) {
-  //     print('Error occurred: $e');
-  //   }
-  // }
 
   void startTimer() {
     // Cancel the previous timer if it's active
@@ -224,10 +168,6 @@ class _TransactionRequestAcceptRejectState
     var data = json.decode(response.body);
 
     print("payment_status: ${data["result"].toString()}");
-
-    // setState(() {
-    //   _resultText = data["result"].toString();
-    // });
   }
 
   void payRequestNowReadyUI(
@@ -315,14 +255,6 @@ class _TransactionRequestAcceptRejectState
 
   @override
   void initState() {
-    // Future.delayed(Duration(seconds: 2), () {
-    //   print('before dialoge');
-    //
-    //   transactionExecutedDialoge(isDark: setThemeDark, context: context);
-    //   print('After dialoge');
-    // }
-    // );
-
     init();
     _events = new StreamController<int>();
     _events.add(60);
@@ -336,11 +268,6 @@ class _TransactionRequestAcceptRejectState
     fToast.init(context);
     flutterHyperPay = FlutterHyperPay(
       shopperResultUrl:
-          // getShopperResultUrl(
-          //     Provider.of<TransactionProvider>(context, listen: false).checkoutId
-          // ),
-          // "http://161.35.16.112:3001/payable-transactions/process?paymentId=" + Provider.of<TransactionProvider>(context, listen: false).checkoutId,
-          // InAppPaymentSetting.getShopperResultUrl(''),
           InAppPaymentSetting.shopperResultUrl,
       paymentMode: PaymentMode.test,
       lang: 'eng',
@@ -352,50 +279,6 @@ class _TransactionRequestAcceptRejectState
   String formattedExpiryDate = '';
   String displayedName = '';
   final TextEditingController _cardnumberController = TextEditingController();
-
-  String addSpacesToText(String input) {
-    final chunkSize = 4;
-    final chunks = <String>[];
-
-    for (int i = 0; i < input.length; i += chunkSize) {
-      final end =
-          (i + chunkSize <= input.length) ? i + chunkSize : input.length;
-      chunks.add(input.substring(i, end));
-    }
-
-    return chunks.join(' ');
-  }
-
-  String replaceMiddleWithDots(String input) {
-    if (input.length <= 30) {
-      return input;
-    }
-
-    final int middleIndex = input.length ~/ 2;
-    final int startIndex = middleIndex - 15;
-    final int endIndex = middleIndex + 15;
-    final String result =
-        input.substring(0, startIndex) + '...' + input.substring(endIndex);
-
-    return result;
-  }
-
-  String replaceMiddleWithDotsTokenId(String input) {
-    if (input.length <= 32) {
-      return input;
-    }
-    final int numCharsToShow = 7;
-    final String start = input.substring(0, numCharsToShow);
-    final String end = input.substring(input.length - numCharsToShow);
-    return "$start...$end";
-  }
-
-  String capitalizeFirstLetter(String text) {
-    if (text.isEmpty) {
-      return text;
-    }
-    return text[0].toUpperCase() + text.substring(1);
-  }
 
   //rejectFuncTosendmuamil
   rejectTransactions() {
@@ -421,86 +304,6 @@ class _TransactionRequestAcceptRejectState
     });
   }
 
-  String formatCurrency(String? numberString) {
-    if (numberString == null || numberString.isEmpty) {
-      return "0";
-    }
-    try {
-      num number = num.parse(numberString);
-      final formatter = NumberFormat("#,##0.##", "en_US");
-      return formatter.format(number);
-    } catch (e) {
-      return "Invalid Number";
-    }
-  }
-
-  String getTransactionDetails(String operation) {
-    switch (operation) {
-      case 'MintNFT':
-      case 'MintNFT':
-        return 'NFT Minting';
-
-      case 'MintCollection':
-        return 'NFT Collection Minting';
-
-      case 'listNFT':
-        return 'NFT Listing';
-
-      case 'listAuctionNFT':
-      case 'listAuctionCollection':
-        return 'Auction Listing';
-
-      case 'listCollection':
-        return 'Listing for sale';
-
-      case 'makeOfferNFT':
-      case 'makeOfferCollection':
-        return 'Offer Placement';
-
-      case 'purchaseNFT':
-      case 'purchaseCollection':
-        return 'Purchase';
-
-      case 'burnNFT':
-      case 'burnCollection':
-        return 'Burning';
-
-      case 'CancelNFTOfferMade':
-      case 'CancelCollectionOfferMade':
-        return 'Offer Cancellation';
-
-      case 'makeNFTCounterOffer':
-        return 'Counter Offer Placement';
-
-      case 'makeCollectionCounterOffer':
-        return 'Counter Offer Placement';
-
-      case 'AcceptCollectionOffer':
-      case 'AcceptNFTOfferReceived':
-        return 'Offer Acceptance';
-
-      case 'rejectCollectionOfferReceived':
-      case 'rejectNFTOfferReceived':
-        return 'Offer Rejection';
-
-      case 'CancelListing':
-      case 'CancelCollectionListing':
-      case 'CancelAuctionListing':
-      case 'CancelCollectionAuctionListing':
-        return 'Listing Cancellation';
-
-      case 'acceptCollectionCounterOffer':
-      case 'acceptNFTCounterOffer':
-        return 'Counter Offer Acceptance';
-
-      case 'rejectCollectionCounterOffer':
-      case 'rejectNFTCounterOffer':
-        return 'Counter Offer Rejection';
-
-      default:
-        return 'Unknown Operation';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -748,7 +551,7 @@ class _TransactionRequestAcceptRejectState
                                                   transactionDetailsWidget(
                                                     title: 'Tnx Type:'.tr(),
                                                     details:
-                                                        getTransactionDetails(
+                                                        tnxLabelingWithPayload(
                                                             operation),
                                                     isDark: themeNotifier.isDark
                                                         ? true
@@ -2222,22 +2025,16 @@ class _TransactionRequestAcceptRejectState
                                             context: context,
                                             operation: operation,
                                             params: params,
-                                            code: otp1Controller.text +
-                                                otp2Controller.text +
-                                                otp3Controller.text +
-                                                otp4Controller.text +
-                                                otp5Controller.text +
-                                                otp6Controller.text,
+                                            code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes,
+
                                           );
                                           if (cancelAuctionListingResult ==
                                               AuthResult.success) {
                                             Navigator.pop(context);
                                             Future.delayed(const Duration(milliseconds: 300), () {
-                                              print('Showing transactionExecutedDialoge');
                                               if (context.mounted) {
                                                 transactionExecutedDialoge(isDark: setThemeDark, context: context);
                                               } else {
-                                                print('Context is no longer valid');
                                               }
                                             });
                                           }

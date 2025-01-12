@@ -16,6 +16,7 @@ import 'package:hesa_wallet/screens/user_profile_pages/nfts_details.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/wallet_activity.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:hesa_wallet/widgets/dialog_button.dart';
+import 'package:hesa_wallet/widgets/restart_widget.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:flutter/material.dart';
@@ -77,6 +78,7 @@ Future<void> main() async {
         // DevicePreview(
         // enabled: !kReleaseMode,
         // builder: (context) =>
+        RestartWidget(child:
         MultiProvider(
             providers: [
           ChangeNotifierProvider(
@@ -123,7 +125,8 @@ Future<void> main() async {
                     //   DevicePreview(
                     //  enabled: !kReleaseMode,
                     // builder: (context) =>
-                    MyApp())));
+                    MyApp()))
+    ));
     // );
     const channel = MethodChannel('com.example.hesa_wallet');
   });
@@ -231,12 +234,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     getAccessToken();
     Future.delayed(Duration(seconds: 2), () {
       showNotification();
+      WidgetsBinding.instance.addObserver(this);
       //   if(accessToken !='') {
       //     Provider.of<AuthProvider>(context, listen: false)
       //       .updateFCM(FCM: fcmToken, token: accessToken, context: context);
       //   }
     });
-    WidgetsBinding.instance.addObserver(this);
+
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       checkWifiStatus();
     });
@@ -250,8 +254,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       await Provider.of<AuthProvider>(context, listen: false)
           .updateFCM(FCM: fcmToken, token: accessToken, context: context);
     });
-    // startTokenRefreshTimer(
-    //     refreshToken: refreshToken, token: accessToken, context: context);
     Timer.periodic(Duration(minutes: 25), (timer) async {
       await Provider.of<AuthProvider>(context, listen: false).refreshToken(
           refreshToken: refreshToken, context: context, token: accessToken);
@@ -268,11 +270,17 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      getAccessToken();
-      print('app is running');
+    if (state == AppLifecycleState.paused) {
+    } else if (state == AppLifecycleState.resumed) {
     }
   }
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   if (state == AppLifecycleState.resumed) {
+  //     getAccessToken();
+  //     print('app is running');
+  //   }
+  // }
 
   void handleDisconnection() async {
     final prefs = await SharedPreferences.getInstance();
@@ -368,13 +376,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
-
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   if (state == AppLifecycleState.paused) {
-  //   } else if (state == AppLifecycleState.resumed) {
-  //   } else {}
-  // }
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
