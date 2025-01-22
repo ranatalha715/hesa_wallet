@@ -50,8 +50,8 @@ dependencies:
   shared_preferences: ^2.2.0
   http: ^1.2.1
   sms_autofill: ^2.3.0
-  dio: ^5.3.3
-  cached_network_image: ^3.3.0
+#  dio: ^5.3.3
+#  cached_network_image: ^3.3.0
   webview_flutter: ^2.0.13
   hyperpay_plugin: ^2.0.8
   firebase_messaging: ^15.0.1
@@ -65,7 +65,7 @@ dependencies:
   csc_picker: ^0.2.7
   flutter_keyboard_visibility: ^6.0.0
   connectivity_plus: ^5.0.2
-  page_transition: ^2.0.9
+#  page_transition: ^2.0.9
   uni_links: ^0.5.1
   pinput: ^5.0.0
   restart_app: ^1.2.1

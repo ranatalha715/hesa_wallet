@@ -123,6 +123,7 @@ String tnxLabelingWithPayload(String operation) {
     case 'CancelCollectionAuctionListing':
     case 'CancelAuctionListing':
     case 'CancelCollectionAuctionListing':
+    case 'CancelCollectionListing':
       return 'Listing Cancellation';
 
     case 'acceptCollectionCounterOffer':
@@ -191,7 +192,7 @@ String tnxLabelingWithApi(String transactionType) {
     case 'Cancel Collection Auction Listing':
       return 'Listing Cancellation';
 
-    case 'Accept Collection Counter Offe':
+    case 'Accept Collection Counter Offer':
     case 'Accept Counter Offer':
       return 'Counter Offer Acceptance';
 
@@ -201,6 +202,9 @@ String tnxLabelingWithApi(String transactionType) {
 
     case 'Item Sold':
       return 'Item Sold';
+
+    case 'NFT Sold':
+      return 'NFT Sold';
 
     default:
       return 'Unknown Operation';

@@ -9,6 +9,7 @@ import 'package:sizer/sizer.dart';
 
 import '../providers/theme_provider.dart';
 import '../providers/transaction_provider.dart';
+import 'image_placeholder.dart';
 
 class WalletActivityWidget extends StatefulWidget {
   final String title, subTitle, image, time, siteURL;
@@ -142,19 +143,24 @@ class _WalletActivityWidgetState extends State<WalletActivityWidget> {
                   child: widget.title == "Site Connected" ||
                       widget.title == "Site Disconnected"
                       ?
-                  Container(
-                    // color: AppColors.profileHeaderDark,
-                    height: 40.sp,
-                    width: 40.sp,
-                    child: Padding(
-                      padding:  EdgeInsets.all(1.sp),
-                      child: Image.memory(
-                        widget.bytes!,
-                        // 'https://images.pexels.com/photos/14354112/pexels-photo-14354112.jpeg?auto=compress&cs=tinysrgb&w=800',
-                        // fit: BoxFit.cover,
+                  Stack(
+                    children: [
+                      ShimmerPlaceholder(),
+                      Container(
+                        color: AppColors.profileHeaderDark,
+                        height: 40.sp,
+                        width: 40.sp,
+                        child: Padding(
+                          padding:  EdgeInsets.all(1.sp),
+                          child: Image.memory(
+                            widget.bytes!,
+                            // 'https://images.pexels.com/photos/14354112/pexels-photo-14354112.jpeg?auto=compress&cs=tinysrgb&w=800',
+                            // fit: BoxFit.cover,
 
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ):
                   Image.network(
                     widget.image,

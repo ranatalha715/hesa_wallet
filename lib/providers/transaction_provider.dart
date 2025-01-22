@@ -1227,7 +1227,6 @@ class TransactionProvider with ChangeNotifier {
       // "params": updatedParams,
       "params": paramsMap,
     };
-
     try {
       final response = await http.post(
         url,
@@ -1238,14 +1237,12 @@ class TransactionProvider with ChangeNotifier {
         },
         body: json.encode(requestBody),
       );
-
       fToast = FToast();
       fToast.init(context);
       print('payload to send bilal');
       print(requestBody.toString());
       print('listnftauction');
       print(response.body);
-
       if (response.statusCode == 201) {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);

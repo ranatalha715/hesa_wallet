@@ -978,383 +978,395 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                     backgroundColor: themeNotifier.isDark
                         ? AppColors.backgroundColor
                         : AppColors.textColorWhite,
-                    body: SafeArea(
-                      child: NestedScrollView(
-                        headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                          SliverOverlapAbsorber(
-                              handle: NestedScrollView
-                                  .sliverOverlapAbsorberHandleFor(context),
-                              sliver: SliverSafeArea(
-                                top: false,
-                                sliver:
-                                SliverAppBar(
-                                  expandedHeight: 29.h,
-                                  collapsedHeight: 8.h,
-                                  backgroundColor: AppColors.backgroundColor,
-                                  elevation: 0,
-                                  pinned: true,
-                                  floating: false,
-                                  snap: false,
-                                  stretch: true,
-                                  leading: Stack(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                          top: 10.sp,
-                                          left: 14.sp,
-                                          right: 20.sp,
-                                          bottom: 8.sp,
-                                        ),
-                                        child: GestureDetector(
-                                          onTap: () =>
-                                              _key.currentState!.openDrawer(),
-                                          child:
-                                              Icon(
-                                                Icons.menu_rounded,
-                                                color: themeNotifier.isDark
-                                                    ? AppColors.textColorWhite
-                                                    : AppColors.textColorBlack,
-                                                size: 25.sp,
-                                              ),
-                                        ),
-                                      ),
-                                      Consumer<TransactionProvider>(builder:
-                                          (context, TransactionProvider trP,
-                                          _) {
-                                        return Positioned(
-                                          right: 10,
-                                          top: 12,
-                                          child: Container(
-                                            height: 4.3.sp,
-                                            width: 4.3.sp,
-                                            decoration: BoxDecoration(
-                                              color:
-                                              trP.showRedDot
-                                                  ? AppColors.errorColor
-                                                  : Colors.transparent,
-                                              borderRadius:
-                                              BorderRadius.circular(
-                                                  10.sp),
+                    body: Stack(
+                      children: [
+                        SafeArea(
+                          child: NestedScrollView(
+                            headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                              SliverOverlapAbsorber(
+                                  handle: NestedScrollView
+                                      .sliverOverlapAbsorberHandleFor(context),
+                                  sliver: SliverSafeArea(
+                                    top: false,
+                                    sliver:
+                                    SliverAppBar(
+                                      expandedHeight: 29.h,
+                                      collapsedHeight: 8.h,
+                                      backgroundColor: AppColors.backgroundColor,
+                                      elevation: 0,
+                                      pinned: true,
+                                      floating: false,
+                                      snap: false,
+                                      stretch: true,
+                                      leading: Stack(
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              top: 10.sp,
+                                              left: 14.sp,
+                                              right: 20.sp,
+                                              bottom: 8.sp,
+                                            ),
+                                            child: GestureDetector(
+                                              onTap: () =>
+                                                  _key.currentState!.openDrawer(),
+                                              child:
+                                                  Icon(
+                                                    Icons.menu_rounded,
+                                                    color: themeNotifier.isDark
+                                                        ? AppColors.textColorWhite
+                                                        : AppColors.textColorBlack,
+                                                    size: 25.sp,
+                                                  ),
                                             ),
                                           ),
-                                        );
-                                      }),
-                                    ],
-                                  ),
-                                  actions: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        setLockScreenStatus(true);
-                                        Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => Unlock()),
-                                              (Route<dynamic> route) =>
-                                          false,
-                                        );
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            bottom: 5.sp, right: 15.sp),
-                                        child: Image.asset(
-                                          "assets/images/lock.png",
-                                          height: 19.sp,
-                                          width: 19.sp,
-                                          color: themeNotifier.isDark
-                                              ? AppColors.textColorWhite
-                                              : AppColors.textColorBlack,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                  flexibleSpace: DecoratedBox(
-                                    decoration: BoxDecoration(
-                                      color: AppColors.profileHeaderDark,
-                                    ),
-                                    child: FlexibleSpaceBar(
-                                        collapseMode: CollapseMode.parallax,
-                                        expandedTitleScale: 1,
-                                        stretchModes: [
-                                        ],
-                                        background: Stack(
-                                          children: [
-                                            Positioned(
-                                                top: 0,
-                                                left: 0,
-                                                right: 0,
-                                                child: Container(
-                                                  color: AppColors
-                                                      .profileHeaderDark,
-                                                  height: 10.h,
-                                                ),
-                                            ),
-                                            Positioned(
-                                              top: 63,
-                                              left: 0,
-                                              right: 0,
+                                          Consumer<TransactionProvider>(builder:
+                                              (context, TransactionProvider trP,
+                                              _) {
+                                            return Positioned(
+                                              right: 10,
+                                              top: 12,
                                               child: Container(
-                                                color:
-                                                AppColors.backgroundColor,
-                                                child: Column(
-                                                  children: [
-                                                    SizedBox(
-                                                      height: 2.h,
+                                                height: 4.3.sp,
+                                                width: 4.3.sp,
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                  trP.showRedDot
+                                                      ? AppColors.errorColor
+                                                      : Colors.transparent,
+                                                  borderRadius:
+                                                  BorderRadius.circular(
+                                                      10.sp),
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                        ],
+                                      ),
+                                      actions: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            setLockScreenStatus(true);
+                                            Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => Unlock()),
+                                                  (Route<dynamic> route) =>
+                                              false,
+                                            );
+                                          },
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                                bottom: 5.sp, right: 15.sp),
+                                            child: Image.asset(
+                                              "assets/images/lock.png",
+                                              height: 19.sp,
+                                              width: 19.sp,
+                                              color: themeNotifier.isDark
+                                                  ? AppColors.textColorWhite
+                                                  : AppColors.textColorBlack,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                      flexibleSpace: DecoratedBox(
+                                        decoration: BoxDecoration(
+                                          color: AppColors.profileHeaderDark,
+                                        ),
+                                        child: FlexibleSpaceBar(
+                                            collapseMode: CollapseMode.parallax,
+                                            expandedTitleScale: 1,
+                                            stretchModes: [
+                                            ],
+                                            background: Stack(
+                                              children: [
+                                                Positioned(
+                                                    top: 0,
+                                                    left: 0,
+                                                    right: 0,
+                                                    child: Container(
+                                                      color: AppColors
+                                                          .profileHeaderDark,
+                                                      height: 10.h,
                                                     ),
-                                                    Container(
-                                                      decoration: BoxDecoration(
-                                                          color: AppColors
-                                                              .textColorGrey,
-                                                          borderRadius:
-                                                          BorderRadius
-                                                              .circular(
-                                                              100)
-                                                      ),
-                                                      child: Padding(
-                                                        padding: EdgeInsets.all(
-                                                            1.sp),
-                                                        child: Container(
-                                                          height: 60.sp,
-                                                          width: 60.sp,
+                                                ),
+                                                Positioned(
+                                                  top: 63,
+                                                  left: 0,
+                                                  right: 0,
+                                                  child: Container(
+                                                    color:
+                                                    AppColors.backgroundColor,
+                                                    child: Column(
+                                                      children: [
+                                                        SizedBox(
+                                                          height: 2.h,
+                                                        ),
+                                                        Container(
                                                           decoration: BoxDecoration(
                                                               color: AppColors
-                                                                  .backgroundColor,
+                                                                  .textColorGrey,
                                                               borderRadius:
                                                               BorderRadius
                                                                   .circular(
-                                                                  100)),
+                                                                  100)
+                                                          ),
                                                           child: Padding(
-                                                            padding:
-                                                            EdgeInsets.all(
+                                                            padding: EdgeInsets.all(
                                                                 1.sp),
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  100),
-                                                              child:
-                                                              user.userAvatar !=
-                                                                  null
-                                                                  ? Image
-                                                                  .network(
-                                                                user.userAvatar!,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              )
-                                                                  : Padding(
+                                                            child: Container(
+                                                              height: 60.sp,
+                                                              width: 60.sp,
+                                                              decoration: BoxDecoration(
+                                                                  color: AppColors
+                                                                      .backgroundColor,
+                                                                  borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                      100)),
+                                                              child: Padding(
                                                                 padding:
-                                                                EdgeInsets.all(4.sp),
-                                                                child:
-                                                                Image.asset(
-                                                                  "assets/images/user_placeholder.png",
-                                                                  color:
-                                                                  AppColors.textColorGrey,
+                                                                EdgeInsets.all(
+                                                                    1.sp),
+                                                                child: ClipRRect(
+                                                                  borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                      100),
+                                                                  child:
+                                                                  user.userAvatar !=
+                                                                      null
+                                                                      ? Image
+                                                                      .network(
+                                                                    user.userAvatar!,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  )
+                                                                      : Padding(
+                                                                    padding:
+                                                                    EdgeInsets.all(4.sp),
+                                                                    child:
+                                                                    Image.asset(
+                                                                      "assets/images/user_placeholder.png",
+                                                                      color:
+                                                                      AppColors.textColorGrey,
+                                                                    ),
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ),
                                                           ),
                                                         ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 2.h,
-                                                    ),
+                                                        SizedBox(
+                                                          height: 2.h,
+                                                        ),
 
-                                                    Text(
-                                                      user.userName != null
-                                                          ? user.userName!
-                                                          : 'username.mjra'
-                                                          .tr(),
-                                                      style: TextStyle(
-                                                          fontSize: 11.7.sp,
-                                                          fontFamily:
-                                                          'Blogger Sans',
-                                                          fontWeight:
-                                                          FontWeight.w700,
-                                                          color: themeNotifier
-                                                              .isDark
-                                                              ? AppColors
-                                                              .textColorWhite
-                                                              : AppColors
-                                                              .textColorBlack),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 0.5.h,
-                                                    ),
-                                                    GestureDetector(
-                                                      onTap: () =>
-                                                          _copyToClipboard(user
-                                                              .walletAddress!),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                        children: [
-                                                          Text(
-                                                            user.walletAddress !=
-                                                                null
-                                                                ? replaceMiddleWithDotsWA(
-                                                                user.walletAddress!)
-                                                                : "...",
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                9.5.sp,
-                                                                fontFamily:
-                                                                'Blogger Sans',
-                                                                fontWeight:
-                                                                FontWeight
-                                                                    .w500,
-                                                                color: AppColors
-                                                                    .textColorGrey),
+                                                        Text(
+                                                          user.userName != null
+                                                              ? user.userName!
+                                                              : 'username.mjra'
+                                                              .tr(),
+                                                          style: TextStyle(
+                                                              fontSize: 11.7.sp,
+                                                              fontFamily:
+                                                              'Blogger Sans',
+                                                              fontWeight:
+                                                              FontWeight.w700,
+                                                              color: themeNotifier
+                                                                  .isDark
+                                                                  ? AppColors
+                                                                  .textColorWhite
+                                                                  : AppColors
+                                                                  .textColorBlack),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 0.5.h,
+                                                        ),
+                                                        GestureDetector(
+                                                          onTap: () =>
+                                                              _copyToClipboard(user
+                                                                  .walletAddress!),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                            children: [
+                                                              Text(
+                                                                user.walletAddress !=
+                                                                    null
+                                                                    ? replaceMiddleWithDotsWA(
+                                                                    user.walletAddress!)
+                                                                    : "...",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                    9.5.sp,
+                                                                    fontFamily:
+                                                                    'Blogger Sans',
+                                                                    fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                    color: AppColors
+                                                                        .textColorGrey),
+                                                              ),
+                                                            ],
                                                           ),
-                                                        ],
-                                                      ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 8.h,
+                                                        ),
+                                                      ],
                                                     ),
-                                                    SizedBox(
-                                                      height: 8.h,
-                                                    ),
-                                                  ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
-                                          ],
-                                        )),
-                                  ),
-                                ),
-                              )),
-                          SliverPersistentHeader(
-                              pinned: true,
-                              delegate: FixedHeaderDelegate(
-                                  tabController: _tabController)
-                          ),
-                        ],
-                        body: TabBarView(controller: _tabController, children: [
-                          CustomScrollView(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            slivers: [
-                              SliverList(
-                                delegate: SliverChildListDelegate([
-                                  _isloading
-                                      ? Container(
-                                      height: 50.h,
-                                      child: Center(
-                                          child: LoaderBluredScreen()))
-                                      : Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 20.h,
+                                              ],
+                                            )),
+                                      ),
                                     ),
-                                    child: Text(
-                                      "You have no Tokens".tr(),
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: themeNotifier.isDark
-                                              ? AppColors
-                                              .textColorGreyShade2
-                                              : AppColors.textColorBlack,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 12.sp,
-                                          fontFamily: 'Blogger Sans'),
-                                    ),
-                                  ),
-                                ]),
+                                  )),
+                              SliverPersistentHeader(
+                                  pinned: true,
+                                  delegate: FixedHeaderDelegate(
+                                      tabController: _tabController)
                               ),
                             ],
-                          ),
-                          CustomScrollView(
-                            slivers: [
-                              SliverList(
-                                delegate: SliverChildListDelegate([
-                                  _isloading
-                                      ? Container(
-                                    height: 50.h,
-                                    child: Center(
-                                        child: LoaderBluredScreen()),
-                                  )
-                                      : Column(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                          height: 8.h,
-                                          width: 100.w,
-                                          color: themeNotifier.isDark
-                                              ? AppColors.backgroundColor
-                                              : AppColors.textColorWhite,
-                                          child: SingleChildScrollView(
-                                            scrollDirection:
-                                            Axis.horizontal,
-                                            child: Padding(
-                                              padding:
-                                              EdgeInsets.symmetric(
-                                                horizontal: 16.sp,
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  NFTCategoryWidget(
-                                                    title: "All".tr(),
-                                                    isFirst: true,
-                                                    index: 0,
-                                                    handler: () =>
-                                                        onCategorySelected(
-                                                            0),
-                                                  ),
-                                                  NFTCategoryWidget(
-                                                      title: "Owned".tr(),
-                                                      index: 1,
-                                                      handler: () {
-                                                        setState(() {
-                                                          _isloading =
-                                                          true;
-                                                        });
-                                                        onCategorySelected(
-                                                            1);
-                                                        setState(() {
-                                                          _isloading =
-                                                          false;
-                                                        });
-                                                      }),
-                                                  NFTCategoryWidget(
-                                                    title: "Created".tr(),
-                                                    index: 2,
-                                                    handler: () =>
-                                                        onCategorySelected(
-                                                            2),
-                                                  ),
-                                                  NFTCategoryWidget(
-                                                    title: "Listed".tr(),
-                                                    index: 3,
-                                                    handler: () =>
-                                                        onCategorySelected(3),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          )),
-                                      Container(
-                                        child: bottomSpaceContent(
-                                          nftsCollectionAll,
-                                          nftsAll,
-                                          nftsCollectionOwnedByUser,
-                                          nftsOwned,
-                                          themeNotifier.isDark,
-                                          nftsCollectionCreated,
-                                          nftsCreated,
-                                          nftsListed,
-                                          collectionListed,
+                            body: TabBarView(controller: _tabController, children: [
+                              CustomScrollView(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                slivers: [
+                                  SliverList(
+                                    delegate: SliverChildListDelegate([
+                                      _isloading
+                                          ? Container(
+                                          height: 50.h,
+                                          child: Center(
+                                              child: LoaderBluredScreen()))
+                                          : Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 20.h,
+                                        ),
+                                        child: Text(
+                                          "You have no Tokens".tr(),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: themeNotifier.isDark
+                                                  ? AppColors
+                                                  .textColorGreyShade2
+                                                  : AppColors.textColorBlack,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 12.sp,
+                                              fontFamily: 'Blogger Sans'),
                                         ),
                                       ),
-                                    ],
+                                    ]),
                                   ),
-                                ]),
+                                ],
                               ),
-                            ],
+                              CustomScrollView(
+                                slivers: [
+                                  SliverList(
+                                    delegate: SliverChildListDelegate([
+                                      _isloading
+                                          ? Container(
+                                        height: 50.h,
+                                        child: Center(
+                                            child: LoaderBluredScreen()),
+                                      )
+                                          : Column(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Container(
+                                              height: 8.h,
+                                              width: 100.w,
+                                              color: themeNotifier.isDark
+                                                  ? AppColors.backgroundColor
+                                                  : AppColors.textColorWhite,
+                                              child: SingleChildScrollView(
+                                                scrollDirection:
+                                                Axis.horizontal,
+                                                child: Padding(
+                                                  padding:
+                                                  EdgeInsets.symmetric(
+                                                    horizontal: 16.sp,
+                                                  ),
+                                                  child: Row(
+                                                    children: [
+                                                      NFTCategoryWidget(
+                                                        title: "All".tr(),
+                                                        isFirst: true,
+                                                        index: 0,
+                                                        handler: () =>
+                                                            onCategorySelected(
+                                                                0),
+                                                      ),
+                                                      NFTCategoryWidget(
+                                                          title: "Owned".tr(),
+                                                          index: 1,
+                                                          handler: () {
+                                                            setState(() {
+                                                              _isloading =
+                                                              true;
+                                                            });
+                                                            onCategorySelected(
+                                                                1);
+                                                            setState(() {
+                                                              _isloading =
+                                                              false;
+                                                            });
+                                                          }),
+                                                      NFTCategoryWidget(
+                                                        title: "Created".tr(),
+                                                        index: 2,
+                                                        handler: () =>
+                                                            onCategorySelected(
+                                                                2),
+                                                      ),
+                                                      NFTCategoryWidget(
+                                                        title: "Listed".tr(),
+                                                        index: 3,
+                                                        handler: () =>
+                                                            onCategorySelected(3),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              )),
+                                          Container(
+                                            child: bottomSpaceContent(
+                                              nftsCollectionAll,
+                                              nftsAll,
+                                              nftsCollectionOwnedByUser,
+                                              nftsOwned,
+                                              themeNotifier.isDark,
+                                              nftsCollectionCreated,
+                                              nftsCreated,
+                                              nftsListed,
+                                              collectionListed,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ]),
+                                  ),
+                                ],
+                              ),
+                            ]),
                           ),
-                        ]),
-                      ),
+                        ),
+                        if (_isloading)
+                          Positioned(
+                            top: 12.h,
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            child: LoaderBluredScreen(),)
+                      ],
                     ),
                   );
                 }),
+
           ],
         );
       });

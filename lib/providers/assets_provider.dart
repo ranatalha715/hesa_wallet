@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hesa_wallet/models/nfts_model.dart';
@@ -8,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:sizer/sizer.dart';
 import '../constants/colors.dart';
 import '../constants/configs.dart';
-import '../models/assets_model.dart';
 
 class AssetsProvider with ChangeNotifier {
   late FToast fToast;
@@ -301,43 +298,118 @@ class AssetsProvider with ChangeNotifier {
     }
   }
 
+  // Future<AuthResult> getAllAssets({
+  //   required String token,
+  //   required String walletAddress,
+  //   required BuildContext context,
+  //   required String ownerType,
+  //   required String type,
+  //   bool isEnglish=true,
+  // }) async {
+  //   final url = Uri.parse(BASE_URL +
+  //       '/user/assets/?ownerType=$ownerType&limit=10&page=1&type=$type&walletAddress=$walletAddress');
+  //   // final body = {
+  //   //   "walletAddress": walletAddress,
+  //   // };
+  //
+  //   final response = await http.get(
+  //     url,
+  //     // body: body,
+  //     headers: {
+  //       "Content-type": "application/json",
+  //       "Accept": "application/json",
+  //       'Authorization': 'Bearer $token',
+  //       'accept-language': isEnglish ? 'eng' :'ar',
+  //     },
+  //   );
+  //   fToast = FToast();
+  //   fToast.init(context);
+  //   print('all response');
+  //   print(json.decode(response.body));
+  //   final extractedData = json.decode(response.body)['nfts'] as List<dynamic>?;
+  //   final extractedCollection =
+  //   json.decode(response.body)['collections'] as List<dynamic>?;
+  //   if (response.statusCode == 200) {
+  //     final List<NftsModel> loadedAssets = [];
+  //     print('All Owned Created');
+  //     print(extractedData);
+  //     print('Collection');
+  //     print(extractedCollection);
+  //     extractedData?.forEach((prodData) {
+  //       loadedAssets.add(NftsModel(
+  //         tokenName: prodData['name'].toString(),
+  //         id: prodData['id'].toString(),
+  //         tokenURI: prodData['image'].toString(),
+  //         price: "",
+  //         tokenId: prodData['id'].toString(),
+  //         ownerId: prodData['ownerId'].toString(),
+  //         standard: prodData['standard'].toString(),
+  //         status: prodData['status'] ?? 'N/A',
+  //         listingType: prodData['listingType'].toString(),
+  //         chain: prodData['chain'].toString(),
+  //         createdAt: prodData['createdAt'].toString(),
+  //         creatorId: prodData['creatorId'].toString(),
+  //         creatorRoyalty: prodData['creatorRoyalty'].toString(),
+  //         isListable: prodData['isListable'].toString(),
+  //       ));
+  //     });
+  //     _assetsAll = loadedAssets;
+  //     final List<NftsCollectionModel> loadedAssetsCollection = [];
+  //     extractedCollection?.forEach((prodData) {
+  //       loadedAssetsCollection.add(NftsCollectionModel(
+  //         collectionName: prodData['name'].toString(),
+  //         collectionId: prodData['id'].toString(),
+  //         id: prodData['id'].toString(),
+  //         ownerId: prodData['ownerId'].toString(),
+  //         // nftIds: prodData['nftIds'] as List<String>,
+  //         nftIds: [],
+  //         creatorId: prodData['creatorId'].toString(),
+  //         creatorRoyalty: prodData['creatorRoyalty'].toString(),
+  //         collectionStandard: prodData['standard'].toString(),
+  //         status: prodData['status'] ?? 'N/A',
+  //         listingType: prodData['listingType'].toString(),
+  //         chain: prodData['chain'].toString(),
+  //         createdAt: prodData['createdAt'].toString(),
+  //         image: prodData['image'].toString(),
+  //         banner: prodData['metaData']['logoLink'].toString(),
+  //       ));
+  //     });
+  //     _assetsCollectionAll = loadedAssetsCollection;
+  //     notifyListeners();
+  //     return AuthResult.success;
+  //   } else {
+  //     return AuthResult.failure;
+  //   }
+  // }
+
   Future<AuthResult> getAllAssets({
     required String token,
     required String walletAddress,
     required BuildContext context,
     required String ownerType,
     required String type,
-    bool isEnglish=true,
+    bool isEnglish = true,
+    int page = 1,
+    int limit = 10,
   }) async {
     final url = Uri.parse(BASE_URL +
-        '/user/assets/?ownerType=$ownerType&limit=10&page=1&type=$type&walletAddress=$walletAddress');
-    // final body = {
-    //   "walletAddress": walletAddress,
-    // };
-
+        '/user/assets/?ownerType=$ownerType&limit=$limit&page=$page&type=$type&walletAddress=$walletAddress');
     final response = await http.get(
       url,
-      // body: body,
       headers: {
         "Content-type": "application/json",
         "Accept": "application/json",
         'Authorization': 'Bearer $token',
-        'accept-language': isEnglish ? 'eng' :'ar',
+        'accept-language': isEnglish ? 'eng' : 'ar',
       },
     );
-    fToast = FToast();
-    fToast.init(context);
-    print('all response');
-    print(json.decode(response.body));
+
     final extractedData = json.decode(response.body)['nfts'] as List<dynamic>?;
     final extractedCollection =
     json.decode(response.body)['collections'] as List<dynamic>?;
+
     if (response.statusCode == 200) {
       final List<NftsModel> loadedAssets = [];
-      print('All Owned Created');
-      print(extractedData);
-      print('Collection');
-      print(extractedCollection);
       extractedData?.forEach((prodData) {
         loadedAssets.add(NftsModel(
           tokenName: prodData['name'].toString(),
@@ -356,7 +428,12 @@ class AssetsProvider with ChangeNotifier {
           isListable: prodData['isListable'].toString(),
         ));
       });
-      _assetsAll = loadedAssets;
+      if (page == 1) {
+        _assetsAll = loadedAssets;
+      } else {
+        _assetsAll.addAll(loadedAssets);
+      }
+
       final List<NftsCollectionModel> loadedAssetsCollection = [];
       extractedCollection?.forEach((prodData) {
         loadedAssetsCollection.add(NftsCollectionModel(
@@ -364,7 +441,6 @@ class AssetsProvider with ChangeNotifier {
           collectionId: prodData['id'].toString(),
           id: prodData['id'].toString(),
           ownerId: prodData['ownerId'].toString(),
-          // nftIds: prodData['nftIds'] as List<String>,
           nftIds: [],
           creatorId: prodData['creatorId'].toString(),
           creatorRoyalty: prodData['creatorRoyalty'].toString(),
@@ -377,7 +453,13 @@ class AssetsProvider with ChangeNotifier {
           banner: prodData['metaData']['logoLink'].toString(),
         ));
       });
-      _assetsCollectionAll = loadedAssetsCollection;
+
+      if (page == 1) {
+        _assetsCollectionAll = loadedAssetsCollection;
+      } else {
+        _assetsCollectionAll.addAll(loadedAssetsCollection);
+      }
+
       notifyListeners();
       return AuthResult.success;
     } else {

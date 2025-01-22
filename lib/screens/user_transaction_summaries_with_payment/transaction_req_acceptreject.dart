@@ -1297,9 +1297,9 @@ class _TransactionRequestAcceptRejectState
                                                                               code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
                                                                           if (acceptNFTOfferResult ==
                                                                               AuthResult.success) {
-                                                                            Navigator.pop(context);
-                                                                            Future.delayed(const Duration(milliseconds: 300), () {
+                                                                            Future.delayed(const Duration(milliseconds: 800), () {
                                                                               if (context.mounted) {
+                                                                                Navigator.pop(context);
                                                                                 paymentRecievedDialogue(
                                                                                   amount: formatCurrency(
                                                                                     feesMap!['total']['value'].toString(),
@@ -1321,9 +1321,9 @@ class _TransactionRequestAcceptRejectState
                                                                               code: Provider.of<AuthProvider>(context, listen: false).codeFromOtpBoxes);
                                                                           if (resultAcceptCollectionOffer ==
                                                                               AuthResult.success) {
-                                                                            Navigator.pop(context);
-                                                                            Future.delayed(const Duration(milliseconds: 300), () {
+                                                                            Future.delayed(const Duration(milliseconds: 800), () {
                                                                               if (context.mounted) {
+                                                                                Navigator.pop(context);
                                                                                 paymentRecievedDialogue(
                                                                                   amount: formatCurrency(
                                                                                     feesMap!['total']['value'].toString(),
@@ -1742,7 +1742,7 @@ class _TransactionRequestAcceptRejectState
                                             const Duration(milliseconds: 500));
                                         if (operation ==
                                             'AcceptNFTOfferReceived') {
-                                          await Provider.of<
+                                        final acceptOfferResult=  await Provider.of<
                                                       TransactionProvider>(
                                                   context,
                                                   listen: false)
@@ -1757,6 +1757,17 @@ class _TransactionRequestAcceptRejectState
                                                               context,
                                                               listen: false)
                                                           .codeFromOtpBoxes);
+
+                                          if (acceptOfferResult ==
+                                              AuthResult.success) {
+                                            Future.delayed(const Duration(milliseconds: 800), () {
+                                              if (context.mounted) {
+                                                Navigator.pop(context);
+                                                transactionExecutedDialoge(isDark: setThemeDark, context: context);
+                                              } else {
+                                              }
+                                            });
+                                          }
                                         } else if (operation ==
                                             'rejectNFTOfferReceived') {
                                          final rejectNFTOfferReceivedResult = await Provider.of<
@@ -1776,19 +1787,17 @@ class _TransactionRequestAcceptRejectState
                                                           .codeFromOtpBoxes);
                                          if (rejectNFTOfferReceivedResult ==
                                              AuthResult.success) {
-                                           Navigator.pop(context);
-                                           Future.delayed(const Duration(milliseconds: 300), () {
-                                             print('Showing transactionExecutedDialoge');
+                                           Future.delayed(const Duration(milliseconds: 800), () {
                                              if (context.mounted) {
+                                               Navigator.pop(context);
                                                transactionExecutedDialoge(isDark: setThemeDark, context: context);
                                              } else {
-                                               print('Context is no longer valid');
                                              }
                                            });
                                          }
                                         } else if (operation ==
                                             'AcceptCollectionOffer') {
-                                          await Provider.of<
+                                         final acceptCollectionOfferResult = await Provider.of<
                                                       TransactionProvider>(
                                                   context,
                                                   listen: false)
@@ -1803,6 +1812,16 @@ class _TransactionRequestAcceptRejectState
                                                               context,
                                                               listen: false)
                                                           .codeFromOtpBoxes);
+                                          if (acceptCollectionOfferResult ==
+                                              AuthResult.success) {
+                                            Future.delayed(const Duration(milliseconds: 800), () {
+                                              if (context.mounted) {
+                                                Navigator.pop(context);
+                                                transactionExecutedDialoge(isDark: setThemeDark, context: context);
+                                              } else {
+                                              }
+                                            });
+                                          }
                                         } else if (operation ==
                                             'rejectCollectionOfferReceived') {
                                         final rejectCollectionOfferReceivedResult =  await Provider.of<
@@ -1822,13 +1841,11 @@ class _TransactionRequestAcceptRejectState
                                                           .codeFromOtpBoxes);
                                         if (rejectCollectionOfferReceivedResult ==
                                             AuthResult.success) {
-                                          Navigator.pop(context);
-                                          Future.delayed(const Duration(milliseconds: 300), () {
-                                            print('Showing transactionExecutedDialoge');
+                                          Future.delayed(const Duration(milliseconds: 800), () {
                                             if (context.mounted) {
+                                              Navigator.pop(context);
                                               transactionExecutedDialoge(isDark: setThemeDark, context: context);
                                             } else {
-                                              print('Context is no longer valid');
                                             }
                                           });
                                         }
@@ -1856,9 +1873,9 @@ class _TransactionRequestAcceptRejectState
                                           );
                                         if (makeNFTCounterOfferResult ==
                                             AuthResult.success) {
-                                          Navigator.pop(context);
-                                          Future.delayed(const Duration(milliseconds: 300), () {
+                                          Future.delayed(const Duration(milliseconds: 800), () {
                                             if (context.mounted) {
+                                              Navigator.pop(context);
                                               transactionExecutedDialoge(isDark: setThemeDark, context: context);
                                             } else {
                                             }
@@ -1884,13 +1901,11 @@ class _TransactionRequestAcceptRejectState
                                           );
                                           if (cancelNFTOfferMadeResult ==
                                               AuthResult.success) {
-                                            Navigator.pop(context);
-                                            Future.delayed(const Duration(milliseconds: 300), () {
-                                              print('Showing transactionExecutedDialoge');
+                                            Future.delayed(const Duration(milliseconds: 800), () {
                                               if (context.mounted) {
+                                                Navigator.pop(context);
                                                 transactionExecutedDialoge(isDark: setThemeDark, context: context);
                                               } else {
-                                                print('Context is no longer valid');
                                               }
                                             });
                                           }
@@ -1913,13 +1928,11 @@ class _TransactionRequestAcceptRejectState
                                                           .codeFromOtpBoxes);
                                         if (rejectNFTCounterOffer ==
                                             AuthResult.success) {
-                                          Navigator.pop(context);
-                                          Future.delayed(const Duration(milliseconds: 300), () {
-                                            print('Showing transactionExecutedDialoge');
+                                          Future.delayed(const Duration(milliseconds: 800), () {
                                             if (context.mounted) {
+                                              Navigator.pop(context);
                                               transactionExecutedDialoge(isDark: setThemeDark, context: context);
                                             } else {
-                                              print('Context is no longer valid');
                                             }
                                           });
                                         }
@@ -1942,13 +1955,11 @@ class _TransactionRequestAcceptRejectState
                                                           .codeFromOtpBoxes);
                                        if (makeCollectionCounterOfferResult ==
                                            AuthResult.success) {
-                                         Navigator.pop(context);
-                                         Future.delayed(const Duration(milliseconds: 300), () {
-                                           print('Showing transactionExecutedDialoge');
+                                         Future.delayed(const Duration(milliseconds: 800), () {
                                            if (context.mounted) {
+                                             Navigator.pop(context);
                                              transactionExecutedDialoge(isDark: setThemeDark, context: context);
                                            } else {
-                                             print('Context is no longer valid');
                                            }
                                          });
                                        }
@@ -1971,13 +1982,11 @@ class _TransactionRequestAcceptRejectState
                                                           .codeFromOtpBoxes);
                                          if (rejectCollectionCounterOfferResult ==
                                              AuthResult.success) {
-                                           Navigator.pop(context);
-                                           Future.delayed(const Duration(milliseconds: 300), () {
-                                             print('Showing transactionExecutedDialoge');
+                                           Future.delayed(const Duration(milliseconds: 800), () {
                                              if (context.mounted) {
+                                               Navigator.pop(context);
                                                transactionExecutedDialoge(isDark: setThemeDark, context: context);
                                              } else {
-                                               print('Context is no longer valid');
                                              }
                                            });
                                          }
@@ -2001,13 +2010,11 @@ class _TransactionRequestAcceptRejectState
                                                           .codeFromOtpBoxes);
                                          if (cancelCollectionOfferMadeResult ==
                                              AuthResult.success) {
-                                           Navigator.pop(context);
-                                           Future.delayed(const Duration(milliseconds: 300), () {
-                                             print('Showing transactionExecutedDialoge');
+                                           Future.delayed(const Duration(milliseconds: 800), () {
                                              if (context.mounted) {
+                                               Navigator.pop(context);
                                                transactionExecutedDialoge(isDark: setThemeDark, context: context);
                                              } else {
-                                               print('Context is no longer valid');
                                              }
                                            });
                                          }
@@ -2030,9 +2037,9 @@ class _TransactionRequestAcceptRejectState
                                           );
                                           if (cancelAuctionListingResult ==
                                               AuthResult.success) {
-                                            Navigator.pop(context);
-                                            Future.delayed(const Duration(milliseconds: 300), () {
+                                            Future.delayed(const Duration(milliseconds: 800), () {
                                               if (context.mounted) {
+                                                Navigator.pop(context);
                                                 transactionExecutedDialoge(isDark: setThemeDark, context: context);
                                               } else {
                                               }
@@ -2058,13 +2065,11 @@ class _TransactionRequestAcceptRejectState
                                                           .codeFromOtpBoxes);
                                           if (cancelCollectionAuctionListingResult ==
                                               AuthResult.success) {
-                                            Navigator.pop(context);
-                                            Future.delayed(const Duration(milliseconds: 300), () {
-                                              print('Showing transactionExecutedDialoge');
+                                            Future.delayed(const Duration(milliseconds: 800), () {
                                               if (context.mounted) {
+                                                Navigator.pop(context);
                                                 transactionExecutedDialoge(isDark: setThemeDark, context: context);
                                               } else {
-                                                print('Context is no longer valid');
                                               }
                                             });
                                           }
@@ -2088,13 +2093,11 @@ class _TransactionRequestAcceptRejectState
                                                           .codeFromOtpBoxes);
                                          if (cancelListingResult ==
                                              AuthResult.success) {
-                                           Navigator.pop(context);
-                                           Future.delayed(const Duration(milliseconds: 300), () {
-                                             print('Showing transactionExecutedDialoge');
+                                           Future.delayed(const Duration(milliseconds: 800), () {
                                              if (context.mounted) {
+                                               Navigator.pop(context);
                                                transactionExecutedDialoge(isDark: setThemeDark, context: context);
                                              } else {
-                                               print('Context is no longer valid');
                                              }
                                            });
                                          }
@@ -2117,13 +2120,11 @@ class _TransactionRequestAcceptRejectState
                                                           .codeFromOtpBoxes);
                                           if (cancelCollectionListingResult ==
                                               AuthResult.success) {
-                                            Navigator.pop(context);
-                                            Future.delayed(const Duration(milliseconds: 300), () {
-                                              print('Showing transactionExecutedDialoge');
+                                            Future.delayed(const Duration(milliseconds: 800), () {
                                               if (context.mounted) {
+                                                Navigator.pop(context);
                                                 transactionExecutedDialoge(isDark: setThemeDark, context: context);
                                               } else {
-                                                print('Context is no longer valid');
                                               }
                                             });
                                           }
