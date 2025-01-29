@@ -49,6 +49,7 @@ class _ResetEmailState extends State<ResetEmail> {
     super.initState();
     init();
     _emailController.addListener(_updateButtonState);
+    Provider.of<UserProvider>(context,listen: false).emailErrorResponse=null;
     KeyboardVisibilityController().onChange.listen((bool visible) {
       setState(() {
         isKeyboardVisible = visible;
@@ -164,7 +165,7 @@ class _ResetEmailState extends State<ResetEmail> {
                                             fontSize: 10.2.sp,
                                             color: AppColors.textColorGrey,
                                             fontWeight: FontWeight.w400,
-                                            // Off-white color,
+                                            //Off-white color,
                                             fontFamily: 'Inter'),
                                         enabledBorder: OutlineInputBorder(
                                             borderRadius:

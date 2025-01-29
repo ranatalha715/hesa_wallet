@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ui';
+import 'package:app_links/app_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
@@ -15,6 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import '../../constants/string_utils.dart';
+import '../../main.dart';
 import '../../providers/assets_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
@@ -22,8 +24,6 @@ import '../../widgets/animated_loader/animated_loader.dart';
 import '../../widgets/app_drawer.dart';
 import '../connection_requests_pages/connect_dapp.dart';
 import '../unlock/unlock.dart';
-import '../user_transaction_summaries_with_payment/transaction_req_acceptreject.dart';
-import '../user_transaction_summaries_with_payment/transaction_request.dart';
 
 class WalletTokensNfts extends StatefulWidget {
   static const routeName = 'nfts-page';
@@ -48,20 +48,22 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     accessToken = prefs.getString('accessToken')!;
   }
 
-
   var userWalletAddress;
   Future<void> init() async {
+    // _appLinksService =  await AppLinksService(context: context);
     setState(() {
       _isloading = true;
     });
-
     await getAccessToken();
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
     var user = await Provider.of<UserProvider>(context, listen: false);
-    userWalletAddress = user.walletAddress;
+    //  userWalletAddress = await user.walletAddress;
+    // await appLinksService.initializeAppLinks(
+    //     user.walletAddress
+    //  );
     await Provider.of<AssetsProvider>(context, listen: false).getListedAssets(
       token: accessToken,
       context: context,
@@ -130,10 +132,9 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   void initState() {
     super.initState();
     getPasscode();
-    initUniLinks();
     initUniLinks1();
     _tabController = TabController(length: 2, vsync: this);
-    init();
+     init();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor:
       AppColors.profileHeaderDark,
@@ -297,622 +298,11 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
           Provider.of<UserProvider>(context, listen: false)
               .navigateToNeoForConnectWallet = false;
         }
-
         return false;
       });
     } catch (e) {
     }
   }
-
-  String _receivedData = 'No UniLink data received';
-  Future<void> initUniLinks() async {
-    getLinksStream().listen((String? link) {
-      if (link != null) {
-        setState(() {
-          _receivedData = link;
-        });
-        Provider.of<TransactionProvider>(context, listen: false)
-            .payloadTnxParam = _receivedData;
-        if (Navigator.canPop(context)) {
-          Navigator.pop(context);
-        }
-        Uri uri = Uri.parse(link);
-        String? operation = uri.queryParameters['operation'];
-        String? params = uri.queryParameters['params'];
-        Map<String, dynamic>? metadata;
-        if(params!=null){
-          try {
-            Map<String, dynamic> paramsMap = jsonDecode(params);
-             metadata= paramsMap['metadata'];
-            if (metadata != null) {
-              print('Metadata testing: $metadata');
-            } else {
-              print('Metadata not found');
-            }
-          } catch (e) {
-            print('Error decoding JSON: $e');
-          }
-        } else {
-          print('No params found');
-        }
-        if (operation != null && operation == 'MintNFT') {
-          navigateToTransactionRequestWithMint(
-              uri.queryParameters, operation,'', context);
-        } else if (operation != null && operation == 'MintCollection') {
-          navigateToTransactionRequestWithMintCollection(
-              uri.queryParameters, operation,'', context,);
-        } else if (operation != null && operation == 'MintNFTWithEditions') {
-          navigateToTransactionRequestWithMintNFTWithEditions(
-              uri.queryParameters, operation, context);
-        } else if (operation != null && operation == 'purchaseNFT') {
-          navigateToTransactionRequestWithPurchaseNft(
-              uri.queryParameters, operation, context);
-        } else if (operation != null && operation == 'purchaseCollection') {
-          navigateToTransactionRequestWithPurchaseCollection(
-              uri.queryParameters, operation, context);
-        } else if (operation != null && operation == 'listNFT') {
-          navigateToTransactionRequestWithListNftFixedPrice(
-              uri.queryParameters, operation, context);
-        } else if (operation != null && operation == 'listCollection') {
-          navigateToTransactionRequestWithListCollectionFixedPrice(
-              uri.queryParameters, operation, context);
-        } else if (operation != null && operation == 'listAuctionNFT') {
-          navigateToTransactionRequestWithListNftForAuction(
-              uri.queryParameters, operation, context);
-        } else if (operation != null && operation == 'listAuctionCollection') {
-          navigateToTransactionRequestWithListCollectionForAuction(
-              uri.queryParameters, operation, context);
-        } else if (operation != null && operation == 'burnNFT') {
-          navigateToTransactionRequestWithBurnNFT(
-              uri.queryParameters, operation, context);
-        } else if (operation != null && operation == 'burnCollection') {
-          navigateToTransactionRequestWithBurnCollection(
-              uri.queryParameters, operation, context);
-        } else if (operation != null && operation == 'makeOfferNFT') {
-          navigateToTransactionRequestWithMakeOfferNFT(
-              uri.queryParameters, operation, context);
-        } else if (operation != null && operation == 'makeOfferCollection') {
-          navigateToTransactionRequestWithMakeOfferCollection(
-              uri.queryParameters, operation, context);
-        } else if (operation != null && operation == 'AcceptNFTOfferReceived') {
-          navigateToTransactionRequestAcceptRejectWithAcceptOffer(
-              uri.queryParameters, operation, context);
-        } else if (operation != null && operation == 'AcceptCollectionOffer') {
-          navigateToTransactionRequestAcceptRejectWithAcceptCollectionOffer(
-              uri.queryParameters, operation, context);
-        } else if (operation != null && operation == 'rejectNFTOfferReceived') {
-          navigateToTransactionRequestAcceptRejectWithrejectNFTOfferReceived(
-              uri.queryParameters, operation, context);
-        } else if (operation != null &&
-            operation == 'rejectCollectionOfferReceived') {
-          navigateToTransactionRequestAcceptRejectWithrejectCollectionOfferReceived(
-              uri.queryParameters, operation, context);
-        } else if (operation != null && operation == 'CancelNFTOfferMade') {
-          navigateToTransactionRequestAcceptRejectWithCancelNFTOfferMade(
-              uri.queryParameters, operation, context);
-        } else if (operation != null && operation == 'CancelAuctionListing') {
-          navigateToTransactionRequestAcceptRejectWithCancelAuctionListing(
-              uri.queryParameters, operation, context);
-        } else if (operation != null &&
-            operation == 'CancelCollectionAuctionListing') {
-          navigateToTransactionRequestAcceptRejectWithCancelCollectionAuctionListing(
-              uri.queryParameters, operation, context);
-        } else if (operation != null && operation == 'CancelListing') {
-          navigateToTransactionRequestAcceptRejectWithCancelListing(
-              uri.queryParameters, operation, context);
-        } else if (operation != null &&
-            operation == 'CancelCollectionListing') {
-          navigateToTransactionRequestAcceptRejectWithCancelCollectionListing(
-              uri.queryParameters, operation, context);
-        } else if (operation != null &&
-            operation == 'CancelCollectionOfferMade') {
-          navigateToTransactionRequestAcceptRejectWithCancelCollectionOfferMade(
-              uri.queryParameters, operation, context);
-        } else if (operation != null && operation == 'makeNFTCounterOffer') {
-          var data = json.decode(uri.queryParameters["params"]!);
-          // String? id = data['id'];
-          // String? offererId = data['offererId'];
-          // int? offerAmount = int.tryParse(data['offerAmount'].toString() ?? '');
-          navigateToTransactionRequestAcceptRejectWithMakeCounterOffer(
-              uri.queryParameters,
-              operation,
-              context,
-            );
-        } else if (operation != null &&
-            operation == 'makeCollectionCounterOffer') {
-          var data = json.decode(uri.queryParameters["params"]!);
-          String? id = data['id'];
-          String? offererId = data['offererId'];
-          int? offerAmount = int.tryParse(data['offerAmount'].toString() ?? '');
-          navigateToTransactionRequestAcceptRejectWithmakeCollectionCounterOffer(
-              uri.queryParameters,
-              operation,
-              context,
-          );
-        } else if (operation != null && operation == 'acceptNFTCounterOffer') {
-          navigateToTransactionRequestWithacceptNFTCounterOffer(
-              uri.queryParameters, operation, context);
-        } else if (operation != null && operation == 'rejectNFTCounterOffer') {
-          var data = json.decode(uri.queryParameters["params"]!);
-          String? id = data['id'];
-          String? offererId = data['offererId'];
-          int? offerAmount = int.tryParse(data['offerAmount'].toString() ?? '');
-          print(id.toString() +
-              "  " +
-              offererId.toString() +
-              "  " +
-              offerAmount.toString());
-          navigateToTransactionRequestAcceptRejectWithrejectNFTCounterOffer(
-              uri.queryParameters,
-              operation,
-              context,);
-        } else if (operation != null &&
-            operation == 'rejectCollectionCounterOffer') {
-          var data = json.decode(uri.queryParameters["params"]!);
-          String? id = data['id'];
-          String? offererId = data['offererId'];
-          int? offerAmount = int.tryParse(data['offerAmount'].toString() ?? '');
-          print(id.toString() +
-              "  " +
-              offererId.toString() +
-              "  " +
-              offerAmount.toString());
-          navigateToTransactionRequestAcceptRejectWithrejectCollectionCounterOffer(
-              uri.queryParameters,
-              operation,
-              context,
-             );
-        } else if (operation != null &&
-            operation == 'acceptCollectionCounterOffer') {
-          navigateToTransactionRequestWithacceptCollectionCounterOffer(
-              uri.queryParameters, operation, context);
-        } else {}
-      }
-    });
-  }
-
-  Future<void> navigateToTransactionRequestWithMintCollection(
-      Map<String, dynamic> queryParams,
-      String operation,
-      String metaData,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "metaData": metaData,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void> navigateToTransactionRequestWithMintNFTWithEditions(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void> navigateToTransactionRequestWithMint(
-      Map<String, dynamic> queryParams,
-      String operation,
-      String metaData,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx)
-        .popAndPushNamed(TransactionRequest.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "metaData": metaData,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void> navigateToTransactionRequestWithPurchaseNft(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress,
-    });
-  }
-
-  Future<void> navigateToTransactionRequestWithPurchaseCollection(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress,
-    });
-  }
-
-  Future<void> navigateToTransactionRequestWithListNftFixedPrice(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void> navigateToTransactionRequestWithListCollectionFixedPrice(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void> navigateToTransactionRequestWithListNftForAuction(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void> navigateToTransactionRequestWithListCollectionForAuction(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void> navigateToTransactionRequestWithBurnNFT(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void> navigateToTransactionRequestWithBurnCollection(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void> navigateToTransactionRequestWithMakeOfferNFT(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-    });
-  }
-
-  Future<void> navigateToTransactionRequestWithMakeOfferCollection(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-    });
-  }
-
-  Future<void> navigateToTransactionRequestWithacceptNFTCounterOffer(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void> navigateToTransactionRequestWithacceptCollectionCounterOffer(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void> navigateToTransactionRequestAcceptRejectWithAcceptOffer(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx)
-        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void>
-  navigateToTransactionRequestAcceptRejectWithAcceptCollectionOffer(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx)
-        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void>
-  navigateToTransactionRequestAcceptRejectWithrejectNFTOfferReceived(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx)
-        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void>
-  navigateToTransactionRequestAcceptRejectWithrejectCollectionOfferReceived(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx)
-        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void> navigateToTransactionRequestAcceptRejectWithCancelNFTOfferMade(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx)
-        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void>
-  navigateToTransactionRequestAcceptRejectWithCancelCollectionOfferMade(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx)
-        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void> navigateToTransactionRequestAcceptRejectWithCancelAuctionListing(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx)
-        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void>
-  navigateToTransactionRequestAcceptRejectWithCancelCollectionAuctionListing(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx)
-        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void> navigateToTransactionRequestAcceptRejectWithCancelListing(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx)
-        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void>
-  navigateToTransactionRequestAcceptRejectWithCancelCollectionListing(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx)
-        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void> navigateToTransactionRequestAcceptRejectWithMakeCounterOffer(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx,
-      ) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx)
-        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress,
-    });
-  }
-
-  Future<void>
-  navigateToTransactionRequestAcceptRejectWithrejectNFTCounterOffer(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx,
-      // String id,
-      // String offererId,
-      // String offerAmount,
-      ) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx)
-        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      // "id": id,
-      // "offererId": offererId,
-      // "offerAmount": offerAmount,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void>
-  navigateToTransactionRequestAcceptRejectWithrejectCollectionCounterOffer(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx,
-      ) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx)
-        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
-      "params": paramsString,
-      "operation": operation,
-      "fees": feesString,
-      "walletAddress": userWalletAddress
-    });
-  }
-
-  Future<void>
-  navigateToTransactionRequestAcceptRejectWithmakeCollectionCounterOffer(
-      Map<String, dynamic> queryParams,
-      String operation,
-      BuildContext ctx,
-      ) async {
-    String paramsString = queryParams['params'] ?? '';
-    String feesString = queryParams['fees'] ?? '';
-    await Navigator.of(ctx)
-        .pushNamed(TransactionRequestAcceptReject.routeName, arguments: {
-      "params": paramsString,
-      "fees": feesString,
-      "operation": operation,
-      "walletAddress": userWalletAddress
-    });
-  }
-
   bool showLockedScreen = false;
 
   @override
@@ -1272,7 +662,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                         child: Center(
                                             child: LoaderBluredScreen()),
                                       )
-                                          : Column(
+                                          :
+                                  Column(
                                         mainAxisAlignment:
                                         MainAxisAlignment.start,
                                         mainAxisSize: MainAxisSize.min,
@@ -1355,13 +746,13 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                             ]),
                           ),
                         ),
-                        if (_isloading)
-                          Positioned(
-                            top: 12.h,
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            child: LoaderBluredScreen(),)
+                        // if (_isloading)
+                        //   Positioned(
+                        //     top: 12.h,
+                        //     bottom: 0,
+                        //     left: 0,
+                        //     right: 0,
+                        //     child: LoaderBluredScreen(),)
                       ],
                     ),
                   );

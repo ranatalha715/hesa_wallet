@@ -33,11 +33,24 @@ class _AppDrawerState extends State<AppDrawer> {
   var accessToken = '';
   var refreshToken = '';
   bool showCopiedMsg = false;
+  bool _isPasscodeSet = false;
 
   getaccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
     refreshToken = prefs.getString('refreshToken')!;
+  }
+
+  getPasscode() async {
+    print('printing');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final passcode = prefs.getString('passcode')!;
+    if (passcode != "" || passcode != null) {
+      _isPasscodeSet = true;
+    } else {
+      _isPasscodeSet = false;
+    }
+    print("ispasscodeset" + _isPasscodeSet.toString());
   }
 
   deleteToken() async {
@@ -64,6 +77,7 @@ class _AppDrawerState extends State<AppDrawer> {
     await getaccessToken();
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
+    await getPasscode();
   }
 
   @override
@@ -73,8 +87,7 @@ class _AppDrawerState extends State<AppDrawer> {
     // getaccessToken();
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor:
-          AppColors.profileHeaderDark,
+      statusBarColor: AppColors.profileHeaderDark,
     ));
   }
 
@@ -91,7 +104,8 @@ class _AppDrawerState extends State<AppDrawer> {
   Widget build(BuildContext context) {
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
-
+    final isEmailVerified =
+        Provider.of<UserProvider>(context, listen: false).isEmailVerified;
     return Consumer<UserProvider>(builder: (context, user, child) {
       return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
         return BackdropFilter(
@@ -142,30 +156,29 @@ class _AppDrawerState extends State<AppDrawer> {
                                 height: 58.sp,
                                 width: 58.sp,
                                 decoration: BoxDecoration(
-                                  // color: Colors.red,
+                                    // color: Colors.red,
                                     color: AppColors.backgroundColor,
                                     borderRadius: BorderRadius.circular(100)),
                                 child: Padding(
                                   padding: EdgeInsets.all(1.sp),
-                                  child:
-                                  ClipRRect(
+                                  child: ClipRRect(
                                     borderRadius: BorderRadius.circular(100),
-                                    child:
-                                    user.userAvatar != null ? Image.network(
-                                      user.userAvatar!,
-                                      // height: 55.sp,
-                                      // width: 55.sp,
-                                      fit: BoxFit.cover,
-                                    ):
-                                    Padding(
-                                      padding:  EdgeInsets.all(4.sp),
-                                      child: Image.asset(
-                                        "assets/images/user_placeholder.png",
-                                        // height: 55.sp,
-                                        // width: 55.sp,
-                                        color: AppColors.textColorGrey,
-                                      ),
-                                    ),
+                                    child: user.userAvatar != null
+                                        ? Image.network(
+                                            user.userAvatar!,
+                                            // height: 55.sp,
+                                            // width: 55.sp,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Padding(
+                                            padding: EdgeInsets.all(4.sp),
+                                            child: Image.asset(
+                                              "assets/images/user_placeholder.png",
+                                              // height: 55.sp,
+                                              // width: 55.sp,
+                                              color: AppColors.textColorGrey,
+                                            ),
+                                          ),
                                   ),
                                 ),
                               ),
@@ -291,46 +304,49 @@ class _AppDrawerState extends State<AppDrawer> {
                                         builder: (context) => Settings()),
                                   );
                                 }),
-                            Positioned(
-                              right: isEnglish ? 20 : null,
-                              left: isEnglish ? null : 20,
-                              top: 0,
-                              bottom: 0,
-                              child: Container(
-                                // color: Colors.yellow,
-                                child: Center(
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.asset(
-                                        "assets/images/warning.png",
-                                        color: AppColors.errorColor,
-                                        height: 2.2.h,
-                                        width: 2.2.h,
-                                      ),
-                                      SizedBox(
-                                        width: 2.w,
-                                      ),
-                                      Text(
-                                        'Unprotected'.tr(),
-                                        style: TextStyle(
-                                            color: selectedIndex == 3
-                                                ? AppColors.errorColor
-                                                : !themeNotifier.isDark
-                                                    ? AppColors
-                                                        .tabColorlightMode
-                                                    : AppColors
-                                                        .textColorGreyShade2,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 9.3.sp,
-                                            fontFamily: 'Inter'),
-                                      ),
-                                    ],
+                            if (isEmailVerified != 'true' && !_isPasscodeSet)
+                              Positioned(
+                                right: isEnglish ? 20 : null,
+                                left: isEnglish ? null : 20,
+                                top: 0,
+                                bottom: 0,
+                                child: Container(
+                                  // color: Colors.yellow,
+                                  child: Center(
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          "assets/images/warning.png",
+                                          color: AppColors.errorColor,
+                                          height: 2.2.h,
+                                          width: 2.2.h,
+                                        ),
+                                        SizedBox(
+                                          width: 2.w,
+                                        ),
+                                        Text(
+                                          'Unprotected'.tr(),
+                                          style: TextStyle(
+                                              color: selectedIndex == 3
+                                                  ? AppColors.errorColor
+                                                  : !themeNotifier.isDark
+                                                      ? AppColors
+                                                          .tabColorlightMode
+                                                      : AppColors
+                                                          .textColorGreyShade2,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 9.3.sp,
+                                              fontFamily: 'Inter'),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            )
+                              )
                           ]),
                           drawerWidget(
                               title: 'FAQ & Support'.tr(),
@@ -375,13 +391,13 @@ class _AppDrawerState extends State<AppDrawer> {
                   ),
                   Expanded(
                       child: Stack(
-                        children: [
-                          Container(
-                                              // margin: EdgeInsets.only(top: 1.sp),
-                                              width: double.infinity,
-                                              // color: Colors.teal,
-                                              color: AppColors.drawerOptBackgroundClr,
-                                              child: Column(
+                    children: [
+                      Container(
+                        // margin: EdgeInsets.only(top: 1.sp),
+                        width: double.infinity,
+                        // color: Colors.teal,
+                        color: AppColors.drawerOptBackgroundClr,
+                        child: Column(
                           children: [
                             Expanded(
                               child: SizedBox(),
@@ -402,49 +418,50 @@ class _AppDrawerState extends State<AppDrawer> {
                               height: 3.h,
                             )
                           ],
-                                              ),
-                                            ),
-                          if(showCopiedMsg)
-                          Positioned(
-                            left: 10,
-                            right: 10,
-                            bottom: 20,
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Container(
-                                height: 4.h,
-                                width: 35.w,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5.sp),
-                                  color: AppColors.profileHeaderDark,
-                                ),
-
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      "assets/images/hesa_wallet_logo.png",
-                                      fit: BoxFit.cover,
-                                      height: 12.sp,
-                                      width: 12.sp,
-                                    ),
-                                    SizedBox(width: 5.sp,),
-                                    Text(
-                                      'Address copied!',
-                                      style: TextStyle(
-                                          fontSize: 9.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.textColorWhite,
-                                          fontFamily: 'Blogger Sans'
-                                      ),)
-                                  ],
-                                ),
+                        ),
+                      ),
+                      if (showCopiedMsg)
+                        Positioned(
+                          left: 10,
+                          right: 10,
+                          bottom: 20,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Container(
+                              height: 4.h,
+                              width: 35.w,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5.sp),
+                                color: AppColors.profileHeaderDark,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    "assets/images/hesa_wallet_logo.png",
+                                    fit: BoxFit.cover,
+                                    height: 12.sp,
+                                    width: 12.sp,
+                                  ),
+                                  SizedBox(
+                                    width: 5.sp,
+                                  ),
+                                  Text(
+                                    'Address copied!',
+                                    style: TextStyle(
+                                        fontSize: 9.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.textColorWhite,
+                                        fontFamily: 'Blogger Sans'),
+                                  )
+                                ],
                               ),
                             ),
-                          )
-                        ],
-                      ))
+                          ),
+                        )
+                    ],
+                  ))
                 ],
               ),
             ),
@@ -464,87 +481,85 @@ class _AppDrawerState extends State<AppDrawer> {
     bool isDark = true,
     bool isLast = false,
   }) {
-   return GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedIndex = index;
-                });
-                print(index);
-                print(selectedIndex);
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedIndex = index;
+        });
+        print(index);
+        print(selectedIndex);
 
-                Future.delayed(Duration(milliseconds: 250), () {
-                  handler();
-                });
-              },
-
-              child: Container(
-                // margin: EdgeInsets.only(
-                //     top: isDark ? 1.sp : 0.5.sp, bottom: isLast ? 0 : 0),
-                height: 7.5.h,
-                decoration:
-                    BoxDecoration(color: AppColors.drawerOptBackgroundClr
-                        // gradient: LinearGradient(
-                        //   colors: [
-                        //     index == selectedIndex
-                        //         ? Color(0xff92B928)
-                        //         : isDark
-                        //             ? AppColors.drawerOptBackgroundClr
-                        //             : AppColors.textColorWhite,
-                        //     index == selectedIndex
-                        //         ? Color(0xffC9C317)
-                        //         : isDark
-                        //             ? AppColors.drawerOptBackgroundClr
-                        //             : AppColors.textColorWhite
-                        //   ],
-                        //   begin: Alignment.topLeft,
-                        //   end: Alignment.bottomRight,
-                        // ),
-                        ),
-                // color: index == selectedIndex ? Colors.yellow:AppColors.textColorWhite.withOpacity(0.05),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.sp),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        color: Colors.transparent,
-                        height: 3.h,
-                        width: 3.h,
-                        child: Image.asset(
-                          imagePath,
-                          color: index == selectedIndex
-                              ? AppColors.hexaGreen
-                              : isDark
-                                  ? AppColors.textColorWhite
-                                  : AppColors.tabColorlightMode,
-                          // AppColors.textColorBlack,
-                          fit: BoxFit.cover,
-                          // height: imageHeight,
-                          // width: imageWidth,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 5.w,
-                      ),
-                      Text(
-                        title,
-                        style: TextStyle(
-                            color: index == selectedIndex
-                                ? AppColors.hexaGreen
-                                : isDark
-                                    ? AppColors.textColorWhite
-                                    : AppColors.tabColorlightMode,
-                            // AppColors.textColorBlack,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 11.7.sp,
-                            fontFamily: 'Inter'),
-                      ),
-                    ],
-                  ),
+        Future.delayed(Duration(milliseconds: 250), () {
+          handler();
+        });
+      },
+      child: Container(
+        // margin: EdgeInsets.only(
+        //     top: isDark ? 1.sp : 0.5.sp, bottom: isLast ? 0 : 0),
+        height: 7.5.h,
+        decoration: BoxDecoration(color: AppColors.drawerOptBackgroundClr
+            // gradient: LinearGradient(
+            //   colors: [
+            //     index == selectedIndex
+            //         ? Color(0xff92B928)
+            //         : isDark
+            //             ? AppColors.drawerOptBackgroundClr
+            //             : AppColors.textColorWhite,
+            //     index == selectedIndex
+            //         ? Color(0xffC9C317)
+            //         : isDark
+            //             ? AppColors.drawerOptBackgroundClr
+            //             : AppColors.textColorWhite
+            //   ],
+            //   begin: Alignment.topLeft,
+            //   end: Alignment.bottomRight,
+            // ),
+            ),
+        // color: index == selectedIndex ? Colors.yellow:AppColors.textColorWhite.withOpacity(0.05),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.sp),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                color: Colors.transparent,
+                height: 3.h,
+                width: 3.h,
+                child: Image.asset(
+                  imagePath,
+                  color: index == selectedIndex
+                      ? AppColors.hexaGreen
+                      : isDark
+                          ? AppColors.textColorWhite
+                          : AppColors.tabColorlightMode,
+                  // AppColors.textColorBlack,
+                  fit: BoxFit.cover,
+                  // height: imageHeight,
+                  // width: imageWidth,
                 ),
               ),
-            );
+              SizedBox(
+                width: 5.w,
+              ),
+              Text(
+                title,
+                style: TextStyle(
+                    color: index == selectedIndex
+                        ? AppColors.hexaGreen
+                        : isDark
+                            ? AppColors.textColorWhite
+                            : AppColors.tabColorlightMode,
+                    // AppColors.textColorBlack,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 11.7.sp,
+                    fontFamily: 'Inter'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   logOutFunction(bool isDark) {
@@ -607,8 +622,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       // Expanded(child: SizedBox()),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 22),
-                        child:
-                        AppButton(
+                        child: AppButton(
                           title: 'Log out'.tr(),
                           handler: () async {
                             // if (isLoading) return;
@@ -617,10 +631,13 @@ class _AppDrawerState extends State<AppDrawer> {
                               setState(() {
                                 isLoading = true;
                               });
-                              final resultLogout = await Provider.of<AuthProvider>(
-                                  context,
-                                  listen: false)
-                                  .logoutUser(token: accessToken, refreshToken: refreshToken, context: context);
+                              final resultLogout =
+                                  await Provider.of<AuthProvider>(context,
+                                          listen: false)
+                                      .logoutUser(
+                                          token: accessToken,
+                                          refreshToken: refreshToken,
+                                          context: context);
 
                               setState(() {
                                 isLoading = false;
@@ -633,32 +650,29 @@ class _AppDrawerState extends State<AppDrawer> {
                                   MaterialPageRoute(
                                     builder: (context) => Wallet(),
                                   ),
-                                      (route) =>
-                                  false, // This predicate ensures that all previous routes are removed.
+                                  (route) =>
+                                      false, // This predicate ensures that all previous routes are removed.
                                 );
                                 await AppDeepLinking().openNftApp(
                                   {
                                     "operation": "disconnectWallet",
-                                    "walletAddress":
-                                    Provider.of<UserProvider>(
-                                        context,
-                                        listen: false)
+                                    "walletAddress": Provider.of<UserProvider>(
+                                            context,
+                                            listen: false)
                                         .walletAddress,
-                                    "userName":
-                                    Provider.of<UserProvider>(
-                                        context,
-                                        listen: false)
+                                    "userName": Provider.of<UserProvider>(
+                                            context,
+                                            listen: false)
                                         .userName,
-                                    "userIcon":
-                                    Provider.of<UserProvider>(
-                                        context,
-                                        listen: false)
+                                    "userIcon": Provider.of<UserProvider>(
+                                            context,
+                                            listen: false)
                                         .userAvatar,
                                     "response":
-                                    'Wallet disconnected successfully'
+                                        'Wallet disconnected successfully'
                                   },
                                 );
-                              } else{
+                              } else {
                                 print('Logout Failed');
                               }
                             } catch (error) {
@@ -672,8 +686,8 @@ class _AppDrawerState extends State<AppDrawer> {
                           },
                           isLoading: isLoading,
                           isGradient: false,
-                          color: AppColors.deleteAccountBtnColor
-                              .withOpacity(0.10),
+                          color:
+                              AppColors.deleteAccountBtnColor.withOpacity(0.10),
                           textColor: AppColors.textColorBlack,
                           buttonWithBorderColor: AppColors.errorColor,
                           isGradientWithBorder: true,
@@ -682,12 +696,11 @@ class _AppDrawerState extends State<AppDrawer> {
                       SizedBox(height: 2.h),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 22),
-                        child:
-                        AppButton(
-                            title: 'Cancel'.tr(),
-                            handler: () {
-                              Navigator.pop(context);
-                            },
+                        child: AppButton(
+                          title: 'Cancel'.tr(),
+                          handler: () {
+                            Navigator.pop(context);
+                          },
                           isGradient: false,
                           textColor: isDark
                               ? AppColors.textColorWhite
@@ -710,15 +723,14 @@ class _AppDrawerState extends State<AppDrawer> {
   void _copyToClipboard(String text) {
     Clipboard.setData(ClipboardData(text: text));
     setState(() {
-      showCopiedMsg=true;
+      showCopiedMsg = true;
     });
     Future.delayed(Duration(milliseconds: 3000), () {
       setState(() {
-        showCopiedMsg=false;
+        showCopiedMsg = false;
       });
     });
     // fToast = FToast();
     // fToast.init(context);
-
   }
 }

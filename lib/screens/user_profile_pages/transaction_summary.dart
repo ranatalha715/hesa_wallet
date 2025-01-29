@@ -321,7 +321,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                       Text(
                                         formatCurrency(transactionSummary
                                                 .txTotalAmount) +
-                                            'SAR'.tr(),
+                                            ' SAR'.tr(),
                                         style: TextStyle(
                                           fontSize: 26.5.sp,
                                           fontWeight: FontWeight.w700,

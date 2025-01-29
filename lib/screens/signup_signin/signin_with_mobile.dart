@@ -89,7 +89,6 @@ class _SigninWithMobileState extends State<SigninWithMobile> {
     // _events = new StreamController<int>();
     _events =
     StreamController<int>.broadcast(); // Make it a broadcast controller
-
     _events.add(60);
     _numberController.addListener(_updateButtonState);
     otp1Controller.addListener(_updateOtpButtonState);

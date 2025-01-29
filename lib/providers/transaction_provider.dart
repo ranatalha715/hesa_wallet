@@ -1488,10 +1488,6 @@ class TransactionProvider with ChangeNotifier {
   }) async {
     final url = Uri.parse(BASE_URL + '/v2/payable-transactions/send');
     Map<String, dynamic> paramsMap = jsonDecode(params);
-    // String yourWalletAddress = walletAddress;
-    // String collectionId = '8c9b250f-2038-4162-9c9a-6015dc2f16a5';
-
-    // paramsMap['owner'] = yourWalletAddress;
     String updatedParams = jsonEncode(paramsMap);
     print('params to send bilal' + updatedParams);
     final Map<String, dynamic> requestBody = {
@@ -2431,7 +2427,6 @@ class TransactionProvider with ChangeNotifier {
   functionToNavigateAfterNonPayable(String response, String operation, BuildContext context,
       {String statusCode = '', String paramsToSend=''}) {
     Future.delayed(const Duration(seconds: 2), () async {
-      print('paramsToSend' + paramsToSend);
       AppDeepLinking().openNftApp(
         {
           "operation": operation,
@@ -2472,22 +2467,20 @@ class TransactionProvider with ChangeNotifier {
       String response, String operation, BuildContext context,
       {String statusCode = '', String paramsToSend = ''}) {
     Future.delayed(Duration(seconds: 1), () async {
-      // Prepare the data being sent
-      final data = {
+      // final data = {
+      //   "operation": operation,
+      //   "statusCode": statusCode.toString(),
+      //   "data": response,
+      //   "payload": paramsToSend,
+      //   "comments": "payable transactions response",
+      // };
+      AppDeepLinking().openNftApp({
         "operation": operation,
         "statusCode": statusCode.toString(),
         "data": response,
         "payload": paramsToSend,
         "comments": "payable transactions response",
-      };
-
-      // Print the data before passing it to the NFT app
-      print('Data being sent to Neo NFT app: $data');
-
-      // Pass the data to the NFT app
-      AppDeepLinking().openNftApp(data);
-
-      // Navigate to the NFTs page
+      });
       await Navigator.of(context).pushNamedAndRemoveUntil(
         'nfts-page',
             (Route<dynamic> route) => false,
@@ -2497,9 +2490,9 @@ class TransactionProvider with ChangeNotifier {
   }
 
 
-  functionToNavigateAfterCounterOffer(String response, String operation,
-      {String statusCode = ''}) {
-    Future.delayed(Duration(seconds: 1), () {
+  functionToNavigateAfterCounterOffer(String response, String operation, BuildContext context,
+      {String statusCode = '',}) {
+    Future.delayed(Duration(seconds: 2), () async {
       AppDeepLinking().openNftApp(
         {
           "operation": operation,
@@ -2508,6 +2501,10 @@ class TransactionProvider with ChangeNotifier {
           "comments": "Counter Offers response",
         },
       );
+      await Navigator.of(context)
+          .pushNamedAndRemoveUntil(
+          'nfts-page', (Route d) => false,
+          arguments: {});
     });
   }
 
@@ -2567,21 +2564,21 @@ class TransactionProvider with ChangeNotifier {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
         print("send response " + responseBody.toString());
-        functionToNavigateAfterCounterOffer(response.body.toString(), operation,
+        functionToNavigateAfterCounterOffer(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         txIdToShowInDialog=responseBody['data']['txId'];
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
       } else {
-        functionToNavigateAfterCounterOffer(response.body.toString(), operation,
+        functionToNavigateAfterCounterOffer(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         otpErrorResponse=true;
         otpSuccessResponse=false;
         return AuthResult.failure;
       }
     } catch (e) {
-      functionToNavigateAfterCounterOffer(e.toString(), operation);
+      functionToNavigateAfterCounterOffer(e.toString(), operation, context);
       otpErrorResponse=true;
       otpSuccessResponse=false;
       return AuthResult.failure;
@@ -2632,21 +2629,22 @@ class TransactionProvider with ChangeNotifier {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
         print("send response " + responseBody.toString());
-        functionToNavigateAfterCounterOffer(response.body.toString(), operation,
+        functionToNavigateAfterCounterOffer(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         txIdToShowInDialog=responseBody['data']['txId'];
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
       } else {
-        functionToNavigateAfterCounterOffer(response.body.toString(), operation,
+        functionToNavigateAfterCounterOffer(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         otpErrorResponse=true;
         otpSuccessResponse=false;
         return AuthResult.failure;
       }
     } catch (e) {
-      functionToNavigateAfterCounterOffer(e.toString(), operation);
+      functionToNavigateAfterCounterOffer(e.toString(), operation, context
+      );
       otpErrorResponse=true;
       otpSuccessResponse=false;
       return AuthResult.failure;
@@ -2697,21 +2695,21 @@ class TransactionProvider with ChangeNotifier {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
         print("send response " + responseBody.toString());
-        functionToNavigateAfterCounterOffer(response.body.toString(), operation,
+        functionToNavigateAfterCounterOffer(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         txIdToShowInDialog=responseBody['data']['txId'];
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
       } else {
-        functionToNavigateAfterCounterOffer(response.body.toString(), operation,
+        functionToNavigateAfterCounterOffer(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         otpErrorResponse=true;
         otpSuccessResponse=false;
         return AuthResult.failure;
       }
     } catch (e) {
-      functionToNavigateAfterCounterOffer(e.toString(), operation);
+      functionToNavigateAfterCounterOffer(e.toString(), operation, context);
       otpErrorResponse=true;
       otpSuccessResponse=false;
       return AuthResult.failure;
@@ -2760,21 +2758,21 @@ class TransactionProvider with ChangeNotifier {
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
         print("send response " + responseBody.toString());
-        functionToNavigateAfterCounterOffer(response.body.toString(), operation,
+        functionToNavigateAfterCounterOffer(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         txIdToShowInDialog=responseBody['data']['txId'];
         otpErrorResponse=false;
         otpSuccessResponse=true;
         return AuthResult.success;
       } else {
-        functionToNavigateAfterCounterOffer(response.body.toString(), operation,
+        functionToNavigateAfterCounterOffer(response.body.toString(), operation, context,
             statusCode: response.statusCode.toString());
         otpErrorResponse=true;
         otpSuccessResponse=false;
         return AuthResult.failure;
       }
     } catch (e) {
-      functionToNavigateAfterCounterOffer(e.toString(), operation);
+      functionToNavigateAfterCounterOffer(e.toString(), operation, context);
       otpErrorResponse=true;
       otpSuccessResponse=false;
       return AuthResult.failure;

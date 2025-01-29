@@ -18,37 +18,37 @@ packages:
     source: hosted
     version: "3.1.0"
   app_links:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: app_links
-      sha256: "49117eefee46a97cf5037bb5baacc882556b22e631e18087b0a18b29379e7a14"
+      sha256: "433df2e61b10519407475d7f69e470789d23d593f28224c38ba1068597be7950"
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.2"
+    version: "6.3.3"
   app_links_linux:
     dependency: transitive
     description:
       name: app_links_linux
-      sha256: "2c39a652331d32ffacd2cdba42ddea1a8eb996f6e9e97c8e0e284fa0310278ac"
+      sha256: f5f7173a78609f3dfd4c2ff2c95bd559ab43c80a87dc6a095921d96c05688c81
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.3"
   app_links_platform_interface:
     dependency: transitive
     description:
       name: app_links_platform_interface
-      sha256: "1888995746c771e4da00c1652174d6061c91e787f2097276bc963905032fe194"
+      sha256: "05f5379577c513b534a29ddea68176a4d4802c46180ee8e2e966257158772a3f"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "2.0.2"
   app_links_web:
     dependency: transitive
     description:
       name: app_links_web
-      sha256: "00c19f99ea2d2d7c6d29a074d1e3160f95186bb491b964ec03a298b37b25a410"
+      sha256: af060ed76183f9e2b87510a9480e56a5352b6c249778d07bd2c95fc35632a555
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.4"
   app_settings:
     dependency: "direct main"
     description:

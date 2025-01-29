@@ -106,13 +106,14 @@ String tnxLabelingWithPayload(String operation) {
       return 'Offer Cancellation';
 
     case 'makeNFTCounterOffer':
-      return 'Offer Placement';
+      return 'Counter Offer Placement';
 
     case 'makeCollectionCounterOffer':
       return 'Counter Offer Placement';
 
     case 'AcceptCollectionOffer':
     case 'AcceptNFTOffer':
+    case 'AcceptNFTOfferReceived':
       return 'Offer Acceptance';
 
     case 'rejectCollectionOfferReceived':

@@ -53,14 +53,17 @@ import 'package:hesa_wallet/screens/user_transaction_summaries_with_payment/tran
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'constants/app_link_service.dart';
 import 'constants/configs.dart';
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+ final AppLinksService appLinksService =   AppLinksService(context: navigatorKey.currentContext!);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await localized.EasyLocalization.ensureInitialized();
+   // appLinksService = await AppLinksService(context: navigatorKey.currentContext!);
   // const AndroidInitializationSettings initializationSettingsAndroid =
   // const AndroidInitializationSettings initializationSettingsAndroid =
   // AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -383,10 +386,16 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     refreshToken = prefs.getString('refreshToken')!;
     print('test access token' + accessToken);
     print('test refresh token' + refreshToken);
+    await Provider.of<UserProvider>(context, listen: false)
+        .getUserDetails(token: accessToken, context: context);
+    var user = await Provider.of<UserProvider>(context, listen: false);
+    await appLinksService.initializeAppLinks(
+        user.walletAddress
+    );
     if (isTokenExpired(accessToken)) {
       prefs.remove('accessToken');
       prefs.remove('refreshToken');
-      Provider.of<AuthProvider>(context, listen: false).refreshToken(
+      await Provider.of<AuthProvider>(context, listen: false).refreshToken(
           refreshToken: refreshToken, context: context, token: accessToken);
     } else {}
     navigateToLoginPage(context);
