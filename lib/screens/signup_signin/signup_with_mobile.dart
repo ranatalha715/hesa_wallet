@@ -1571,7 +1571,7 @@ class _SignupWithMobileState extends State<SignupWithMobile> {
                                               fontFamily: 'Inter'),
                                           inputFormatters: [
                                             LengthLimitingTextInputFormatter(
-                                                10),
+                                                9),
                                             FilteringTextInputFormatter
                                                 .digitsOnly,
                                           ],

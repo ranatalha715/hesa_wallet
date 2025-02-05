@@ -37,7 +37,7 @@ class _ConnectDappState extends State<ConnectDapp> {
     'Username'.tr(),
     'Display icon'.tr(),
     'NFTs and Collections (owned/created)'.tr(),
-    'Wallet activity'.tr(),
+    'Wallet activity (Specific to the app)'.tr(),
     'Email'.tr(),
   ];
 

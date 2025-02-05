@@ -9,6 +9,7 @@ class AppColors {
   static const gradientColor2 = Color(0xffC9C317);
   static const gradientColor3 = Color(0xff191C1F);
   static const textColorGrey = Color(0xff6B6F72);
+  static const collectionName = Color(0xffB0B0B0);
   static const textColorGreen = Color(0xff20BF6B);
   static const textClrGreyIconsContainerSecurity = Color(0xffD9D9D9);
   static const footerColor = Color(0xff6B6F72);

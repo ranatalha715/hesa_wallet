@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../constants/colors.dart';
+import '../constants/string_utils.dart';
 
 class WalletNftsTitles extends StatefulWidget {
   bool isOpened;
@@ -43,7 +44,7 @@ class _WalletNftsTitlesState extends State<WalletNftsTitles> {
             children: [
               Container(
                   height: 3.5.h,
-                  width: 3.5.h,
+                  width: 3.8.h,
                   decoration: BoxDecoration(
                     color: AppColors.textColorWhite.withOpacity(0.05),
                     borderRadius: BorderRadius.circular(4),
@@ -51,13 +52,13 @@ class _WalletNftsTitlesState extends State<WalletNftsTitles> {
                   child: Align(
                     alignment: Alignment.center,
                     child: Text(
-                      widget.length.toString(),
+                      formatNumber(widget.length),
                       style: TextStyle(
                           color: widget.isDark
                               ? AppColors.textColorGreyShade2
                               : AppColors.textColorBlack,
                           fontWeight: FontWeight.w600,
-                          fontSize: 9.sp,
+                          fontSize: 7.sp,
                           fontFamily: 'Inter'),
                     ),
                   )),

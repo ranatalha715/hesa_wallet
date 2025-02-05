@@ -84,7 +84,6 @@ class _AppDrawerState extends State<AppDrawer> {
   void initState() {
     // TODO: implement initState
     init();
-    // getaccessToken();
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: AppColors.profileHeaderDark,
@@ -143,7 +142,6 @@ class _AppDrawerState extends State<AppDrawer> {
                           Expanded(
                               child: Container(
                             width: double.infinity,
-                            // color: Colors.red,
                           )),
                           Container(
                             decoration: BoxDecoration(
@@ -220,6 +218,12 @@ class _AppDrawerState extends State<AppDrawer> {
                                       fontFamily: 'Blogger Sans',
                                       fontWeight: FontWeight.w500,
                                       color: AppColors.textColorGrey),
+                                ),
+                                SizedBox(width: 3),
+                                Icon(
+                                  Icons.copy,
+                                  size: 10.sp,
+                                  color: AppColors.textColorGrey,
                                 ),
                               ],
                             ),
@@ -438,15 +442,6 @@ class _AppDrawerState extends State<AppDrawer> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Image.asset(
-                                    "assets/images/hesa_wallet_logo.png",
-                                    fit: BoxFit.cover,
-                                    height: 12.sp,
-                                    width: 12.sp,
-                                  ),
-                                  SizedBox(
-                                    width: 5.sp,
-                                  ),
                                   Text(
                                     'Address copied!',
                                     style: TextStyle(

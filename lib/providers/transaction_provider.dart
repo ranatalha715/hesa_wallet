@@ -1309,13 +1309,9 @@ class TransactionProvider with ChangeNotifier {
         },
         body: json.encode(requestBody),
       );
-
-      fToast = FToast();
-      fToast.init(context);
       print('payload to send bilal');
       print(requestBody.toString());
       print(response.body);
-
       if (response.statusCode == 201) {
         final Map<String, dynamic> responseBody = json.decode(response.body);
         checkoutURL = responseBody['data']['checkoutURL'];
@@ -1388,6 +1384,7 @@ class TransactionProvider with ChangeNotifier {
       print(requestBody.toString());
 
       if (response.statusCode == 201) {
+        print('burn response');
         print(response.body);
         final Map<String, dynamic> responseBody = json.decode(response.body);
         checkoutURL = responseBody['data']['checkoutURL'];

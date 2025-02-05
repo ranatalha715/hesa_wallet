@@ -12,6 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../constants/colors.dart';
+import '../../constants/string_utils.dart';
 import '../../providers/theme_provider.dart';
 import '../../widgets/animated_loader/animated_loader.dart';
 import '../../widgets/main_header.dart';
@@ -28,51 +29,6 @@ class NftsDetails extends StatefulWidget {
 class _NftsDetailsState extends State<NftsDetails> {
   var accessToken;
   var _isInit = true;
-
-  String replaceMiddleWithDots(String? input) {
-    // if (input == null || input.isEmpty) {
-    //   // Return a default value or an error message if the input is null or empty
-    //   return '';
-    // }
-    //
-    // if (input.length <= 20) {
-    //   // If the input string is 20 characters or less, return it as is.
-    //   return input;
-    // }
-    //
-    // final int middleIndex = input.length ~/ 2; // Find the middle index
-    // final int startIndex = middleIndex - 15; // Calculate the start index
-    // final int endIndex = middleIndex + 15; // Calculate the end index
-    //
-    // // Split the input string into three parts and join them with '...'
-    // final String result =
-    //     input.substring(0, startIndex) + '...' + input.substring(endIndex);
-
-    // return result;
-    return input.toString();
-  }
-
-  String replaceMiddleWithDotsCollectionId(String input) {
-    if (input.length <= 30) {
-      return input;
-    }
-
-    final int middleIndex = input.length ~/ 2; // Find the middle index
-    final int startIndex = middleIndex - 12; // Calculate the start index
-    final int endIndex = middleIndex + 9; // Calculate the end index
-
-    // Split the input string into three parts and join them with '...'
-    final String result =
-        input.substring(0, startIndex) + '...' + input.substring(endIndex);
-
-    return result;
-  }
-
-  String formatDate(String dateString) {
-    final DateTime dateTime = DateTime.parse(dateString);
-    final DateFormat formatter = DateFormat('MMM dd, yyyy');
-    return formatter.format(dateTime);
-  }
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -102,7 +58,6 @@ class _NftsDetailsState extends State<NftsDetails> {
       isLoading = true;
     });
     await Future.delayed(Duration(milliseconds: 500), () {
-      // print('Executed after 500 milliseconds');
     });
 
     if (_isInit) {
@@ -146,7 +101,7 @@ class _NftsDetailsState extends State<NftsDetails> {
                         isLoading ? 'NFT Name'.tr() : assetsDetails.tokenName,
                     subTitle: isLoading
                         ? '.......'
-                        : replaceMiddleWithDotsCollectionId(
+                        : truncateTo13Digits(
                             assetsDetails.tokenId),
                     showSubTitle: true,
                   ),
@@ -211,7 +166,7 @@ class _NftsDetailsState extends State<NftsDetails> {
                                     func: () => _launchURL(
                                         "https://www.mjraexplorer.com/nft/" +
                                             assetsDetails.tokenId),
-                                    details: replaceMiddleWithDotsCollectionId(
+                                    details: truncateTo13Digits(
                                         assetsDetails.tokenId),
                                     // replaceMiddleWithDotsCollectionId(args["tokenId"]),
                                     isDark: themeNotifier.isDark ? true : false,
@@ -225,11 +180,18 @@ class _NftsDetailsState extends State<NftsDetails> {
                                         _launchURL(
                                             "https://www.mjraexplorer.com/collection/" +
                                                 assetsDetails.collectionId),
-                                    details: replaceMiddleWithDotsCollectionId(
+                                    details: truncateTo13Digits(
                                         assetsDetails.collectionId),
                                     isDark: themeNotifier.isDark ? true : false,
                                     isEnglish: isEnglish,
                                       color: AppColors.textColorToska,
+                                  ),
+                                if (assetsDetails.creatorRoyalty != "null")
+                                  nftsDetailsWidget(
+                                    title: 'Creator royalty:'.tr(),
+                                    details: assetsDetails.creatorRoyalty + '%',
+                                    isDark: themeNotifier.isDark ? true : false,
+                                    isEnglish: isEnglish,
                                   ),
                                 if (assetsDetails.numberOfEdtions != null &&
                                     assetsDetails.numberOfEdtions == '' &&
@@ -246,19 +208,12 @@ class _NftsDetailsState extends State<NftsDetails> {
                                     func: () => _launchURL(
                                         "https://www.mjraexplorer.com/address/" +
                                             assetsDetails.creatorAddress),
-                                    details: replaceMiddleWithDots(
+                                    details: truncateTo13Digits(
                                             assetsDetails.creatorName) ??
                                         "N/A",
                                     isDark: themeNotifier.isDark ? true : false,
                                     isEnglish: isEnglish,
                                     color: AppColors.textColorToska,
-                                  ),
-                                if (assetsDetails.creatorRoyalty != "null")
-                                  nftsDetailsWidget(
-                                    title: 'Creator royalty:'.tr(),
-                                    details: assetsDetails.creatorRoyalty + '%',
-                                    isDark: themeNotifier.isDark ? true : false,
-                                    isEnglish: isEnglish,
                                   ),
                                 if (assetsDetails.ownerName != "null" &&
                                     assetsDetails.ownerName == '' &&
@@ -274,12 +229,12 @@ class _NftsDetailsState extends State<NftsDetails> {
                                     color: AppColors.textColorToska,
                                     isEnglish: isEnglish,
                                   ),
-                                // // if (args["nftIds"] != "null")
-                                // //   nftsDetailsWidget(
-                                // //     title: 'Collection Items:'.tr(),
-                                // //     details: args["nftIds"],
-                                // //     isDark: themeNotifier.isDark ? true : false,
-                                // //   ),
+                                // if (args["nftIds"] != "null")
+                                //   nftsDetailsWidget(
+                                //     title: 'Collection Items:'.tr(),
+                                //     details: args["nftIds"],
+                                //     isDark: themeNotifier.isDark ? true : false,
+                                //   ),
                                 if (assetsDetails.status != "null")
                                   nftsDetailsWidget(
                                     title: 'Token Status:'.tr(),
@@ -296,21 +251,20 @@ class _NftsDetailsState extends State<NftsDetails> {
                                     isDark: themeNotifier.isDark ? true : false,
                                     isEnglish: isEnglish,
                                   ),
-                                if (assetsDetails.collectionName != "null"&&
-                                    assetsDetails.collectionName == '' &&
-                                    assetsDetails.collectionName == 'Unknown')
+                                if (assetsDetails.collectionName != "null")
                                   nftsDetailsWidget(
                                     title: 'Collection Name:'.tr(),
                                     details: assetsDetails.collectionName,
                                     isDark: themeNotifier.isDark ? true : false,
                                     isEnglish: isEnglish,
+                                    color: AppColors.collectionName,
                                   ),
                                 if (assetsDetails.isListable != "null")
                                   nftsDetailsWidget(
-                                    title: 'Is Listable:'.tr(),
+                                    title: 'Listable status:'.tr(),
                                     details: assetsDetails.isListable == 'true'
-                                        ? 'True'
-                                        : 'False',
+                                        ? 'Listable'
+                                        : 'Not Listable',
                                     isDark: themeNotifier.isDark ? true : false,
                                     isEnglish: isEnglish,
                                   ),
@@ -321,17 +275,17 @@ class _NftsDetailsState extends State<NftsDetails> {
                                   isEnglish: isEnglish,
                                 ),
                                 nftsDetailsWidget(
-                                  title: 'Chain:'.tr(),
+                                  title: 'Blockchain:'.tr(),
                                   details: assetsDetails.chain,
                                   isDark: themeNotifier.isDark ? true : false,
                                   isEnglish: isEnglish,
                                 ),
                                 if (assetsDetails.burnable != "null")
                                   nftsDetailsWidget(
-                                    title: 'Burn Control:'.tr(),
+                                    title: 'Burnable status:'.tr(),
                                     details: assetsDetails.burnable == "true"
-                                        ? "On"
-                                        : "Off",
+                                        ? "Enabled"
+                                        : "Disabled",
                                     isDark: themeNotifier.isDark ? true : false,
                                     isEnglish: isEnglish,
                                   ),

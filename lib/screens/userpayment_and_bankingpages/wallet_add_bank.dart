@@ -771,12 +771,13 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                       height: _isSelected
                                           ? OS.Platform.isIOS
                                               ? 7.5.h
-                                              : 10.h
+                                              : 9.h
                                           : OS.Platform.isIOS
                                               ? 32.h
-                                              : 34.5.h,
+                                              : 31.5.h,
                                     ),
                                     Container(
+                                      // color: Colors.red,
                                       color: themeNotifier.isDark
                                           ? AppColors.backgroundColor
                                           : AppColors.textColorWhite,

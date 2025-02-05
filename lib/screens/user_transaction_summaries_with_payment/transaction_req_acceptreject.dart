@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hesa_wallet/constants/colors.dart';
 import 'package:hesa_wallet/providers/transaction_provider.dart';
@@ -23,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:hyperpay_plugin/flutter_hyperpay.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:developer' as dev;
 
 import '../../constants/app_deep_linking.dart';
@@ -126,7 +128,6 @@ class _TransactionRequestAcceptRejectState
 
 
   void startTimer() {
-    // Cancel the previous timer if it's active
     _timer?.cancel();
     _timeLeft = 60;
     _isTimerActive = true;
@@ -304,6 +305,12 @@ class _TransactionRequestAcceptRejectState
     });
   }
 
+  void _launchURL(String url) async {
+    Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      throw 'Could not launch $url';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -575,7 +582,7 @@ class _TransactionRequestAcceptRejectState
                                                         ? 'Collection ID:'.tr()
                                                         : 'Token ID:'.tr(),
                                                     details:
-                                                        replaceMiddleWithDotsTokenId(
+                                                    truncateTo13Digits(
                                                             paramsMap!['id']
                                                                 .toString()),
                                                     isDark: themeNotifier.isDark
@@ -612,7 +619,11 @@ class _TransactionRequestAcceptRejectState
                                                                   'CancelCollectionOfferMade'
                                                           ? 'Offerer ID:'
                                                           : 'Creator ID:'.tr(),
-                                                      details: replaceMiddleWithDots(operation ==
+                                                        func: () => _launchURL(
+                                                          "https://www.mjraexplorer.com/address/" +
+                                                              paramsMap![
+                                                              'offererId'].toString(),),
+                                                      details: truncateTo13Digits(operation ==
                                                                   'makeNFTCounterOffer' ||
                                                               operation ==
                                                                   'makeCollectionCounterOffer' ||
@@ -642,6 +653,8 @@ class _TransactionRequestAcceptRejectState
                                                           themeNotifier.isDark
                                                               ? true
                                                               : false,
+                                                      color: AppColors
+                                                          .textColorToska,
                                                     ),
                                                   if (paramsMap![
                                                           'offerAmount'] !=
@@ -2229,9 +2242,11 @@ class _TransactionRequestAcceptRejectState
 
   Widget transactionDetailsWidget(
       {required String title,
+        Function? func,
       required String details,
       Color? color,
-      bool isDark = true}) {
+      bool isDark = true,
+      }) {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.sp),
       child: Row(
@@ -2252,18 +2267,21 @@ class _TransactionRequestAcceptRejectState
             ),
           ),
           Spacer(),
-          Container(
-            // color: Colors.yellow,
-            width: 50.w,
-            child: Text(
-              details,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.right,
-              style: TextStyle(
-                  color: color == null ? AppColors.textColorGreyShade2 : color,
-                  fontSize: 11.sp,
-                  fontWeight: FontWeight.w400),
+          GestureDetector(
+            onTap: () => func!(),
+            child: Container(
+              // color: Colors.yellow,
+              width: 50.w,
+              child: Text(
+                details,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                    color: color == null ? AppColors.textColorGreyShade2 : color,
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w400),
+              ),
             ),
           ),
         ],
@@ -2304,7 +2322,9 @@ class _TransactionRequestAcceptRejectState
               alignment: Alignment.centerRight,
               child: Text(
                 details != 'N/A' && showCurrency ? details + ' SAR' : details,
+                maxLines: 1,
                 style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
                     color: isDark
                         ? AppColors.textColorWhite
                         : AppColors.textColorBlack,
@@ -2829,7 +2849,7 @@ transactionExecutedDialoge(
                           TextSpan(
                               recognizer: TapGestureRecognizer()..onTap = () {},
                               // text: 'abc',
-                              text: ' ' + replaceMiddleWithDots2(
+                              text: ' ' + truncateTo13Digits(
                                 Provider.of<TransactionProvider>(context,
                                     listen: false)
                                     .txIdToShowInDialog,

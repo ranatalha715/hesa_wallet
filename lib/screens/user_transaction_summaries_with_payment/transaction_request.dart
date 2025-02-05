@@ -230,7 +230,6 @@ class _TransactionRequestState extends State<TransactionRequest> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     final args =
@@ -279,6 +278,14 @@ class _TransactionRequestState extends State<TransactionRequest> {
     final filteredFees = feesMap!.entries
         .where((entry) => entry.value['label'] != 'Total')
         .toList();
+    filteredFees.sort((a, b) {
+      List<String> lastItems = ['Network Fees', 'Payment Processing Fee'];
+      bool aIsLast = lastItems.contains(a.value['label']);
+      bool bIsLast = lastItems.contains(b.value['label']);
+      if (aIsLast && !bIsLast) return 1;
+      if (!aIsLast && bIsLast) return -1;
+      return 0;
+    });
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
       setThemeDark = themeNotifier.isDark;
       Provider.of<UserProvider>(context, listen: false)
@@ -423,7 +430,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                               'acceptCollectionCounterOffer'
                                       ? 'Collection ID:'.tr()
                                       : 'Token ID:'.tr(),
-                                  details: replaceMiddleWithDotsTokenId(
+                                  details: truncateTo13Digits(
                                       paramsMap!['id'].toString()),
                                   isDark: themeNotifier.isDark ? true : false,
                                   color: AppColors.textColorToska,
@@ -445,9 +452,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                 if (paramsMap!['owner'] != null)
                                   transactionDetailsWidget(
                                     title: 'Owner:'.tr(),
-                                    details: replaceMiddleWithDots(
-                                            paramsMap!['owner'])
-                                        .toString(),
+                                    details:
+                                        truncateTo13Digits(paramsMap!['owner'])
+                                            .toString(),
                                     isDark: themeNotifier.isDark ? true : false,
                                   ),
                                 if (paramsMap!['listedBy'] != null ||
@@ -460,7 +467,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                             operation == 'listAuctionNFT'
                                         ? 'Listed By:'
                                         : 'Creator ID:'.tr(),
-                                    details: replaceMiddleWithDots(
+                                    details: truncateTo13Digits(
                                         operation == 'listNFT' ||
                                                 operation == 'listCollection' ||
                                                 operation ==
@@ -513,11 +520,66 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                           height: 1.h,
                                         ),
                                         if (feesMap != null)
+                                          // ListView.builder(
+                                          //   padding: EdgeInsets.zero,
+                                          //   controller: scrollController,
+                                          //   itemCount: filteredFees.length + 1,
+                                          //   shrinkWrap: true,
+                                          //   itemBuilder: (BuildContext context,
+                                          //       int index) {
+                                          //     if (index ==
+                                          //         filteredFees.length) {
+                                          //       final totalFee = feesMap!
+                                          //           .entries
+                                          //           .firstWhere((entry) =>
+                                          //               entry.value['label'] ==
+                                          //               'Total');
+                                          //       String totalLabel = totalFee
+                                          //           .value['label']
+                                          //           .toString();
+                                          //       String totalValue = totalFee
+                                          //           .value['value']
+                                          //           .toString();
+                                          //       Provider.of<TransactionProvider>(
+                                          //                   context,
+                                          //                   listen: false)
+                                          //               .totalForDialog =
+                                          //           formatCurrency(totalValue);
+                                          //       return Column(
+                                          //         children: [
+                                          //           Divider(
+                                          //               color: AppColors
+                                          //                   .textColorGrey),
+                                          //           transactionFeesWidget(
+                                          //             title: totalLabel,
+                                          //             details: formatCurrency(
+                                          //                 totalValue),
+                                          //             showCurrency: true,
+                                          //             isDark:
+                                          //                 themeNotifier.isDark,
+                                          //           ),
+                                          //         ],
+                                          //       );
+                                          //     }
+                                          //     final fee =
+                                          //         filteredFees[index].value;
+                                          //     String feeLabel =
+                                          //         fee['label'].toString();
+                                          //     String feeValue =
+                                          //         fee['value'].toString();
+                                          //     return transactionFeesWidget(
+                                          //       title: feeLabel,
+                                          //       details:
+                                          //           formatCurrency(feeValue),
+                                          //       showCurrency: true,
+                                          //       isDark: themeNotifier.isDark,
+                                          //     );
+                                          //   },
+                                          // ),
                                           ListView.builder(
                                             padding: EdgeInsets.zero,
                                             controller: scrollController,
                                             itemCount: filteredFees.length + 1,
-                                            // Add one for the "Total" item at the end
                                             shrinkWrap: true,
                                             itemBuilder: (BuildContext context,
                                                 int index) {
@@ -528,17 +590,20 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                     .firstWhere((entry) =>
                                                         entry.value['label'] ==
                                                         'Total');
+
                                                 String totalLabel = totalFee
                                                     .value['label']
                                                     .toString();
                                                 String totalValue = totalFee
                                                     .value['value']
                                                     .toString();
+
                                                 Provider.of<TransactionProvider>(
                                                             context,
                                                             listen: false)
                                                         .totalForDialog =
                                                     formatCurrency(totalValue);
+
                                                 return Column(
                                                   children: [
                                                     Divider(
@@ -555,16 +620,13 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   ],
                                                 );
                                               }
+
                                               final fee =
                                                   filteredFees[index].value;
-                                              String feeLabel =
-                                                  fee['label'].toString();
-                                              String feeValue =
-                                                  fee['value'].toString();
                                               return transactionFeesWidget(
-                                                title: feeLabel,
-                                                details:
-                                                    formatCurrency(feeValue),
+                                                title: fee['label'].toString(),
+                                                details: formatCurrency(
+                                                    fee['value'].toString()),
                                                 showCurrency: true,
                                                 isDark: themeNotifier.isDark,
                                               );
@@ -1051,8 +1113,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                         size: 22.sp,
                                                         color: themeNotifier
                                                                 .isDark
-                                                            ?
-                                                        AppColors.textColorGrey
+                                                            ? AppColors
+                                                                .textColorGrey
                                                             : AppColors
                                                                 .textColorBlack,
                                                       ),
@@ -2215,7 +2277,9 @@ class _TransactionRequestState extends State<TransactionRequest> {
               alignment: Alignment.centerRight,
               child: Text(
                 details != 'N/A' && showCurrency ? details + ' SAR' : details,
+                maxLines: 1,
                 style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
                     color: isDark
                         ? AppColors.textColorWhite
                         : AppColors.textColorBlack,
@@ -3082,7 +3146,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                         height: 18.sp,
                                       )
                                     : Container(
-                                  // height: 2.7.h,
+                                        // height: 2.7.h,
                                         decoration: BoxDecoration(
                                           color: AppColors.textColorGreyShade2
                                               .withOpacity(0.27),
@@ -3210,6 +3274,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
           );
         });
   }
+
   void confirmBrandDialogue(Function onCloseHandler,
       {required bool showPopup}) {
     if (showPopup) {
@@ -3220,98 +3285,98 @@ class _TransactionRequestState extends State<TransactionRequest> {
           final dialogWidth = screenWidth * 0.85;
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
-                return Dialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  backgroundColor: Colors.transparent,
-                  child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
-                      child: Container(
-                        height: 23.h,
-                        width: dialogWidth,
-                        decoration: BoxDecoration(
-                          color: AppColors.showDialogClr,
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.textColorBlack.withOpacity(0.95),
-                              offset: Offset(0, 0),
-                              blurRadius: 10,
-                              spreadRadius: 0.4,
-                            ),
-                          ],
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              backgroundColor: Colors.transparent,
+              child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+                  child: Container(
+                    height: 23.h,
+                    width: dialogWidth,
+                    decoration: BoxDecoration(
+                      color: AppColors.showDialogClr,
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.textColorBlack.withOpacity(0.95),
+                          offset: Offset(0, 0),
+                          blurRadius: 10,
+                          spreadRadius: 0.4,
                         ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 4.h,
+                        ),
+                        Text(
+                          'Please select your card type'.tr(),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14.sp,
+                              color: AppColors.textColorWhite),
+                        ),
+                        SizedBox(
+                          height: 4.h,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            SizedBox(
-                              height: 4.h,
-                            ),
-                            Text(
-                              'Please select your card type'.tr(),
-                              textAlign: TextAlign.center,
-                              maxLines: 2,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14.sp,
-                                  color: AppColors.textColorWhite),
-                            ),
-                            SizedBox(
-                              height: 4.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                GestureDetector(
-                                  onTap: () async {
-                                    Provider.of<TransactionProvider>(context,
+                            GestureDetector(
+                              onTap: () async {
+                                Provider.of<TransactionProvider>(context,
                                         listen: false)
-                                        .selectedCardBrand = 'VISA';
-                                    navigateToAddCard();
-                                  },
-                                  child: Image.asset(
-                                    "assets/images/VisaPopup.png",
-                                    height: 40.sp,
-                                    width: 40.sp,
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Provider.of<TransactionProvider>(context,
-                                        listen: false)
-                                        .selectedCardBrand = 'MASTER';
-                                    navigateToAddCard();
-                                  },
-                                  child: Image.asset(
-                                    "assets/images/MastercardPopup.png",
-                                    height: 40.sp,
-                                    width: 40.sp,
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Provider.of<TransactionProvider>(context,
-                                        listen: false)
-                                        .selectedCardBrand = 'MADA';
-                                    navigateToAddCard();
-                                  },
-                                  child: Image.asset(
-                                    "assets/images/MadaPayPopup.png",
-                                    height: 45.sp,
-                                    width: 44.sp,
-                                  ),
-                                ),
-                              ],
+                                    .selectedCardBrand = 'VISA';
+                                navigateToAddCard();
+                              },
+                              child: Image.asset(
+                                "assets/images/VisaPopup.png",
+                                height: 40.sp,
+                                width: 40.sp,
+                              ),
                             ),
-                            SizedBox(
-                              height: 2.h,
+                            GestureDetector(
+                              onTap: () {
+                                Provider.of<TransactionProvider>(context,
+                                        listen: false)
+                                    .selectedCardBrand = 'MASTER';
+                                navigateToAddCard();
+                              },
+                              child: Image.asset(
+                                "assets/images/MastercardPopup.png",
+                                height: 40.sp,
+                                width: 40.sp,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Provider.of<TransactionProvider>(context,
+                                        listen: false)
+                                    .selectedCardBrand = 'MADA';
+                                navigateToAddCard();
+                              },
+                              child: Image.asset(
+                                "assets/images/MadaPayPopup.png",
+                                height: 45.sp,
+                                width: 44.sp,
+                              ),
                             ),
                           ],
                         ),
-                      )),
-                );
-              });
+                        SizedBox(
+                          height: 2.h,
+                        ),
+                      ],
+                    ),
+                  )),
+            );
+          });
         },
       ).then((value) => onCloseHandler());
     } else {

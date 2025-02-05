@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:app_links/app_links.dart';
+import 'package:deep_linking/deep_linking.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/transaction_provider.dart';
 import '../screens/user_transaction_summaries_with_payment/transaction_req_acceptreject.dart';
 import '../screens/user_transaction_summaries_with_payment/transaction_request.dart';
+import 'app_deep_linking.dart';
 
 class AppLinksService {
   late final AppLinks _appLinks;
@@ -22,49 +24,14 @@ class AppLinksService {
         _handleLink(uri, userWalletAddress);
       }
     });
-    final Uri? initialUri = await _appLinks.getInitialLink();
+    final Uri? initialUri = await _appLinks.getLatestLink();
     if (initialUri != null) {
       _handleLink(initialUri, userWalletAddress);
     }
   }
-
-
-  // void _handleLink(Uri uri, var userWalletAddress) {
-  //   final String newLink = uri.toString();
-  //   if (_currentLink != newLink) {
-  //     _currentLink = newLink;
-  //     Provider.of<TransactionProvider>(context, listen: false).payloadTnxParam = newLink;
-  //     if (Navigator.canPop(context)) {
-  //       Navigator.pop(context);
-  //     return;
-  //     }
-  //     final String? operation = uri.queryParameters['operation'];
-  //     final String? params = uri.queryParameters['params'];
-  //     Map<String, dynamic>? metadata;
-  //     if (params != null) {
-  //       try {
-  //         final Map<String, dynamic> paramsMap = jsonDecode(params);
-  //         metadata = paramsMap['metadata'];
-  //         if (metadata != null) {
-  //           print('Metadata testing: $metadata');
-  //         } else {
-  //           print('Metadata not found');
-  //         }
-  //       } catch (e) {
-  //         print('Error decoding JSON: $e');
-  //       }
-  //     } else {
-  //       print('No params found');
-  //     }
-  //     print('chla ha ya nhi');
-  //     _navigateBasedOnOperation(uri, operation, userWalletAddress);
-  //   } else {
-  //     print('Link is the same as the current link. Ignoring...');
-  //   }
-  // }
   void _handleLink(Uri uri, var userWalletAddress) {
     final String newLink = uri.toString();
-    _currentLink = newLink; // Update the link regardless
+    _currentLink = newLink;
 
     Provider.of<TransactionProvider>(context, listen: false).payloadTnxParam = newLink;
 
@@ -92,9 +59,58 @@ class AppLinksService {
       print('No params found');
     }
     print('Handling UniLink Navigation...');
-    _navigateBasedOnOperation(uri, operation, userWalletAddress);
+    Future.delayed(Duration(milliseconds: 400), () {
+      _navigateBasedOnOperation(uri, operation, userWalletAddress);
+    });
+
   }
 
+  // Future<void> initializeAppLinks(var userWalletAddress) async {
+  //   AppDeepLinking deepLinking = AppDeepLinking();
+  //   deepLinking.initDeeplink();
+  //   final Uri? initialUri = await deepLinking.getDeepLinkStream().first;
+  //   if (initialUri != null) {
+  //     print('this should run');
+  //     print(initialUri.toString());
+  //     _handleLink(initialUri, userWalletAddress);
+  //   } else {
+  //     print("No initial URI found");
+  //   }
+  // }
+  //
+  // void _handleLink(Uri uri, var userWalletAddress) {
+  //   final String newLink = uri.toString();
+  //   _currentLink = newLink;
+  //
+  //   Provider.of<TransactionProvider>(context, listen: false).payloadTnxParam = newLink;
+  //
+  //   if (Navigator.canPop(context)) {
+  //     Navigator.pop(context);
+  //   }
+  //
+  //   final String? operation = uri.queryParameters['operation'];
+  //   final String? params = uri.queryParameters['params'];
+  //   Map<String, dynamic>? metadata;
+  //
+  //   if (params != null && params.isNotEmpty) {
+  //     try {
+  //       final Map<String, dynamic> paramsMap = jsonDecode(params);
+  //       metadata = paramsMap['metadata'];
+  //       if (metadata != null) {
+  //         print('Metadata testing: $metadata');
+  //       } else {
+  //         print('Metadata not found');
+  //       }
+  //     } catch (e) {
+  //       print('Error decoding JSON: $e');
+  //     }
+  //   } else {
+  //     print('No params found');
+  //   }
+  //
+  //   print('Handling Deep Link Navigation...');
+  //   _navigateBasedOnOperation(uri, operation, userWalletAddress);
+  // }
   void _navigateBasedOnOperation(Uri uri, String? operation, String userWalletAddress) {
     if (operation == null) return;
     switch (operation) {
@@ -163,7 +179,6 @@ Future<void> navigateToTransactionRequest(
     BuildContext ctx,
     String userWalletAddress,
     ) async {
-  print('chal gya ha');
   String paramsString = queryParams['params'] ?? '';
   String feesString = queryParams['fees'] ?? '';
   await Navigator.of(ctx)
@@ -173,7 +188,6 @@ Future<void> navigateToTransactionRequest(
     "operation": operation,
     "walletAddress": userWalletAddress,
   });
-  print('nhi chala');
 }
 
 Future<void> navigateToTransactionRequestWithoutWalletAddress(

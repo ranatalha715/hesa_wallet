@@ -15,6 +15,7 @@ import 'package:hesa_wallet/widgets/nfts_collection_divisions/nfts_collections_d
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import '../../constants/app_deep_linking.dart';
 import '../../constants/string_utils.dart';
 import '../../main.dart';
 import '../../providers/assets_provider.dart';
@@ -50,7 +51,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
 
   var userWalletAddress;
   Future<void> init() async {
-    // _appLinksService =  await AppLinksService(context: context);
     setState(() {
       _isloading = true;
     });
@@ -60,10 +60,10 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
     var user = await Provider.of<UserProvider>(context, listen: false);
-    //  userWalletAddress = await user.walletAddress;
+
     // await appLinksService.initializeAppLinks(
     //     user.walletAddress
-    //  );
+    // );
     await Provider.of<AssetsProvider>(context, listen: false).getListedAssets(
       token: accessToken,
       context: context,
@@ -133,6 +133,8 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     super.initState();
     getPasscode();
     initUniLinks1();
+    // AppDeepLinking().openNftApp({});
+    // AppDeepLinking().initDeeplink();
     _tabController = TabController(length: 2, vsync: this);
      init();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -145,7 +147,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   callRedDotLogic() async {
     final prefs = await SharedPreferences.getInstance();
     savedShowRedDot = prefs.getBool('showRedDot') ?? false;
-
   }
   @override
   void dispose() {
@@ -573,34 +574,31 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                           height: 0.5.h,
                                                         ),
                                                         GestureDetector(
-                                                          onTap: () =>
-                                                              _copyToClipboard(user
-                                                                  .walletAddress!),
+                                                          onTap: () => _copyToClipboard(user.walletAddress!),
                                                           child: Row(
-                                                            mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
+                                                            mainAxisAlignment: MainAxisAlignment.center,
                                                             children: [
                                                               Text(
-                                                                user.walletAddress !=
-                                                                    null
-                                                                    ? replaceMiddleWithDotsWA(
-                                                                    user.walletAddress!)
+                                                                user.walletAddress != null
+                                                                    ? truncateTo13Digits(user.walletAddress!)
                                                                     : "...",
                                                                 style: TextStyle(
-                                                                    fontSize:
-                                                                    9.5.sp,
-                                                                    fontFamily:
-                                                                    'Blogger Sans',
-                                                                    fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                    color: AppColors
-                                                                        .textColorGrey),
+                                                                  fontSize: 9.5.sp,
+                                                                  fontFamily: 'Blogger Sans',
+                                                                  fontWeight: FontWeight.w500,
+                                                                  color: AppColors.textColorGrey,
+                                                                ),
+                                                              ),
+                                                              SizedBox(width: 3),
+                                                              Icon(
+                                                                Icons.copy,
+                                                                size: 10.sp, // Adjust the size as needed
+                                                                color: AppColors.textColorGrey,
                                                               ),
                                                             ],
                                                           ),
                                                         ),
+
                                                         SizedBox(
                                                           height: 8.h,
                                                         ),

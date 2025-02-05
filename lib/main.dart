@@ -701,10 +701,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   Widget _buildContent() {
     return FutureBuilder<void>(
-      future: initUniLinks(), // Call the modified initUniLinks function
+      future: initUniLinks(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return accessToken.isEmpty ? const Wallet() : WalletTokensNfts();
+          return accessToken.isEmpty ?  Wallet() : WalletTokensNfts();
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else {

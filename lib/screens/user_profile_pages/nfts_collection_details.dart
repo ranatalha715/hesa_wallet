@@ -8,6 +8,7 @@ import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/colors.dart';
+import '../../constants/string_utils.dart';
 import '../../providers/assets_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../widgets/animated_loader/animated_loader.dart';
@@ -25,29 +26,6 @@ class NftsCollectionDetails extends StatefulWidget {
 class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
   var accessToken;
   final scrollController = ScrollController();
-
-  String replaceMiddleWithDots(String input) {
-    return input.toString();
-  }
-
-  String replaceMiddleWithDotsCollectionId(String input) {
-    if (input.length <= 30) {
-      return input;
-    }
-    final int middleIndex = input.length ~/ 2;
-    final int startIndex = middleIndex - 12;
-    final int endIndex = middleIndex + 9;
-    final String result =
-        input.substring(0, startIndex) + '...' + input.substring(endIndex);
-    return result;
-  }
-
-  String formatDate(String dateString) {
-    final DateTime dateTime = DateTime.parse(dateString);
-    final DateFormat formatter = DateFormat('MMM dd, yyyy');
-    return formatter.format(dateTime);
-  }
-
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
@@ -115,7 +93,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                               : assetsDetails.tokenName,
                           subTitle:  isLoading
                               ? '.......'
-                              : replaceMiddleWithDotsCollectionId(
+                              : truncateTo13Digits(
                               assetsDetails.tokenId),
                           showSubTitle: true,
                           showLogo: true,
@@ -176,7 +154,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                                             "https://www.mjraexplorer.com/collection/" +
                                                 assetsDetails.tokenId),
                                         details:
-                                            replaceMiddleWithDotsCollectionId(
+                                        truncateTo13Digits(
                                                 assetsDetails.tokenId),
                                         isDark:
                                             themeNotifier.isDark ? true : false,
@@ -189,8 +167,8 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                                           func: () => _launchURL(
                                               "https://www.mjraexplorer.com/address/" +
                                                   assetsDetails.creatorAddress),
-                                          details: replaceMiddleWithDots(
-                                                  assetsDetails.creatorName) ??
+                                          details:
+                                                  assetsDetails.creatorName ??
                                               "N/A",
                                           isDark: themeNotifier.isDark
                                               ? true
@@ -219,7 +197,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                                           func: () => _launchURL(
                                               "https://www.mjraexplorer.com/address/" +
                                                   assetsDetails.ownerAddress),
-                                          details: replaceMiddleWithDots(
+                                          details: truncateTo13Digits(
                                                   assetsDetails.ownerName) ??
                                               "N/A",
                                           isDark: themeNotifier.isDark
@@ -228,13 +206,21 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                                           color: AppColors.textColorToska,
                                           isEnglish: isEnglish,
                                         ),
+                                      if (assetsDetails.isListable != "null")
+                                        nftsDetailsWidget(
+                                          title: 'Listable status:'.tr(),
+                                          details: assetsDetails.isListable == 'true'
+                                              ? 'Listable'
+                                              : 'Not Listable',
+                                          isDark: themeNotifier.isDark ? true : false,
+                                          isEnglish: isEnglish,
+                                        ),
                                       if (assetsDetails.collectionItems !=
                                           "null")
                                         nftsDetailsWidget(
                                           title: 'Collection Items:'.tr(),
-                                          details: replaceMiddleWithDots(
-                                                  assetsDetails
-                                                      .collectionItems) ??
+                                          details: assetsDetails
+                                                      .collectionItems ??
                                               "N/A",
                                           isDark: themeNotifier.isDark
                                               ? true
@@ -248,7 +234,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                                             themeNotifier.isDark ? true : false,
                                         isEnglish: isEnglish,
                                       ),
-                                      if (assetsDetails.listingType != "null" &&
+                                      if (assetsDetails.listingType != "null"  &&
                                           assetsDetails.listingType == '' &&
                                           assetsDetails.listingType == 'Unknown')
                                         nftsDetailsWidget(
@@ -276,7 +262,7 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                                         ),
                                       if (assetsDetails.chain != "null")
                                         nftsDetailsWidget(
-                                          title: 'Chain:'.tr(),
+                                          title: 'Blockchain:'.tr(),
                                           details: assetsDetails.chain,
                                           isDark: themeNotifier.isDark
                                               ? true
@@ -285,11 +271,11 @@ class _NftsCollectionDetailsState extends State<NftsCollectionDetails> {
                                         ),
                                       if (assetsDetails.burnable != "null")
                                         nftsDetailsWidget(
-                                          title: 'Burn Control:'.tr(),
+                                          title: 'Burnable status:'.tr(),
                                           details:
                                               assetsDetails.burnable == "true"
-                                                  ? "On"
-                                                  : "Off",
+                                                  ? "Enabled"
+                                                  : "Disabled",
                                           isDark: themeNotifier.isDark
                                               ? true
                                               : false,

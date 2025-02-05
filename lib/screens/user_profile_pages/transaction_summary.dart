@@ -297,9 +297,9 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                         child: Text(
                                           transactionSummary.txType
                                                   .contains("Counter")
-                                              ? replaceMiddleWithDotstxIdCounter(
+                                              ? truncateTo13Digits(
                                                   transactionSummary.txId)
-                                              : replaceMiddleWithDotstxId(
+                                              : truncateTo13Digits(
                                                   transactionSummary.txId),
                                           style: TextStyle(
                                             color: themeNotifier.isDark
@@ -508,9 +508,9 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                           "https://www.mjraexplorer.com/tx/" +
                                               transactionSummary.txId),
                                       details: type == 'counter-offer'
-                                          ? replaceMiddleWithDotstxIdCounter(
+                                          ? truncateTo13Digits(
                                               transactionSummary.txId)
-                                          : replaceMiddleWithDotstxId(
+                                          : truncateTo13Digits(
                                               transactionSummary.txId),
                                       isDark:
                                           themeNotifier.isDark ? true : false,
@@ -531,7 +531,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                           : "Token ID:".tr(),
                                       details:
                                           transactionSummary.txTokenId != ""
-                                              ? replaceMiddleWithDotsTokenId(
+                                              ? truncateTo13Digits(
                                                   transactionSummary.txTokenId)
                                               : 'N/A',
                                       isDark:
@@ -553,7 +553,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                       func: () => _launchURL(
                                           "https://www.mjraexplorer.com/address/${transactionSummary.txCreatorId}"),
                                       title: 'Creator ID:'.tr(),
-                                      details: replaceMiddleWithDots(
+                                      details: truncateTo13Digits(
                                           transactionSummary.txCreatorId),
                                       isDark:
                                           themeNotifier.isDark ? true : false,
@@ -562,7 +562,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
                                     if (transactionSummary.txOfferedBy != 'N/A')
                                       transactionDetailsWidget(
                                         title: 'Offered by:'.tr(),
-                                        details: replaceMiddleWithDots(
+                                        details: truncateTo13Digits(
                                             transactionSummary.txOfferedBy),
                                         isDark:
                                             themeNotifier.isDark ? true : false,
@@ -763,7 +763,6 @@ class _TransactionSummaryState extends State<TransactionSummary> {
               ),
             ),
           ),
-
         ],
       ),
     );
@@ -782,8 +781,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
-            // color: Colors.yellow,
-            width: 40.w,
+            width: title == "Total" ? 25.w : 45.w,
             child: Text(
               title,
               // maxLines: 1,
@@ -797,7 +795,7 @@ class _TransactionSummaryState extends State<TransactionSummary> {
             width: 5.sp,
           ),
           Container(
-            width: 30.w,
+            width: title == "Total" ? 45.w : 28.w,
             // color: Colors.blue,
             child: Text(
               details,

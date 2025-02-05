@@ -677,6 +677,12 @@ class _AccountInformationState extends State<AccountInformation> {
                                               fontWeight: FontWeight.w400,
                                               // Off-white color,
                                               fontFamily: 'Inter'),
+                                          inputFormatters: [
+                                            LengthLimitingTextInputFormatter(
+                                                9),
+                                            FilteringTextInputFormatter
+                                                .digitsOnly,
+                                          ],
                                           decoration: InputDecoration(
                                             contentPadding:
                                                 EdgeInsets.symmetric(
