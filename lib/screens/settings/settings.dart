@@ -34,13 +34,13 @@ class _SettingsState extends State<Settings> {
   var accessToken = '';
   var refreshToken = '';
   var _isLoading = false;
-  var _isinit= true;
+  var _isinit = true;
+  bool _isPasscodeSet = false;
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
     refreshToken = prefs.getString('refreshToken')!;
-
   }
 
   deleteToken() async {
@@ -51,10 +51,25 @@ class _SettingsState extends State<Settings> {
     prefs.remove('isConnected');
   }
 
+  @override
+  void initState() {
+    getPasscode();
+    super.initState();
+  }
+
   init() async {
     await getAccessToken();
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
+  }
+
+  void getPasscode() async {
+    print('printing');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final passcode = prefs.getString('passcode') ?? "";
+    setState(() {
+      _isPasscodeSet = passcode.isNotEmpty;
+    });
   }
 
   logOutFunction(bool isDark) {
@@ -122,10 +137,13 @@ class _SettingsState extends State<Settings> {
                               setState(() {
                                 isLoading = true;
                               });
-                              final resultLogout = await Provider.of<AuthProvider>(
-                                  context,
-                                  listen: false)
-                                  .logoutUser(token: accessToken, refreshToken: refreshToken, context: context);
+                              final resultLogout =
+                                  await Provider.of<AuthProvider>(context,
+                                          listen: false)
+                                      .logoutUser(
+                                          token: accessToken,
+                                          refreshToken: refreshToken,
+                                          context: context);
 
                               setState(() {
                                 isLoading = false;
@@ -138,32 +156,29 @@ class _SettingsState extends State<Settings> {
                                   MaterialPageRoute(
                                     builder: (context) => Wallet(),
                                   ),
-                                      (route) =>
-                                  false, // This predicate ensures that all previous routes are removed.
+                                  (route) =>
+                                      false, // This predicate ensures that all previous routes are removed.
                                 );
                                 await AppDeepLinking().openNftApp(
                                   {
                                     "operation": "disconnectWallet",
-                                    "walletAddress":
-                                    Provider.of<UserProvider>(
-                                        context,
-                                        listen: false)
+                                    "walletAddress": Provider.of<UserProvider>(
+                                            context,
+                                            listen: false)
                                         .walletAddress,
-                                    "userName":
-                                    Provider.of<UserProvider>(
-                                        context,
-                                        listen: false)
+                                    "userName": Provider.of<UserProvider>(
+                                            context,
+                                            listen: false)
                                         .userName,
-                                    "userIcon":
-                                    Provider.of<UserProvider>(
-                                        context,
-                                        listen: false)
+                                    "userIcon": Provider.of<UserProvider>(
+                                            context,
+                                            listen: false)
                                         .userAvatar,
                                     "response":
-                                    'Wallet disconnected successfully'
+                                        'Wallet disconnected successfully'
                                   },
                                 );
-                              } else{
+                              } else {
                                 print('Logout Failed');
                               }
                             } catch (error) {
@@ -176,8 +191,8 @@ class _SettingsState extends State<Settings> {
                           },
                           // isLoading: isLoading,
                           isGradient: false,
-                          color: AppColors.deleteAccountBtnColor
-                              .withOpacity(0.10),
+                          color:
+                              AppColors.deleteAccountBtnColor.withOpacity(0.10),
                           textColor: AppColors.textColorBlack,
                           buttonWithBorderColor: AppColors.errorColor,
                           isGradientWithBorder: true,
@@ -199,8 +214,8 @@ class _SettingsState extends State<Settings> {
                             isGradientWithBorder: true,
                             secondBtnBorderClr: true,
                           )
-                        // color: Colors.transparent),
-                      ),
+                          // color: Colors.transparent),
+                          ),
                       Expanded(child: SizedBox()),
                     ],
                   ),
@@ -214,19 +229,21 @@ class _SettingsState extends State<Settings> {
   @override
   Future<void> didChangeDependencies() async {
     // TODO: implement didChangeDependencies
-    if(_isinit){
+    if (_isinit) {
       getAccessToken();
     }
-    _isinit=false;
+    _isinit = false;
     super.didChangeDependencies();
   }
+
   @override
   Widget build(BuildContext context) {
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
+    final isEmailVerified =
+        Provider.of<UserProvider>(context, listen: false).isEmailVerified;
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
-      return Stack
-        (
+      return Stack(
         children: [
           Scaffold(
             backgroundColor:
@@ -267,11 +284,17 @@ class _SettingsState extends State<Settings> {
                                     )),
                             SettingsWidget(
                                 title: 'Security & privacy'.tr(),
-                                imagePath: "assets/images/privacyrisk.png",
+                                imagePath:
+                                    _isPasscodeSet && isEmailVerified == 'true'
+                                        ? "assets/images/secure.png"
+                                        : "assets/images/privacyrisk.png",
                                 imageHeight: 2.8.h,
                                 imageWidth: 2.8.h,
                                 index: 1,
-                                color: AppColors.errorColor,
+                                color:
+                                    _isPasscodeSet && isEmailVerified == 'true'
+                                        ? AppColors.textColorGreen
+                                        : AppColors.errorColor,
                                 isDark: themeNotifier.isDark ? true : false,
                                 handler: () => Navigator.push(
                                       context,
@@ -302,7 +325,9 @@ class _SettingsState extends State<Settings> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              TermsAndConditions(fromSignup: false,)),
+                                              TermsAndConditions(
+                                                fromSignup: false,
+                                              )),
                                     )),
                             SettingsWidget(
                                 title: 'Logout'.tr(),
@@ -337,7 +362,7 @@ class _SettingsState extends State<Settings> {
               ),
             ),
           ),
-          if(_isLoading)
+          if (_isLoading)
             Positioned(
                 top: 12.h,
                 bottom: 0,
@@ -363,9 +388,7 @@ class _SettingsState extends State<Settings> {
       child: Container(
         margin: EdgeInsets.only(bottom: 1.sp),
         height: 7.5.h,
-        decoration: BoxDecoration(
-
-            ),
+        decoration: BoxDecoration(),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 4.sp),
           child: Column(
@@ -382,11 +405,16 @@ class _SettingsState extends State<Settings> {
                     child: Center(
                       child: Image.asset(
                         imagePath,
-                        color: color == AppColors.errorColor
+                        color:
+                        // color == AppColors.errorColor
+                        //     ?
+                        // color ??
+                        //     ( isDark
+                        //         ? AppColors.textColorWhite
+                        //         : AppColors.tabColorlightMode),
+                        (color != null && color != Colors.transparent)
                             ? color
-                            : isDark
-                                ? AppColors.textColorWhite
-                                : AppColors.tabColorlightMode,
+                            : (isDark ? AppColors.textColorWhite : AppColors.tabColorlightMode),
                         fit: BoxFit.cover,
                       ),
                     ),

@@ -45,7 +45,6 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
 
   @override
   Future<void> didChangeDependencies() async {
-    // TODO: implement didChangeDependencies
     if (_isinit) {
       setState(() {
         _isLoading = true;
@@ -64,17 +63,26 @@ class _SecurityAndPrivacyState extends State<SecurityAndPrivacy> {
     _isUserAuthorized = prefs.getBool("fingerPrint") ?? false;
   }
 
-  getPasscode() async {
+  void getPasscode() async {
     print('printing');
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final passcode = prefs.getString('passcode')!;
-    if (passcode != "") {
-      _isPasscodeSet = true;
-    } else {
-      _isPasscodeSet = false;
-    }
-    print("ispasscodeset" + _isPasscodeSet.toString());
+    final passcode = prefs.getString('passcode') ?? "";
+    setState(() {
+      _isPasscodeSet = passcode.isNotEmpty;
+    });
   }
+
+  // getPasscode() async {
+  //   print('printing');
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   final passcode = prefs.getString('passcode')!;
+  //   if (passcode != "") {
+  //     _isPasscodeSet = true;
+  //   } else {
+  //     _isPasscodeSet = false;
+  //   }
+  //   print("ispasscodeset" + _isPasscodeSet.toString());
+  // }
 
   @override
   void initState() {
