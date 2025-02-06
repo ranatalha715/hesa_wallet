@@ -36,6 +36,7 @@ class _SettingsState extends State<Settings> {
   var _isLoading = false;
   var _isinit = true;
   bool _isPasscodeSet = false;
+  bool isConnected = false;
 
   getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -61,6 +62,8 @@ class _SettingsState extends State<Settings> {
     await getAccessToken();
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
+    final prefs = await SharedPreferences.getInstance();
+    isConnected = prefs.getBool("isConnected") ?? false;
   }
 
   void getPasscode() async {
@@ -406,12 +409,6 @@ class _SettingsState extends State<Settings> {
                       child: Image.asset(
                         imagePath,
                         color:
-                        // color == AppColors.errorColor
-                        //     ?
-                        // color ??
-                        //     ( isDark
-                        //         ? AppColors.textColorWhite
-                        //         : AppColors.tabColorlightMode),
                         (color != null && color != Colors.transparent)
                             ? color
                             : (isDark ? AppColors.textColorWhite : AppColors.tabColorlightMode),

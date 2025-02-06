@@ -34,6 +34,7 @@ class _AppDrawerState extends State<AppDrawer> {
   var refreshToken = '';
   bool showCopiedMsg = false;
   bool _isPasscodeSet = false;
+  bool isConnected=false;
 
   getaccessToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -78,6 +79,9 @@ class _AppDrawerState extends State<AppDrawer> {
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
     await getPasscode();
+    final prefs = await SharedPreferences.getInstance();
+    isConnected = prefs.getBool("isConnected") ?? false;
+
   }
 
   @override
