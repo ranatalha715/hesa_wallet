@@ -120,7 +120,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
 
   getPasscode() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final passcode = prefs.getString('passcode')!;
+    final passcode = prefs.getString('passcode') ?? '';
     if (passcode != "") {
       _isPasscodeSet = true;
     } else {
