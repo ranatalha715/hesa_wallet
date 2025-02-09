@@ -1,19 +1,15 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:app_links/app_links.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hesa_wallet/providers/payment_fees.dart';
 import 'package:hesa_wallet/providers/token_provider.dart';
-import 'package:hesa_wallet/screens/onboarding_notifications/verify_email.dart';
 import 'package:hesa_wallet/screens/unlock/set_confirm_pin_screen.dart';
-import 'package:hesa_wallet/screens/unlock/set_pin_screen.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/nfts_details.dart';
-import 'package:hesa_wallet/screens/user_profile_pages/wallet_activity.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:hesa_wallet/widgets/dialog_button.dart';
 import 'package:hesa_wallet/widgets/restart_widget.dart';
@@ -34,15 +30,9 @@ import 'package:hesa_wallet/providers/nfts_provider.dart';
 import 'package:hesa_wallet/providers/theme_provider.dart';
 import 'package:hesa_wallet/providers/transaction_provider.dart';
 import 'package:hesa_wallet/providers/user_provider.dart';
-import 'package:hesa_wallet/screens/account_recovery/reset_email.dart';
-import 'package:hesa_wallet/screens/account_recovery/reset_password.dart';
 import 'package:hesa_wallet/screens/connection_requests_pages/connect_dapp.dart';
-import 'package:hesa_wallet/screens/settings/security_and_privacy.dart';
-import 'package:hesa_wallet/screens/settings/settings.dart';
 import 'package:hesa_wallet/screens/signup_signin/signin_with_email.dart';
-import 'package:hesa_wallet/screens/signup_signin/signin_with_mobile.dart';
 import 'package:hesa_wallet/screens/signup_signin/signup_with_email.dart';
-import 'package:hesa_wallet/screens/signup_signin/signup_with_mobile.dart';
 import 'package:hesa_wallet/screens/signup_signin/terms_conditions.dart';
 import 'package:hesa_wallet/screens/signup_signin/wallet.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/nfts_collection_details.dart';
@@ -54,7 +44,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'constants/app_link_service.dart';
-import 'constants/configs.dart';
+
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -78,7 +68,7 @@ Future<void> main() async {
     DeviceOrientation.portraitDown,
   ]).then((_) {
     runApp(
-        // DevicePreview(
+        // DevicePreview(Re Enter PIN
         // enabled: !kReleaseMode,
         // builder: (context) =>
         RestartWidget(child:
@@ -151,6 +141,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   bool isWifiOn = true;
   bool fromNeoApp = false;
   var user;
+  late final AppLinks _appLinks;
 
   Future<void> checkWifiStatus() async {
     var connectivityResult = await Connectivity().checkConnectivity();
@@ -238,16 +229,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     Future.delayed(Duration(seconds: 2), () {
       showNotification();
       WidgetsBinding.instance.addObserver(this);
-      //   if(accessToken !='') {
-      //     Provider.of<AuthProvider>(context, listen: false)
-      //       .updateFCM(FCM: fcmToken, token: accessToken, context: context);
-      //   }
     });
-
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       checkWifiStatus();
     });
-    initUniLinks();
+    // initUniLinks();
     Timer.periodic(Duration(seconds: 3), (timer) async {
       getAccessToken();
      Provider.of<TransactionProvider>(context,listen: false).initializeRedDotState();
@@ -384,11 +370,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
     refreshToken = prefs.getString('refreshToken')!;
-    print('test access token' + accessToken);
-    print('test refresh token' + refreshToken);
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
     var user = await Provider.of<UserProvider>(context, listen: false);
+    await appLinksService.AppLinksForConnectWallet(
+        user.walletAddress
+    );
     await appLinksService.initializeAppLinks(
         user.walletAddress
     );
@@ -400,8 +387,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     } else {}
     navigateToLoginPage(context);
   }
-
-
    navigateToLoginPage(BuildContext context) async {
    await Navigator.pushAndRemoveUntil(
       context,
@@ -701,7 +686,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   Widget _buildContent() {
     return FutureBuilder<void>(
-      future: initUniLinks(),
+      // future: initUniLinks(),
+      future: null,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return accessToken.isEmpty ?  Wallet() : WalletTokensNfts();

@@ -3,6 +3,8 @@ import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/transaction_provider.dart';
+import '../providers/user_provider.dart';
+import '../screens/connection_requests_pages/connect_dapp.dart';
 import '../screens/user_transaction_summaries_with_payment/transaction_req_acceptreject.dart';
 import '../screens/user_transaction_summaries_with_payment/transaction_request.dart';
 
@@ -10,13 +12,13 @@ class AppLinksService {
   late final AppLinks _appLinks;
   late final BuildContext context;
   String? _currentLink;
-
   AppLinksService({required this.context});
 
   Future<void> initializeAppLinks(var userWalletAddress) async {
     _appLinks = AppLinks();
     _appLinks.uriLinkStream.listen((Uri? uri) {
-      if (uri != null) {
+      final String? operation = uri?.queryParameters['operation'];
+      if (uri != null && operation !=null) {
         print('uri link');
         print(uri.toString());
         _handleLink(uri, userWalletAddress);
@@ -28,10 +30,10 @@ class AppLinksService {
     // }
   }
 
+
   void _handleLink(Uri uri, var userWalletAddress) {
     final String newLink = uri.toString();
     _currentLink = newLink;
-
     Provider.of<TransactionProvider>(context, listen: false).payloadTnxParam =
         newLink;
     if (Navigator.canPop(context)) {
@@ -59,7 +61,7 @@ class AppLinksService {
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     //   _navigateBasedOnOperation(uri, operation, userWalletAddress);
     // });
-    if(uri !=null && operation!=null && userWalletAddress!=null){
+    if( operation!=null && userWalletAddress!=null){
       Future.delayed(Duration(milliseconds: 200), () {
         _navigateBasedOnOperation(uri, operation, userWalletAddress);
       });
@@ -69,52 +71,6 @@ class AppLinksService {
     // });
   }
 
-  // Future<void> initializeAppLinks(var userWalletAddress) async {
-  //   AppDeepLinking deepLinking = AppDeepLinking();
-  //   deepLinking.initDeeplink();
-  //   final Uri? initialUri = await deepLinking.getDeepLinkStream().first;
-  //   if (initialUri != null) {
-  //     print('this should run');
-  //     print(initialUri.toString());
-  //     _handleLink(initialUri, userWalletAddress);
-  //   } else {
-  //     print("No initial URI found");
-  //   }
-  // }
-  //
-  // void _handleLink(Uri uri, var userWalletAddress) {
-  //   final String newLink = uri.toString();
-  //   _currentLink = newLink;
-  //
-  //   Provider.of<TransactionProvider>(context, listen: false).payloadTnxParam = newLink;
-  //
-  //   if (Navigator.canPop(context)) {
-  //     Navigator.pop(context);
-  //   }
-  //
-  //   final String? operation = uri.queryParameters['operation'];
-  //   final String? params = uri.queryParameters['params'];
-  //   Map<String, dynamic>? metadata;
-  //
-  //   if (params != null && params.isNotEmpty) {
-  //     try {
-  //       final Map<String, dynamic> paramsMap = jsonDecode(params);
-  //       metadata = paramsMap['metadata'];
-  //       if (metadata != null) {
-  //         print('Metadata testing: $metadata');
-  //       } else {
-  //         print('Metadata not found');
-  //       }
-  //     } catch (e) {
-  //       print('Error decoding JSON: $e');
-  //     }
-  //   } else {
-  //     print('No params found');
-  //   }
-  //
-  //   print('Handling Deep Link Navigation...');
-  //   _navigateBasedOnOperation(uri, operation, userWalletAddress);
-  // }
   void _navigateBasedOnOperation(
       Uri uri, String? operation, String userWalletAddress) {
     if (operation == null) return;
@@ -195,6 +151,49 @@ class AppLinksService {
             uri.queryParameters, operation, context, userWalletAddress);
         break;
     }
+  }
+
+  Future<void> AppLinksForConnectWallet(var userWalletAddress) async {
+    try {
+      final AppLinks _appLinks = AppLinks();
+      _appLinks.uriLinkStream.listen((Uri? uri) {
+        if (uri != null) {
+          _handleLinkForConnectWallet(uri, userWalletAddress);
+        }
+      });
+      // final Uri? initialUri = await _appLinks.getLatestLink();
+      // if (initialUri != null) {
+      //   _handleLinkForConnectWallet(initialUri, userWalletAddress);
+      // }
+    } catch (e) {
+    }
+  }
+
+  void _handleLinkForConnectWallet(Uri uri, var userWalletAddress) {
+    final String newLink = uri.toString();
+    Provider.of<TransactionProvider>(context, listen: false).payloadTnxParam = newLink;
+    final String? operation = uri.queryParameters['operation'];
+    final String? logoFromNeo = uri.queryParameters['logo'];
+    final String? siteUrl = uri.queryParameters['siteUrl'];
+    if (operation == 'connectWallet') {
+      Provider.of<UserProvider>(context, listen: false).navigateToNeoForConnectWallet = true;
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => ConnectDapp()),
+            (Route<dynamic> route) => false,
+      );
+      Provider.of<TransactionProvider>(context, listen: false).logoFromNeo = logoFromNeo;
+      Provider.of<TransactionProvider>(context, listen: false).siteUrl = siteUrl;
+    } else if (operation == 'disconnectWallet') {
+      // handleDisconnection1();
+    } else {
+      Provider.of<UserProvider>(context, listen: false).navigateToNeoForConnectWallet = false;
+    }
+    // Navigate based on operation
+    // if (operation != null && userWalletAddress != null) {
+    //   Future.delayed(Duration(milliseconds: 200), () {
+    //     _navigateBasedOnOperation(uri, operation, userWalletAddress);
+    //   });
+    // }
   }
 }
 

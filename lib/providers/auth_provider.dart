@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:app_links/app_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hesa_wallet/providers/user_provider.dart';
@@ -54,8 +55,6 @@ class AuthProvider with ChangeNotifier {
         otpErrorResponse = false;
         otpSuccessResponse = true;
         notifyListeners();
-        // await prefs.setString('password', password);
-        print('true ya false h');
         print(Provider.of<UserProvider>(context, listen: false)
             .navigateToNeoForConnectWallet);
         if (Provider.of<UserProvider>(context, listen: false)
@@ -63,20 +62,6 @@ class AuthProvider with ChangeNotifier {
           await Future.delayed(const Duration(milliseconds: 500));
           await Navigator.of(context)
               .pushNamed(ConnectDapp.routeName, arguments: {});
-
-          // await Provider.of<UserProvider>(context,listen: false).getUserDetails(context: context,
-          //     token: accessToken
-          // );
-          // await AppDeepLinking().openNftApp(
-          //   {
-          //     "operation": "connectWallet",
-          //     "walletAddress": Provider.of<UserProvider>(context,listen: false).walletAddress,
-          //     "userName": Provider.of<UserProvider>(context,listen: false).userName,
-          //     "userIcon": Provider.of<UserProvider>(context,listen: false).userAvatar,
-          //     "loginResponse":response.body.toString()
-          //   },
-          // );
-          print('go to neo');
         } else {
           await Future.delayed(const Duration(milliseconds: 500));
           await Navigator.of(context).pushNamedAndRemoveUntil(

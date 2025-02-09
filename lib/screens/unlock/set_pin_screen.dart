@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../constants/colors.dart';
+import '../../widgets/main_header.dart';
 
 class PinScreen extends StatefulWidget {
   const PinScreen({Key? key}) : super(key: key);
@@ -78,9 +79,10 @@ class _PinScreenState extends State<PinScreen> {
       backgroundColor: AppColors.backgroundColor,
       body: Column(
         children: [
+          MainHeader(title: 'Set PIN'.tr()),
           Container(
-            height: 20.h,
-            // color: Colors.redAccent
+            height: 8.h,
+            // color: Colors.redAccent,
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Text(
@@ -96,7 +98,7 @@ class _PinScreenState extends State<PinScreen> {
             ),
           ),
           Container(
-            height: 15.h,
+            height: 13.h,
             // color: Colors.blue,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.sp),
@@ -122,7 +124,7 @@ class _PinScreenState extends State<PinScreen> {
             ),
           ),
           Container(
-            height: 65.h,
+            height: 64.h,
             // color: Colors.yellow,
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 10.sp),

@@ -338,11 +338,12 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                 ),
                                 Consumer<AuthProvider>(
                                     builder: (context, auth, child) {
-                                  return TextFieldParent(
+                                  return
+                                    TextFieldParent(
                                     child: TextField(
                                         focusNode: userNameFocusNode,
-                                        textCapitalization:
-                                            TextCapitalization.words,
+                                        // textCapitalization:
+                                        //     TextCapitalization.words,
                                         textInputAction: TextInputAction.next,
                                         onEditingComplete: () {
                                           emailFocusNode.requestFocus();
@@ -363,8 +364,7 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                 .bottom),
                                         keyboardType: TextInputType.text,
                                         inputFormatters: [
-                                          FilteringTextInputFormatter.allow(
-                                              RegExp(r'[a-zA-Z0-9]')),
+                                          FilteringTextInputFormatter.allow(RegExp(r'[a-z0-9]')),
                                         ],
                                         style: TextStyle(
                                             fontSize: 10.2.sp,
@@ -372,7 +372,6 @@ class _SignUpWithEmailState extends State<SignUpWithEmail> {
                                                 ? AppColors.textColorWhite
                                                 : AppColors.textColorBlack,
                                             fontWeight: FontWeight.w400,
-                                            // Off-white color,
                                             fontFamily: 'Inter'),
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.symmetric(

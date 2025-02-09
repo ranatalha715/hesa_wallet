@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../constants/colors.dart';
+import '../../widgets/main_header.dart';
 
 class SetConfirmPinScreen extends StatefulWidget {
   static const routeName = '/SetConfirmPinScreen';
@@ -27,7 +28,6 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _timer = Timer.periodic(Duration(milliseconds: 500), (timer) {
       setState(() {
@@ -65,13 +65,14 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
       backgroundColor: AppColors.backgroundColor,
       body: Column(
         children: [
+          MainHeader(title: 'Set PIN'.tr()),
           Container(
-            height: 20.h,
+            height: 8.h,
             // color: Colors.redAccent
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Text(
-                'Confirm Pin'.tr(),
+                'Re Enter PIN'.tr(),
                 style: TextStyle(
                     fontSize: 13.sp,
                     color: isFirstFieldFilled
@@ -85,7 +86,7 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
             ),
           ),
           Container(
-            height: 15.h,
+            height: 13.h,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.sp),
               child: Row(
@@ -112,7 +113,7 @@ class _SetConfirmPinScreenState extends State<SetConfirmPinScreen> {
             ),
           ),
           Container(
-            height: 65.h,
+            height: 64.h,
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 10.sp),
               child: Column(

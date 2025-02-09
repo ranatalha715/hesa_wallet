@@ -1011,8 +1011,8 @@ class _WalletAddBankState extends State<WalletAddBank> {
                                                                 Navigator.of(
                                                                         context)
                                                                     .pop(); // Close the dialog
-                                                                // Navigator.of(context).pop(); // Close the
-                                                                Navigator.push(
+                                                                Navigator.of(context).pop(); // Close the
+                                                                Navigator.pushReplacement(
                                                                   context,
                                                                   MaterialPageRoute(
                                                                       builder:

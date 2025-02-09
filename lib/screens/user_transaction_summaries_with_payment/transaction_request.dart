@@ -1006,7 +1006,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                   "cards";
                                             });
                                           },
-                                          child: Container(
+                                          child:
+                                          Container(
                                             height: 6.5.h,
                                             decoration: BoxDecoration(
                                               color: AppColors

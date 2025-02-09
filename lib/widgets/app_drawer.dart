@@ -650,7 +650,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                     builder: (context) => Wallet(),
                                   ),
                                   (route) =>
-                                      false, // This predicate ensures that all previous routes are removed.
+                                      false,
                                 );
                                 await AppDeepLinking().openNftApp(
                                   {

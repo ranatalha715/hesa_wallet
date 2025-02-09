@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:ui';
 import 'package:app_links/app_links.dart';
 import 'package:flutter/cupertino.dart';
@@ -64,42 +63,105 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     // await appLinksService.initializeAppLinks(
     //     user.walletAddress
     // );
-    await Provider.of<AssetsProvider>(context, listen: false).getListedAssets(
-      token: accessToken,
-      context: context,
-      walletAddress: user.walletAddress!,
-      ownerType: 'owner',
-      type: 'all',
-      isEnglish: isEnglish,
-    );
-    await Provider.of<AssetsProvider>(context, listen: false).getCreatedAssets(
-      token: accessToken,
-      context: context,
-      walletAddress: user.walletAddress!,
-      ownerType: 'creator',
-      type: 'all',
-      isEnglish: isEnglish,
-    );
-    await Provider.of<AssetsProvider>(context, listen: false).getOwnedAssets(
-      token: accessToken,
-      context: context,
-      walletAddress: user.walletAddress!,
-      ownerType: 'owner',
-      type: 'all',
-      isEnglish: isEnglish,
-    );
-    await Provider.of<AssetsProvider>(context, listen: false).getAllAssets(
-      token: accessToken,
-      context: context,
-      walletAddress: user.walletAddress!,
-      ownerType: 'both',
-      type: 'all',
-      isEnglish: isEnglish,
-    );
+    // await Provider.of<AssetsProvider>(context, listen: false).getListedAssets(
+    //   token: accessToken,
+    //   context: context,
+    //   walletAddress: user.walletAddress!,
+    //   ownerType: 'owner',
+    //   type: 'all',
+    //   isEnglish: isEnglish,
+    // );
+    // await Provider.of<AssetsProvider>(context, listen: false).getCreatedAssets(
+    //   token: accessToken,
+    //   context: context,
+    //   walletAddress: user.walletAddress!,
+    //   ownerType: 'creator',
+    //   type: 'all',
+    //   isEnglish: isEnglish,
+    // );
+    // await Provider.of<AssetsProvider>(context, listen: false).getOwnedAssets(
+    //   token: accessToken,
+    //   context: context,
+    //   walletAddress: user.walletAddress!,
+    //   ownerType: 'owner',
+    //   type: 'all',
+    //   isEnglish: isEnglish,
+    // );
+    // await Provider.of<AssetsProvider>(context, listen: false).getAllAssets(
+    //   token: accessToken,
+    //   context: context,
+    //   walletAddress: user.walletAddress!,
+    //   ownerType: 'both',
+    //   type: 'all',
+    //   isEnglish: isEnglish,
+    // );
+    setState(() {
+      _isloading = false;
+    });
+    loadTabData(selectedCategoryIndex);
+  }
+
+  Future<void> loadTabData(int tabIndex) async {
+    setState(() {
+      _isloading = true;
+    });
+
+    var user = Provider.of<UserProvider>(context, listen: false);
+
+    switch (tabIndex) {
+      case 0:
+        await Provider.of<AssetsProvider>(context, listen: false).getAllAssets(
+          token: accessToken,
+          context: context,
+          walletAddress: user.walletAddress!,
+          ownerType: 'both',
+          type: 'all',
+          isEnglish: true,
+        );
+        break;
+      case 1:
+        await Provider.of<AssetsProvider>(context, listen: false).getOwnedAssets(
+          token: accessToken,
+          context: context,
+          walletAddress: user.walletAddress!,
+          ownerType: 'owner',
+          type: 'all',
+          isEnglish: true,
+        );
+        break;
+      case 2:
+        await Provider.of<AssetsProvider>(context, listen: false).getCreatedAssets(
+          token: accessToken,
+          context: context,
+          walletAddress: user.walletAddress!,
+          ownerType: 'creator',
+          type: 'all',
+          isEnglish: true,
+        );
+        break;
+      case 3:
+        await Provider.of<AssetsProvider>(context, listen: false).getListedAssets(
+          token: accessToken,
+          context: context,
+          walletAddress: user.walletAddress!,
+          ownerType: 'owner',
+          type: 'all',
+          isEnglish: true,
+        );
+        break;
+    }
     setState(() {
       _isloading = false;
     });
   }
+
+  void onTabChanged(int index) {
+    setState(() {
+      selectedCategoryIndex = index;
+    });
+    loadTabData(index);
+  }
+
 
   Future<Map<String, dynamic>> getSettings() async {
     final prefs = await SharedPreferences.getInstance();
@@ -132,7 +194,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   void initState() {
     super.initState();
     getPasscode();
-    initUniLinks1();
+    // initUniLinks1();
     // AppDeepLinking().openNftApp({});
     // AppDeepLinking().initDeeplink();
     _tabController = TabController(length: 2, vsync: this);
@@ -143,11 +205,13 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     ));
     callRedDotLogic();
   }
+
   var savedShowRedDot;
   callRedDotLogic() async {
     final prefs = await SharedPreferences.getInstance();
     savedShowRedDot = prefs.getBool('showRedDot') ?? false;
   }
+
   @override
   void dispose() {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -304,6 +368,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     } catch (e) {
     }
   }
+
   bool showLockedScreen = false;
 
   @override
@@ -654,13 +719,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                 slivers: [
                                   SliverList(
                                     delegate: SliverChildListDelegate([
-                                      _isloading
-                                          ? Container(
-                                        height: 50.h,
-                                        child: Center(
-                                            child: LoaderBluredScreen()),
-                                      )
-                                          :
                                   Column(
                                         mainAxisAlignment:
                                         MainAxisAlignment.start,
@@ -686,42 +744,55 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                                         title: "All".tr(),
                                                         isFirst: true,
                                                         index: 0,
-                                                        handler: () =>
+                                                        handler: (){
                                                             onCategorySelected(
-                                                                0),
+                                                                0);
+                                                            onTabChanged(0);
+                                                            ;}
                                                       ),
                                                       NFTCategoryWidget(
                                                           title: "Owned".tr(),
                                                           index: 1,
                                                           handler: () {
-                                                            setState(() {
-                                                              _isloading =
-                                                              true;
-                                                            });
+                                                            // setState(() {
+                                                            //   _isloading =
+                                                            //   true;
+                                                            // });
                                                             onCategorySelected(
                                                                 1);
-                                                            setState(() {
-                                                              _isloading =
-                                                              false;
-                                                            });
+                                                            // setState(() {
+                                                            //   _isloading =
+                                                            //   false;
+                                                            // });
+                                                            onTabChanged(1);
                                                           }),
                                                       NFTCategoryWidget(
                                                         title: "Created".tr(),
                                                         index: 2,
-                                                        handler: () =>
+                                                        handler: () {
                                                             onCategorySelected(
-                                                                2),
+                                                                2);
+                                                            onTabChanged(2);
+                                                        }
                                                       ),
                                                       NFTCategoryWidget(
                                                         title: "Listed".tr(),
                                                         index: 3,
-                                                        handler: () =>
-                                                            onCategorySelected(3),
+                                                        handler: (){
+                                                            onCategorySelected(3);
+                                                            onTabChanged(3);
+                                                        }
                                                       ),
                                                     ],
                                                   ),
                                                 ),
                                               )),
+                                          _isloading
+                                              ? Container(
+                                            height: 50.h,
+                                            child: Center(
+                                                child: LoaderBluredScreen()),
+                                          ) :
                                           Container(
                                             child: bottomSpaceContent(
                                               nftsCollectionAll,

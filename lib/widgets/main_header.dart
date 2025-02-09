@@ -65,7 +65,8 @@ class _MainHeaderState extends State<MainHeader> {
                     left: isEnglish ? 22.sp : 11.sp,
                     bottom: isEnglish ? 12.sp : 8.sp,
                     right: isEnglish ? 0 : 17.sp),
-                child: GestureDetector(
+                child:
+                GestureDetector(
                   onTap: () => widget.handler != null
                       ? widget.handler!()
                       : Navigator.pop(context),

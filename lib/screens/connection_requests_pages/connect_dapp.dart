@@ -103,7 +103,7 @@ class _ConnectDappState extends State<ConnectDapp> {
                         MaterialPageRoute(
                             builder: (context) => WalletTokensNfts()),
                       ),
-                      showBackBtn: false,
+                      showBackBtn: true,
                     ),
                     Container(
                       height: 88.h,
@@ -342,14 +342,14 @@ class _ConnectDappState extends State<ConnectDapp> {
                               SizedBox(
                                 height: 2.h,
                               ),
-                                        
+
                               AppButton(
                                 title: 'Reject'.tr(),
                                 handler: () async {
                                   setState(() {
                                     _isLoading = true;
                                   });
-                                        
+
                                   Provider.of<UserProvider>(context,
                                           listen: false)
                                       .navigateToNeoForConnectWallet = false;
@@ -358,7 +358,7 @@ class _ConnectDappState extends State<ConnectDapp> {
                                   setState(() {
                                     _isLoading = false;
                                   });
-                                        
+
                                   await AppDeepLinking().openNftApp(
                                     {
                                       "operation": "connectWallet",
@@ -438,7 +438,7 @@ class _ConnectDappState extends State<ConnectDapp> {
                                             DateTime.now().toString());
                                         await  prefs.setBool('isConnected', true);
                                       }
-                                        
+
                                       Future.delayed(Duration(milliseconds: 1500),
                                           closeDialogAndNavigate);
                                       return Dialog(
@@ -472,7 +472,7 @@ class _ConnectDappState extends State<ConnectDapp> {
                                                   ),
                                                 ],
                                               ),
-                                        
+
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.center,
@@ -535,7 +535,7 @@ class _ConnectDappState extends State<ConnectDapp> {
                                                   SizedBox(
                                                     height: 2.h,
                                                   ),
-                                        
+
                                                   Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.center,
@@ -573,7 +573,7 @@ class _ConnectDappState extends State<ConnectDapp> {
                                                       )
                                                     ],
                                                   ),
-                                        
+
                                                   SizedBox(
                                                     height: 2.h,
                                                   ),

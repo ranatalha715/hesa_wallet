@@ -135,7 +135,7 @@ class _UnlockState extends State<Unlock> {
                                 isactive: isButtonActive ? true : false,
                                 handler: () async {
                                   passcode=="" ?
-                                  Navigator.pushReplacement(
+                                  Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) => UnlockWithPassword(),
                                   ))
@@ -168,3 +168,9 @@ class _UnlockState extends State<Unlock> {
     });
   }
 }
+
+
+
+
+
+

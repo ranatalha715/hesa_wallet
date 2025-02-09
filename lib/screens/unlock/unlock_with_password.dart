@@ -82,16 +82,37 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
     final auth = Provider.of<AuthProvider>(context, listen: false);
     final user = Provider.of<UserProvider>(context, listen: false);
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
-      return Scaffold(
+      return
+        Scaffold(
         backgroundColor: AppColors.backgroundColor,
         body: SingleChildScrollView(
-          child: Column(
+          child:
+          Column(
             children: [
               Container(
                   height: 55.h,
                   width: 100.w,
                   child: Column(
                     children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 18.sp, top: 6.h),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Image.asset(
+                              isEnglish
+                                  ? "assets/images/back_dark_oldUI.png"
+                                  : "assets/images/back_arrow_left.png",
+                              height: isEnglish ? 3.1.h : 4.6.h,
+                              width: isEnglish ? 3.1.h : 4.6.h,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
                       Spacer(
                         flex: 5,
                       ),
@@ -155,8 +176,11 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                             },
                             scrollPadding: EdgeInsets.only(
                                 bottom:
-                                    MediaQuery.of(context).viewInsets.bottom /
-                                        1.4),
+                                MediaQuery
+                                    .of(context)
+                                    .viewInsets
+                                    .bottom /
+                                    1.4),
                             controller: _passwordController,
                             obscureText: _obscurePassword,
                             style: TextStyle(
@@ -180,11 +204,11 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                                   borderRadius: BorderRadius.circular(8.0),
                                   borderSide: BorderSide(
                                     color: (isValidating &&
-                                                _passwordController
-                                                    .text.isEmpty) ||
-                                            auth.loginErrorResponse
-                                                .toString()
-                                                .contains('password')
+                                        _passwordController
+                                            .text.isEmpty) ||
+                                        auth.loginErrorResponse
+                                            .toString()
+                                            .contains('password')
                                         ? AppColors.errorColor
                                         : Colors.transparent,
                                   )),
@@ -192,11 +216,11 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                                   borderRadius: BorderRadius.circular(8.0),
                                   borderSide: BorderSide(
                                     color: (isValidating &&
-                                                _passwordController
-                                                    .text.isEmpty) ||
-                                            auth.loginErrorResponse
-                                                .toString()
-                                                .contains('password')
+                                        _passwordController
+                                            .text.isEmpty) ||
+                                        auth.loginErrorResponse
+                                            .toString()
+                                            .contains('password')
                                         ? AppColors.errorColor
                                         : AppColors.focusTextFieldColor,
                                   )),
@@ -243,7 +267,7 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                             alignment: Alignment.centerLeft,
                             child: Text(
                               auth.loginErrorResponse ==
-                                      "You have entered an invalid password"
+                                  "You have entered an invalid password"
                                   ? "*Password incorrect".tr()
                                   : "",
                               style: TextStyle(
@@ -259,12 +283,13 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                       Align(
                         alignment: Alignment.centerRight,
                         child: GestureDetector(
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ResetEmail(),
-                            ),
-                          ),
+                          onTap: () =>
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ResetEmail(),
+                                ),
+                              ),
                           child: Text(
                             'Forgot password?'.tr(),
                             style: TextStyle(
@@ -302,14 +327,14 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                               final sha512Hash = sha512.convert(bytes);
                               final sha512String = sha512Hash.toString();
                               final result = await Provider.of<AuthProvider>(
-                                      context,
-                                      listen: false)
+                                  context,
+                                  listen: false)
                                   .loginWithUsername(
-                                      username: user.userName!,
-                                      password: sha512String,
-                                      context: context,
-                                      isEnglish: isEnglish,
-                                      forUnlock: true);
+                                  username: user.userName!,
+                                  password: sha512String,
+                                  context: context,
+                                  isEnglish: isEnglish,
+                                  forUnlock: true);
                               setState(() {
                                 _isLoading = false;
                               });
@@ -328,6 +353,23 @@ class _UnlockWithPasswordState extends State<UnlockWithPassword> {
                   ),
                 ),
               ),
+              // Positioned(
+              //   top: 0,
+              //   left: 4.w,
+              //   bottom: 0,
+              //   child:    GestureDetector(
+              //     onTap:  () {
+              //       Navigator.pop(context);
+              //     },
+              //     child: Image.asset(
+              //       isEnglish
+              //           ? "assets/images/back_dark_oldUI.png"
+              //           : "assets/images/back_arrow_left.png",
+              //       height: isEnglish ? 3.1.h : 4.6.h,
+              //       width: isEnglish ? 3.1.h : 4.6.h,
+              //       color: Colors.white,
+              //     ),
+              //   ),),
             ],
           ),
         ),
