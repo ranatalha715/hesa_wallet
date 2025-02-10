@@ -198,7 +198,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
     });
   }
 
-  navigateToAddCard() async {
+  navigateToAddCard({bool isStandalone=true}) async {
     print('card brand');
     print(Provider.of<TransactionProvider>(context, listen: false)
         .selectedCardBrand);
@@ -208,7 +208,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
             brand: Provider.of<TransactionProvider>(context, listen: false)
                 .selectedCardBrand,
             context: context);
-    if (result == AuthResult.success) {
+    if (result == AuthResult.success && isStandalone) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -691,248 +691,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                               () async {},
                                               showPopup: true,
                                             );
-                                            // confirmBrandDialogue(
-                                            //   () async {
-                                            //     var result = await Provider.of<
-                                            //                 TransactionProvider>(
-                                            //             context,
-                                            //             listen: false)
-                                            //         .tokenizeCardRequest(
-                                            //             token: accessToken,
-                                            //             brand: Provider.of<
-                                            //                         TransactionProvider>(
-                                            //                     context,
-                                            //                     listen: false)
-                                            //                 .selectedCardBrand,
-                                            //             context: context);
-                                            //     if (result ==
-                                            //         AuthResult.success) {
-                                            //       Navigator.push(
-                                            //         context,
-                                            //         MaterialPageRoute(
-                                            //           builder: (context) =>
-                                            //               WalletAddCard(
-                                            //             fromTransactionReq:
-                                            //                 true,
-                                            //             tokenizedCheckoutId: Provider
-                                            //                     .of<TransactionProvider>(
-                                            //                         context,
-                                            //                         listen:
-                                            //                             false)
-                                            //                 .tokenizedCheckoutId,
-                                            //           ),
-                                            //         ),
-                                            //       );
-                                            //     }
-                                            //   },
-                                            //   showPopup: true,
-                                            // );
 
-                                            // return showDialog(
-                                            //   context: context,
-                                            //   builder: (BuildContext context) {
-                                            //     final screenWidth =
-                                            //         MediaQuery.of(context)
-                                            //             .size
-                                            //             .width;
-                                            //     final dialogWidth =
-                                            //         screenWidth * 0.85;
-                                            //
-                                            //     return StatefulBuilder(builder:
-                                            //         (BuildContext context,
-                                            //             StateSetter setState) {
-                                            //       return Dialog(
-                                            //         shape:
-                                            //             RoundedRectangleBorder(
-                                            //           borderRadius:
-                                            //               BorderRadius.circular(
-                                            //                   8.0),
-                                            //         ),
-                                            //         backgroundColor:
-                                            //             Colors.transparent,
-                                            //         child: BackdropFilter(
-                                            //             filter:
-                                            //                 ImageFilter.blur(
-                                            //                     sigmaX: 7,
-                                            //                     sigmaY: 7),
-                                            //             child: Container(
-                                            //               height: 35.h,
-                                            //               width: dialogWidth,
-                                            //               decoration:
-                                            //                   BoxDecoration(
-                                            //                 border: Border.all(
-                                            //                     width: 0.1.h,
-                                            //                     color: AppColors
-                                            //                         .textColorGrey),
-                                            //                 color: themeNotifier.isDark
-                                            //                     ? AppColors
-                                            //                         .showDialogClr
-                                            //                     : AppColors
-                                            //                         .textColorWhite,
-                                            //                 borderRadius:
-                                            //                     BorderRadius
-                                            //                         .circular(
-                                            //                             15),
-                                            //               ),
-                                            //               child: Column(
-                                            //                 mainAxisAlignment:
-                                            //                     MainAxisAlignment
-                                            //                         .start,
-                                            //                 children: [
-                                            //                   SizedBox(
-                                            //                     height: 4.h,
-                                            //                   ),
-                                            //                   Text(
-                                            //                     "Enter card number \n to continue!",
-                                            //                     textAlign:
-                                            //                         TextAlign
-                                            //                             .center,
-                                            //                     // '2320   3000   0000   1234',
-                                            //                     style: TextStyle(
-                                            //                         fontSize:
-                                            //                             13.sp,
-                                            //                         color: AppColors
-                                            //                             .whiteColorWithOpacity),
-                                            //                   ),
-                                            //                   SizedBox(
-                                            //                       height: 4.h),
-                                            //                   Padding(
-                                            //                     padding: const EdgeInsets
-                                            //                         .symmetric(
-                                            //                         horizontal:
-                                            //                             20),
-                                            //                     child:
-                                            //                         Container(
-                                            //                       height: 6.5.h,
-                                            //                       child: TextField(
-                                            //                           maxLength: 16,
-                                            //                           inputFormatters: [LengthLimitingTextInputFormatter(16)],
-                                            //                           controller: _cardnumberController,
-                                            //                           keyboardType: TextInputType.number,
-                                            //                           scrollPadding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 150),
-                                            //                           style: TextStyle(
-                                            //                               fontSize: 10.2.sp,
-                                            //                               color: themeNotifier.isDark ? AppColors.textColorWhite : AppColors.textColorBlack,
-                                            //                               fontWeight: FontWeight.w400,
-                                            //                               // Off-white color,
-                                            //                               fontFamily: 'Inter'),
-                                            //                           decoration: InputDecoration(
-                                            //                             contentPadding: EdgeInsets.symmetric(
-                                            //                                 vertical:
-                                            //                                     10.0,
-                                            //                                 horizontal:
-                                            //                                     16.0),
-                                            //                             counterStyle: TextStyle(
-                                            //                                 color:
-                                            //                                     Colors.transparent,
-                                            //                                 fontSize: 0),
-                                            //                             hintText:
-                                            //                                 'Enter card number'.tr(),
-                                            //                             hintStyle: TextStyle(
-                                            //                                 fontSize: 10.2.sp,
-                                            //                                 color: AppColors.textColorGrey,
-                                            //                                 fontWeight: FontWeight.w400,
-                                            //                                 // Off-white color,
-                                            //                                 fontFamily: 'Inter'),
-                                            //                             enabledBorder: OutlineInputBorder(
-                                            //                                 borderRadius: BorderRadius.circular(8.0),
-                                            //                                 borderSide: BorderSide(
-                                            //                                   color: AppColors.textColorGrey,
-                                            //                                   // Off-white color
-                                            //                                   width: 1.0,
-                                            //                                 )),
-                                            //                             focusedBorder: OutlineInputBorder(
-                                            //                                 borderRadius: BorderRadius.circular(8.0),
-                                            //                                 borderSide: BorderSide(
-                                            //                                   color: AppColors.textColorGrey,
-                                            //                                   // Off-white color
-                                            //                                   width: 1.0,
-                                            //                                 )),
-                                            //                             // labelText: 'Enter your password',
-                                            //                           ),
-                                            //                           onChanged: (value) {
-                                            //                             // Update the displayedText whenever the text changes
-                                            //                             setState(
-                                            //                                 () {
-                                            //                               displayedText =
-                                            //                                   value;
-                                            //                             });
-                                            //                           },
-                                            //                           cursorColor: AppColors.textColorGrey),
-                                            //                     ),
-                                            //                   ),
-                                            //                   Expanded(
-                                            //                     child: SizedBox(
-                                            //                         // height: 4.h,
-                                            //                         ),
-                                            //                   ),
-                                            //                   Padding(
-                                            //                     padding: EdgeInsets
-                                            //                         .symmetric(
-                                            //                             horizontal:
-                                            //                                 20.sp),
-                                            //                     child:
-                                            //                         AppButton(
-                                            //                       title:
-                                            //                           'Add card'
-                                            //                               .tr(),
-                                            //                       isactive: _cardnumberController
-                                            //                               .text
-                                            //                               .isNotEmpty
-                                            //                           ? true
-                                            //                           : false,
-                                            //                       handler:
-                                            //                           () async {
-                                            //                         setState(
-                                            //                             () {
-                                            //                           isLoading =
-                                            //                               true;
-                                            //                         });
-                                            //                         final result = await Provider.of<TransactionProvider>(
-                                            //                                 context,
-                                            //                                 listen:
-                                            //                                     false)
-                                            //                             .tokenizeCardRequest(
-                                            //                           token:
-                                            //                               accessToken,
-                                            //                           context:
-                                            //                               context,
-                                            //                           bin: _cardnumberController
-                                            //                               .text,
-                                            //                         );
-                                            //                         setState(
-                                            //                             () {
-                                            //                           isLoading =
-                                            //                               false;
-                                            //                         });
-                                            //                         if (result ==
-                                            //                             AuthResult
-                                            //                                 .success) {
-                                            //                           print(Provider.of<TransactionProvider>(
-                                            //                                   context,
-                                            //                                   listen: false)
-                                            //                               .tokenizedCheckoutId);
-                                            //                         }
-                                            //                       },
-                                            //                       isLoading:
-                                            //                           isLoading,
-                                            //                       isGradient:
-                                            //                           true,
-                                            //                       color: Colors
-                                            //                           .transparent,
-                                            //                       // textColor: AppColors.textColorGreyShade2,
-                                            //                     ),
-                                            //                   ),
-                                            //                   SizedBox(
-                                            //                     height: 4.h,
-                                            //                   ),
-                                            //                 ],
-                                            //               ),
-                                            //             )),
-                                            //       );
-                                            //     });
-                                            //   },
-                                            // );
                                           },
                                           child: Row(
                                             children: [
@@ -1005,6 +764,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                       .selectedPaymentMethod =
                                                   "cards";
                                             });
+                                          paymentCards.isEmpty ?  payButtonFuncTnx(trPro, paymentCards):null;
                                           },
                                           child:
                                           Container(
@@ -1364,828 +1124,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                         SizedBox(height: 2.h),
                                         AppButton(
                                             title: "Pay".tr(),
-                                            handler: () async {
-                                              setState(() {
-                                                isValidating = true;
-                                              });
-                                              setState(() {
-                                                isLoading = true;
-                                              });
-                                              TransactionProvider
-                                                  transactionProvider = Provider
-                                                      .of<TransactionProvider>(
-                                                          context,
-                                                          listen: false);
-                                              UserProvider userProvider =
-                                                  Provider.of<UserProvider>(
-                                                      context,
-                                                      listen: false);
-                                              confirmBrandDialogue(() async {
-                                                if (operation ==
-                                                    'MintCollection') {
-                                                  print(
-                                                      'running mint collection');
-                                                  print(itemCollectionID);
-                                                  final collectionResult =
-                                                      await transactionProvider
-                                                          .mintCollectionpayableTransactionSend(
-                                                    token: accessToken,
-                                                    context: context,
-                                                    brand: Provider.of<TransactionProvider>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .selectedPaymentMethod !=
-                                                            "cards"
-                                                        ? 'APPLEPAY'
-                                                        : Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .selectedCardBrand,
-                                                    walletAddress: userProvider
-                                                        .walletAddress!,
-                                                    tokenId: paymentCards
-                                                            .isEmpty
-                                                        ? ""
-                                                        : trPro
-                                                            .selectedCardTokenId,
-                                                    country: country,
-                                                    mintCollectionId:
-                                                        itemCollectionID,
-                                                    ownerId: userProvider
-                                                        .walletAddress!,
-                                                    params: params,
-                                                    operation: operation,
-                                                  )
-                                                          .then((value) {
-                                                    payRequestNowReadyUI(
-                                                        operation: operation,
-                                                        brandsName: Provider.of<
-                                                                            TransactionProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .selectedPaymentMethod !=
-                                                                "cards"
-                                                            ? ['APPLEPAY']
-                                                            : [
-                                                                "VISA",
-                                                                "MASTER",
-                                                                "MADA",
-                                                              ],
-                                                        checkoutId: Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .checkoutId);
-                                                  });
-                                                } else if (operation ==
-                                                    'MintNFT') {
-                                                  final nftResult = await transactionProvider
-                                                      .mintNftpayableTransactionSend(
-                                                          params: params,
-                                                          token: accessToken,
-                                                          context: context,
-                                                          brand: Provider.of<TransactionProvider>(
-                                                                          context,
-                                                                          listen:
-                                                                              false)
-                                                                      .selectedPaymentMethod !=
-                                                                  "cards"
-                                                              ? 'APPLEPAY'
-                                                              : Provider.of<
-                                                                          TransactionProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .selectedCardBrand,
-                                                          walletAddress:
-                                                              userProvider
-                                                                  .walletAddress!,
-                                                          tokenId: paymentCards
-                                                                  .isEmpty
-                                                              ? ""
-                                                              : trPro
-                                                                  .selectedCardTokenId,
-                                                          country: country,
-                                                          operation: operation)
-                                                      .then((value) {
-                                                    print(
-                                                        "transactionProvider.checkoutId");
-                                                    print(transactionProvider
-                                                        .checkoutId);
-                                                    payRequestNowReadyUI(
-                                                        operation: operation,
-                                                        brandsName: Provider.of<
-                                                                            TransactionProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .selectedPaymentMethod !=
-                                                                "cards"
-                                                            ? ['APPLEPAY']
-                                                            : [
-                                                                "VISA",
-                                                                "MASTER",
-                                                                "MADA",
-                                                              ],
-                                                        checkoutId: Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .checkoutId);
-                                                  });
-                                                } else if (operation ==
-                                                    'MintNFTWithEditions') {
-                                                  final nftResult = await transactionProvider
-                                                      .mintNFTWithEditions(
-                                                          params: params,
-                                                          token: accessToken,
-                                                          context: context,
-                                                          brand: Provider.of<TransactionProvider>(
-                                                                          context,
-                                                                          listen:
-                                                                              false)
-                                                                      .selectedPaymentMethod !=
-                                                                  "cards"
-                                                              ? 'APPLEPAY'
-                                                              : Provider.of<
-                                                                          TransactionProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .selectedCardBrand,
-                                                          walletAddress:
-                                                              userProvider
-                                                                  .walletAddress!,
-                                                          tokenId: paymentCards
-                                                                  .isEmpty
-                                                              ? ""
-                                                              : trPro
-                                                                  .selectedCardTokenId,
-                                                          country: country,
-                                                          operation: operation)
-                                                      .then((value) {
-                                                    print(
-                                                        "transactionProvider.checkoutId");
-                                                    print(transactionProvider
-                                                        .checkoutId);
-                                                    payRequestNowReadyUI(
-                                                        operation: operation,
-                                                        brandsName: Provider.of<
-                                                                            TransactionProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .selectedPaymentMethod !=
-                                                                "cards"
-                                                            ? ['APPLEPAY']
-                                                            : [
-                                                                "VISA",
-                                                                "MASTER",
-                                                                "MADA",
-                                                              ],
-                                                        checkoutId: Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .checkoutId);
-                                                  });
-                                                } else if (operation ==
-                                                    'purchaseNFT') {
-                                                  final purchasenftResult = await transactionProvider
-                                                      .purchaseNft(
-                                                          params: params,
-                                                          token: accessToken,
-                                                          context: context,
-                                                          brand: Provider.of<TransactionProvider>(
-                                                                          context,
-                                                                          listen:
-                                                                              false)
-                                                                      .selectedPaymentMethod !=
-                                                                  "cards"
-                                                              ? 'APPLEPAY'
-                                                              : Provider.of<
-                                                                          TransactionProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .selectedCardBrand,
-                                                          walletAddress:
-                                                              userProvider
-                                                                  .walletAddress!,
-                                                          tokenId: paymentCards
-                                                                  .isEmpty
-                                                              ? ""
-                                                              : trPro
-                                                                  .selectedCardTokenId,
-                                                          country: country,
-                                                          operation: operation)
-                                                      .then((value) {
-                                                    payRequestNowReadyUI(
-                                                        operation: operation,
-                                                        brandsName: Provider.of<
-                                                                            TransactionProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .selectedPaymentMethod !=
-                                                                "cards"
-                                                            ? ['APPLEPAY']
-                                                            : [
-                                                                "VISA",
-                                                                "MASTER",
-                                                                "MADA",
-                                                              ],
-                                                        checkoutId: Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .checkoutId);
-                                                  });
-                                                } else if (operation ==
-                                                    'purchaseCollection') {
-                                                  final purchaseCollectionResult = await transactionProvider
-                                                      .purchaseCollection(
-                                                          params: params,
-                                                          token: accessToken,
-                                                          context: context,
-                                                          brand: Provider.of<TransactionProvider>(
-                                                                          context,
-                                                                          listen:
-                                                                              false)
-                                                                      .selectedPaymentMethod !=
-                                                                  "cards"
-                                                              ? 'APPLEPAY'
-                                                              : Provider.of<
-                                                                          TransactionProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .selectedCardBrand,
-                                                          walletAddress:
-                                                              userProvider
-                                                                  .walletAddress!,
-                                                          tokenId: paymentCards
-                                                                  .isEmpty
-                                                              ? ""
-                                                              : trPro
-                                                                  .selectedCardTokenId,
-                                                          country: country,
-                                                          operation: operation)
-                                                      .then((value) {
-                                                    payRequestNowReadyUI(
-                                                        operation: operation,
-                                                        brandsName: Provider.of<
-                                                                            TransactionProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .selectedPaymentMethod !=
-                                                                "cards"
-                                                            ? ['APPLEPAY']
-                                                            : [
-                                                                "VISA",
-                                                                "MASTER",
-                                                                "MADA",
-                                                              ],
-                                                        checkoutId: Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .checkoutId);
-                                                  });
-                                                } else if (operation ==
-                                                    'listNFT') {
-                                                  final listNftFixedPrice =
-                                                      await transactionProvider
-                                                          .listNftFixedPrice(
-                                                    params: params,
-                                                    token: accessToken,
-                                                    context: context,
-                                                    brand: Provider.of<TransactionProvider>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .selectedPaymentMethod !=
-                                                            "cards"
-                                                        ? 'APPLEPAY'
-                                                        : Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .selectedCardBrand,
-                                                    walletAddress: userProvider
-                                                        .walletAddress!,
-                                                    tokenId: paymentCards
-                                                            .isEmpty
-                                                        ? ""
-                                                        : trPro
-                                                            .selectedCardTokenId,
-                                                    operation: operation,
-                                                  )
-                                                          .then((value) {
-                                                    payRequestNowReadyUI(
-                                                        operation: operation,
-                                                        brandsName: Provider.of<
-                                                                            TransactionProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .selectedPaymentMethod !=
-                                                                "cards"
-                                                            ? ['APPLEPAY']
-                                                            : [
-                                                                "VISA",
-                                                                "MASTER",
-                                                                "MADA",
-                                                              ],
-                                                        checkoutId: Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .checkoutId);
-                                                  });
-                                                } else if (operation ==
-                                                    'listCollection') {
-                                                  final listCollectionFixedPrice =
-                                                      await transactionProvider
-                                                          .listCollectionFixedPrice(
-                                                    params: params,
-                                                    token: accessToken,
-                                                    context: context,
-                                                    brand: Provider.of<TransactionProvider>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .selectedPaymentMethod !=
-                                                            "cards"
-                                                        ? 'APPLEPAY'
-                                                        : Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .selectedCardBrand,
-                                                    walletAddress: userProvider
-                                                        .walletAddress!,
-                                                    tokenId: paymentCards
-                                                            .isEmpty
-                                                        ? ""
-                                                        : trPro
-                                                            .selectedCardTokenId,
-                                                    operation: operation,
-                                                  )
-                                                          .then((value) {
-                                                    payRequestNowReadyUI(
-                                                        operation: operation,
-                                                        brandsName: Provider.of<
-                                                                            TransactionProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .selectedPaymentMethod !=
-                                                                "cards"
-                                                            ? ['APPLEPAY']
-                                                            : [
-                                                                "VISA",
-                                                                "MASTER",
-                                                                "MADA",
-                                                              ],
-                                                        checkoutId: Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .checkoutId);
-                                                  });
-                                                } else if (operation ==
-                                                    'listAuctionNFT') {
-                                                  final listNftForAuction =
-                                                      await transactionProvider
-                                                          .listNftForAuction(
-                                                    params: params,
-                                                    token: accessToken,
-                                                    context: context,
-                                                    brand: Provider.of<TransactionProvider>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .selectedPaymentMethod !=
-                                                            "cards"
-                                                        ? 'APPLEPAY'
-                                                        : Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .selectedCardBrand,
-                                                    walletAddress: userProvider
-                                                        .walletAddress!,
-                                                    tokenId: paymentCards
-                                                            .isEmpty
-                                                        ? ""
-                                                        : trPro
-                                                            .selectedCardTokenId,
-                                                    operation: operation,
-                                                  )
-                                                          .then((value) {
-                                                    payRequestNowReadyUI(
-                                                        operation: operation,
-                                                        brandsName: Provider.of<
-                                                                            TransactionProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .selectedPaymentMethod !=
-                                                                "cards"
-                                                            ? ['APPLEPAY']
-                                                            : [
-                                                                "VISA",
-                                                                "MASTER",
-                                                                "MADA",
-                                                              ],
-                                                        checkoutId: Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .checkoutId);
-                                                  });
-                                                } else if (operation ==
-                                                    'listAuctionCollection') {
-                                                  final listCollectionForAuction =
-                                                      await transactionProvider
-                                                          .listCollectionForAuction(
-                                                    params: params,
-                                                    token: accessToken,
-                                                    context: context,
-                                                    brand: Provider.of<TransactionProvider>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .selectedPaymentMethod !=
-                                                            "cards"
-                                                        ? 'APPLEPAY'
-                                                        : Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .selectedCardBrand,
-                                                    walletAddress: userProvider
-                                                        .walletAddress!,
-                                                    tokenId: paymentCards
-                                                            .isEmpty
-                                                        ? ""
-                                                        : trPro
-                                                            .selectedCardTokenId,
-                                                    operation: operation,
-                                                  )
-                                                          .then((value) {
-                                                    payRequestNowReadyUI(
-                                                        operation: operation,
-                                                        brandsName: Provider.of<
-                                                                            TransactionProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .selectedPaymentMethod !=
-                                                                "cards"
-                                                            ? ['APPLEPAY']
-                                                            : [
-                                                                "VISA",
-                                                                "MASTER",
-                                                                "MADA",
-                                                              ],
-                                                        checkoutId: Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .checkoutId);
-                                                  });
-                                                } else if (operation ==
-                                                    'burnNFT') {
-                                                  final burnNFT =
-                                                      await transactionProvider
-                                                          .burnNFT(
-                                                    params: params,
-                                                    token: accessToken,
-                                                    context: context,
-                                                    brand: Provider.of<TransactionProvider>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .selectedPaymentMethod !=
-                                                            "cards"
-                                                        ? 'APPLEPAY'
-                                                        : Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .selectedCardBrand,
-                                                    walletAddress: userProvider
-                                                        .walletAddress!,
-                                                    tokenId: paymentCards
-                                                            .isEmpty
-                                                        ? ""
-                                                        : trPro
-                                                            .selectedCardTokenId,
-                                                    operation: operation,
-                                                  )
-                                                          .then((value) {
-                                                    payRequestNowReadyUI(
-                                                        operation: operation,
-                                                        brandsName: Provider.of<
-                                                                            TransactionProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .selectedPaymentMethod !=
-                                                                "cards"
-                                                            ? ['APPLEPAY']
-                                                            : [
-                                                                "VISA",
-                                                                "MASTER",
-                                                                "MADA",
-                                                              ],
-                                                        checkoutId: Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .checkoutId);
-                                                  });
-                                                } else if (operation ==
-                                                    'burnCollection') {
-                                                  final burnCollection =
-                                                      await transactionProvider
-                                                          .burnCollection(
-                                                    params: params,
-                                                    token: accessToken,
-                                                    context: context,
-                                                    brand: Provider.of<TransactionProvider>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .selectedPaymentMethod !=
-                                                            "cards"
-                                                        ? 'APPLEPAY'
-                                                        : Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .selectedCardBrand,
-                                                    walletAddress: userProvider
-                                                        .walletAddress!,
-                                                    tokenId: paymentCards
-                                                            .isEmpty
-                                                        ? ""
-                                                        : trPro
-                                                            .selectedCardTokenId,
-                                                    operation: operation,
-                                                  )
-                                                          .then((value) {
-                                                    payRequestNowReadyUI(
-                                                        operation: operation,
-                                                        brandsName: Provider.of<
-                                                                            TransactionProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .selectedPaymentMethod !=
-                                                                "cards"
-                                                            ? ['APPLEPAY']
-                                                            : [
-                                                                "VISA",
-                                                                "MASTER",
-                                                                "MADA",
-                                                              ],
-                                                        checkoutId: Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .checkoutId);
-                                                  });
-                                                } else if (operation ==
-                                                    'makeOfferNFT') {
-                                                  final makeOffer =
-                                                      await transactionProvider
-                                                          .makeOffer(
-                                                    params: params,
-                                                    token: accessToken,
-                                                    context: context,
-                                                    brand: Provider.of<TransactionProvider>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .selectedPaymentMethod !=
-                                                            "cards"
-                                                        ? 'APPLEPAY'
-                                                        : Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .selectedCardBrand,
-                                                    walletAddress: userProvider
-                                                        .walletAddress!,
-                                                    tokenId: paymentCards
-                                                            .isEmpty
-                                                        ? ""
-                                                        : trPro
-                                                            .selectedCardTokenId,
-                                                    operation: operation,
-                                                  )
-                                                          .then((value) {
-                                                    payRequestNowReadyUI(
-                                                        operation: operation,
-                                                        brandsName: Provider.of<
-                                                                            TransactionProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .selectedPaymentMethod !=
-                                                                "cards"
-                                                            ? ['APPLEPAY']
-                                                            : [
-                                                                "VISA",
-                                                                "MASTER",
-                                                                "MADA",
-                                                              ],
-                                                        checkoutId: Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .checkoutId);
-                                                  });
-                                                } else if (operation ==
-                                                    'makeOfferCollection') {
-                                                  final makeOfferCollection =
-                                                      await transactionProvider
-                                                          .makeOfferCollection(
-                                                    params: params,
-                                                    token: accessToken,
-                                                    context: context,
-                                                    brand: Provider.of<TransactionProvider>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .selectedPaymentMethod !=
-                                                            "cards"
-                                                        ? 'APPLEPAY'
-                                                        : Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .selectedCardBrand,
-                                                    walletAddress: userProvider
-                                                        .walletAddress!,
-                                                    tokenId: paymentCards
-                                                            .isEmpty
-                                                        ? ""
-                                                        : trPro
-                                                            .selectedCardTokenId,
-                                                    operation: operation,
-                                                  )
-                                                          .then((value) {
-                                                    payRequestNowReadyUI(
-                                                        operation: operation,
-                                                        brandsName: Provider.of<
-                                                                            TransactionProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .selectedPaymentMethod !=
-                                                                "cards"
-                                                            ? ['APPLEPAY']
-                                                            : [
-                                                                "VISA",
-                                                                "MASTER",
-                                                                "MADA",
-                                                              ],
-                                                        checkoutId: Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .checkoutId);
-                                                  });
-                                                } else if (operation ==
-                                                    'acceptNFTCounterOffer') {
-                                                  final acceptNFTCounterOffer =
-                                                      await transactionProvider
-                                                          .acceptCounterOffer(
-                                                    params: params,
-                                                    token: accessToken,
-                                                    context: context,
-                                                    brand: Provider.of<TransactionProvider>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .selectedPaymentMethod !=
-                                                            "cards"
-                                                        ? 'APPLEPAY'
-                                                        : Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .selectedCardBrand,
-                                                    walletAddress: userProvider
-                                                        .walletAddress!,
-                                                    tokenId: paymentCards
-                                                            .isEmpty
-                                                        ? ""
-                                                        : trPro
-                                                            .selectedCardTokenId,
-                                                    operation: operation,
-                                                  )
-                                                          .then((value) {
-                                                    payRequestNowReadyUI(
-                                                        operation: operation,
-                                                        brandsName: Provider.of<
-                                                                            TransactionProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .selectedPaymentMethod !=
-                                                                "cards"
-                                                            ? ['APPLEPAY']
-                                                            : [
-                                                                "VISA",
-                                                                "MASTER",
-                                                                "MADA",
-                                                              ],
-                                                        checkoutId: Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .checkoutId);
-                                                  });
-                                                } else if (operation ==
-                                                    'acceptCollectionCounterOffer') {
-                                                  final acceptCollectionCounterOffer =
-                                                      await transactionProvider
-                                                          .acceptCollectionCounterOffer(
-                                                    params: params,
-                                                    token: accessToken,
-                                                    context: context,
-                                                    brand: Provider.of<TransactionProvider>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .selectedPaymentMethod !=
-                                                            "cards"
-                                                        ? 'APPLEPAY'
-                                                        : Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .selectedCardBrand,
-                                                    walletAddress: userProvider
-                                                        .walletAddress!,
-                                                    tokenId: paymentCards
-                                                            .isEmpty
-                                                        ? ""
-                                                        : trPro
-                                                            .selectedCardTokenId,
-                                                    operation: operation,
-                                                  )
-                                                          .then((value) {
-                                                    payRequestNowReadyUI(
-                                                        operation: operation,
-                                                        brandsName: Provider.of<
-                                                                            TransactionProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .selectedPaymentMethod !=
-                                                                "cards"
-                                                            ? ['APPLEPAY']
-                                                            : [
-                                                                "VISA",
-                                                                "MASTER",
-                                                                "MADA",
-                                                              ],
-                                                        checkoutId: Provider.of<
-                                                                    TransactionProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .checkoutId);
-                                                  });
-                                                } else {}
-                                                setState(() {
-                                                  isLoading = false;
-                                                });
-                                              },
-                                                  showPopup: Provider.of<
-                                                                      UserProvider>(
-                                                                  context,
-                                                                  listen: false)
-                                                              .paymentCards
-                                                              .isEmpty &&
-                                                          Provider.of<TransactionProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .selectedPaymentMethod !=
-                                                              "apple_pay"
-                                                      ? true
-                                                      : false);
-                                            },
+                                            handler: ()=> payButtonFuncTnx(trPro, paymentCards),
                                             isGradient: true,
                                             color: AppColors.textColorBlack),
                                       ],
@@ -3277,7 +2216,7 @@ class _TransactionRequestState extends State<TransactionRequest> {
   }
 
   void confirmBrandDialogue(Function onCloseHandler,
-      {required bool showPopup}) {
+      {required bool showPopup, bool isStandAlone=true}) {
     if (showPopup) {
       showDialog(
         context: context,
@@ -3334,7 +2273,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                 Provider.of<TransactionProvider>(context,
                                         listen: false)
                                     .selectedCardBrand = 'VISA';
-                                navigateToAddCard();
+                                isStandAlone ?
+                                navigateToAddCard(): Navigator.pop(context);
                               },
                               child: Image.asset(
                                 "assets/images/VisaPopup.png",
@@ -3347,7 +2287,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                 Provider.of<TransactionProvider>(context,
                                         listen: false)
                                     .selectedCardBrand = 'MASTER';
-                                navigateToAddCard();
+                                isStandAlone ?
+                                navigateToAddCard(): Navigator.pop(context);
                               },
                               child: Image.asset(
                                 "assets/images/MastercardPopup.png",
@@ -3360,7 +2301,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                 Provider.of<TransactionProvider>(context,
                                         listen: false)
                                     .selectedCardBrand = 'MADA';
-                                navigateToAddCard();
+                                isStandAlone ?
+                                navigateToAddCard(): Navigator.pop(context);
                               },
                               child: Image.asset(
                                 "assets/images/MadaPayPopup.png",
@@ -3383,5 +2325,894 @@ class _TransactionRequestState extends State<TransactionRequest> {
     } else {
       onCloseHandler();
     }
+  }
+
+  payButtonFuncTnx(var trPro, var paymentCards)async {
+    setState(() {
+      isValidating = true;
+    });
+    setState(() {
+      isLoading = true;
+    });
+    TransactionProvider
+    transactionProvider = Provider
+        .of<TransactionProvider>(
+        context,
+        listen: false);
+    UserProvider userProvider =
+    Provider.of<UserProvider>(
+        context,
+        listen: false);
+    confirmBrandDialogue(
+
+            () async {
+
+      if (operation ==
+          'MintCollection') {
+        print(
+            'running mint collection');
+        print(itemCollectionID);
+        final collectionResult =
+        await transactionProvider
+            .mintCollectionpayableTransactionSend(
+          token: accessToken,
+          context: context,
+          brand: Provider
+              .of<TransactionProvider>(
+              context,
+              listen:
+              false)
+              .selectedPaymentMethod !=
+              "cards"
+              ? 'APPLEPAY'
+              : Provider
+              .of<
+              TransactionProvider>(
+              context,
+              listen: false)
+              .selectedCardBrand,
+          walletAddress: userProvider
+              .walletAddress!,
+          tokenId: paymentCards
+              .isEmpty
+              ? ""
+              : trPro
+              .selectedCardTokenId,
+          country: country,
+          mintCollectionId:
+          itemCollectionID,
+          ownerId: userProvider
+              .walletAddress!,
+          params: params,
+          operation: operation,
+        )
+            .then((value) {
+          payRequestNowReadyUI(
+              operation: operation,
+              brandsName: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen:
+                  false)
+                  .selectedPaymentMethod !=
+                  "cards"
+                  ? ['APPLEPAY']
+                  : [
+                "VISA",
+                "MASTER",
+                "MADA",
+              ],
+              checkoutId: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen: false)
+                  .checkoutId);
+        });
+      } else if (operation ==
+          'MintNFT') {
+        final nftResult = await transactionProvider
+            .mintNftpayableTransactionSend(
+            params: params,
+            token: accessToken,
+            context: context,
+            brand: Provider
+                .of<TransactionProvider>(
+                context,
+                listen:
+                false)
+                .selectedPaymentMethod !=
+                "cards"
+                ? 'APPLEPAY'
+                : Provider
+                .of<
+                TransactionProvider>(
+                context,
+                listen:
+                false)
+                .selectedCardBrand,
+            walletAddress:
+            userProvider
+                .walletAddress!,
+            tokenId: paymentCards
+                .isEmpty
+                ? ""
+                : trPro
+                .selectedCardTokenId,
+            country: country,
+            operation: operation)
+            .then((value) {
+          print(
+              "transactionProvider.checkoutId");
+          print(transactionProvider
+              .checkoutId);
+          payRequestNowReadyUI(
+              operation: operation,
+              brandsName: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen:
+                  false)
+                  .selectedPaymentMethod !=
+                  "cards"
+                  ? ['APPLEPAY']
+                  : [
+                "VISA",
+                "MASTER",
+                "MADA",
+              ],
+              checkoutId: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen: false)
+                  .checkoutId);
+        });
+      } else if (operation ==
+          'MintNFTWithEditions') {
+        final nftResult = await transactionProvider
+            .mintNFTWithEditions(
+            params: params,
+            token: accessToken,
+            context: context,
+            brand: Provider
+                .of<TransactionProvider>(
+                context,
+                listen:
+                false)
+                .selectedPaymentMethod !=
+                "cards"
+                ? 'APPLEPAY'
+                : Provider
+                .of<
+                TransactionProvider>(
+                context,
+                listen:
+                false)
+                .selectedCardBrand,
+            walletAddress:
+            userProvider
+                .walletAddress!,
+            tokenId: paymentCards
+                .isEmpty
+                ? ""
+                : trPro
+                .selectedCardTokenId,
+            country: country,
+            operation: operation)
+            .then((value) {
+          print(
+              "transactionProvider.checkoutId");
+          print(transactionProvider
+              .checkoutId);
+          payRequestNowReadyUI(
+              operation: operation,
+              brandsName: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen:
+                  false)
+                  .selectedPaymentMethod !=
+                  "cards"
+                  ? ['APPLEPAY']
+                  : [
+                "VISA",
+                "MASTER",
+                "MADA",
+              ],
+              checkoutId: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen: false)
+                  .checkoutId);
+        });
+      } else if (operation ==
+          'purchaseNFT') {
+        final purchasenftResult = await transactionProvider
+            .purchaseNft(
+            params: params,
+            token: accessToken,
+            context: context,
+            brand: Provider
+                .of<TransactionProvider>(
+                context,
+                listen:
+                false)
+                .selectedPaymentMethod !=
+                "cards"
+                ? 'APPLEPAY'
+                : Provider
+                .of<
+                TransactionProvider>(
+                context,
+                listen:
+                false)
+                .selectedCardBrand,
+            walletAddress:
+            userProvider
+                .walletAddress!,
+            tokenId: paymentCards
+                .isEmpty
+                ? ""
+                : trPro
+                .selectedCardTokenId,
+            country: country,
+            operation: operation)
+            .then((value) {
+          payRequestNowReadyUI(
+              operation: operation,
+              brandsName: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen:
+                  false)
+                  .selectedPaymentMethod !=
+                  "cards"
+                  ? ['APPLEPAY']
+                  : [
+                "VISA",
+                "MASTER",
+                "MADA",
+              ],
+              checkoutId: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen: false)
+                  .checkoutId);
+        });
+      } else if (operation ==
+          'purchaseCollection') {
+        final purchaseCollectionResult = await transactionProvider
+            .purchaseCollection(
+            params: params,
+            token: accessToken,
+            context: context,
+            brand: Provider
+                .of<TransactionProvider>(
+                context,
+                listen:
+                false)
+                .selectedPaymentMethod !=
+                "cards"
+                ? 'APPLEPAY'
+                : Provider
+                .of<
+                TransactionProvider>(
+                context,
+                listen:
+                false)
+                .selectedCardBrand,
+            walletAddress:
+            userProvider
+                .walletAddress!,
+            tokenId: paymentCards
+                .isEmpty
+                ? ""
+                : trPro
+                .selectedCardTokenId,
+            country: country,
+            operation: operation)
+            .then((value) {
+          payRequestNowReadyUI(
+              operation: operation,
+              brandsName: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen:
+                  false)
+                  .selectedPaymentMethod !=
+                  "cards"
+                  ? ['APPLEPAY']
+                  : [
+                "VISA",
+                "MASTER",
+                "MADA",
+              ],
+              checkoutId: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen: false)
+                  .checkoutId);
+        });
+      } else if (operation ==
+          'listNFT') {
+        final listNftFixedPrice =
+        await transactionProvider
+            .listNftFixedPrice(
+          params: params,
+          token: accessToken,
+          context: context,
+          brand: Provider
+              .of<TransactionProvider>(
+              context,
+              listen:
+              false)
+              .selectedPaymentMethod !=
+              "cards"
+              ? 'APPLEPAY'
+              : Provider
+              .of<
+              TransactionProvider>(
+              context,
+              listen: false)
+              .selectedCardBrand,
+          walletAddress: userProvider
+              .walletAddress!,
+          tokenId: paymentCards
+              .isEmpty
+              ? ""
+              : trPro
+              .selectedCardTokenId,
+          operation: operation,
+        )
+            .then((value) {
+          payRequestNowReadyUI(
+              operation: operation,
+              brandsName: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen:
+                  false)
+                  .selectedPaymentMethod !=
+                  "cards"
+                  ? ['APPLEPAY']
+                  : [
+                "VISA",
+                "MASTER",
+                "MADA",
+              ],
+              checkoutId: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen: false)
+                  .checkoutId);
+        });
+      } else if (operation ==
+          'listCollection') {
+        final listCollectionFixedPrice =
+        await transactionProvider
+            .listCollectionFixedPrice(
+          params: params,
+          token: accessToken,
+          context: context,
+          brand: Provider
+              .of<TransactionProvider>(
+              context,
+              listen:
+              false)
+              .selectedPaymentMethod !=
+              "cards"
+              ? 'APPLEPAY'
+              : Provider
+              .of<
+              TransactionProvider>(
+              context,
+              listen: false)
+              .selectedCardBrand,
+          walletAddress: userProvider
+              .walletAddress!,
+          tokenId: paymentCards
+              .isEmpty
+              ? ""
+              : trPro
+              .selectedCardTokenId,
+          operation: operation,
+        )
+            .then((value) {
+          payRequestNowReadyUI(
+              operation: operation,
+              brandsName: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen:
+                  false)
+                  .selectedPaymentMethod !=
+                  "cards"
+                  ? ['APPLEPAY']
+                  : [
+                "VISA",
+                "MASTER",
+                "MADA",
+              ],
+              checkoutId: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen: false)
+                  .checkoutId);
+        });
+      } else if (operation ==
+          'listAuctionNFT') {
+        final listNftForAuction =
+        await transactionProvider
+            .listNftForAuction(
+          params: params,
+          token: accessToken,
+          context: context,
+          brand: Provider
+              .of<TransactionProvider>(
+              context,
+              listen:
+              false)
+              .selectedPaymentMethod !=
+              "cards"
+              ? 'APPLEPAY'
+              : Provider
+              .of<
+              TransactionProvider>(
+              context,
+              listen: false)
+              .selectedCardBrand,
+          walletAddress: userProvider
+              .walletAddress!,
+          tokenId: paymentCards
+              .isEmpty
+              ? ""
+              : trPro
+              .selectedCardTokenId,
+          operation: operation,
+        )
+            .then((value) {
+          payRequestNowReadyUI(
+              operation: operation,
+              brandsName: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen:
+                  false)
+                  .selectedPaymentMethod !=
+                  "cards"
+                  ? ['APPLEPAY']
+                  : [
+                "VISA",
+                "MASTER",
+                "MADA",
+              ],
+              checkoutId: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen: false)
+                  .checkoutId);
+        });
+      } else if (operation ==
+          'listAuctionCollection') {
+        final listCollectionForAuction =
+        await transactionProvider
+            .listCollectionForAuction(
+          params: params,
+          token: accessToken,
+          context: context,
+          brand: Provider
+              .of<TransactionProvider>(
+              context,
+              listen:
+              false)
+              .selectedPaymentMethod !=
+              "cards"
+              ? 'APPLEPAY'
+              : Provider
+              .of<
+              TransactionProvider>(
+              context,
+              listen: false)
+              .selectedCardBrand,
+          walletAddress: userProvider
+              .walletAddress!,
+          tokenId: paymentCards
+              .isEmpty
+              ? ""
+              : trPro
+              .selectedCardTokenId,
+          operation: operation,
+        )
+            .then((value) {
+          payRequestNowReadyUI(
+              operation: operation,
+              brandsName: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen:
+                  false)
+                  .selectedPaymentMethod !=
+                  "cards"
+                  ? ['APPLEPAY']
+                  : [
+                "VISA",
+                "MASTER",
+                "MADA",
+              ],
+              checkoutId: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen: false)
+                  .checkoutId);
+        });
+      } else if (operation ==
+          'burnNFT') {
+        final burnNFT =
+        await transactionProvider
+            .burnNFT(
+          params: params,
+          token: accessToken,
+          context: context,
+          brand: Provider
+              .of<TransactionProvider>(
+              context,
+              listen:
+              false)
+              .selectedPaymentMethod !=
+              "cards"
+              ? 'APPLEPAY'
+              : Provider
+              .of<
+              TransactionProvider>(
+              context,
+              listen: false)
+              .selectedCardBrand,
+          walletAddress: userProvider
+              .walletAddress!,
+          tokenId: paymentCards
+              .isEmpty
+              ? ""
+              : trPro
+              .selectedCardTokenId,
+          operation: operation,
+        )
+            .then((value) {
+          payRequestNowReadyUI(
+              operation: operation,
+              brandsName: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen:
+                  false)
+                  .selectedPaymentMethod !=
+                  "cards"
+                  ? ['APPLEPAY']
+                  : [
+                "VISA",
+                "MASTER",
+                "MADA",
+              ],
+              checkoutId: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen: false)
+                  .checkoutId);
+        });
+      } else if (operation ==
+          'burnCollection') {
+        final burnCollection =
+        await transactionProvider
+            .burnCollection(
+          params: params,
+          token: accessToken,
+          context: context,
+          brand: Provider
+              .of<TransactionProvider>(
+              context,
+              listen:
+              false)
+              .selectedPaymentMethod !=
+              "cards"
+              ? 'APPLEPAY'
+              : Provider
+              .of<
+              TransactionProvider>(
+              context,
+              listen: false)
+              .selectedCardBrand,
+          walletAddress: userProvider
+              .walletAddress!,
+          tokenId: paymentCards
+              .isEmpty
+              ? ""
+              : trPro
+              .selectedCardTokenId,
+          operation: operation,
+        )
+            .then((value) {
+          payRequestNowReadyUI(
+              operation: operation,
+              brandsName: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen:
+                  false)
+                  .selectedPaymentMethod !=
+                  "cards"
+                  ? ['APPLEPAY']
+                  : [
+                "VISA",
+                "MASTER",
+                "MADA",
+              ],
+              checkoutId: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen: false)
+                  .checkoutId);
+        });
+      } else if (operation ==
+          'makeOfferNFT') {
+        final makeOffer =
+        await transactionProvider
+            .makeOffer(
+          params: params,
+          token: accessToken,
+          context: context,
+          brand: Provider
+              .of<TransactionProvider>(
+              context,
+              listen:
+              false)
+              .selectedPaymentMethod !=
+              "cards"
+              ? 'APPLEPAY'
+              : Provider
+              .of<
+              TransactionProvider>(
+              context,
+              listen: false)
+              .selectedCardBrand,
+          walletAddress: userProvider
+              .walletAddress!,
+          tokenId: paymentCards
+              .isEmpty
+              ? ""
+              : trPro
+              .selectedCardTokenId,
+          operation: operation,
+        )
+            .then((value) {
+          payRequestNowReadyUI(
+              operation: operation,
+              brandsName: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen:
+                  false)
+                  .selectedPaymentMethod !=
+                  "cards"
+                  ? ['APPLEPAY']
+                  : [
+                "VISA",
+                "MASTER",
+                "MADA",
+              ],
+              checkoutId: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen: false)
+                  .checkoutId);
+        });
+      } else if (operation ==
+          'makeOfferCollection') {
+        final makeOfferCollection =
+        await transactionProvider
+            .makeOfferCollection(
+          params: params,
+          token: accessToken,
+          context: context,
+          brand: Provider
+              .of<TransactionProvider>(
+              context,
+              listen:
+              false)
+              .selectedPaymentMethod !=
+              "cards"
+              ? 'APPLEPAY'
+              : Provider
+              .of<
+              TransactionProvider>(
+              context,
+              listen: false)
+              .selectedCardBrand,
+          walletAddress: userProvider
+              .walletAddress!,
+          tokenId: paymentCards
+              .isEmpty
+              ? ""
+              : trPro
+              .selectedCardTokenId,
+          operation: operation,
+        )
+            .then((value) {
+          payRequestNowReadyUI(
+              operation: operation,
+              brandsName: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen:
+                  false)
+                  .selectedPaymentMethod !=
+                  "cards"
+                  ? ['APPLEPAY']
+                  : [
+                "VISA",
+                "MASTER",
+                "MADA",
+              ],
+              checkoutId: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen: false)
+                  .checkoutId);
+        });
+      } else if (operation ==
+          'acceptNFTCounterOffer') {
+        final acceptNFTCounterOffer =
+        await transactionProvider
+            .acceptCounterOffer(
+          params: params,
+          token: accessToken,
+          context: context,
+          brand: Provider
+              .of<TransactionProvider>(
+              context,
+              listen:
+              false)
+              .selectedPaymentMethod !=
+              "cards"
+              ? 'APPLEPAY'
+              : Provider
+              .of<
+              TransactionProvider>(
+              context,
+              listen: false)
+              .selectedCardBrand,
+          walletAddress: userProvider
+              .walletAddress!,
+          tokenId: paymentCards
+              .isEmpty
+              ? ""
+              : trPro
+              .selectedCardTokenId,
+          operation: operation,
+        )
+            .then((value) {
+          payRequestNowReadyUI(
+              operation: operation,
+              brandsName: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen:
+                  false)
+                  .selectedPaymentMethod !=
+                  "cards"
+                  ? ['APPLEPAY']
+                  : [
+                "VISA",
+                "MASTER",
+                "MADA",
+              ],
+              checkoutId: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen: false)
+                  .checkoutId);
+        });
+      } else if (operation ==
+          'acceptCollectionCounterOffer') {
+        final acceptCollectionCounterOffer =
+        await transactionProvider
+            .acceptCollectionCounterOffer(
+          params: params,
+          token: accessToken,
+          context: context,
+          brand: Provider
+              .of<TransactionProvider>(
+              context,
+              listen:
+              false)
+              .selectedPaymentMethod !=
+              "cards"
+              ? 'APPLEPAY'
+              : Provider
+              .of<
+              TransactionProvider>(
+              context,
+              listen: false)
+              .selectedCardBrand,
+          walletAddress: userProvider
+              .walletAddress!,
+          tokenId: paymentCards
+              .isEmpty
+              ? ""
+              : trPro
+              .selectedCardTokenId,
+          operation: operation,
+        )
+            .then((value) {
+          payRequestNowReadyUI(
+              operation: operation,
+              brandsName: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen:
+                  false)
+                  .selectedPaymentMethod !=
+                  "cards"
+                  ? ['APPLEPAY']
+                  : [
+                "VISA",
+                "MASTER",
+                "MADA",
+              ],
+              checkoutId: Provider
+                  .of<
+                  TransactionProvider>(
+                  context,
+                  listen: false)
+                  .checkoutId);
+        });
+      } else {}
+      setState(() {
+        isLoading = false;
+      });
+    },
+        isStandAlone: false,
+        showPopup: Provider
+            .of<
+            UserProvider>(
+            context,
+            listen: false)
+            .paymentCards
+            .isEmpty &&
+            Provider
+                .of<TransactionProvider>(
+                context,
+                listen:
+                false)
+                .selectedPaymentMethod !=
+                "apple_pay"
+            ? true
+            : false);
   }
 }

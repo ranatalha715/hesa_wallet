@@ -1361,7 +1361,7 @@ class TransactionProvider with ChangeNotifier {
         "city": "Karachi",
         "state": "Sindh",
         "postcode": "75400",
-        "street1": "39 E"
+        "street1": "39 E",
       },
       // "params": updatedParams,
       "params": paramsMap,

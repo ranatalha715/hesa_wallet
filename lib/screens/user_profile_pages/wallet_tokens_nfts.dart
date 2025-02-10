@@ -409,7 +409,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                       print("setLockScreen && passcode");
                       print(setLockScreen.toString() + passcode.toString());
                       if (setLockScreen
-                      // &&
+                      || Provider.of<TransactionProvider>(context, listen: false).showRedDot
                       // passcode != null &&
                       // passcode.isNotEmpty
                       ) {
