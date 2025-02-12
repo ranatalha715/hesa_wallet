@@ -104,6 +104,27 @@ class _WalletBankingAndPaymentEmptyState
     });
   }
 
+  bool isCardExpired(String expiryMonth, String expiryYear) {
+    // Convert string to integer
+    int month = int.tryParse(expiryMonth) ?? 0;
+    int year = int.tryParse(expiryYear) ?? 0;
+
+    // If parsing fails or invalid values, consider expired
+    if (month == 0 || year == 0) return true;
+
+    // Get current date
+    DateTime now = DateTime.now();
+    int currentYear = now.year;
+    int currentMonth = now.month;
+
+    // Check if the card is expired
+    if (year < currentYear || (year == currentYear && month < currentMonth)) {
+      return true; // Expired
+    }
+    return false; // Not expired
+  }
+
+
   @override
   void initState() {
    _events = new StreamController<int>();
@@ -749,6 +770,7 @@ class _WalletBankingAndPaymentEmptyState
                                                     trPro.selectedCardTokenId =
                                                         paymentCards[index].id;
                                               });
+
                                             },
                                             child: paymentCardWidget(
                                               isFirst: isFirst,
@@ -764,6 +786,9 @@ class _WalletBankingAndPaymentEmptyState
                                                   .last4Digits,
                                               cardBrand:
                                                   paymentCards[index].cardBrand,
+                                              expired:isCardExpired(paymentCards[index].expiryMonth,
+                                                  paymentCards[index].expiryYear
+                                              )
                                             ),
                                           );
                                         }),
@@ -1126,6 +1151,7 @@ class _WalletBankingAndPaymentEmptyState
     bool isDark = true,
     required String cardNum,
     required String last4Digits,
+    bool expired=false,
     required String cardBrand,
     required String regNum,
     required int index,
@@ -1133,8 +1159,9 @@ class _WalletBankingAndPaymentEmptyState
     return Column(
       children: [
         Container(
-          height: 6.5.h,
+          height: expired ? 7.5.h : 6.5.h,
           decoration: BoxDecoration(
+            // color: Colors.red,
             border: Border.all(
               color: _isSelected ? Colors.transparent : AppColors.textColorGrey,
               width: 1.0,
@@ -1142,10 +1169,14 @@ class _WalletBankingAndPaymentEmptyState
             borderRadius: BorderRadius.circular(8.0),
           ),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.sp),
+            padding: EdgeInsets.only(
+              left: 10.sp,
+              right: 10.sp,
+              top:expired ? 10.sp:10.sp
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // if (english)
                   cardBrand == 'VISA'
@@ -1207,17 +1238,18 @@ class _WalletBankingAndPaymentEmptyState
                             : AppColors.textColorBlack,
                       ),
                     ),
-                    // if (isExpired)
+                    if (expired)
                       Text(
-                        "Expired",
+                        'Expired',
                         style: TextStyle(
                           fontSize: 10.sp,
                           fontWeight: FontWeight.w400,
-                          color: Colors.red,
+                          color: AppColors.errorColor,
                         ),
                       ),
                   ],
                 ),
+
                 // if (english)
                   Spacer(),
                 // if (english)

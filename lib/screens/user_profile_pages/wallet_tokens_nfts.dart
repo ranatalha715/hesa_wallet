@@ -59,7 +59,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
     var user = await Provider.of<UserProvider>(context, listen: false);
-
     // await appLinksService.initializeAppLinks(
     //     user.walletAddress
     // );
@@ -105,9 +104,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     setState(() {
       _isloading = true;
     });
-
     var user = Provider.of<UserProvider>(context, listen: false);
-
     switch (tabIndex) {
       case 0:
         await Provider.of<AssetsProvider>(context, listen: false).getAllAssets(

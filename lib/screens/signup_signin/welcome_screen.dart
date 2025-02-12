@@ -5,6 +5,7 @@ import 'package:hesa_wallet/constants/colors.dart';
 import 'package:hesa_wallet/screens/unlock/set_pin_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import '../../constants/app_link_service.dart';
 import '../unlock/unlock_with_password.dart';
 import '../user_profile_pages/wallet_tokens_nfts.dart';
 
@@ -314,6 +315,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   });
 
                   Future.delayed(Duration(milliseconds: 500), () {
+
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(

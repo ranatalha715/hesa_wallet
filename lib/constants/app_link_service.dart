@@ -41,7 +41,7 @@ class AppLinksService {
 
   void _startTimeoutTimer() {
     _timeoutTimer?.cancel();
-    _timeoutTimer = Timer(Duration(seconds: 30), () {
+    _timeoutTimer = Timer(Duration(minutes: 5), () {
       print("No UniLink received within 30 seconds. Navigating to Unlock screen...");
       _navigateToLockScreen();
     });
@@ -58,45 +58,6 @@ class AppLinksService {
     );
   }
 
-  // void _handleLink(Uri uri, var userWalletAddress) {
-  //   final String newLink = uri.toString();
-  //   _currentLink = newLink;
-  //   Provider.of<TransactionProvider>(context, listen: false).payloadTnxParam =
-  //       newLink;
-  //   if (Navigator.canPop(context)) {
-  //     Navigator.pop(context);
-  //   }
-  //   final String? operation = uri.queryParameters['operation'];
-  //   final String? params = uri.queryParameters['params'];
-  //   Map<String, dynamic>? metadata;
-  //   // if (params != null && params.isNotEmpty) {
-  //   //   try {
-  //   //     final Map<String, dynamic> paramsMap = jsonDecode(params);
-  //   //     metadata = paramsMap['metadata'];
-  //   //     if (metadata != null) {
-  //   //       print('Metadata testing: $metadata');
-  //   //     } else {
-  //   //       print('Metadata not found');
-  //   //     }
-  //   //   } catch (e) {
-  //   //     print('Error decoding JSON: $e');
-  //   //   }
-  //   // }
-  //   // else {
-  //   //   print('No params found');
-  //   // }
-  //   // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  //   //   _navigateBasedOnOperation(uri, operation, userWalletAddress);
-  //   // });
-  //   if( operation!=null && userWalletAddress!=null){
-  //     Future.delayed(Duration(milliseconds: 200), () {
-  //       _navigateBasedOnOperation(uri, operation, userWalletAddress);
-  //     });
-  //   }
-  //   // Future.delayed(Duration(milliseconds: 200), () {
-  //   //   _navigateBasedOnOperation(uri, operation, userWalletAddress);
-  //   // });
-  // }
   void _handleLink(Uri uri, var userWalletAddress) {
     final String newLink = uri.toString();
     _currentLink = newLink;
@@ -211,57 +172,14 @@ class AppLinksService {
         break;
     }
   }
-
-  // Future<void> AppLinksForConnectWallet(var userWalletAddress) async {
-  //   try {
-  //     final AppLinks _appLinks = AppLinks();
-  //     _appLinks.uriLinkStream.listen((Uri? uri) {
-  //       if (uri != null) {
-  //         _handleLinkForConnectWallet(uri, userWalletAddress);
-  //       }
-  //     });
-  //     // final Uri? initialUri = await _appLinks.getLatestLink();
-  //     // if (initialUri != null) {
-  //     //   _handleLinkForConnectWallet(initialUri, userWalletAddress);
-  //     // }
-  //   } catch (e) {
-  //   }
-  // }
-  //
-  // void _handleLinkForConnectWallet(Uri uri, var userWalletAddress) {
-  //   final String newLink = uri.toString();
-  //   Provider.of<TransactionProvider>(context, listen: false).payloadTnxParam = newLink;
-  //   final String? operation = uri.queryParameters['operation'];
-  //   final String? logoFromNeo = uri.queryParameters['logo'];
-  //   final String? siteUrl = uri.queryParameters['siteUrl'];
-  //   if (operation == 'connectWallet') {
-  //     Provider.of<UserProvider>(context, listen: false).navigateToNeoForConnectWallet = true;
-  //     Navigator.of(context).pushAndRemoveUntil(
-  //       MaterialPageRoute(builder: (context) => ConnectDapp()),
-  //           (Route<dynamic> route) => false,
-  //     );
-  //     Provider.of<TransactionProvider>(context, listen: false).logoFromNeo = logoFromNeo;
-  //     Provider.of<TransactionProvider>(context, listen: false).siteUrl = siteUrl;
-  //   } else if (operation == 'disconnectWallet') {
-  //     // handleDisconnection1();
-  //   } else {
-  //     Provider.of<UserProvider>(context, listen: false).navigateToNeoForConnectWallet = false;
-  //   }
-  //   // Navigate based on operation
-  //   // if (operation != null && userWalletAddress != null) {
-  //   //   Future.delayed(Duration(milliseconds: 200), () {
-  //   //     _navigateBasedOnOperation(uri, operation, userWalletAddress);
-  //   //   });
-  //   // }
-  // }
 }
 
 Future<void> navigateToTransactionRequest(
-  Map<String, dynamic> queryParams,
-  String operation,
-  BuildContext ctx,
-  String userWalletAddress,
-) async {
+    Map<String, dynamic> queryParams,
+    String operation,
+    BuildContext ctx,
+    String userWalletAddress,
+    ) async {
   String paramsString = queryParams['params'] ?? '';
   String feesString = queryParams['fees'] ?? '';
   await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
@@ -273,10 +191,10 @@ Future<void> navigateToTransactionRequest(
 }
 
 Future<void> navigateToTransactionRequestWithoutWalletAddress(
-  Map<String, dynamic> queryParams,
-  String operation,
-  BuildContext ctx,
-) async {
+    Map<String, dynamic> queryParams,
+    String operation,
+    BuildContext ctx,
+    ) async {
   String paramsString = queryParams['params'] ?? '';
   String feesString = queryParams['fees'] ?? '';
   await Navigator.of(ctx).pushNamed(TransactionRequest.routeName, arguments: {
@@ -287,11 +205,11 @@ Future<void> navigateToTransactionRequestWithoutWalletAddress(
 }
 
 Future<void> navigateToTransactionRequestWithNonPayable(
-  Map<String, dynamic> queryParams,
-  String operation,
-  BuildContext ctx,
-  String userWalletAddress,
-) async {
+    Map<String, dynamic> queryParams,
+    String operation,
+    BuildContext ctx,
+    String userWalletAddress,
+    ) async {
   String paramsString = queryParams['params'] ?? '';
   String feesString = queryParams['fees'] ?? '';
   await Navigator.of(ctx)
