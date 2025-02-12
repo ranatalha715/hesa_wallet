@@ -3,6 +3,8 @@ class PaymentCard {
   final String id;
   final String cardBrand;
   final String last4Digits;
+  final String expiryMonth;
+  final String expiryYear;
   // final Billing billing;
 
   PaymentCard({
@@ -10,6 +12,8 @@ class PaymentCard {
     required this.id,
     required this.cardBrand,
     required this.last4Digits,
+    required this.expiryMonth,
+    required this.expiryYear,
     // required this.billing,
   });
 
@@ -19,6 +23,8 @@ class PaymentCard {
       id: json['id'],
       cardBrand: json['cardBrand'],
       last4Digits: json['last4Digits'],
+      expiryMonth: json['expiryMonth'],
+      expiryYear: json['expiryYear'],
       // billing: Billing.fromJson(json['billing']),
     );
   }

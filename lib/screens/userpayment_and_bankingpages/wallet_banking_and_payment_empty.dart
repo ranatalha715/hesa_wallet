@@ -161,7 +161,7 @@ class _WalletBankingAndPaymentEmptyState
     setState(() {
       isLoading = true;
     });
-    // await getAccessToken();
+    await getAccessToken();
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
     setState(() {
@@ -170,7 +170,6 @@ class _WalletBankingAndPaymentEmptyState
   }
 
   void startTimer() {
-    // Cancel the previous timer if it's active
     _timer?.cancel();
     _timeLeft = 60;
     _isTimerActive = true;
@@ -197,21 +196,10 @@ class _WalletBankingAndPaymentEmptyState
         context,
         listen: false)
         .updateBankAccountAsPrimaryStep1(
-      // bic: bic,
       context: context,
       token: accessToken,
       isPrimary: isPrimary, accountNumber: ibanNumber,
-      // accountTitle: accountholdername,
     );
-    // await Provider.of<BankProvider>(context, listen: false)
-    //     .updateBankAccount(
-    //   isPrimary: true,
-    //   index: index,
-    //   accountNumber: ibanNumber,
-    //   bic: bic,
-    //   token: accessToken,
-    //   context: ctx,
-    // );
 
     if (result == AuthResult.success) {
       startTimer();
@@ -243,7 +231,6 @@ class _WalletBankingAndPaymentEmptyState
           setState(() {
             _isLoading = false;
           });
-          print("after adding bank");
           if (resultsecond ==
               AuthResult.success) {
             await Future.delayed(
@@ -295,11 +282,7 @@ class _WalletBankingAndPaymentEmptyState
         },
         firstTitle: 'Verify',
         secondTitle: 'Resend code ',
-
-        // "${(_timeLeft ~/ 60).toString().padLeft(2, '0')}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
-
         context: context,
-        // isDark: themeNotifier.isDark,
         isFirstButtonActive:
         isOtpButtonActive,
         isSecondButtonActive: false,
@@ -332,29 +315,9 @@ class _WalletBankingAndPaymentEmptyState
             ? AppColors.textColorBlack
             .withOpacity(0.8)
             : AppColors.textColorWhite,
-        // themeNotifier.isDark
-        //     ? AppColors.textColorWhite
-        //     : AppColors.textColorBlack
-        //         .withOpacity(0.8),
         isLoading: _isLoading,
       );
-
-
-
-
-
-
-
-      // Navigator.pop(context);
-      // Navigator.pushReplacement(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => WalletBankingAndPaymentEmpty(),
-      //   ),
-      // );
-      // print('updated success!');
     }
-
     setState(() {
       isLoading = false;
     });
@@ -517,7 +480,6 @@ class _WalletBankingAndPaymentEmptyState
           break;
         }
       }
-      // print('bankpro.selectedBankName' + bankpro.selectedBankName);
       return Stack(
         children: [
           Scaffold(
@@ -751,13 +713,10 @@ class _WalletBankingAndPaymentEmptyState
                                             color: _isSelected
                                                 ? Colors.black.withOpacity(0.10)
                                                 : Colors.transparent,
-                                            // Shadow color
                                             offset: Offset(0, 4),
-                                            // Pushes the shadow down, removes the top shadow
                                             blurRadius: 3,
-                                            // Adjust the blur radius to change shadow size
                                             spreadRadius:
-                                                0.5, // Optional: Adjust spread radius if needed
+                                                0.5,
                                           ),
                                         ],
                                         borderRadius:
@@ -770,10 +729,8 @@ class _WalletBankingAndPaymentEmptyState
                                         padding: EdgeInsets.zero,
                                         itemBuilder: (context, index) {
                                           bool isFirst = index == 0;
-
                                           bool isLast =
                                               index == paymentCards.length - 1;
-
                                           return GestureDetector(
                                             onTap: () {
                                               print(trPro.selectedCardTokenId);
@@ -1234,18 +1191,32 @@ class _WalletBankingAndPaymentEmptyState
                 SizedBox(
                   width: 2.w,
                 ),
-                Text(
-                  cardNum.substring(0, cardNum.length - 2) +
-                      ' **** **** ' +
-                      last4Digits,
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w500,
-                    color: isDark
-                        ? AppColors.textColorWhite
-                        : AppColors.textColorBlack,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      cardNum.substring(0, cardNum.length - 2) +
+                          ' **** **** ' +
+                          last4Digits,
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w500,
+                        color: isDark
+                            ? AppColors.textColorWhite
+                            : AppColors.textColorBlack,
+                      ),
+                    ),
+                    // if (isExpired)
+                      Text(
+                        "Expired",
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.red,
+                        ),
+                      ),
+                  ],
                 ),
                 // if (english)
                   Spacer(),
@@ -1626,7 +1597,15 @@ class _WalletBankingAndPaymentEmptyState
                                       context: context,
                                       token: accessToken,
                                       accountNumber: fullAccNum);
-
+                              if (result == AuthResult.success) {
+                                Navigator.pop(context);
+                                await Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          WalletBankingAndPaymentEmpty()),
+                                );
+                              }
                               setState(() {
                                 isDeleteBankLoading = false;
                               });

@@ -14,7 +14,7 @@ import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
 import 'package:hesa_wallet/widgets/dialog_button.dart';
 import 'package:hesa_wallet/widgets/restart_widget.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:uni_links/uni_links.dart';
+// import 'package:uni_links/uni_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -149,10 +149,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       isWifiOn = (connectivityResult == ConnectivityResult.wifi);
       isWifiOn = connectivityResult == ConnectivityResult.none ? false : true;
     });
-
-    // if (!isWifiOn) {
-    //   noInternetDialog(context);
-    // }
+    if (!isWifiOn) {
+      noInternetDialog(context);
+    }
   }
   Future<void> fetchActivities() async {
     final transactionProvider = Provider.of<TransactionProvider>(context, listen: false);
@@ -191,32 +190,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Timer? _timer;
   StreamSubscription<String?>? _linkSubscription;
 
-  void clearLinkStream() {
-    getLinksStream()
-        .drain();
-  }
-
-  void showNotification() async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      'your_channel_id',
-      'your_channel_name',
-      importance: Importance.max,
-      priority: Priority.high,
-      showWhen: false,
-    );
-
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
-
-    await flutterLocalNotificationsPlugin.show(
-      0,
-      'Hello',
-      'This is a local notification',
-      platformChannelSpecifics,
-      payload: 'notification payload',
-    );
-  }
+  // void clearLinkStream() {
+  //   getLinksStream()
+  //       .drain();
+  // }
 
   @override
   initState()  {
@@ -226,10 +203,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     fToast = FToast();
     fToast.init(context);
     getAccessToken();
-    Future.delayed(Duration(seconds: 2), () {
-      showNotification();
-      WidgetsBinding.instance.addObserver(this);
-    });
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       checkWifiStatus();
     });
@@ -296,69 +269,69 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     );
   }
 
-  Future<void> initUniLinks() async {
-    try {
-      print('trying');
-      await getLinksStream().firstWhere((String? link) {
-        if (link != null) {
-          Uri uri = Uri.parse(link);
-          String? operation = uri.queryParameters['operation'];
-          String? logoFromNeo = uri.queryParameters['logo'];
-          String? siteUrl = uri.queryParameters['siteUrl'];
-          print("print operation");
-          print(operation);
-
-          if (operation != null && operation == 'connectWallet') {
-            Provider.of<UserProvider>(context, listen: false)
-                .navigateToNeoForConnectWallet = true;
-
-            Provider.of<TransactionProvider>(context, listen: false)
-                .logoFromNeo = logoFromNeo;
-            Provider.of<TransactionProvider>(context, listen: false).siteUrl =
-                siteUrl;
-            setState(() {
-              isOverlayVisible = Provider.of<UserProvider>(context,
-                      listen: false)
-                  .navigateToNeoForConnectWallet; // Set overlay visibility to true
-            });
-
-            print("check kro" +
-                Provider.of<UserProvider>(context, listen: false)
-                    .navigateToNeoForConnectWallet
-                    .toString());
-          } else if (operation != null && operation == 'DisconnectWallet') {
-            handleDisconnection();
-          } else {
-            Provider.of<UserProvider>(context, listen: false)
-                .navigateToNeoForConnectWallet = false;
-
-            setState(() {
-              isOverlayVisible = Provider.of<UserProvider>(context,
-                      listen: false)
-                  .navigateToNeoForConnectWallet; // Set overlay visibility to false
-            });
-          }
-          return true; // Exit the loop after processing
-        } else {
-          Provider.of<UserProvider>(context, listen: false)
-              .navigateToNeoForConnectWallet = false;
-
-          setState(() {
-            isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
-                .navigateToNeoForConnectWallet; // Set overlay visibility to false
-          });
-        }
-
-        return false;
-      });
-
-      print('trying end');
-      clearLinkStream();
-    } catch (e) {
-      print('Error initializing UniLinks: $e');
-      print('trying error');
-    }
-  }
+  // Future<void> initUniLinks() async {
+  //   try {
+  //     print('trying');
+  //     await getLinksStream().firstWhere((String? link) {
+  //       if (link != null) {
+  //         Uri uri = Uri.parse(link);
+  //         String? operation = uri.queryParameters['operation'];
+  //         String? logoFromNeo = uri.queryParameters['logo'];
+  //         String? siteUrl = uri.queryParameters['siteUrl'];
+  //         print("print operation");
+  //         print(operation);
+  //
+  //         if (operation != null && operation == 'connectWallet') {
+  //           Provider.of<UserProvider>(context, listen: false)
+  //               .navigateToNeoForConnectWallet = true;
+  //
+  //           Provider.of<TransactionProvider>(context, listen: false)
+  //               .logoFromNeo = logoFromNeo;
+  //           Provider.of<TransactionProvider>(context, listen: false).siteUrl =
+  //               siteUrl;
+  //           setState(() {
+  //             isOverlayVisible = Provider.of<UserProvider>(context,
+  //                     listen: false)
+  //                 .navigateToNeoForConnectWallet; // Set overlay visibility to true
+  //           });
+  //
+  //           print("check kro" +
+  //               Provider.of<UserProvider>(context, listen: false)
+  //                   .navigateToNeoForConnectWallet
+  //                   .toString());
+  //         } else if (operation != null && operation == 'DisconnectWallet') {
+  //           handleDisconnection();
+  //         } else {
+  //           Provider.of<UserProvider>(context, listen: false)
+  //               .navigateToNeoForConnectWallet = false;
+  //
+  //           setState(() {
+  //             isOverlayVisible = Provider.of<UserProvider>(context,
+  //                     listen: false)
+  //                 .navigateToNeoForConnectWallet; // Set overlay visibility to false
+  //           });
+  //         }
+  //         return true; // Exit the loop after processing
+  //       } else {
+  //         Provider.of<UserProvider>(context, listen: false)
+  //             .navigateToNeoForConnectWallet = false;
+  //
+  //         setState(() {
+  //           isOverlayVisible = Provider.of<UserProvider>(context, listen: false)
+  //               .navigateToNeoForConnectWallet; // Set overlay visibility to false
+  //         });
+  //       }
+  //
+  //       return false;
+  //     });
+  //
+  //     print('trying end');
+  //     clearLinkStream();
+  //   } catch (e) {
+  //     print('Error initializing UniLinks: $e');
+  //     print('trying error');
+  //   }
+  // }
 
   @override
   void didChangeDependencies() {
@@ -373,9 +346,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
     var user = await Provider.of<UserProvider>(context, listen: false);
-    await appLinksService.AppLinksForConnectWallet(
-        user.walletAddress
-    );
+    // await appLinksService.AppLinksForConnectWallet(
+    //     user.walletAddress
+    // );
     await appLinksService.initializeAppLinks(
         user.walletAddress
     );

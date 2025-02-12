@@ -60,11 +60,6 @@ class UserProvider with ChangeNotifier {
     bool isEnglish=true,
   }) async {
     final url = Uri.parse(BASE_URL + '/user');
-    // final body = {};
-    // final cookieHeader = 'token=$token';
-    print("this is token");
-    print(token.toString());
-
     final response = await http.get(
       url,
       headers: {
@@ -74,7 +69,6 @@ class UserProvider with ChangeNotifier {
         'accept-language': isEnglish ? 'eng' :'ar',
       },
     );
-print('userdetails' + response.statusCode.toString());
     fToast = FToast();
     fToast.init(context);
     if (response.statusCode == 200) {
@@ -92,7 +86,6 @@ print('userdetails' + response.statusCode.toString());
         Bank bank = Bank.fromJson(banJson);
         _banks.add(bank);
         });
-      print("new banks");
       print(banksJsonList);
       walletAddress = jsonResponse['accounts'][0]['walletAddress'];
       userName = jsonResponse['userName'];
@@ -105,30 +98,17 @@ print('userdetails' + response.statusCode.toString());
       isEmailVerified = jsonResponse['isEmailVerified'].toString();
       verifiedEmail = jsonResponse['email'].toString();
       userNationality = jsonResponse['nationality'].toString();
-
-      print("User details getting successfully!");
-      print(response.body);
-      // _showToast('User details getting successfully!', duration: 6000);
       List<dynamic>? sitesJsonList = jsonResponse['connectedSites'];
-      _connectedSites.clear(); // Clear the list before adding new items
+      _connectedSites.clear();
 
       sitesJsonList?.forEach((siteJson) {
         if (siteJson is String && siteJson != null) {
           _connectedSites.add(ConnectedSites.fromJson(siteJson));
         }
       });
-
-      // print('Connected Sites.com');
-      // print(_connectedSites.isNotEmpty ? _connectedSites[2].urls : 'List is empty or index 2 is out of bounds');
-
-
-
       notifyListeners();
       return AuthResult.success;
     } else {
-      // Show an error message or handle the response as needed
-      print("User details not found: ${response.body}");
-      // _showToast('User details not found');
       return AuthResult.failure;
     }
   }

@@ -68,12 +68,11 @@ class AuthProvider with ChangeNotifier {
               'nfts-page', (Route d) => false,
               arguments: {});
           await getLinksStream().firstWhere((String? link) {
+          // final AppLinks _appLinks = AppLinks();
+          // _appLinks.getLatestLinkString().then((String? link) {
             if (link != null) {
               Uri uri = Uri.parse(link);
               String? operation = uri.queryParameters['operation'];
-              print("print operation");
-              print(operation);
-
               if (operation != null && operation == 'connectWallet') {
                 Provider.of<UserProvider>(context, listen: false)
                     .navigateToNeoForConnectWallet = true;
@@ -257,42 +256,6 @@ class AuthProvider with ChangeNotifier {
       return AuthResult.failure;
     }
   }
-
-  // Future<AuthResult> logoutUser({
-  //   required String token,
-  //   required String refreshToken,
-  //   required BuildContext context,
-  // }) async {
-  //   final url = Uri.parse(BASE_URL + '/auth/logout');
-  //   // final body = {
-  //   //
-  //   // };
-  //
-  //   final response = await http.post(
-  //     url,
-  //     // body: body,
-  //     headers: {
-  //       'Authorization': 'Bearer $token',
-  //     },
-  //   );
-  //   fToast = FToast();
-  //   fToast.init(context);
-  //   print('logout response' + response.body);
-  //   print('logout token' + refreshToken.toString());
-  //   final jsonResponse = json.decode(response.body);
-  //   final msg = jsonResponse['message'];
-  //   if (response.statusCode == 201) {
-  //     // final prefs = await SharedPreferences.getInstance();
-  //     // prefs.clear();
-  //
-  //     print(msg); // Print the message
-  //
-  //     return AuthResult.success;
-  //   } else {
-  //     print("Log out failed: ${response.body}");
-  //     return AuthResult.failure;
-  //   }
-  // }
 
   Future<AuthResult> logoutUser({
     required String token,
@@ -601,14 +564,10 @@ class AuthProvider with ChangeNotifier {
     print(token);
 
     final response = await http.post(url, body: body);
-    print('verify api response');
     print(response.body);
     fToast = FToast();
     fToast.init(context);
     if (response.statusCode == 201) {
-      // Successful login, handle navigation or other actions
-      print("User registered successfully!");
-
       notifyListeners();
       return AuthResult.success;
     } else {

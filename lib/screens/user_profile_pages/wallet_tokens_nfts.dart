@@ -5,7 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hesa_wallet/providers/transaction_provider.dart';
-import 'package:uni_links/uni_links.dart';
+// import 'package:uni_links/uni_links.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -333,41 +333,41 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     );
   }
 
-  Future<void> initUniLinks1() async {
-    try {
-      await getLinksStream().firstWhere((String? link) {
-        if (link != null) {
-          Uri uri = Uri.parse(link);
-          String? operation = uri.queryParameters['operation'];
-          String? logoFromNeo = uri.queryParameters['logo'];
-          String? siteUrl = uri.queryParameters['siteUrl'];
-          if (operation != null && operation == 'connectWallet') {
-            Provider.of<UserProvider>(context, listen: false)
-                .navigateToNeoForConnectWallet = true;
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => ConnectDapp()),
-                  (Route<dynamic> route) => false,
-            );
-            Provider.of<TransactionProvider>(context, listen: false)
-                .logoFromNeo = logoFromNeo;
-            Provider.of<TransactionProvider>(context, listen: false).siteUrl =
-                siteUrl;
-          } else if (operation != null && operation == 'disconnectWallet') {
-            handleDisconnection1();
-          } else {
-            Provider.of<UserProvider>(context, listen: false)
-                .navigateToNeoForConnectWallet = false;
-          }
-          return true;
-        } else {
-          Provider.of<UserProvider>(context, listen: false)
-              .navigateToNeoForConnectWallet = false;
-        }
-        return false;
-      });
-    } catch (e) {
-    }
-  }
+  // Future<void> initUniLinks1() async {
+  //   try {
+  //     await getLinksStream().firstWhere((String? link) {
+  //       if (link != null) {
+  //         Uri uri = Uri.parse(link);
+  //         String? operation = uri.queryParameters['operation'];
+  //         String? logoFromNeo = uri.queryParameters['logo'];
+  //         String? siteUrl = uri.queryParameters['siteUrl'];
+  //         if (operation != null && operation == 'connectWallet') {
+  //           Provider.of<UserProvider>(context, listen: false)
+  //               .navigateToNeoForConnectWallet = true;
+  //           Navigator.of(context).pushAndRemoveUntil(
+  //             MaterialPageRoute(builder: (context) => ConnectDapp()),
+  //                 (Route<dynamic> route) => false,
+  //           );
+  //           Provider.of<TransactionProvider>(context, listen: false)
+  //               .logoFromNeo = logoFromNeo;
+  //           Provider.of<TransactionProvider>(context, listen: false).siteUrl =
+  //               siteUrl;
+  //         } else if (operation != null && operation == 'disconnectWallet') {
+  //           handleDisconnection1();
+  //         } else {
+  //           Provider.of<UserProvider>(context, listen: false)
+  //               .navigateToNeoForConnectWallet = false;
+  //         }
+  //         return true;
+  //       } else {
+  //         Provider.of<UserProvider>(context, listen: false)
+  //             .navigateToNeoForConnectWallet = false;
+  //       }
+  //       return false;
+  //     });
+  //   } catch (e) {
+  //   }
+  // }
 
   bool showLockedScreen = false;
 
@@ -409,7 +409,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                       print("setLockScreen && passcode");
                       print(setLockScreen.toString() + passcode.toString());
                       if (setLockScreen
-                      || Provider.of<TransactionProvider>(context, listen: false).showRedDot
+                      && Provider.of<TransactionProvider>(context, listen: false).showRedDot
                       // passcode != null &&
                       // passcode.isNotEmpty
                       ) {
@@ -691,7 +691,7 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
                                     delegate: SliverChildListDelegate([
                                       _isloading
                                           ? Container(
-                                          height: 50.h,
+                                          height: 62.h,
                                           child: Center(
                                               child: LoaderBluredScreen()))
                                           : Padding(
