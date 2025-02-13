@@ -120,7 +120,7 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                                     height: 4.h,
                                   ),
                                   Text(
-                                    "Last updated: October 05, 2022.".tr(),
+                                    "Last updated: February 2025".tr(),
                                     style: TextStyle(
                                         color: AppColors.textColorWhite,
                                         fontWeight: FontWeight.w400,

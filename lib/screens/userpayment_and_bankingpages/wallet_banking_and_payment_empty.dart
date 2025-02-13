@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../constants/string_utils.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/card_provider.dart';
 import '../../providers/theme_provider.dart';
@@ -104,25 +105,6 @@ class _WalletBankingAndPaymentEmptyState
     });
   }
 
-  bool isCardExpired(String expiryMonth, String expiryYear) {
-    // Convert string to integer
-    int month = int.tryParse(expiryMonth) ?? 0;
-    int year = int.tryParse(expiryYear) ?? 0;
-
-    // If parsing fails or invalid values, consider expired
-    if (month == 0 || year == 0) return true;
-
-    // Get current date
-    DateTime now = DateTime.now();
-    int currentYear = now.year;
-    int currentMonth = now.month;
-
-    // Check if the card is expired
-    if (year < currentYear || (year == currentYear && month < currentMonth)) {
-      return true; // Expired
-    }
-    return false; // Not expired
-  }
 
 
   @override
@@ -764,7 +746,6 @@ class _WalletBankingAndPaymentEmptyState
                                                 trPro.selectedCardBrand =
                                                     paymentCards[index]
                                                         .cardBrand;
-
                                                 _isSelected = false;
                                                 trPro.selectedCardTokenId =
                                                     trPro.selectedCardTokenId =
@@ -996,7 +977,8 @@ class _WalletBankingAndPaymentEmptyState
                                         ],
                                         borderRadius: BorderRadius.circular(8.0),
                                       ),
-                                      child: ListView.builder(
+                                      child:
+                                      ListView.builder(
                                           controller: scrollController,
                                           itemCount: banks.length,
                                           shrinkWrap: true,
@@ -1024,8 +1006,6 @@ class _WalletBankingAndPaymentEmptyState
                                                                 .length -
                                                             4)
                                                 : "";
-                                            print("Selected Bank Name");
-                                            print(bankpro.selectedBankName);
                                             return bankingDetailsWidget(
                                               accountNumber:
                                                  isEnglish ? "**** " + lastFourDigits : lastFourDigits   + " ****",
@@ -1050,54 +1030,6 @@ class _WalletBankingAndPaymentEmptyState
                                                   isLoading = false;
                                                 });
                                               },
-
-                                              // handler: () async {
-                                              //   // Call the function to update the bank account and refresh details
-                                              //   await updateBankAccountAndRefreshDetails(
-                                              //       index,
-                                              //       accessToken,
-                                              //       banks[index]
-                                              //           .ibanNumber,
-                                              //       banks[index].bic,
-                                              //       context);
-                                              // },
-
-                                              // handler: () async {
-                                              //   print('before update');
-                                              //   var result =
-                                              //   await bankpro
-                                              //       .updateBankAccount(
-                                              //     isPrimary: true,
-                                              //     index: index,
-                                              //     accountNumber:
-                                              //         banks[index].ibanNumber,
-                                              //     bic: banks[index].bic,
-                                              //     token: accessToken,
-                                              //     context: context,
-                                              //   );
-                                              //   print('after update');
-                                              //   await refreshUserDetails();
-                                              //
-                                              //   if (result ==
-                                              //       AuthResult.success) {
-                                              //     await refreshUserDetails();
-                                              //     // setState(() {
-                                              //     //   isLoading = true;
-                                              //     // });
-                                              //     // // Provider.of<UserProvider>(context, listen: false).banks.clear();
-                                              //     //
-                                              //     // await Provider.of<UserProvider>(
-                                              //     //         context,
-                                              //     //         listen: false)
-                                              //     //     .getUserDetails(
-                                              //     //         token: accessToken,
-                                              //     //         context: context);
-                                              //     // setState(() {
-                                              //     //   isLoading = false;
-                                              //     // });
-                                              //     // Navigator.pop(context);
-                                              //   }
-                                              // },
                                               isPrimary:
                                                   banks[index].isPrimary ==
                                                           "true"
@@ -1203,22 +1135,6 @@ class _WalletBankingAndPaymentEmptyState
                             ),
                           ),
                         ),
-                // if (!english)
-                //   GestureDetector(
-                //     onTap: () => showPopupCardRemove(
-                //         isDark, cardNum, regNum, cardBrand, last4Digits),
-                //     child: Image.asset(
-                //       "assets/images/cancel.png",
-                //       height: 16.sp,
-                //       color: isDark
-                //           ? AppColors.textColorWhite
-                //           : AppColors.textColorBlack,
-                //     ),
-                //   ),
-                // if (!english) Spacer(),
-                // SizedBox(
-                //   width: 0.5.h,
-                // ),
                 SizedBox(
                   width: 2.w,
                 ),
@@ -1261,37 +1177,10 @@ class _WalletBankingAndPaymentEmptyState
                       height: 16.sp,
                     ),
                   ),
-                // if (!english)
-                //   cardBrand == 'VISA'
-                //       ? Image.asset(
-                //           "assets/images/Visa.png",
-                //           height: 18.sp,
-                //         )
-                //       : Container(
-                //           decoration: BoxDecoration(
-                //             color:
-                //                 AppColors.textColorGreyShade2.withOpacity(0.27),
-                //             borderRadius: BorderRadius.circular(3),
-                //           ),
-                //           child: Padding(
-                //             padding: EdgeInsets.symmetric(
-                //                 horizontal: 5.2.sp, vertical: 1.5.sp),
-                //             child: Image.asset(
-                //               cardBrand == 'MASTER'
-                //                   ? "assets/images/master2.png"
-                //                   : "assets/images/mada_pay.png",
-                //               height: 16.sp,
-                //             ),
-                //           ),
-                //         ),
               ],
             ),
           ),
         ),
-        // if (!isLast)
-        //   Divider(
-        //     color: AppColors.textColorGrey,
-        //   )
       ],
     );
   }
@@ -1330,7 +1219,6 @@ class _WalletBankingAndPaymentEmptyState
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  // color: Colors.red,
                   width: selectedBankName.toString().length > 12 ? 30.w:25.w,
                   child: Text(
                     selectedBankName,
@@ -1369,7 +1257,6 @@ class _WalletBankingAndPaymentEmptyState
                 Spacer(),
                 Container(
                   width: 20.w,
-               // color: Colors.red,
                   child: Text(
                     accountNumber,
                     maxLines: 1,

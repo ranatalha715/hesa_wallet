@@ -11,6 +11,7 @@ import 'package:hesa_wallet/screens/userpayment_and_bankingpages/wallet_banking_
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../constants/app_deep_linking.dart';
 import '../constants/configs.dart';
 import '../providers/auth_provider.dart';
@@ -101,6 +102,15 @@ class _AppDrawerState extends State<AppDrawer> {
     // ));
     // TODO: implement dispose
     super.dispose();
+  }
+
+  void _launchURL() async {
+    final Uri url = Uri.parse('https://hesa-wallet.com/about-us');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -378,7 +388,9 @@ class _AppDrawerState extends State<AppDrawer> {
                             imageWidth: 2.9.h,
                             isDark: themeNotifier.isDark ? true : false,
                             index: 5,
-                            handler: () => Navigator.pop(context),
+                            handler: (){ Navigator.pop(context);
+                              _launchURL();
+                              },
                           ),
                           drawerWidget(
                             title: 'Logout'.tr(),

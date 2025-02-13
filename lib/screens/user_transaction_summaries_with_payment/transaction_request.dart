@@ -896,7 +896,8 @@ class _TransactionRequestState extends State<TransactionRequest> {
                                                       (BuildContext context,
                                                           StateSetter
                                                               setState) {
-                                                  return ListView.builder(
+                                                  return
+                                                    ListView.builder(
                                                       controller:
                                                           scrollController,
                                                       itemCount:

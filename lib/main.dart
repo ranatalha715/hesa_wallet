@@ -44,6 +44,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:uni_links/uni_links.dart';
+import 'constants/T&C.dart';
 import 'constants/app_link_service.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -405,27 +406,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     });
   }
 
-  // void startTokenRefreshTimer({
-  //   required String refreshToken,
-  //   required String token,
-  //   required BuildContext context,
-  // }) {
-  //   Timer.periodic(Duration(minutes: 1), (Timer timer) async {
-  //     final result =
-  //         await Provider.of<AuthProvider>(context, listen: false).refreshToken(
-  //       refreshToken: refreshToken,
-  //       token: token,
-  //       context: context,
-  //     );
-  //
-  //     if (result == AuthResult.failure) {
-  //       print('Token refresh failed, consider retrying or handling failure.');
-  //     } else {
-  //       print('Token refreshed successfully.');
-  //     }
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     final emailVerified =
@@ -456,6 +436,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           home:
           // BeerListView(),
               _buildContent(),
+          // TermsAndConditionsData(),
           // Provider.of<TokenProvider>(
           //   context,
           //   context,devic

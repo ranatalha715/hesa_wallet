@@ -1,4 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
+
+
 String addSpacesToText(String input) {
   final chunkSize = 4;
   final chunks = <String>[];
@@ -196,4 +198,17 @@ String formatNumber(int number) {
   } else {
     return number.toString();
   }
+}
+
+bool isCardExpired(String expiryMonth, String expiryYear) {
+  int month = int.tryParse(expiryMonth) ?? 0;
+  int year = int.tryParse(expiryYear) ?? 0;
+  if (month == 0 || year == 0) return true;
+  DateTime now = DateTime.now();
+  int currentYear = now.year;
+  int currentMonth = now.month;
+  if (year < currentYear || (year == currentYear && month < currentMonth)) {
+    return true;
+  }
+  return false;
 }

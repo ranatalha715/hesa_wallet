@@ -41,7 +41,7 @@ class AppLinksService {
 
   void _startTimeoutTimer() {
     _timeoutTimer?.cancel();
-    _timeoutTimer = Timer(Duration(minutes: 5), () {
+    _timeoutTimer = Timer(Duration(minutes: 50), () {
       print("No UniLink received within 30 seconds. Navigating to Unlock screen...");
       _navigateToLockScreen();
     });
