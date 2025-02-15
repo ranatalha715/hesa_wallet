@@ -8,6 +8,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hesa_wallet/providers/payment_fees.dart';
 import 'package:hesa_wallet/providers/token_provider.dart';
+import 'package:hesa_wallet/screens/settings/faq_&_support.dart';
 import 'package:hesa_wallet/screens/unlock/set_confirm_pin_screen.dart';
 import 'package:hesa_wallet/screens/user_profile_pages/nfts_details.dart';
 import 'package:hesa_wallet/widgets/animated_loader/animated_loader.dart';
@@ -436,7 +437,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           home:
           // BeerListView(),
               _buildContent(),
-          // TermsAndConditionsData(),
+          // FAQAndSupport(),
+          // TermsAndConditions(),
           // Provider.of<TokenProvider>(
           //   context,
           //   context,devic

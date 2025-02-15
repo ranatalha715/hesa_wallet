@@ -3,10 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../constants/colors.dart';
+import '../models/FAQ_model.dart';
 import '../providers/theme_provider.dart';
 
 class FAQWidget extends StatefulWidget {
-  const FAQWidget({Key? key}) : super(key: key);
+  final FAQModel faq;
+  const FAQWidget({Key? key, required this.faq}) : super(key: key);
 
   @override
   State<FAQWidget> createState() => _FAQWidgetState();
@@ -25,23 +27,28 @@ class _FAQWidgetState extends State<FAQWidget> {
               _isSelected = !_isSelected;
             }),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+
               children: [
-                Text(
-                  "Lorem ipsum dolor sit amet, consect.",
-                  style: TextStyle(
-                      color: themeNotifier.isDark
-                          ? AppColors.textColorWhite
-                          : AppColors.textColorBlack,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 11.7.sp,
-                      fontFamily: 'Inter'),
+                Container(
+                  // color:Colors.yellow,
+                  width: MediaQuery.of(context).size.width*0.8,
+                  child: Text(
+                  widget.faq.question,
+                    maxLines: 10,
+                    style: TextStyle(
+                        color: themeNotifier.isDark
+                            ? AppColors.textColorWhite
+                            : AppColors.textColorBlack,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 11.7.sp,
+                        fontFamily: 'Inter'),
+                  ),
                 ),
                 Spacer(),
                 Icon(
                   _isSelected
-                      ? Icons.keyboard_arrow_down
-                      : Icons.keyboard_arrow_up,
+                      ? Icons.keyboard_arrow_up:Icons.keyboard_arrow_down,
                   size: 19.sp,
                   color: AppColors.textColorWhite,
                 ),
@@ -51,8 +58,7 @@ class _FAQWidgetState extends State<FAQWidget> {
           SizedBox(height: 1.h),
           if (_isSelected)
             Text(
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eget volutpat quis id ullamcorper porttitor magna ultricies. Eu id faucibus eu, id arcu. Facilisis felis, sagittis, fringilla faucibus neque. Elementum, enim, molestie at urna sed consectetur pellentesque molestie dolor. Et est eget faucibus nulla non.",
-              style: TextStyle(
+             widget.faq.answer, style: TextStyle(
                   color: AppColors.textColorGreyShade2,
                   fontWeight: FontWeight.w400,
                   fontSize: 10.2.sp,

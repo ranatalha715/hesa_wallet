@@ -4,6 +4,7 @@ import 'package:hesa_wallet/constants/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../models/FAQ_model.dart';
 import '../../providers/theme_provider.dart';
 import '../../widgets/animated_loader/animated_loader.dart';
 import '../../widgets/faq_widget.dart';
@@ -20,15 +21,16 @@ class _FAQAndSupportState extends State<FAQAndSupport> {
   bool _isSelected = false;
   var _selectedIndex = -1;
   var _isLoading = false;
-  var _isinit= true;
+  var _isinit = true;
+
   @override
   Future<void> didChangeDependencies() async {
     // TODO: implement didChangeDependencies
-    if(_isinit){
-    }
-    _isinit=false;
+    if (_isinit) {}
+    _isinit = false;
     super.didChangeDependencies();
   }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(builder: (context, themeNotifier, child) {
@@ -61,47 +63,167 @@ class _FAQAndSupportState extends State<FAQAndSupport> {
                             style: TextStyle(
                                 color: AppColors.textColorWhite,
                                 fontWeight: FontWeight.w600,
-                                fontSize: 17.5.sp,
+                                fontSize: 17.sp,
                                 fontFamily: 'Inter'),
-                          ),
-                          SizedBox(
-                            height: 3.h,
-                          ),
-                          ListView(
-                            shrinkWrap: true,
-                            padding: EdgeInsets.zero,
-                            physics: NeverScrollableScrollPhysics(),
-                            children: [
-                              FAQWidget(),
-                              FAQWidget(),
-                              FAQWidget(),
-                              FAQWidget(),
-                              FAQWidget(),
-                            ],
                           ),
                           SizedBox(
                             height: 2.h,
                           ),
+                          ListView.builder(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: faqList.length,
+                              itemBuilder: (context, index) {
+                                return FAQWidget(
+                                  faq: faqList[index],
+                                );
+                              }),
+                          SizedBox(
+                            height: 2.h,
+                          ),
                           Text(
-                            "Support".tr(),
+                            "Account & Security".tr(),
                             style: TextStyle(
                                 color: themeNotifier.isDark
                                     ? AppColors.textColorWhite
                                     : AppColors.textColorBlack,
                                 fontWeight: FontWeight.w600,
-                                fontSize: 17.5.sp,
+                                fontSize: 17.sp,
                                 fontFamily: 'Inter'),
                           ),
-                          ListView(
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            children: [
-                              supportWidget(isDark: themeNotifier.isDark ? true : false),
-                              supportWidget(isDark: themeNotifier.isDark ? true : false),
-                              supportWidget(isDark: themeNotifier.isDark ? true : false),
-                            ],
-                          )
+                          SizedBox(height: 1.h,),
+                          ListView.builder(
+                              shrinkWrap: true,
+                              padding: EdgeInsets.zero,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: faqList.length,
+                              itemBuilder: (context, index) {
+                                return FAQWidget(
+                                  faq: faqSecurity[index],
+                                );
+                              }),
+                          SizedBox(
+                            height: 2.h,
+                          ),
+                          Text(
+                            "Transactions & Payments".tr(),
+                            style: TextStyle(
+                                color: themeNotifier.isDark
+                                    ? AppColors.textColorWhite
+                                    : AppColors.textColorBlack,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 17.sp,
+                                fontFamily: 'Inter'),
+                          ),
+                          SizedBox(height: 1.h,),
+                          ListView.builder(
+                              shrinkWrap: true,
+                              padding: EdgeInsets.zero,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: faqList.length,
+                              itemBuilder: (context, index) {
+                                return FAQWidget(
+                                  faq: faqTnxPay[index],
+                                );
+                              }),
+                          SizedBox(
+                            height: 2.h,
+                          ),
+                          Text(
+                            "Payouts & Withdrawals".tr(),
+                            style: TextStyle(
+                                color: themeNotifier.isDark
+                                    ? AppColors.textColorWhite
+                                    : AppColors.textColorBlack,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 17.sp,
+                                fontFamily: 'Inter'),
+                          ),
+                          SizedBox(height: 1.h,),
+                          ListView.builder(
+                              shrinkWrap: true,
+                              padding: EdgeInsets.zero,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: faqList.length,
+                              itemBuilder: (context, index) {
+                                return FAQWidget(
+                                  faq: faqPaywithdraw[index],
+                                );
+                              }),
+                          SizedBox(
+                            height: 2.h,
+                          ),
+                          Text(
+                            "Connected Web3 Applications".tr(),
+                            style: TextStyle(
+                                color: themeNotifier.isDark
+                                    ? AppColors.textColorWhite
+                                    : AppColors.textColorBlack,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 17.sp,
+                                fontFamily: 'Inter'),
+                          ),
+                          SizedBox(height: 1.h,),
+                          ListView.builder(
+                              shrinkWrap: true,
+                              padding: EdgeInsets.zero,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: faqList.length,
+                              itemBuilder: (context, index) {
+                                return FAQWidget(
+                                  faq: faqConnection[index],
+                                );
+                              }),
+                          SizedBox(
+                            height: 2.h,
+                          ),
+                          Text(
+                            "Compliance & Security".tr(),
+                            style: TextStyle(
+                                color: themeNotifier.isDark
+                                    ? AppColors.textColorWhite
+                                    : AppColors.textColorBlack,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 17.sp,
+                                fontFamily: 'Inter'),
+                          ),
+                          SizedBox(height: 1.h,),
+                          ListView.builder(
+                              shrinkWrap: true,
+                              padding: EdgeInsets.zero,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: faqList.length,
+                              itemBuilder: (context, index) {
+                                return FAQWidget(
+                                  faq: faqCompilanceSecurity[index],
+                                );
+                              }),
+                          SizedBox(
+                            height: 2.h,
+                          ),
+                          Text(
+                            "Support & Troubleshooting".tr(),
+                            style: TextStyle(
+                                color: themeNotifier.isDark
+                                    ? AppColors.textColorWhite
+                                    : AppColors.textColorBlack,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 17.sp,
+                                fontFamily: 'Inter'),
+                          ),
+                          SizedBox(height: 1.h,),
+                          ListView.builder(
+                              shrinkWrap: true,
+                              padding: EdgeInsets.zero,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: faqList.length,
+                              itemBuilder: (context, index) {
+                                return FAQWidget(
+                                  faq: faqSupport[index],
+                                );
+                              }),
+                          SizedBox(height:5.h),
                         ],
                       ),
                     ),
@@ -110,7 +232,7 @@ class _FAQAndSupportState extends State<FAQAndSupport> {
               ],
             ),
           ),
-          if(_isLoading)
+          if (_isLoading)
             Positioned(
                 top: 12.h,
                 bottom: 0,
@@ -143,9 +265,8 @@ class _FAQAndSupportState extends State<FAQAndSupport> {
         Text(
           "Lorem ipsum dolor sit amet, consect.",
           style: TextStyle(
-              color: isDark
-                  ? AppColors.textColorWhite
-                  : AppColors.textColorBlack,
+              color:
+                  isDark ? AppColors.textColorWhite : AppColors.textColorBlack,
               fontWeight: FontWeight.w400,
               fontSize: 11.7.sp,
               fontFamily: 'Inter'),

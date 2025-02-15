@@ -9,10 +9,8 @@ class TermsAndConditionsData extends StatefulWidget {
 }
 
 class _TermsAndConditionsDataState extends State<TermsAndConditionsData> {
-  String content="""HESA WALLET – TERMS & CONDITIONS
-Last Updated: February 2025
-INTRODUCTION 
-Welcome to Hesa Wallet ("Hesa Wallet," "we," "our," or "us"), a custodial Web3 wallet operated by Limar Global Technologies Company, with commercial registration number #1010256003. These Terms and Conditions ("T&C") govern your access to and use of Hesa Wallet, including its services, payment processing, and blockchain interactions.
+  String content="""
+  Welcome to Hesa Wallet ("Hesa Wallet," "we," "our," or "us"), a custodial Web3 wallet operated by Limar Global Technologies Company, with commercial registration number #1010256003. These Terms and Conditions ("T&C") govern your access to and use of Hesa Wallet, including its services, payment processing, and blockchain interactions.
 Hesa Wallet is currently in its pilot phase and undergoing regulatory approvals in the Kingdom of Saudi Arabia (KSA), which are expected to be completed within [anticipated timeframe, e.g., 6-24 months]. These terms may be updated to comply with evolving legal and regulatory requirements.
 By using Hesa Wallet, you ("User," "you," or "your") agree to abide by these Terms and Conditions. If you do not agree, you must immediately discontinue use of Hesa Wallet.
 ABOUT HESA WALLET
