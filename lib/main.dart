@@ -182,15 +182,18 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     final prefs = await SharedPreferences.getInstance();
     final storedActivityTime = prefs.getString('lastActivityTime') ?? '';
     final savedShowRedDot = prefs.getBool('showRedDot') ?? false;
+    final savedConfirmedRedDot = prefs.getBool('confirmedRedDot') ?? false;
     if (storedActivityTime != latestActivityTime) {
       final transactionProvider = Provider.of<TransactionProvider>(context, listen: false);
       transactionProvider.showRedDot = true;
       transactionProvider.confirmedRedDot = true;
       await prefs.setString('lastActivityTime', latestActivityTime);
       await prefs.setBool('showRedDot', true);
+      await prefs.setBool('confirmedRedDot', true);
     } else {
       final transactionProvider = Provider.of<TransactionProvider>(context, listen: false);
       transactionProvider.showRedDot = savedShowRedDot;
+      transactionProvider.confirmedRedDot = savedConfirmedRedDot;
     }
   }
   Timer? _timer;
@@ -206,7 +209,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.initState();
     generateFcmToken();
     AppDeepLinking().initDeeplink();
-
+    // appLinksService.initializeAppLinks(
+    //     user.walletAddress
+    // );
     fToast = FToast();
     fToast.init(context);
     getAccessToken();
@@ -353,6 +358,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
     var user = await Provider.of<UserProvider>(context, listen: false);
+    print('wallet address');
+    print(user.walletAddress);
 
     await appLinksService.initializeAppLinks(
         user.walletAddress
@@ -645,7 +652,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   Widget _buildContent() {
     return FutureBuilder<void>(
-      // future: initUniLinks(),
+      // future: AppLinksService(context: null).initializeAppLinks(userWalletAddress),
       future: null,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {

@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'package:easy_localization/easy_localization.dart' as localized;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +14,7 @@ import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../constants/app_deep_linking.dart';
 import '../constants/configs.dart';
+import '../main.dart';
 import '../providers/auth_provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/user_provider.dart';
@@ -35,7 +36,7 @@ class _AppDrawerState extends State<AppDrawer> {
   var refreshToken = '';
   bool showCopiedMsg = false;
   bool _isPasscodeSet = false;
-  bool isConnected=false;
+  bool isConnected = false;
 
   getaccessToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -61,6 +62,9 @@ class _AppDrawerState extends State<AppDrawer> {
     prefs.remove('refreshToken');
     prefs.remove('siteUrl');
     prefs.remove('isConnected');
+    // prefs.remove('showRedDot');
+    // prefs.remove('confirmedRedDot');
+    // prefs.remove('lastActivityTime');
   }
 
   String replaceMiddleWithDots(String input) {
@@ -82,7 +86,6 @@ class _AppDrawerState extends State<AppDrawer> {
     await getPasscode();
     final prefs = await SharedPreferences.getInstance();
     isConnected = prefs.getBool("isConnected") ?? false;
-
   }
 
   @override
@@ -388,9 +391,10 @@ class _AppDrawerState extends State<AppDrawer> {
                             imageWidth: 2.9.h,
                             isDark: themeNotifier.isDark ? true : false,
                             index: 5,
-                            handler: (){ Navigator.pop(context);
+                            handler: () {
+                              Navigator.pop(context);
                               _launchURL();
-                              },
+                            },
                           ),
                           drawerWidget(
                             title: 'Logout'.tr(),
@@ -656,13 +660,26 @@ class _AppDrawerState extends State<AppDrawer> {
                               if (resultLogout == AuthResult.success) {
                                 print('printing navigator');
                                 await deleteToken();
+                                Future.delayed(
+                                    const Duration(milliseconds: 700),
+                                    () async {
+                                  print('loggedeededede out');
+                                  localized.EasyLocalization(
+                                      supportedLocales: const [
+                                        Locale('en', 'US'),
+                                        Locale('ar', 'AE')
+                                      ],
+                                      path: 'assets/translations',
+                                      fallbackLocale: Locale('en', 'US'),
+                                      saveLocale: true,
+                                      child: MyApp());
+                                });
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => Wallet(),
                                   ),
-                                  (route) =>
-                                      false,
+                                  (route) => false,
                                 );
                                 await AppDeepLinking().openNftApp(
                                   {

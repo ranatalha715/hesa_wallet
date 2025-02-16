@@ -166,6 +166,8 @@ class UserProvider with ChangeNotifier {
     required String lastName,
     required String mobileNumber,
     required String email,
+    required String nationality,
+    required String idNumber,
     required BuildContext context,
     required String token,
     bool isEnglish=true,
@@ -176,6 +178,8 @@ class UserProvider with ChangeNotifier {
       "lastName" : lastName,
       "mobileNumber" : mobileNumber,
       "email" : email,
+      "nationality" : nationality,
+      "idNumber" : idNumber,
     };
 
     final response = await http.post(

@@ -103,8 +103,8 @@ class _AccountInformationState extends State<AccountInformation> {
     });
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
-    await Provider.of<UserProvider>(context, listen: false)
-        .getUserDetails(token: accessToken, context: context, isEnglish:isEnglish);
+    await Provider.of<UserProvider>(context, listen: false).getUserDetails(
+        token: accessToken, context: context, isEnglish: isEnglish);
     setState(() {
       _isLoading = false;
     });
@@ -180,8 +180,8 @@ class _AccountInformationState extends State<AccountInformation> {
     });
     Locale currentLocale = context.locale;
     bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
-    Provider.of<UserProvider>(context, listen: false)
-        .getUserDetails(token: accessToken, context: context, isEnglish:isEnglish);
+    Provider.of<UserProvider>(context, listen: false).getUserDetails(
+        token: accessToken, context: context, isEnglish: isEnglish);
 
     setState(() {
       _isLoading = false;
@@ -301,8 +301,7 @@ class _AccountInformationState extends State<AccountInformation> {
                                       height: 1.h,
                                     ),
                                     TextFieldParent(
-                                      child:
-                                      TextField(
+                                      child: TextField(
                                           readOnly: isEditAble ? false : true,
                                           controller: _firstnameController,
                                           keyboardType: TextInputType.name,
@@ -678,8 +677,7 @@ class _AccountInformationState extends State<AccountInformation> {
                                               // Off-white color,
                                               fontFamily: 'Inter'),
                                           inputFormatters: [
-                                            LengthLimitingTextInputFormatter(
-                                                9),
+                                            LengthLimitingTextInputFormatter(9),
                                             FilteringTextInputFormatter
                                                 .digitsOnly,
                                           ],
@@ -736,7 +734,6 @@ class _AccountInformationState extends State<AccountInformation> {
                                                           .textColorBlack,
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 14,
-
                                                 ),
                                               ),
                                             ),
@@ -755,83 +752,81 @@ class _AccountInformationState extends State<AccountInformation> {
                                               color: AppColors.errorColor),
                                         ),
                                       ),
-                                    if (!isEditAble)
-                                      SizedBox(
-                                        height: 2.h,
+                                    // if (isEditAble)
+                                    SizedBox(
+                                      height: 2.h,
+                                    ),
+                                    // if (isEditAble)
+                                    Align(
+                                      alignment: isEnglish
+                                          ? Alignment.centerLeft
+                                          : Alignment.centerRight,
+                                      child: Text(
+                                        'Nationality'.tr(),
+                                        style: TextStyle(
+                                            fontSize: 11.7.sp,
+                                            fontFamily: 'Inter',
+                                            fontWeight: FontWeight.w600,
+                                            color: themeNotifier.isDark
+                                                ? AppColors.textColorWhite
+                                                : AppColors.textColorBlack),
                                       ),
-                                    if (!isEditAble)
-                                      Align(
-                                        alignment: isEnglish
-                                            ? Alignment.centerLeft
-                                            : Alignment.centerRight,
-                                        child: Text(
-                                          'Nationality'.tr(),
+                                    ),
+                                    // if (isEditAble)
+                                    SizedBox(
+                                      height: 1.h,
+                                    ),
+                                    // if (isEditAble)
+                                    TextFieldParent(
+                                      child: TextField(
+                                          readOnly: isEditAble ? false : true,
+                                          controller: _nationalityController,
+                                          keyboardType: TextInputType.name,
+                                          scrollPadding: EdgeInsets.only(
+                                              bottom: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom),
                                           style: TextStyle(
-                                              fontSize: 11.7.sp,
-                                              fontFamily: 'Inter',
-                                              fontWeight: FontWeight.w600,
+                                              fontSize: 10.2.sp,
                                               color: themeNotifier.isDark
                                                   ? AppColors.textColorWhite
-                                                  : AppColors.textColorBlack),
-                                        ),
-                                      ),
-                                    if (!isEditAble)
-                                      SizedBox(
-                                        height: 1.h,
-                                      ),
-                                    if (!isEditAble)
-                                      TextFieldParent(
-                                        child: TextField(
-                                            readOnly: true,
-                                            controller: _nationalityController,
-                                            keyboardType: TextInputType.name,
-                                            scrollPadding: EdgeInsets.only(
-                                                bottom: MediaQuery.of(context)
-                                                    .viewInsets
-                                                    .bottom),
-                                            style: TextStyle(
+                                                  : AppColors.textColorBlack,
+                                              fontWeight: FontWeight.w400,
+                                              fontFamily: 'Inter'),
+                                          decoration: InputDecoration(
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: OS.Platform.isIOS
+                                                        ? 13.5.sp
+                                                        : 10.0,
+                                                    horizontal:
+                                                        OS.Platform.isIOS
+                                                            ? 10.sp
+                                                            : 16.0),
+                                            // hintText: 'No banking have been added',
+                                            hintStyle: TextStyle(
                                                 fontSize: 10.2.sp,
-                                                color: themeNotifier.isDark
-                                                    ? AppColors.textColorWhite
-                                                    : AppColors.textColorBlack,
+                                                color: AppColors.textColorGrey,
                                                 fontWeight: FontWeight.w400,
                                                 fontFamily: 'Inter'),
-                                            decoration: InputDecoration(
-                                              contentPadding:
-                                                  EdgeInsets.symmetric(
-                                                      vertical:
-                                                          OS.Platform.isIOS
-                                                              ? 13.5.sp
-                                                              : 10.0,
-                                                      horizontal:
-                                                          OS.Platform.isIOS
-                                                              ? 10.sp
-                                                              : 16.0),
-                                              // hintText: 'No banking have been added',
-                                              hintStyle: TextStyle(
-                                                  fontSize: 10.2.sp,
-                                                  color:
-                                                      AppColors.textColorGrey,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontFamily: 'Inter'),
-                                              enabledBorder: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0),
-                                                  borderSide: BorderSide(
-                                                    color: Colors.transparent,
-                                                  )),
-                                              focusedBorder: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0),
-                                                  borderSide: BorderSide(
-                                                    color: Colors.transparent,
-                                                  )),
-                                            ),
-                                            cursorColor:
-                                                AppColors.textColorGrey),
-                                      ),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                borderSide: BorderSide(
+                                                  color: Colors.transparent,
+                                                )),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                borderSide: BorderSide(
+                                                  color: isEditAble
+                                                      ? AppColors
+                                                          .focusTextFieldColor
+                                                      : Colors.transparent,
+                                                )),
+                                          ),
+                                          cursorColor: AppColors.textColorGrey),
+                                    ),
                                     if (_nationalityController.text.isEmpty &&
                                         isValidating &&
                                         !isEditAble)
@@ -848,81 +843,79 @@ class _AccountInformationState extends State<AccountInformation> {
                                     SizedBox(
                                       height: 2.h,
                                     ),
-                                    if (!isEditAble)
-                                      Align(
-                                        alignment: isEnglish
-                                            ? Alignment.centerLeft
-                                            : Alignment.centerRight,
-                                        child: Text(
-                                          'Identification Number'.tr(),
+                                    // if (isEditAble)
+                                    Align(
+                                      alignment: isEnglish
+                                          ? Alignment.centerLeft
+                                          : Alignment.centerRight,
+                                      child: Text(
+                                        'Identification Number'.tr(),
+                                        style: TextStyle(
+                                            fontSize: 11.7.sp,
+                                            fontFamily: 'Inter',
+                                            fontWeight: FontWeight.w600,
+                                            color: themeNotifier.isDark
+                                                ? AppColors.textColorWhite
+                                                : AppColors.textColorBlack),
+                                      ),
+                                    ),
+                                    // if (isEditAble)
+                                    SizedBox(
+                                      height: 1.h,
+                                    ),
+                                    // if (isEditAble)
+                                    TextFieldParent(
+                                      child: TextField(
+                                          readOnly: isEditAble ? false : true,
+                                          controller:
+                                              _identificationNumberController,
+                                          keyboardType: TextInputType.name,
+                                          scrollPadding: EdgeInsets.only(
+                                              bottom: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom),
                                           style: TextStyle(
-                                              fontSize: 11.7.sp,
-                                              fontFamily: 'Inter',
-                                              fontWeight: FontWeight.w600,
+                                              fontSize: 10.2.sp,
                                               color: themeNotifier.isDark
                                                   ? AppColors.textColorWhite
-                                                  : AppColors.textColorBlack),
-                                        ),
-                                      ),
-                                    if (!isEditAble)
-                                      SizedBox(
-                                        height: 1.h,
-                                      ),
-                                    if (!isEditAble)
-                                      TextFieldParent(
-                                        child: TextField(
-                                            readOnly: true,
-                                            controller:
-                                                _identificationNumberController,
-                                            keyboardType: TextInputType.name,
-                                            scrollPadding: EdgeInsets.only(
-                                                bottom: MediaQuery.of(context)
-                                                    .viewInsets
-                                                    .bottom),
-                                            style: TextStyle(
+                                                  : AppColors.textColorBlack,
+                                              fontWeight: FontWeight.w400,
+                                              // Off-white color,
+                                              fontFamily: 'Inter'),
+                                          decoration: InputDecoration(
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: OS.Platform.isIOS
+                                                        ? 13.5.sp
+                                                        : 10.0,
+                                                    horizontal:
+                                                        OS.Platform.isIOS
+                                                            ? 10.sp
+                                                            : 16.0),
+                                            // hintText: 'No banking have been added',
+                                            hintStyle: TextStyle(
                                                 fontSize: 10.2.sp,
-                                                color: themeNotifier.isDark
-                                                    ? AppColors.textColorWhite
-                                                    : AppColors.textColorBlack,
+                                                color: AppColors.textColorGrey,
                                                 fontWeight: FontWeight.w400,
-                                                // Off-white color,
                                                 fontFamily: 'Inter'),
-                                            decoration: InputDecoration(
-                                              contentPadding:
-                                                  EdgeInsets.symmetric(
-                                                      vertical:
-                                                          OS.Platform.isIOS
-                                                              ? 13.5.sp
-                                                              : 10.0,
-                                                      horizontal:
-                                                          OS.Platform.isIOS
-                                                              ? 10.sp
-                                                              : 16.0),
-                                              // hintText: 'No banking have been added',
-                                              hintStyle: TextStyle(
-                                                  fontSize: 10.2.sp,
-                                                  color:
-                                                      AppColors.textColorGrey,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontFamily: 'Inter'),
-                                              enabledBorder: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0),
-                                                  borderSide: BorderSide(
-                                                    color: Colors.transparent,
-                                                  )),
-                                              focusedBorder: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0),
-                                                  borderSide: BorderSide(
-                                                    color: Colors.transparent,
-                                                  )),
-                                            ),
-                                            cursorColor:
-                                                AppColors.textColorGrey),
-                                      ),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                borderSide: BorderSide(
+                                                  color: Colors.transparent,
+                                                )),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                borderSide: BorderSide(
+                                                  color: isEditAble
+                                                      ? AppColors
+                                                          .focusTextFieldColor
+                                                      : Colors.transparent,
+                                                )),
+                                          ),
+                                          cursorColor: AppColors.textColorGrey),
+                                    ),
                                     if (_identificationNumberController
                                             .text.isEmpty &&
                                         isValidating &&
@@ -938,235 +931,8 @@ class _AccountInformationState extends State<AccountInformation> {
                                         ),
                                       ),
                                     SizedBox(
-                                      height: 19.h,
+                                      height: 20.h,
                                     ),
-                                    if (isEditAble)
-                                      Column(
-                                        children: [
-                                          Container(
-                                            height: 2.h,
-                                            width: double.infinity,
-                                            color: AppColors.backgroundColor,
-                                          ),
-                                          Container(
-                                            color: AppColors.backgroundColor,
-                                            child: AppButton(
-                                                title: 'Save changes'.tr(),
-                                                isactive:
-                                                    isEditAble && isButtonActive
-                                                        ? true
-                                                        : false,
-                                                handler: () async {
-                                                  setState(() {
-                                                    isValidating = true;
-                                                  });
-
-                                                  if (isButtonActive &&
-                                                      isEditAble == true) {
-                                                    setState(() {
-                                                      _isLoading = true;
-                                                      if (_isLoading) {
-                                                        FocusManager.instance
-                                                            .primaryFocus
-                                                            ?.unfocus();
-                                                      }
-                                                    });
-                                                    var result = await Provider
-                                                            .of<UserProvider>(
-                                                                context,
-                                                                listen: false)
-                                                        .userUpdateStep1(
-                                                      firstName:
-                                                          _firstnameController
-                                                              .text,
-                                                      lastName:
-                                                          _lastnameController
-                                                              .text,
-                                                      email:
-                                                          _emailController.text,
-                                                      mobileNumber: '+966' +
-                                                          _numberController
-                                                              .text,
-                                                      context: context,
-                                                      token: accessToken,
-                                                      isEnglish:isEnglish
-                                                    );
-                                                    await Future.delayed(
-                                                        Duration(
-                                                            milliseconds: 1000),
-                                                        () {});
-                                                    setState(() {
-                                                      _isLoading = false;
-                                                    });
-                                                    if (result ==
-                                                        AuthResult.success) {
-                                                      print(
-                                                          "Result is successful");
-                                                      startTimer();
-                                                      otpDialog(
-                                                        fromAuth: false,
-                                                        fromUser: true,
-                                                        fromTransaction: false,
-                                                        incorrect: auth
-                                                            .otpErrorResponse,
-                                                        // onClose: ()=> removeRoutes(),
-                                                        events: _events,
-                                                        firstBtnHandler:
-                                                            () async {
-                                                          setState(() {
-                                                            _isLoading = true;
-                                                          });
-                                                          await Future.delayed(
-                                                              const Duration(
-                                                                  milliseconds:
-                                                                      500));
-                                                          print('loading popup' +
-                                                              _isLoading
-                                                                  .toString());
-                                                          final userUpdateWithOtpStep2 =
-                                                              await Provider.of<
-                                                                          UserProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .userUpdateStep2(
-                                                            context: context,
-                                                            code: Provider.of<
-                                                                        AuthProvider>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .codeFromOtpBoxes,
-                                                            token: accessToken,
-                                                          );
-                                                          setState(() {
-                                                            _isLoading = false;
-                                                          });
-                                                          print('loading popup 2' +
-                                                              _isLoading
-                                                                  .toString());
-                                                          if (userUpdateWithOtpStep2 ==
-                                                              AuthResult
-                                                                  .success) {
-                                                            await Future.delayed(
-                                                                const Duration(
-                                                                    milliseconds:
-                                                                        500));
-                                                            Navigator.pop(
-                                                                context);
-                                                            Navigator
-                                                                .pushReplacement(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          AccountInformation()),
-                                                            );
-                                                          }
-                                                        },
-                                                        secondBtnHandler:
-                                                            () async {
-                                                          if (_timeLeft == 0) {
-                                                            print(
-                                                                'resend function calling');
-                                                            try {
-                                                              setState(() {
-                                                                _isLoadingResend =
-                                                                    true;
-                                                              });
-                                                              final result = await Provider.of<
-                                                                          UserProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .userUpdateResendOtp(
-                                                                      token:
-                                                                          accessToken,
-                                                                      context:
-                                                                          context);
-                                                              setState(() {
-                                                                _isLoadingResend =
-                                                                    false;
-                                                              });
-                                                              if (result ==
-                                                                  AuthResult
-                                                                      .success) {
-                                                                startTimer();
-                                                              }
-                                                            } catch (error) {
-                                                              print(
-                                                                  "Error: $error");
-                                                            } finally {
-                                                              setState(() {
-                                                                _isLoadingResend =
-                                                                    false;
-                                                              });
-                                                            }
-                                                          } else {}
-                                                        },
-                                                        firstTitle: 'Confirm'.tr(),
-                                                        secondTitle:
-                                                            'Resend code '.tr(),
-
-                                                        context: context,
-                                                        isDark: themeNotifier
-                                                            .isDark,
-                                                        isFirstButtonActive:
-                                                            isOtpButtonActive,
-                                                        isSecondButtonActive:
-                                                            false,
-                                                        otp1Controller:
-                                                            otp1Controller,
-                                                        otp2Controller:
-                                                            otp2Controller,
-                                                        otp3Controller:
-                                                            otp3Controller,
-                                                        otp4Controller:
-                                                            otp4Controller,
-                                                        otp5Controller:
-                                                            otp5Controller,
-                                                        otp6Controller:
-                                                            otp6Controller,
-                                                        firstFieldFocusNode:
-                                                            firstFieldFocusNode,
-                                                        secondFieldFocusNode:
-                                                            secondFieldFocusNode,
-                                                        thirdFieldFocusNode:
-                                                            thirdFieldFocusNode,
-                                                        forthFieldFocusNode:
-                                                            forthFieldFocusNode,
-                                                        fifthFieldFocusNode:
-                                                            fifthFieldFocusNode,
-                                                        sixthFieldFocusNode:
-                                                            sixthFieldFocusNode,
-                                                        firstBtnBgColor: AppColors
-                                                            .activeButtonColor,
-                                                        firstBtnTextColor:
-                                                            AppColors
-                                                                .textColorBlack,
-                                                        secondBtnBgColor:
-                                                            Colors.transparent,
-                                                        secondBtnTextColor:
-                                                            _timeLeft != 0
-                                                                ? AppColors
-                                                                    .textColorBlack
-                                                                    .withOpacity(
-                                                                        0.8)
-                                                                : AppColors
-                                                                    .textColorWhite,
-                                                        isLoading:
-                                                            _isLoadingResend ||
-                                                                _isLoading,
-                                                      );
-                                                    }
-                                                  }
-                                                },
-                                                isGradient: true,
-                                                color:
-                                                    AppColors.textColorBlack),
-                                          ),
-                                        ],
-                                      ),
                                   ],
                                 ),
                               ),
@@ -1176,6 +942,173 @@ class _AccountInformationState extends State<AccountInformation> {
                       ),
                     ),
                   ],
+                ),
+                if (isEditAble)
+                Positioned(
+                  bottom: 30,
+                  left: 20,
+                  right: 20,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 2.h,
+                        width: double.infinity,
+                        color: AppColors.backgroundColor,
+                      ),
+                      Container(
+                        color: AppColors.backgroundColor,
+                        child: AppButton(
+                            title: 'Save changes'.tr(),
+                            isactive:
+                                isEditAble && isButtonActive ? true : false,
+                            handler: () async {
+                              setState(() {
+                                isValidating = true;
+                              });
+
+                              if (isButtonActive && isEditAble == true) {
+                                setState(() {
+                                  _isLoading = true;
+                                  if (_isLoading) {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                  }
+                                });
+                                var result = await Provider.of<UserProvider>(
+                                        context,
+                                        listen: false)
+                                    .userUpdateStep1(
+                                        firstName: _firstnameController.text,
+                                        lastName: _lastnameController.text,
+                                        email: _emailController.text,
+                                        mobileNumber:
+                                            '+966' + _numberController.text,
+                                        nationality:
+                                            _nationalityController.text,
+                                        idNumber:
+                                            _identificationNumberController
+                                                .text,
+                                        context: context,
+                                        token: accessToken,
+                                        isEnglish: isEnglish);
+                                await Future.delayed(
+                                    Duration(milliseconds: 1000), () {});
+                                setState(() {
+                                  _isLoading = false;
+                                });
+                                if (result == AuthResult.success) {
+                                  print("Result is successful");
+                                  startTimer();
+                                  otpDialog(
+                                    fromAuth: false,
+                                    fromUser: true,
+                                    fromTransaction: false,
+                                    incorrect: auth.otpErrorResponse,
+                                    // onClose: ()=> removeRoutes(),
+                                    events: _events,
+                                    firstBtnHandler: () async {
+                                      setState(() {
+                                        _isLoading = true;
+                                      });
+                                      await Future.delayed(
+                                          const Duration(milliseconds: 500));
+                                      print('loading popup' +
+                                          _isLoading.toString());
+                                      final userUpdateWithOtpStep2 =
+                                          await Provider.of<UserProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .userUpdateStep2(
+                                        context: context,
+                                        code: Provider.of<AuthProvider>(context,
+                                                listen: false)
+                                            .codeFromOtpBoxes,
+                                        token: accessToken,
+                                      );
+                                      setState(() {
+                                        _isLoading = false;
+                                      });
+                                      print('loading popup 2' +
+                                          _isLoading.toString());
+                                      if (userUpdateWithOtpStep2 ==
+                                          AuthResult.success) {
+                                        await Future.delayed(
+                                            const Duration(milliseconds: 500));
+                                        Navigator.pop(context);
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AccountInformation()),
+                                        );
+                                      }
+                                    },
+                                    secondBtnHandler: () async {
+                                      if (_timeLeft == 0) {
+                                        print('resend function calling');
+                                        try {
+                                          setState(() {
+                                            _isLoadingResend = true;
+                                          });
+                                          final result =
+                                              await Provider.of<UserProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .userUpdateResendOtp(
+                                                      token: accessToken,
+                                                      context: context);
+                                          setState(() {
+                                            _isLoadingResend = false;
+                                          });
+                                          if (result == AuthResult.success) {
+                                            startTimer();
+                                          }
+                                        } catch (error) {
+                                          print("Error: $error");
+                                        } finally {
+                                          setState(() {
+                                            _isLoadingResend = false;
+                                          });
+                                        }
+                                      } else {}
+                                    },
+                                    firstTitle: 'Confirm'.tr(),
+                                    secondTitle: 'Resend code '.tr(),
+
+                                    context: context,
+                                    isDark: themeNotifier.isDark,
+                                    isFirstButtonActive: isOtpButtonActive,
+                                    isSecondButtonActive: false,
+                                    otp1Controller: otp1Controller,
+                                    otp2Controller: otp2Controller,
+                                    otp3Controller: otp3Controller,
+                                    otp4Controller: otp4Controller,
+                                    otp5Controller: otp5Controller,
+                                    otp6Controller: otp6Controller,
+                                    firstFieldFocusNode: firstFieldFocusNode,
+                                    secondFieldFocusNode: secondFieldFocusNode,
+                                    thirdFieldFocusNode: thirdFieldFocusNode,
+                                    forthFieldFocusNode: forthFieldFocusNode,
+                                    fifthFieldFocusNode: fifthFieldFocusNode,
+                                    sixthFieldFocusNode: sixthFieldFocusNode,
+                                    firstBtnBgColor:
+                                        AppColors.activeButtonColor,
+                                    firstBtnTextColor: AppColors.textColorBlack,
+                                    secondBtnBgColor: Colors.transparent,
+                                    secondBtnTextColor: _timeLeft != 0
+                                        ? AppColors.textColorBlack
+                                            .withOpacity(0.8)
+                                        : AppColors.textColorWhite,
+                                    isLoading: _isLoadingResend || _isLoading,
+                                  );
+                                }
+                              }
+                            },
+                            isGradient: true,
+                            color: AppColors.textColorBlack),
+                      ),
+                    ],
+                  ),
                 ),
                 if (OS.Platform.isIOS)
                   Positioned(
@@ -1199,9 +1132,9 @@ class _AccountInformationState extends State<AccountInformation> {
                                       child: Text(
                                         'Done'.tr(),
                                         style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 11.5.sp,
-                                                fontWeight: FontWeight.bold)
+                                            color: Colors.white,
+                                            fontSize: 11.5.sp,
+                                            fontWeight: FontWeight.bold)
                                             .apply(fontWeightDelta: -1),
                                       ),
                                     ))),

@@ -101,7 +101,9 @@ class TransactionProvider with ChangeNotifier {
   Future<void> initializeRedDotState() async {
     final prefs = await SharedPreferences.getInstance();
     final savedShowRedDot = prefs.getBool('showRedDot') ?? false;
+    final savedConfirmedRedDot = prefs.getBool('confirmedRedDot') ?? false;
     showRedDot = savedShowRedDot;
+    confirmedRedDot = savedConfirmedRedDot;
     notifyListeners();
   }
   void resetRedDotState() async {
@@ -110,6 +112,7 @@ class TransactionProvider with ChangeNotifier {
     confirmedRedDot = false;
     notifyListeners();
     await prefs.setBool('showRedDot', false);
+    await prefs.setBool('confirmedRedDot', false);
   }
 
   void clearActivities() {

@@ -24,6 +24,120 @@ class AuthProvider with ChangeNotifier {
   bool otpErrorResponse = false;
   bool otpSuccessResponse = false;
 
+  // Future<AuthResult> logInWithMobile({
+  //   required String mobile,
+  //   required String code,
+  //   required BuildContext context,
+  // }) async {
+  //   try {
+  //     final url = Uri.parse(BASE_URL + '/auth/login/otp');
+  //     final body = {
+  //       "mobileNumber": "+966" + mobile,
+  //       "code": code,
+  //     };
+  //
+  //     final response = await http.post(url,
+  //         body: body);
+  //     fToast = FToast();
+  //     fToast.init(context);
+  //     print('loginwithmobileresponse');
+  //     print(response.body);
+  //     if (response.statusCode == 201) {
+  //       print("User logged in successfully!");
+  //       final jsonResponse = json.decode(response.body);
+  //       final accessToken = jsonResponse['data']['accessToken'];
+  //       final refreshToken = jsonResponse['data']['refreshToken'];
+  //       final prefs = await SharedPreferences.getInstance();
+  //       await prefs.setString('accessToken', accessToken);
+  //       await prefs.setString('refreshToken', refreshToken);
+  //       otpErrorResponse = false;
+  //       otpSuccessResponse = true;
+  //       notifyListeners();
+  //       print(Provider.of<UserProvider>(context, listen: false)
+  //           .navigateToNeoForConnectWallet);
+  //       if (Provider.of<UserProvider>(context, listen: false)
+  //           .navigateToNeoForConnectWallet) {
+  //         await Future.delayed(const Duration(milliseconds: 500));
+  //         await Navigator.of(context)
+  //             .pushNamed(ConnectDapp.routeName, arguments: {});
+  //       } else {
+  //         await Future.delayed(const Duration(milliseconds: 500));
+  //         await Navigator.of(context).pushNamedAndRemoveUntil(
+  //             'nfts-page', (Route d) => false,
+  //             arguments: {});
+  //         await getLinksStream().firstWhere((String? link) {
+  //           if (link != null) {
+  //             Uri uri = Uri.parse(link);
+  //             String? operation = uri.queryParameters['operation'];
+  //             if (operation != null && operation == 'connectWallet') {
+  //               Provider.of<UserProvider>(context, listen: false)
+  //                   .navigateToNeoForConnectWallet = true;
+  //
+  //               // setState(() {
+  //               isOverlayVisible = Provider.of<UserProvider>(context,
+  //                       listen: false)
+  //                   .navigateToNeoForConnectWallet; // Set overlay visibility to true
+  //               // });
+  //
+  //               print("check kro" +
+  //                   Provider.of<UserProvider>(context, listen: false)
+  //                       .navigateToNeoForConnectWallet
+  //                       .toString());
+  //               Future.delayed(const Duration(milliseconds: 500));
+  //               Navigator.of(context).pushAndRemoveUntil(
+  //                 MaterialPageRoute(builder: (context) => ConnectDapp()),
+  //                 (Route<dynamic> route) => false,
+  //               );
+  //             } else {
+  //               Provider.of<UserProvider>(context, listen: false)
+  //                   .navigateToNeoForConnectWallet = false;
+  //
+  //               // setState(() {
+  //               isOverlayVisible = Provider.of<UserProvider>(context,
+  //                       listen: false)
+  //                   .navigateToNeoForConnectWallet; // Set overlay visibility to false
+  //               // });
+  //             }
+  //             return true; // Exit the loop after processing
+  //           } else {
+  //             Provider.of<UserProvider>(context, listen: false)
+  //                 .navigateToNeoForConnectWallet = false;
+  //
+  //             // setState(() {
+  //             isOverlayVisible = Provider.of<UserProvider>(context,
+  //                     listen: false)
+  //                 .navigateToNeoForConnectWallet; // Set overlay visibility to false
+  //             // });
+  //           }
+  //
+  //           return false;
+  //         });
+  //       }
+  //       otpErrorResponse = false;
+  //       otpSuccessResponse = true;
+  //       notifyListeners();
+  //
+  //       return AuthResult.success;
+  //     } else {
+  //       print("Login failed: ${response.body}");
+  //       otpErrorResponse = true;
+  //       otpSuccessResponse = false;
+  //       notifyListeners();
+  //       return AuthResult.failure;
+  //     }
+  //   } on TimeoutException catch (e) {
+  //     otpErrorResponse = true;
+  //     otpSuccessResponse = false;
+  //     print("TimeoutException during login: $e");
+  //     return AuthResult.failure;
+  //   } catch (e) {
+  //     otpErrorResponse = true;
+  //     otpSuccessResponse = false;
+  //     print("Exception during login: $e");
+  //     return AuthResult.failure;
+  //   }
+  // }
+
   Future<AuthResult> logInWithMobile({
     required String mobile,
     required String code,
@@ -35,15 +149,9 @@ class AuthProvider with ChangeNotifier {
         "mobileNumber": "+966" + mobile,
         "code": code,
       };
-
-      final response = await http.post(url,
-          body: body);
-      fToast = FToast();
-      fToast.init(context);
-      print('loginwithmobileresponse');
-      print(response.body);
+      final response = await http.post(url, body: body);
+      print('loginwithmobileresponse: ${response.body}');
       if (response.statusCode == 201) {
-        // Successful login
         print("User logged in successfully!");
         final jsonResponse = json.decode(response.body);
         final accessToken = jsonResponse['data']['accessToken'];
@@ -52,75 +160,41 @@ class AuthProvider with ChangeNotifier {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('accessToken', accessToken);
         await prefs.setString('refreshToken', refreshToken);
+
         otpErrorResponse = false;
         otpSuccessResponse = true;
         notifyListeners();
-        print(Provider.of<UserProvider>(context, listen: false)
-            .navigateToNeoForConnectWallet);
-        if (Provider.of<UserProvider>(context, listen: false)
-            .navigateToNeoForConnectWallet) {
+
+        if (Provider.of<UserProvider>(context, listen: false).navigateToNeoForConnectWallet) {
           await Future.delayed(const Duration(milliseconds: 500));
-          await Navigator.of(context)
-              .pushNamed(ConnectDapp.routeName, arguments: {});
+          await Navigator.of(context).pushNamed(ConnectDapp.routeName);
         } else {
           await Future.delayed(const Duration(milliseconds: 500));
-          await Navigator.of(context).pushNamedAndRemoveUntil(
-              'nfts-page', (Route d) => false,
-              arguments: {});
-          await getLinksStream().firstWhere((String? link) {
-          // final AppLinks _appLinks = AppLinks();
-          // _appLinks.getLatestLinkString().then((String? link) {
-            if (link != null) {
-              Uri uri = Uri.parse(link);
-              String? operation = uri.queryParameters['operation'];
-              if (operation != null && operation == 'connectWallet') {
-                Provider.of<UserProvider>(context, listen: false)
-                    .navigateToNeoForConnectWallet = true;
-
-                // setState(() {
-                isOverlayVisible = Provider.of<UserProvider>(context,
-                        listen: false)
-                    .navigateToNeoForConnectWallet; // Set overlay visibility to true
-                // });
-
-                print("check kro" +
-                    Provider.of<UserProvider>(context, listen: false)
-                        .navigateToNeoForConnectWallet
-                        .toString());
-                Future.delayed(const Duration(milliseconds: 500));
+          await Navigator.of(context).pushNamedAndRemoveUntil('nfts-page', (Route d) => false);
+          final appLinks = AppLinks();
+          appLinks.uriLinkStream.listen((Uri uri) {
+            debugPrint('Received App Link: $uri');
+            String? operation = uri.queryParameters['operation'];
+            if (operation != null && operation == 'connectWallet') {
+              Provider.of<UserProvider>(context, listen: false).navigateToNeoForConnectWallet = true;
+              isOverlayVisible = true;
+              Future.delayed(const Duration(milliseconds: 500), () {
                 Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => ConnectDapp()),
-                  (Route<dynamic> route) => false,
+                      (Route<dynamic> route) => false,
                 );
-              } else {
-                Provider.of<UserProvider>(context, listen: false)
-                    .navigateToNeoForConnectWallet = false;
-
-                // setState(() {
-                isOverlayVisible = Provider.of<UserProvider>(context,
-                        listen: false)
-                    .navigateToNeoForConnectWallet; // Set overlay visibility to false
-                // });
-              }
-              return true; // Exit the loop after processing
+              });
             } else {
-              Provider.of<UserProvider>(context, listen: false)
-                  .navigateToNeoForConnectWallet = false;
-
-              // setState(() {
-              isOverlayVisible = Provider.of<UserProvider>(context,
-                      listen: false)
-                  .navigateToNeoForConnectWallet; // Set overlay visibility to false
-              // });
+              Provider.of<UserProvider>(context, listen: false).navigateToNeoForConnectWallet = false;
+              isOverlayVisible = false;
             }
-
-            return false;
+          }).onError((error) {
+            print("App Links error: $error");
           });
         }
         otpErrorResponse = false;
         otpSuccessResponse = true;
         notifyListeners();
-
         return AuthResult.success;
       } else {
         print("Login failed: ${response.body}");
