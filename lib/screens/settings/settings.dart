@@ -154,33 +154,27 @@ class _SettingsState extends State<Settings> {
                               if (resultLogout == AuthResult.success) {
                                 print('printing navigator');
                                 deleteToken();
+                                bool isSiteConnected = Provider.of<UserProvider>(context, listen: false)
+                                    .isConnected;
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => Wallet(),
                                   ),
-                                  (route) =>
-                                      false, // This predicate ensures that all previous routes are removed.
+                                      (route) => false,
                                 );
-                                await AppDeepLinking().openNftApp(
-                                  {
+                                if (isSiteConnected) {
+                                  await AppDeepLinking().openNftApp({
                                     "operation": "disconnectWallet",
-                                    "walletAddress": Provider.of<UserProvider>(
-                                            context,
-                                            listen: false)
+                                    "walletAddress": Provider.of<UserProvider>(context, listen: false)
                                         .walletAddress,
-                                    "userName": Provider.of<UserProvider>(
-                                            context,
-                                            listen: false)
+                                    "userName": Provider.of<UserProvider>(context, listen: false)
                                         .userName,
-                                    "userIcon": Provider.of<UserProvider>(
-                                            context,
-                                            listen: false)
+                                    "userIcon": Provider.of<UserProvider>(context, listen: false)
                                         .userAvatar,
-                                    "response":
-                                        'Wallet disconnected successfully'
-                                  },
-                                );
+                                    "response": 'Wallet disconnected successfully',
+                                  });
+                                }
                               } else {
                                 print('Logout Failed');
                               }

@@ -337,12 +337,9 @@ class AuthProvider with ChangeNotifier {
     required BuildContext context,
   }) async {
     final url = Uri.parse(BASE_URL + '/auth/logout');
-    // final body = {};
-
     try {
       final response = await http.post(
         url,
-        // body: body,
         headers: {
           'Authorization': 'Bearer $token',
         },
@@ -350,9 +347,6 @@ class AuthProvider with ChangeNotifier {
 
       fToast = FToast();
       fToast.init(context);
-      print('Logout response: ${response.statusCode}');
-      // print('Logout token: $token');
-
       if (response.statusCode == 204) {
         // final jsonResponse = json.decode(response.body);
         // final msg = jsonResponse['message'];

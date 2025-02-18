@@ -28,8 +28,16 @@ class UserProvider with ChangeNotifier {
   String isEmailVerified = "false";
   var verifiedEmail;
   var userNationality;
+  bool _isConnected = false;
   bool navigateToNeoForConnectWallet=false;
   var uniqueIdFromStep1;
+
+  bool get isConnected => _isConnected;
+
+  void setSiteConnection(bool status) {
+    _isConnected = status;
+    notifyListeners();
+  }
 
   List<PaymentCard> _paymentCards = [];
 
@@ -106,6 +114,8 @@ class UserProvider with ChangeNotifier {
           _connectedSites.add(ConnectedSites.fromJson(siteJson));
         }
       });
+      final prefs = await SharedPreferences.getInstance();
+      _isConnected = prefs.getBool("isConnected") ?? false;
       notifyListeners();
       return AuthResult.success;
     } else {

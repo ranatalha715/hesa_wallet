@@ -62,9 +62,6 @@ class _AppDrawerState extends State<AppDrawer> {
     prefs.remove('refreshToken');
     prefs.remove('siteUrl');
     prefs.remove('isConnected');
-    // prefs.remove('showRedDot');
-    // prefs.remove('confirmedRedDot');
-    // prefs.remove('lastActivityTime');
   }
 
   String replaceMiddleWithDots(String input) {
@@ -84,8 +81,10 @@ class _AppDrawerState extends State<AppDrawer> {
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
     await getPasscode();
-    final prefs = await SharedPreferences.getInstance();
-    isConnected = prefs.getBool("isConnected") ?? false;
+    // final prefs = await SharedPreferences.getInstance();
+    // isConnected = prefs.getBool("isConnected") ?? false;
+    // print('isconnected site');
+    // print(isConnected);
   }
 
   @override
@@ -660,46 +659,67 @@ class _AppDrawerState extends State<AppDrawer> {
                               if (resultLogout == AuthResult.success) {
                                 print('printing navigator');
                                 await deleteToken();
-                                Future.delayed(
-                                    const Duration(milliseconds: 700),
-                                    () async {
-                                  print('loggedeededede out');
-                                  localized.EasyLocalization(
-                                      supportedLocales: const [
-                                        Locale('en', 'US'),
-                                        Locale('ar', 'AE')
-                                      ],
-                                      path: 'assets/translations',
-                                      fallbackLocale: Locale('en', 'US'),
-                                      saveLocale: true,
-                                      child: MyApp());
-                                });
+                                bool isSiteConnected = Provider.of<UserProvider>(context, listen: false)
+                                    .isConnected;
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => Wallet(),
                                   ),
-                                  (route) => false,
+                                      (route) => false,
                                 );
-                                await AppDeepLinking().openNftApp(
-                                  {
+                                if (isSiteConnected) {
+                                  await AppDeepLinking().openNftApp({
                                     "operation": "disconnectWallet",
-                                    "walletAddress": Provider.of<UserProvider>(
-                                            context,
-                                            listen: false)
+                                    "walletAddress": Provider.of<UserProvider>(context, listen: false)
                                         .walletAddress,
-                                    "userName": Provider.of<UserProvider>(
-                                            context,
-                                            listen: false)
+                                    "userName": Provider.of<UserProvider>(context, listen: false)
                                         .userName,
-                                    "userIcon": Provider.of<UserProvider>(
-                                            context,
-                                            listen: false)
+                                    "userIcon": Provider.of<UserProvider>(context, listen: false)
                                         .userAvatar,
-                                    "response":
-                                        'Wallet disconnected successfully'
-                                  },
-                                );
+                                    "response": 'Wallet disconnected successfully',
+                                  });
+                                }
+                                // Future.delayed(
+                                //     const Duration(milliseconds: 700),
+                                //     () async {
+                                //   print('loggedeededede out');
+                                //   localized.EasyLocalization(
+                                //       supportedLocales: const [
+                                //         Locale('en', 'US'),
+                                //         Locale('ar', 'AE')
+                                //       ],
+                                //       path: 'assets/translations',
+                                //       fallbackLocale: Locale('en', 'US'),
+                                //       saveLocale: true,
+                                //       child: MyApp());
+                                // });
+                                // Navigator.pushAndRemoveUntil(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) => Wallet(),
+                                //   ),
+                                //   (route) => false,
+                                // );
+                                // await AppDeepLinking().openNftApp(
+                                //   {
+                                //     "operation": "disconnectWallet",
+                                //     "walletAddress": Provider.of<UserProvider>(
+                                //             context,
+                                //             listen: false)
+                                //         .walletAddress,
+                                //     "userName": Provider.of<UserProvider>(
+                                //             context,
+                                //             listen: false)
+                                //         .userName,
+                                //     "userIcon": Provider.of<UserProvider>(
+                                //             context,
+                                //             listen: false)
+                                //         .userAvatar,
+                                //     "response":
+                                //         'Wallet disconnected successfully'
+                                //   },
+                                // );
                               } else {
                                 print('Logout Failed');
                               }

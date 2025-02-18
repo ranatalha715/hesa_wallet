@@ -209,9 +209,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.initState();
     generateFcmToken();
     AppDeepLinking().initDeeplink();
-    // appLinksService.initializeAppLinks(
-    //     user.walletAddress
-    // );
     fToast = FToast();
     fToast.init(context);
     getAccessToken();
@@ -248,13 +245,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     } else if (state == AppLifecycleState.resumed) {
     }
   }
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   if (state == AppLifecycleState.resumed) {
-  //     getAccessToken();
-  //     print('app is running');
-  //   }
-  // }
 
   void handleDisconnection() async {
     final prefs = await SharedPreferences.getInstance();
@@ -418,8 +408,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final emailVerified =
         Provider.of<UserProvider>(context, listen: false).isEmailVerified;
-    print('isOverlayVisible testing');
-    print(isOverlayVisible);
     return Sizer(builder: (context, orientation, deviceType) {
       return Consumer<ThemeProvider>(
           builder: (context, ThemeProvider themeProvider, _) {

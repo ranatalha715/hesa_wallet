@@ -106,6 +106,7 @@ class TransactionProvider with ChangeNotifier {
     confirmedRedDot = savedConfirmedRedDot;
     notifyListeners();
   }
+
   void resetRedDotState() async {
     final prefs = await SharedPreferences.getInstance();
     showRedDot = false;

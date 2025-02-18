@@ -47,56 +47,49 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     final prefs = await SharedPreferences.getInstance();
     accessToken = prefs.getString('accessToken')!;
   }
-
   var userWalletAddress;
+  // Future<void> init() async {
+  //   setState(() {
+  //     _isloading = true;
+  //   });
+  //   await getAccessToken();
+  //   Locale currentLocale = context.locale;
+  //   bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
+  //   await Provider.of<UserProvider>(context, listen: false)
+  //       .getUserDetails(token: accessToken, context: context);
+  //   var user = await Provider.of<UserProvider>(context, listen: false);
+  //   setState(() {
+  //     _isloading = false;
+  //   });
+  //   loadTabData(selectedCategoryIndex);
+  // }
   Future<void> init() async {
     setState(() {
       _isloading = true;
     });
     await getAccessToken();
+    if (accessToken == null || accessToken.isEmpty) {
+      setState(() {
+        _isloading = false;
+      });
+      return;
+    }
     Locale currentLocale = context.locale;
-    bool isEnglish = currentLocale.languageCode == 'en' ? true : false;
-    await Provider.of<UserProvider>(context, listen: false)
-        .getUserDetails(token: accessToken, context: context);
-    var user = await Provider.of<UserProvider>(context, listen: false);
-    // await appLinksService.initializeAppLinks(
-    //     user.walletAddress
-    // );
-    // await Provider.of<AssetsProvider>(context, listen: false).getListedAssets(
-    //   token: accessToken,
-    //   context: context,
-    //   walletAddress: user.walletAddress!,
-    //   ownerType: 'owner',
-    //   type: 'all',
-    //   isEnglish: isEnglish,
-    // );
-    // await Provider.of<AssetsProvider>(context, listen: false).getCreatedAssets(
-    //   token: accessToken,
-    //   context: context,
-    //   walletAddress: user.walletAddress!,
-    //   ownerType: 'creator',
-    //   type: 'all',
-    //   isEnglish: isEnglish,
-    // );
-    // await Provider.of<AssetsProvider>(context, listen: false).getOwnedAssets(
-    //   token: accessToken,
-    //   context: context,
-    //   walletAddress: user.walletAddress!,
-    //   ownerType: 'owner',
-    //   type: 'all',
-    //   isEnglish: isEnglish,
-    // );
-    // await Provider.of<AssetsProvider>(context, listen: false).getAllAssets(
-    //   token: accessToken,
-    //   context: context,
-    //   walletAddress: user.walletAddress!,
-    //   ownerType: 'both',
-    //   type: 'all',
-    //   isEnglish: isEnglish,
-    // );
-    setState(() {
-      _isloading = false;
-    });
+    bool isEnglish = currentLocale.languageCode == 'en';
+    try {
+      await Provider.of<UserProvider>(context, listen: false)
+          .getUserDetails(token: accessToken, context: context);
+      var user = Provider.of<UserProvider>(context, listen: false);
+      if (user.walletAddress == null) {
+        throw Exception("Wallet address is null");
+      }
+
+    } catch (e) {
+    } finally {
+      setState(() {
+        _isloading = false;
+      });
+    }
     loadTabData(selectedCategoryIndex);
   }
 
@@ -159,6 +152,12 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
     loadTabData(index);
   }
 
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      init();
+    }
+  }
+
 
   Future<Map<String, dynamic>> getSettings() async {
     final prefs = await SharedPreferences.getInstance();
@@ -191,9 +190,6 @@ class _WalletTokensNftsState extends State<WalletTokensNfts>
   void initState() {
     super.initState();
     getPasscode();
-    // initUniLinks1();
-    // AppDeepLinking().openNftApp({});
-    // AppDeepLinking().initDeeplink();
     _tabController = TabController(length: 2, vsync: this);
      init();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
