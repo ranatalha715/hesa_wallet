@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../main.dart';
 import '../providers/transaction_provider.dart';
 import '../providers/user_provider.dart';
 import '../screens/connection_requests_pages/connect_dapp.dart';
@@ -15,17 +17,21 @@ class AppLinksService {
   late final BuildContext context;
   String? _currentLink;
   Timer? _timeoutTimer;
+  Timer? _inactivityTimer;
   AppLinksService({required this.context});
-
   void dispose() {
     _timeoutTimer?.cancel();
+    _inactivityTimer?.cancel();
+    appLinksService.dispose();
   }
-
   Future<void> initializeAppLinks(var userWalletAddress) async {
     _appLinks = AppLinks();
-    _startTimeoutTimer();
+    // _startTimeoutTimer();
+    // _startInactivityTimer();
     _appLinks.uriLinkStream.listen((Uri? uri) {
-      _resetTimeoutTimer();
+      // _resetTimeoutTimer();
+      // _resetInactivityTimer();
+      // _updateLastActiveTime();
       final String? operation = uri?.queryParameters['operation'];
       if (uri != null && operation !=null) {
         print('uri link');
@@ -37,18 +43,53 @@ class AppLinksService {
     // if (initialUri != null) {
     //   _handleLink(initialUri, userWalletAddress);
     // }
+   // await _checkLastActiveTime();
+  }
+
+  Future<void> _updateLastActiveTime() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('lastActiveTime', DateTime.now().millisecondsSinceEpoch);
+  }
+
+  Future<void> _checkLastActiveTime() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? lastActiveTime = prefs.getInt('lastActiveTime');
+
+    if (lastActiveTime != null) {
+      DateTime lastActive = DateTime.fromMillisecondsSinceEpoch(lastActiveTime);
+      DateTime now = DateTime.now();
+      Duration difference = now.difference(lastActive);
+
+      if (difference.inSeconds >= 30) {
+        _navigateToLockScreen();
+      } else {
+        _startInactivityTimer(); // Restart inactivity timer when unlocking
+      }
+    } else {
+      _startInactivityTimer(); // Start inactivity timer if not set
+    }
   }
 
   void _startTimeoutTimer() {
     _timeoutTimer?.cancel();
-    _timeoutTimer = Timer(Duration(minutes: 50), () {
-      print("No UniLink received within 30 seconds. Navigating to Unlock screen...");
-      _navigateToLockScreen();
+    _timeoutTimer = Timer(Duration(seconds:30), () {
+      // _navigateToLockScreen();
     });
   }
 
   void _resetTimeoutTimer() {
     _startTimeoutTimer();
+  }
+
+  void _startInactivityTimer() {
+    _inactivityTimer?.cancel();
+    _inactivityTimer = Timer(Duration(seconds: 30), () {
+      _navigateToLockScreen();
+    });
+  }
+
+  void _resetInactivityTimer() {
+    _startInactivityTimer();
   }
 
   void _navigateToLockScreen() {
@@ -60,17 +101,17 @@ class AppLinksService {
 
   void _handleLink(Uri uri, var userWalletAddress) {
     final String newLink = uri.toString();
+    // _resetInactivityTimer();
+    // _updateLastActiveTime();
     _currentLink = newLink;
     Provider.of<TransactionProvider>(context, listen: false).payloadTnxParam = newLink;
 
     if (Navigator.canPop(context)) {
       Navigator.pop(context);
     }
-
     final String? operation = uri.queryParameters['operation'];
     final String? logoFromNeo = uri.queryParameters['logo'];
     final String? siteUrl = uri.queryParameters['siteUrl'];
-
     if (operation == 'connectWallet') {
       Provider.of<UserProvider>(context, listen: false).navigateToNeoForConnectWallet = true;
       Navigator.of(context).pushAndRemoveUntil(
@@ -94,6 +135,8 @@ class AppLinksService {
   void _navigateBasedOnOperation(
       Uri uri, String? operation, String userWalletAddress) {
     if (operation == null) return;
+    // _resetInactivityTimer();
+    // _updateLastActiveTime();
     switch (operation) {
       case 'makeOfferNFT':
         navigateToTransactionRequestWithoutWalletAddress(

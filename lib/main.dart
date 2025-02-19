@@ -209,13 +209,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.initState();
     generateFcmToken();
     AppDeepLinking().initDeeplink();
+    WidgetsBinding.instance.addObserver(this);
     fToast = FToast();
     fToast.init(context);
     getAccessToken();
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       checkWifiStatus();
     });
-    // initUniLinks();
     Timer.periodic(Duration(seconds: 3), (timer) async {
       getAccessToken();
      Provider.of<TransactionProvider>(context,listen: false).initializeRedDotState();

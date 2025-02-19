@@ -14,7 +14,7 @@ import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../constants/app_deep_linking.dart';
 import '../constants/configs.dart';
-import '../main.dart';
+import '../constants/string_utils.dart';
 import '../providers/auth_provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/user_provider.dart';
@@ -45,7 +45,6 @@ class _AppDrawerState extends State<AppDrawer> {
   }
 
   getPasscode() async {
-    print('printing');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final passcode = prefs.getString('passcode')!;
     if (passcode != "" || passcode != null) {
@@ -53,7 +52,6 @@ class _AppDrawerState extends State<AppDrawer> {
     } else {
       _isPasscodeSet = false;
     }
-    print("ispasscodeset" + _isPasscodeSet.toString());
   }
 
   deleteToken() async {
@@ -64,32 +62,15 @@ class _AppDrawerState extends State<AppDrawer> {
     prefs.remove('isConnected');
   }
 
-  String replaceMiddleWithDots(String input) {
-    if (input.length <= 30) {
-      return input;
-    }
-    final int middleIndex = input.length ~/ 2;
-    final int startIndex = middleIndex - 16;
-    final int endIndex = middleIndex + 16;
-    final String result =
-        input.substring(0, startIndex) + '...' + input.substring(endIndex);
-    return result;
-  }
-
   init() async {
     await getaccessToken();
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
     await getPasscode();
-    // final prefs = await SharedPreferences.getInstance();
-    // isConnected = prefs.getBool("isConnected") ?? false;
-    // print('isconnected site');
-    // print(isConnected);
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     init();
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -99,10 +80,6 @@ class _AppDrawerState extends State<AppDrawer> {
 
   @override
   void dispose() {
-    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    //   statusBarColor: AppColors.profileHeaderDark, // Reset to default color
-    // ));
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -135,19 +112,12 @@ class _AppDrawerState extends State<AppDrawer> {
                 children: [
                   Container(
                     height: 42.h,
-                    // color: Colors.blue,
-                    // color: themeNotifier.isDark
-                    //     ? AppColors.backgroundColor
-                    //     : AppColors.textColorWhite,
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20.sp),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          // SizedBox(
-                          //   height: 8.h,
-                          // ),
                           Container(
                             child: Image.asset(
                               "assets/images/hesalogo_text.png",
@@ -170,7 +140,6 @@ class _AppDrawerState extends State<AppDrawer> {
                                 height: 58.sp,
                                 width: 58.sp,
                                 decoration: BoxDecoration(
-                                    // color: Colors.red,
                                     color: AppColors.backgroundColor,
                                     borderRadius: BorderRadius.circular(100)),
                                 child: Padding(
@@ -180,16 +149,12 @@ class _AppDrawerState extends State<AppDrawer> {
                                     child: user.userAvatar != null
                                         ? Image.network(
                                             user.userAvatar!,
-                                            // height: 55.sp,
-                                            // width: 55.sp,
                                             fit: BoxFit.cover,
                                           )
                                         : Padding(
                                             padding: EdgeInsets.all(4.sp),
                                             child: Image.asset(
                                               "assets/images/user_placeholder.png",
-                                              // height: 55.sp,
-                                              // width: 55.sp,
                                               color: AppColors.textColorGrey,
                                             ),
                                           ),
@@ -205,16 +170,13 @@ class _AppDrawerState extends State<AppDrawer> {
                             user.userName != null
                                 ? user.userName!
                                 : 'username.mjra'.tr(),
-                            // 'username.mjra'.tr(),
                             style: TextStyle(
                                 fontSize: 11.7.sp,
                                 fontFamily: 'Blogger Sans',
                                 fontWeight: FontWeight.w700,
                                 color: themeNotifier.isDark
                                     ? AppColors.textColorWhite
-                                    : AppColors.tabColorlightMode
-                                // AppColors.textColorBlack
-                                ),
+                                    : AppColors.tabColorlightMode),
                           ),
                           SizedBox(
                             height: 0.5.h,
@@ -226,7 +188,7 @@ class _AppDrawerState extends State<AppDrawer> {
                               children: [
                                 Text(
                                   user.walletAddress != null
-                                      ? replaceMiddleWithDots(
+                                      ? truncateTo13Digits(
                                           user.walletAddress!)
                                       : "...",
                                   style: TextStyle(
@@ -260,7 +222,6 @@ class _AppDrawerState extends State<AppDrawer> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          // SizedBox(height: 0.2.h,),
                           drawerWidget(
                             title: 'Payments & Banking'.tr(),
                             imagePath: "assets/images/draweroption1.png",
@@ -331,7 +292,6 @@ class _AppDrawerState extends State<AppDrawer> {
                                 top: 0,
                                 bottom: 0,
                                 child: Container(
-                                  // color: Colors.yellow,
                                   child: Center(
                                     child: Row(
                                       crossAxisAlignment:
@@ -391,7 +351,6 @@ class _AppDrawerState extends State<AppDrawer> {
                             isDark: themeNotifier.isDark ? true : false,
                             index: 5,
                             handler: () {
-                              Navigator.pop(context);
                               _launchURL();
                             },
                           ),
@@ -404,7 +363,6 @@ class _AppDrawerState extends State<AppDrawer> {
                             index: 6,
                             isLast: true,
                             handler: () {
-                              // Navigator.pop(context);
                               logOutFunction(themeNotifier.isDark);
                             },
                           )
@@ -432,11 +390,6 @@ class _AppDrawerState extends State<AppDrawer> {
                                   fontSize: 8.7.sp,
                                   fontWeight: FontWeight.w400),
                             ),
-                            // FooterText(
-                            //   textcolor: themeNotifier.isDark
-                            //       ? AppColors.textColorGrey
-                            //       : AppColors.tabColorlightMode,
-                            // ),
                             SizedBox(
                               height: 3.h,
                             )
@@ -500,36 +453,13 @@ class _AppDrawerState extends State<AppDrawer> {
         setState(() {
           selectedIndex = index;
         });
-        print(index);
-        print(selectedIndex);
-
         Future.delayed(Duration(milliseconds: 250), () {
           handler();
         });
       },
       child: Container(
-        // margin: EdgeInsets.only(
-        //     top: isDark ? 1.sp : 0.5.sp, bottom: isLast ? 0 : 0),
         height: 7.5.h,
-        decoration: BoxDecoration(color: AppColors.drawerOptBackgroundClr
-            // gradient: LinearGradient(
-            //   colors: [
-            //     index == selectedIndex
-            //         ? Color(0xff92B928)
-            //         : isDark
-            //             ? AppColors.drawerOptBackgroundClr
-            //             : AppColors.textColorWhite,
-            //     index == selectedIndex
-            //         ? Color(0xffC9C317)
-            //         : isDark
-            //             ? AppColors.drawerOptBackgroundClr
-            //             : AppColors.textColorWhite
-            //   ],
-            //   begin: Alignment.topLeft,
-            //   end: Alignment.bottomRight,
-            // ),
-            ),
-        // color: index == selectedIndex ? Colors.yellow:AppColors.textColorWhite.withOpacity(0.05),
+        decoration: BoxDecoration(color: AppColors.drawerOptBackgroundClr),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.sp),
           child: Row(
@@ -547,10 +477,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       : isDark
                           ? AppColors.textColorWhite
                           : AppColors.tabColorlightMode,
-                  // AppColors.textColorBlack,
                   fit: BoxFit.cover,
-                  // height: imageHeight,
-                  // width: imageWidth,
                 ),
               ),
               SizedBox(
@@ -564,7 +491,6 @@ class _AppDrawerState extends State<AppDrawer> {
                         : isDark
                             ? AppColors.textColorWhite
                             : AppColors.tabColorlightMode,
-                    // AppColors.textColorBlack,
                     fontWeight: FontWeight.w600,
                     fontSize: 11.7.sp,
                     fontFamily: 'Inter'),
@@ -595,8 +521,6 @@ class _AppDrawerState extends State<AppDrawer> {
                   height: 35.h,
                   width: dialogWidth,
                   decoration: BoxDecoration(
-                    // border: Border.all(
-                    //     width: 0.1.h, color: AppColors.textColorGrey),
                     color: isDark
                         ? AppColors.showDialogClr
                         : AppColors.textColorWhite,
@@ -639,8 +563,6 @@ class _AppDrawerState extends State<AppDrawer> {
                         child: AppButton(
                           title: 'Log out'.tr(),
                           handler: () async {
-                            // if (isLoading) return;
-
                             try {
                               setState(() {
                                 isLoading = true;
@@ -657,75 +579,39 @@ class _AppDrawerState extends State<AppDrawer> {
                                 isLoading = false;
                               });
                               if (resultLogout == AuthResult.success) {
-                                print('printing navigator');
                                 await deleteToken();
-                                bool isSiteConnected = Provider.of<UserProvider>(context, listen: false)
-                                    .isConnected;
+                                bool isSiteConnected =
+                                    Provider.of<UserProvider>(context,
+                                            listen: false)
+                                        .isConnected;
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => Wallet(),
                                   ),
-                                      (route) => false,
+                                  (route) => false,
                                 );
                                 if (isSiteConnected) {
                                   await AppDeepLinking().openNftApp({
                                     "operation": "disconnectWallet",
-                                    "walletAddress": Provider.of<UserProvider>(context, listen: false)
+                                    "walletAddress": Provider.of<UserProvider>(
+                                            context,
+                                            listen: false)
                                         .walletAddress,
-                                    "userName": Provider.of<UserProvider>(context, listen: false)
+                                    "userName": Provider.of<UserProvider>(
+                                            context,
+                                            listen: false)
                                         .userName,
-                                    "userIcon": Provider.of<UserProvider>(context, listen: false)
+                                    "userIcon": Provider.of<UserProvider>(
+                                            context,
+                                            listen: false)
                                         .userAvatar,
-                                    "response": 'Wallet disconnected successfully',
+                                    "response":
+                                        'Wallet disconnected successfully',
                                   });
                                 }
-                                // Future.delayed(
-                                //     const Duration(milliseconds: 700),
-                                //     () async {
-                                //   print('loggedeededede out');
-                                //   localized.EasyLocalization(
-                                //       supportedLocales: const [
-                                //         Locale('en', 'US'),
-                                //         Locale('ar', 'AE')
-                                //       ],
-                                //       path: 'assets/translations',
-                                //       fallbackLocale: Locale('en', 'US'),
-                                //       saveLocale: true,
-                                //       child: MyApp());
-                                // });
-                                // Navigator.pushAndRemoveUntil(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => Wallet(),
-                                //   ),
-                                //   (route) => false,
-                                // );
-                                // await AppDeepLinking().openNftApp(
-                                //   {
-                                //     "operation": "disconnectWallet",
-                                //     "walletAddress": Provider.of<UserProvider>(
-                                //             context,
-                                //             listen: false)
-                                //         .walletAddress,
-                                //     "userName": Provider.of<UserProvider>(
-                                //             context,
-                                //             listen: false)
-                                //         .userName,
-                                //     "userIcon": Provider.of<UserProvider>(
-                                //             context,
-                                //             listen: false)
-                                //         .userAvatar,
-                                //     "response":
-                                //         'Wallet disconnected successfully'
-                                //   },
-                                // );
-                              } else {
-                                print('Logout Failed');
-                              }
+                              } else {}
                             } catch (error) {
-                              print("Error: $error");
-                              // _showToast('An error occurred'); // Show an error message
                             } finally {
                               setState(() {
                                 isLoading = false;
@@ -778,7 +664,5 @@ class _AppDrawerState extends State<AppDrawer> {
         showCopiedMsg = false;
       });
     });
-    // fToast = FToast();
-    // fToast.init(context);
   }
 }

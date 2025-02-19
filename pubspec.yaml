@@ -75,7 +75,6 @@ dependencies:
    path: ../deepinking_module
 
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
