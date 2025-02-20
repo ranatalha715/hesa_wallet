@@ -156,15 +156,12 @@ class AuthProvider with ChangeNotifier {
         final jsonResponse = json.decode(response.body);
         final accessToken = jsonResponse['data']['accessToken'];
         final refreshToken = jsonResponse['data']['refreshToken'];
-
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('accessToken', accessToken);
         await prefs.setString('refreshToken', refreshToken);
-
         otpErrorResponse = false;
         otpSuccessResponse = true;
         notifyListeners();
-
         if (Provider.of<UserProvider>(context, listen: false).navigateToNeoForConnectWallet) {
           await Future.delayed(const Duration(milliseconds: 500));
           await Navigator.of(context).pushNamed(ConnectDapp.routeName);
@@ -216,56 +213,6 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<AuthResult> updateInformation({
-    required String username,
-    required String image,
-    required BuildContext context,
-  }) async {
-    final url = Uri.parse(BASE_URL + '/user/update');
-    final body = {
-      "username": username,
-      "displayPicture": image,
-    };
-
-    final response = await http.post(url, body: body);
-    fToast = FToast();
-    fToast.init(context);
-    if (response.statusCode == 201) {
-      // Successful login, handle navigation or other actions
-      print("Information updated successfully!");
-      return AuthResult.success;
-    } else {
-      // Show an error message or handle the response as needed
-      print("Something went wrong: ${response.body}");
-      return AuthResult.failure;
-    }
-  }
-
-  Future<AuthResult> deleteAccount({
-    required String token,
-    required BuildContext context,
-  }) async {
-    final url = Uri.parse(BASE_URL + '/user/delete-account');
-    final specialToken =
-        "726d7a62edbddc32ba6cafaa2805484b4c7659ffa999f27b0b09ba8db27f017d";
-    // final body = {
-    //   "email": email,
-    // };
-    final body = {};
-
-    final response = await http.post(url, body: body, headers: {
-      'Authorization': 'Bearer $specialToken',
-    });
-
-    final fToast = FToast();
-    fToast.init(context);
-
-    if (response.statusCode == 201) {
-      return AuthResult.success;
-    } else {
-      return AuthResult.failure;
-    }
-  }
 
   Future<AuthResult> deleteAccountStep1({
     required String token,
@@ -331,7 +278,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<AuthResult> logoutUser({
+    Future<AuthResult> logoutUser({
     required String token,
     required String refreshToken,
     required BuildContext context,
@@ -345,13 +292,11 @@ class AuthProvider with ChangeNotifier {
         },
       );
 
-      fToast = FToast();
-      fToast.init(context);
       if (response.statusCode == 204) {
-        // final jsonResponse = json.decode(response.body);
-        // final msg = jsonResponse['message'];
-        print('logout success'); // Print the message
-
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.clear();
+        Provider.of<UserProvider>(context, listen: false).clearUserData();
+        print('Logout success');
         return AuthResult.success;
       } else {
         print("Logout failed: ${response.body}");
@@ -362,6 +307,7 @@ class AuthProvider with ChangeNotifier {
       return AuthResult.failure;
     }
   }
+
 
   Future<AuthResult> sendLoginOTP({
     required String mobile,
@@ -774,13 +720,11 @@ class AuthProvider with ChangeNotifier {
     fToast = FToast();
     fToast.init(context);
     if (response.statusCode == 201) {
-      // Successful login, handle navigation or other actions
       otpErrorResponse = false;
       otpSuccessResponse = true;
       notifyListeners();
       return AuthResult.success;
     } else {
-      // Show an error message or handle the response as needed
       otpErrorResponse = true;
       otpSuccessResponse = false;
       notifyListeners();

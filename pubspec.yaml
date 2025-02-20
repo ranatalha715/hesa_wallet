@@ -44,13 +44,15 @@ dependencies:
   infinite_scroll_pagination: ^4.1.0
   intl:
   google_fonts:
-  url_launcher:
+#  url_launcher:
+  url_launcher: ^6.3.1
   animated_checkmark: ^3.1.0
   shimmer: ^3.0.0
   shared_preferences: ^2.2.0
   http: ^1.2.1
   sms_autofill: ^2.3.0
-  app_links: ^6.3.3
+#  app_links: ^6.3.3
+  app_links: ^6.4.0
 #  dio: ^5.3.3
 #  cached_network_image: ^3.3.0
   webview_flutter: ^2.0.13

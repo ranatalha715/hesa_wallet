@@ -34,6 +34,14 @@ class UserProvider with ChangeNotifier {
 
   bool get isConnected => _isConnected;
 
+  void clearUserData() {
+    walletAddress = null;
+    userName = null;
+    userAvatar = null;
+    _isConnected = false;
+    notifyListeners();
+  }
+
   void setSiteConnection(bool status) {
     _isConnected = status;
     notifyListeners();

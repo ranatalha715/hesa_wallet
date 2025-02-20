@@ -138,6 +138,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final PageController _pageController = PageController(initialPage: 0);
   var accessToken = '';
   var refreshToken = '';
+
   Timer? _redDotTimer;
   late FToast fToast;
   bool isOverlayVisible = false;
@@ -204,22 +205,47 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         .drain();
   }
 
+  // @override
+  // initState()  {
+  //   super.initState();
+  //   generateFcmToken();
+  //   AppDeepLinking().initDeeplink();
+  //   WidgetsBinding.instance.addObserver(this);
+  //   fToast = FToast();
+  //   fToast.init(context);
+  //   getAccessToken();
+  //   Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+  //     checkWifiStatus();
+  //   });
+  //   Timer.periodic(Duration(seconds: 3), (timer) async {
+  //     getAccessToken();
+  //    Provider.of<TransactionProvider>(context,listen: false).initializeRedDotState();
+  //        fetchActivities();
+  //   });
+  //   Timer.periodic(Duration(seconds: 30), (timer) async {
+  //     await Provider.of<AuthProvider>(context, listen: false)
+  //         .updateFCM(FCM: fcmToken, token: accessToken, context: context);
+  //   });
+  //   Timer.periodic(Duration(minutes: 25), (timer) async {
+  //     await Provider.of<AuthProvider>(context, listen: false).refreshToken(
+  //         refreshToken: refreshToken, context: context, token: accessToken);
+  //   });
+  // }
   @override
-  initState()  {
+  void initState() {
     super.initState();
     generateFcmToken();
     AppDeepLinking().initDeeplink();
     WidgetsBinding.instance.addObserver(this);
-    fToast = FToast();
-    fToast.init(context);
     getAccessToken();
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       checkWifiStatus();
     });
     Timer.periodic(Duration(seconds: 3), (timer) async {
       getAccessToken();
-     Provider.of<TransactionProvider>(context,listen: false).initializeRedDotState();
-         fetchActivities();
+      Provider.of<TransactionProvider>(context, listen: false)
+          .initializeRedDotState();
+      fetchActivities();
     });
     Timer.periodic(Duration(seconds: 30), (timer) async {
       await Provider.of<AuthProvider>(context, listen: false)
@@ -341,28 +367,63 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.didChangeDependencies();
   }
 
-  getAccessToken() async {
+  // getAccessToken() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   accessToken = prefs.getString('accessToken')!;
+  //   refreshToken = prefs.getString('refreshToken')!;
+  //   await Provider.of<UserProvider>(context, listen: false)
+  //       .getUserDetails(token: accessToken, context: context);
+  //   var user = await Provider.of<UserProvider>(context, listen: false);
+  //   print('test wallet address');
+  //   print(user.walletAddress);
+  //   print('test access token');
+  //   print(accessToken);
+  //   if(accessToken!=""){
+  //   await appLinksService.initializeAppLinks(
+  //       user.walletAddress
+  //   );}
+  //   if (isTokenExpired(accessToken)) {
+  //     prefs.remove('accessToken');
+  //     prefs.remove('refreshToken');
+  //     await Provider.of<AuthProvider>(context, listen: false).refreshToken(
+  //         refreshToken: refreshToken, context: context, token: accessToken);
+  //   } else {}
+  //   navigateToLoginPage(context);
+  // }
+  Future<void> getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
-    accessToken = prefs.getString('accessToken')!;
-    refreshToken = prefs.getString('refreshToken')!;
+    accessToken = prefs.getString('accessToken') ?? "";
+    refreshToken = prefs.getString('refreshToken') ?? "";
+
+    // If token is empty, clear user data
+    if (accessToken.isEmpty) {
+      Provider.of<UserProvider>(context, listen: false).clearUserData();
+      // Provider.of<AuthProvider>(context, listen: false).clearTokens();
+      accessToken="";
+      refreshToken="";
+      return;
+    }
     await Provider.of<UserProvider>(context, listen: false)
         .getUserDetails(token: accessToken, context: context);
-    var user = await Provider.of<UserProvider>(context, listen: false);
-    print('wallet address');
+    var user = Provider.of<UserProvider>(context, listen: false);
+    print('test wallet address');
     print(user.walletAddress);
+    print('test access token');
+    print(accessToken);
 
-    await appLinksService.initializeAppLinks(
-        user.walletAddress
-    );
+    if (accessToken!="" && user.walletAddress!='') {
+      await appLinksService.initializeAppLinks(user.walletAddress);
+    }
     if (isTokenExpired(accessToken)) {
       prefs.remove('accessToken');
       prefs.remove('refreshToken');
+
       await Provider.of<AuthProvider>(context, listen: false).refreshToken(
           refreshToken: refreshToken, context: context, token: accessToken);
-    } else {}
-    navigateToLoginPage(context);
+    }
   }
-   navigateToLoginPage(BuildContext context) async {
+
+  navigateToLoginPage(BuildContext context) async {
    await Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => Wallet()),

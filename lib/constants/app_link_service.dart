@@ -19,6 +19,8 @@ class AppLinksService {
   Timer? _timeoutTimer;
   Timer? _inactivityTimer;
   AppLinksService({required this.context});
+
+
   void dispose() {
     _timeoutTimer?.cancel();
     _inactivityTimer?.cancel();

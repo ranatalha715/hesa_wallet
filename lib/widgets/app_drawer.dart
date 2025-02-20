@@ -13,8 +13,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../constants/app_deep_linking.dart';
+import '../constants/app_link_service.dart';
 import '../constants/configs.dart';
 import '../constants/string_utils.dart';
+import '../main.dart';
 import '../providers/auth_provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/user_provider.dart';
@@ -85,10 +87,9 @@ class _AppDrawerState extends State<AppDrawer> {
 
   void _launchURL() async {
     final Uri url = Uri.parse('https://hesa-wallet.com/about-us');
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url, mode: LaunchMode.externalApplication);
-    } else {
-      throw 'Could not launch $url';
+
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      debugPrint('Could not launch $url');
     }
   }
 
@@ -188,8 +189,7 @@ class _AppDrawerState extends State<AppDrawer> {
                               children: [
                                 Text(
                                   user.walletAddress != null
-                                      ? truncateTo13Digits(
-                                          user.walletAddress!)
+                                      ? truncateTo13Digits(user.walletAddress!)
                                       : "...",
                                   style: TextStyle(
                                       fontSize: 9.5.sp,
@@ -351,6 +351,7 @@ class _AppDrawerState extends State<AppDrawer> {
                             isDark: themeNotifier.isDark ? true : false,
                             index: 5,
                             handler: () {
+                              Navigator.pop(context);
                               _launchURL();
                             },
                           ),
@@ -557,7 +558,6 @@ class _AppDrawerState extends State<AppDrawer> {
                       SizedBox(
                         height: 4.h,
                       ),
-                      // Expanded(child: SizedBox()),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 22),
                         child: AppButton(
@@ -574,21 +574,18 @@ class _AppDrawerState extends State<AppDrawer> {
                                           token: accessToken,
                                           refreshToken: refreshToken,
                                           context: context);
-
-                              setState(() {
-                                isLoading = false;
-                              });
                               if (resultLogout == AuthResult.success) {
                                 await deleteToken();
                                 bool isSiteConnected =
                                     Provider.of<UserProvider>(context,
                                             listen: false)
                                         .isConnected;
+                                await Future.delayed(
+                                    Duration(milliseconds: 500));
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => Wallet(),
-                                  ),
+                                      builder: (context) => Wallet()),
                                   (route) => false,
                                 );
                                 if (isSiteConnected) {
@@ -610,8 +607,9 @@ class _AppDrawerState extends State<AppDrawer> {
                                         'Wallet disconnected successfully',
                                   });
                                 }
-                              } else {}
+                              }
                             } catch (error) {
+                              print("Error during logout: $error");
                             } finally {
                               setState(() {
                                 isLoading = false;
